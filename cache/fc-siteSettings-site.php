@@ -9,6 +9,6 @@
   ),
   'contactEmail' => 
   array (
-    'en_US' => 'spfestin@gmail.com',
+    'en_US' => 'siteadmin@gmail.com',
   ),
 ); ?>

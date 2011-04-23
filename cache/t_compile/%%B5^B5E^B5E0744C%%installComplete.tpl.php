@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-04-18 16:39:28
+<?php /* Smarty version 2.6.26, created on 2011-04-23 22:13:46
          compiled from core:install/installComplete.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'url', 'core:install/installComplete.tpl', 16, false),array('function', 'translate', 'core:install/installComplete.tpl', 17, false),array('modifier', 'assign', 'core:install/installComplete.tpl', 16, false),array('modifier', 'escape', 'core:install/installComplete.tpl', 26, false),)), $this); ?>

@@ -29,7 +29,7 @@
 installed = On
 
 ; The canonical URL to the OJS installation (excluding the trailing slash)
-base_url = "http://localhost/ojs-2.3.4"
+base_url = "http://localhost/whorrp"
 
 ; Path to the registry directory (containing various settings files)
 ; Although the files in this directory generally do not contain any
@@ -102,8 +102,8 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-username = ojs
-password = ojs
+username = root
+password = password
 name = ojs
 
 ; Enable persistent connections
@@ -181,7 +181,7 @@ charset_normalization = Off
 ; Complete path to directory to store uploaded files
 ; (This directory should not be directly web-accessible)
 ; Windows users should use forward slashes
-files_dir = "/Applications/MAMP/htdocs/ojs-2.3.4/files"
+files_dir = /home/anne/ojsfiles/
 
 ; Path to the directory to store public uploaded files
 ; (This directory should be web-accessible and the specified path
