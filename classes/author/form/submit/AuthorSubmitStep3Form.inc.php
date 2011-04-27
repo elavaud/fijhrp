@@ -37,6 +37,21 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 			$this->addCheck(new FormValidatorCustom($this, 'abstract', 'required', 'author.submit.form.wordCountAlert', create_function('$abstract, $wordCount', 'foreach ($abstract as $localizedAbstract) {return count(explode(" ",$localizedAbstract)) < $wordCount; }'), array($abstractWordCount)));
 		}
 
+                /************************************************************************************************************/
+                /*  Validation code for additional proposal metadata
+                 *  Added by:  Anne Ivy Mirasol
+                 *  Last Update: April 25, 2011
+                 ************************************************************************************************************/
+                $this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'reviewedByOtherErc', 'required', 'author.submit.form.reviewedByOtherErcRequired', $this->getRequiredLocale()));
+
 	}
 
 	/**
@@ -61,7 +76,22 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 				'language' => $article->getLanguage(),
 				'sponsor' => $article->getSponsor(null), // Localized
 				'section' => $sectionDao->getSection($article->getSectionId()),
-				'citations' => $article->getCitations()
+				'citations' => $article->getCitations(),
+                                /*
+                                 *  Init code for additional proposal metadata
+                                 *  Added by: Anne Ivy Mirasol
+                                 *  Last Edited: April 25, 2011
+                                 */
+                                 'objectives' => $article->getObjectives(null),
+                                 'keywords' => $article->getKeywords(null),
+                                 'startDate' => $article->getStartDate(null),
+                                 'endDate' => $article->getEndDate(null),
+                                 'fundsRequired' => $article->getFundsRequired(null),
+                                 'proposalType' => $article->getProposalType(null),
+                                 'submittedAsPi' => $article->getSubmittedAsPi(null),
+                                 'conflictOfInterest' => $article->getConflictOfInterest(null),
+                                 'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
+                                 'otherErcDecision' => $article->getOtherErcDecision(null)
 			);
 
 			$authors =& $article->getAuthors();
@@ -109,7 +139,22 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 				'type',
 				'language',
 				'sponsor',
-				'citations'
+				'citations',
+                                /*
+                                 *  Read input code for additional proposal metadata
+                                 *  Added by: Anne Ivy Mirasol
+                                 *  Last Edited: April 25, 2011
+                                 */
+                                 'objectives',
+                                 'keywords',
+                                 'startDate',
+                                 'endDate',
+                                 'fundsRequired',
+                                 'proposalType',
+                                 'submittedAsPi',
+                                 'conflictOfInterest',
+                                 'reviewedByOtherErc',
+                                 'otherErcDecision'
 			)
 		);
 
@@ -129,7 +174,8 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
-		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor');
+		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
+                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -146,6 +192,15 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 			$templateMgr->assign('scrollToAuthor', true);
 		}
 
+                /*********************************************************************
+                 *  Get proposal types from database
+                 *  Added by:  Anne Ivy Mirasol
+                 *  Last Updated: April 25, 2011
+                 *********************************************************************/
+                $articleDao =& DAORegistry::getDAO('ArticleDAO');
+                $proposalTypes = $articleDao->getProposalTypes();
+                $templateMgr->assign_by_ref('proposalTypes', &$proposalTypes);
+                
 		parent::display();
 	}
 
@@ -180,7 +235,23 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 			$article->setSubmissionProgress($this->step + 1);
 		}
 
-		// Update authors
+                /***********************************************************
+                 *  Added by: Anne Ivy Mirasol
+                 *  Last Edited: April 25, 2011
+                 */
+                 
+                $article->setObjectives($this->getData('objectives'), null); // Localized
+                $article->setKeywords($this->getData('keywords'), null); // Localized
+                $article->setStartDate($this->getData('startDate'), null); // Localized
+                $article->setEndDate($this->getData('endDate'), null); // Localized
+                $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
+                $article->setProposalType($this->getData('proposalType'), null); // Localized
+                $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
+                $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
+                $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
+                $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
+                //
+                // Update authors
 		$authors = $this->getData('authors');
 		for ($i=0, $count=count($authors); $i < $count; $i++) {
 			if ($authors[$i]['authorId'] > 0) {

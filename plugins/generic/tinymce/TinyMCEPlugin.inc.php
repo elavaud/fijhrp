@@ -87,7 +87,8 @@ class TinyMCEPlugin extends GenericPlugin {
 							$fields[] = "authors-$i-biography";
 							$fields[] = "authors-$i-competingInterests";
 						}
-						$fields[] = 'abstract';
+						//$fields[] = 'abstract';
+                                                //$fields[] = 'objectives';
 						break;
 				}
 				break;

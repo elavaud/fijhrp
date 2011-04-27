@@ -941,6 +941,290 @@ class Submission extends DataObject {
 	function setCommentsStatus($commentsStatus) {
 		return $this->setData('commentsStatus', $commentsStatus);
 	}
+
+        /*****************************************************************************************************************************/
+        /*  Setters and Getters for Additional Proposal Metadata
+         *  Added by: Anne Ivy Mirasol
+         *  Last Edited: April 24, 2011
+         */
+        /*****************************************************************************************************************************/
+
+        /**
+	 * Get "localized" proposal objectives (if applicable).
+	 * @return string
+	 */
+	function getLocalizedObjectives() {
+		return $this->getLocalizedData('objectives');
+	}
+
+	/**
+	 * Get proposal objectives.
+	 * @param $locale
+	 * @return string
+	 */
+	function getObjectives($locale) {
+		return $this->getData('objectives', $locale);
+	}
+
+	/**
+	 * Set proposal objectives.
+	 * @param $objectives string
+	 * @param $locale
+	 */
+	function setObjectives($objectives, $locale) {
+		return $this->setData('objectives', $objectives, $locale);
+	}
+
+
+        /**
+	 * Get "localized" proposal keywords (if applicable).
+	 * @return string
+	 */
+	function getLocalizedKeywords() {
+		return $this->getLocalizedData('keywords');
+	}
+
+	/**
+	 * Get proposal keywords.
+	 * @param $locale
+	 * @return string
+	 */
+	function getKeywords($locale) {
+		return $this->getData('keywords', $locale);
+	}
+
+	/**
+	 * Set proposal keywords.
+	 * @param $keywords string
+	 * @param $locale
+	 */
+	function setKeywords($keywords, $locale) {
+		return $this->setData('keywords', $keywords, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" start date (if applicable).
+	 * @return string
+	 */
+	function getLocalizedStartDate() {
+		return $this->getLocalizedData('startDate');
+	}
+
+	/**
+	 * Get start date.
+	 * @param $locale
+	 * @return string
+	 */
+	function getStartDate($locale) {
+		return $this->getData('startDate', $locale);
+	}
+
+	/**
+	 * Set start date.
+	 * @param $startDate string
+	 * @param $locale
+	 */
+	function setStartDate($startDate, $locale) {
+		return $this->setData('startDate', $startDate, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" end date (if applicable).
+	 * @return string
+	 */
+	function getLocalizedEndDate() {
+		return $this->getLocalizedData('endDate');
+	}
+
+	/**
+	 * Get end date.
+	 * @param $locale
+	 * @return string
+	 */
+	function getEndDate($locale) {
+		return $this->getData('endDate', $locale);
+	}
+
+	/**
+	 * Set end date.
+	 * @param $endDate string
+	 * @param $locale
+	 */
+	function setEndDate($endDate, $locale) {
+		return $this->setData('endDate', $endDate, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" funds required (if applicable).
+	 * @return string
+	 */
+	function getLocalizedFundsRequired() {
+		return $this->getLocalizedData('fundsRequired');
+	}
+
+	/**
+	 * Get funds required.
+	 * @param $locale
+	 * @return string
+	 */
+	function getFundsRequired($locale) {
+		return $this->getData('fundsRequired', $locale);
+	}
+
+	/**
+	 * Set funds required.
+	 * @param $fundsRequired string
+	 * @param $locale
+	 */
+	function setFundsRequired($fundsRequired, $locale) {
+		return $this->setData('fundsRequired', $fundsRequired, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" proposal type (if applicable).
+	 * @return string
+	 */
+	function getLocalizedProposalType() {
+		return $this->getLocalizedData('proposalType');
+	}
+
+	/**
+	 * Get proposal type.
+	 * @param $locale
+	 * @return string
+	 */
+	function getProposalType($locale) {
+		return $this->getData('proposalType', $locale);
+	}
+
+	/**
+	 * Set proposal type.
+	 * @param $proposalType string
+	 * @param $locale
+	 */
+	function setProposalType($proposalType, $locale) {
+		return $this->setData('proposalType', $proposalType, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" submittedAsPi (if applicable).
+	 * @return string
+	 */
+	function getLocalizedSubmittedAsPi() {
+		return $this->getLocalizedData('submittedAsPi');
+	}
+
+	/**
+	 * Get submittedAsPi.
+	 * @param $locale
+	 * @return string
+	 */
+	function getSubmittedAsPi($locale) {
+		return $this->getData('submittedAsPi', $locale);
+	}
+
+	/**
+	 * Set submittedAsPi (yes/no).
+	 * @param $submittedAsPi string
+	 * @param $locale
+	 */
+	function setSubmittedAsPi($submittedAsPi, $locale) {
+		return $this->setData('submittedAsPi', $submittedAsPi, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" conflictOfInterest (if applicable).
+	 * @return string
+	 */
+	function getLocalizedConflictOfInterest() {
+		return $this->getLocalizedData('conflictOfInterest');
+	}
+
+	/**
+	 * Get conflictOfInterest.
+	 * @param $locale
+	 * @return string
+	 */
+	function getConflictOfInterest($locale) {
+		return $this->getData('conflictOfInterest', $locale);
+	}
+
+	/**
+	 * Set conflictOfInterest (yes/no).
+	 * @param $conflictOfInterest string
+	 * @param $locale
+	 */
+	function setConflictOfInterest($conflictOfInterest, $locale) {
+		return $this->setData('conflictOfInterest', $conflictOfInterest, $locale);
+	}
+        
+        
+        
+        /**
+	 * Get "localized" reviewedByOtherErc (if applicable).
+	 * @return string
+	 */
+	function getLocalizedReviewedByOtherErc() {
+		return $this->getLocalizedData('reviewedByOtherErc');
+	}
+
+	/**
+	 * Get reviewedByOtherErc.
+	 * @param $locale
+	 * @return string
+	 */
+	function getReviewedByOtherErc($locale) {
+		return $this->getData('reviewedByOtherErc', $locale);
+	}
+
+	/**
+	 * Set reviewedByOtherErc (yes/no).
+	 * @param $reviewedByOtherErc string
+	 * @param $locale
+	 */
+	function setReviewedByOtherErc($reviewedByOtherErc, $locale) {
+		return $this->setData('reviewedByOtherErc', $reviewedByOtherErc, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" otherErcDecision (if applicable).
+	 * @return string
+	 */
+	function getLocalizedOtherErcDecision() {
+		return $this->getLocalizedData('otherErcDecision');
+	}
+
+	/**
+	 * Get otherErcDecision.
+	 * @param $locale
+	 * @return string
+	 */
+	function getOtherErcDecision($locale) {
+		return $this->getData('otherErcDecision', $locale);
+	}
+
+	/**
+	 * Set otherErcDecision (yes/no).
+	 * @param $otherErcDecision string
+	 * @param $locale
+	 */
+	function setOtherErcDecision($otherErcDecision, $locale) {
+		return $this->setData('otherErcDecision', $otherErcDecision, $locale);
+	}
 }
 
 ?>

@@ -31,6 +31,23 @@ function moveAuthor(dir, authorIndex) {
 	form.submit();
 }
 // -->
+
+$(document).ready(function() {
+    if($('input[name^="reviewedByOtherErc"]:checked').val() == "No")
+        $('#otherErcDecisionField').hide();
+        
+    $('input[name^="reviewedByOtherErc"]').change(function(){
+        var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
+
+        if(answer == "Yes") {
+            $('#otherErcDecisionField').show();
+        } else {
+            $('#otherErcDecisionField').hide();
+            $('#otherErcDecision').val("NA");
+            
+        }
+    });
+});
 </script>
 {/literal}
 
@@ -206,14 +223,90 @@ function moveAuthor(dir, authorIndex) {
 <table width="100%" class="data">
 
 <tr valign="top">
-	<td width="20%" class="label">{fieldLabel name="title" required="true" key="article.title"}</td>
+	<td width="20%" class="label">{fieldLabel name="title" required="true" key="proposal.title"}</td>
 	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="60" maxlength="255" /></td>
 </tr>
 
 <tr valign="top">
-	<td width="20%" class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" key="article.abstract" required="true"}{else}{fieldLabel name="abstract" key="article.abstract"}{/if}</td>
+	<td width="20%" class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" key="proposal.abstract" required="true"}{else}{fieldLabel name="abstract" key="proposal.abstract"}{/if}</td>
 	<td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="60">{$abstract[$formLocale]|escape}</textarea></td>
 </tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="objectives" required="true" key="proposal.objectives"}</td>
+	<td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="60">{$objectives[$formLocale]|escape}</textarea></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="60" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="startDate" required="true" key="proposal.startDate"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="startDate[{$formLocale|escape}]" id="startDate" value="{$startDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="endDate" required="true" key="proposal.endDate"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="endDate[{$formLocale|escape}]" id="endDate" value="{$endDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="fundsRequired" required="true" key="proposal.fundsRequired"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="fundsRequired[{$formLocale|escape}]" id="fundsRequired" value="{$fundsRequired[$formLocale]|escape}" size="20" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="proposalType" required="true" key="proposal.proposalType"}</td>
+	<td width="80%" class="value">
+            <select name="proposalType[{$formLocale|escape}]" id="proposalType" value="{$proposalType[$formLocale]|escape}">
+                <option value="">Select One:</option>
+                {foreach from=$proposalTypes key=myId item=ptype}
+                <option value="{$ptype.id}" {if  $proposalType[$formLocale] == $ptype.id } selected="selected"{/if} >{$ptype.type}</option>
+                {/foreach}
+            </select>
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="submittedAsPi" required="true" key="proposal.submittedAsPi"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="submittedAsPi[{$formLocale|escape}]" id="submittedAsPi" value="Yes" {if  $submittedAsPi[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="submittedAsPi[{$formLocale|escape}]" id="submittedAsPi" value="No" {if  $submittedAsPi[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="conflictOfInterest" required="true" key="proposal.conflictOfInterest"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="conflictOfInterest[{$formLocale|escape}]" id="conflictOfInterest" value="Yes" {if  $conflictOfInterest[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="conflictOfInterest[{$formLocale|escape}]" id="conflictOfInterest" value="No" {if  $conflictOfInterest[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="reviewedByOtherErc" required="true" key="proposal.reviewedByOtherErc"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="reviewedByOtherErc[{$formLocale|escape}]" id="reviewedByOtherErc" value="Yes" {if  $reviewedByOtherErc[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="reviewedByOtherErc[{$formLocale|escape}]" id="reviewedByOtherErc" value="No" {if  $reviewedByOtherErc[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top" id="otherErcDecisionField">
+	<td width="20%" class="label">{fieldLabel name="otherErcDecision" required="false" key="proposal.otherErcDecision"}</td>
+	<td width="80%" class="value">
+            <select name="otherErcDecision[{$formLocale|escape}]" id="otherErcDecision" value="{$otherErcDecision[$formLocale]|escape}">
+                <option value="NA">Select One:</option>
+                <option value="Submitted" {if  $otherErcDecision[$formLocale] == "Submitted" } selected="selected"{/if} >Submitted</option>
+                <option value="Reviewed" {if  $otherErcDecision[$formLocale] == "Reviewed" } selected="selected"{/if} >Reviewed</option>
+            </select>
+        </td>
+</tr>
+
 </table>
 </div>
 

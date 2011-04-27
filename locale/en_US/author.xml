@@ -76,9 +76,28 @@
 	<message key="author.submit.languageInstructions"><![CDATA[English=en; French=fr; Spanish=es. <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">Additional codes</a>.]]></message>
 	<message key="author.submit.form.authorRequired">At least one author is required.</message>
 	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each author is required.</message>
-	<message key="author.submit.form.titleRequired">Please enter the title of your article.</message>
-	<message key="author.submit.form.abstractRequired">Please enter the abstract of your article.</message>
-	<message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts in this section's track.</message>
+
+        <!-- ************************************************************************************************************************
+            Validation error messages
+            Added by: Anne Ivy Mirasol
+            Last Edited: April 25, 2011
+        -->
+        <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
+	<message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
+        <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message>
+        <message key="author.submit.form.keywordsRequired">Please enter keywords for your research proposal.</message>
+        <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
+        <message key="author.submit.form.endDateRequired">Please enter the end date of your research proposal.</message>
+        <message key="author.submit.form.fundsRequiredRequired">Please enter the funds required for your research.</message>
+        <message key="author.submit.form.proposalTypeRequired">Please enter the research proposal type.</message>
+        <message key="author.submit.form.submittedAsPiRequired">Please select Yes or No (Submitting as Primary Investigator?).</message>
+        <message key="author.submit.form.conflictOfInterestRequired">Please select Yes or No (Conflict Of Interest?).</message>
+        <message key="author.submit.form.reviewedByOtherErcRequired">Please select Yes or No (Reviewed By Other ERC?).</message>
+
+
+        <!-- ************************************End of Edit ********************************************************************-->
+
+        <message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts in this section's track.</message>
 	<message key="author.submit.submissionFile">Submission File</message>
 	<message key="author.submit.uploadSubmissionFile">Upload submission file</message>
 	<message key="author.submit.replaceSubmissionFile">Replace submission file</message>

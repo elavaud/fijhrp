@@ -52,7 +52,8 @@ class FormValidatorLocale extends FormValidator {
 	function getMessage() {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$allLocales = Locale::getAllLocales();
-		return parent::getMessage() . ' (' . $allLocales[$this->_requiredLocale] . ')';
+		//return parent::getMessage() . ' (' . $allLocales[$this->_requiredLocale] . ')';
+                return parent::getMessage(); //Edited by Anne Ivy Mirasol, April 27, 2011
 	}
 
 	//

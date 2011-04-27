@@ -150,6 +150,32 @@
 	<message key="article.fontSize.medium.altText">Medium</message>
 	<message key="article.fontSize.large.altText">Large</message>
 
+        <!-- Proposal Metadata
+             Added by: Anne Ivy Mirasol
+             Last Edited: April 24, 2011
+        -->
+        <message key="proposal.title">Title</message>
+        <message key="proposal.abstract">Abstract</message>
+        <message key="proposal.objectives">Objectives</message>
+        <message key="proposal.keywords">Keywords</message>
+        <message key="proposal.startDate">Start Date</message>
+        <message key="proposal.endDate">End Date</message>
+        <message key="proposal.fundsRequired">Funds Required</message>
+        <message key="proposal.proposalType">Proposal Type</message>
+        <message key="proposal.conflictOfInterest">Conflict of Interest?</message>
+        <message key="proposal.informedConsentIncluded">Informed Consent Included?</message>
+        <message key="proposal.dataCollectionQuestionnairesIncluded">Data Collection Questionnaires Included?</message>
+        <message key="proposal.ethicalClearanceEnclosed">Ethical Clearance Enclosed?</message>
+        <message key="proposal.reviewedByOtherErc">Has Proposal Been Reviewed By Other ERC?</message>
+        <message key="proposal.otherErcDecision">If yes, other ERC Decision: </message>
+        <message key="proposal.proofOfRegistration">Proof Of Registration Included?</message>
+        <message key="proposal.submittedAsPi">Submitting as Primary Investigator?</message>
+        <message key="proposal.nationalApprovalEnclosed">National Approval Enclosed?</message>
+        
+
+
+
+
 	<!-- Submission Tracking - Common -->
 	<message key="submission.submissionEditing">Submission Editing</message>
 	<message key="submission.changeSection">Change to</message>
