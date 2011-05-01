@@ -29,7 +29,7 @@
 installed = On
 
 ; The canonical URL to the OJS installation (excluding the trailing slash)
-base_url = "http://localhost/whorrp"
+base_url = "http://localhost/whorrp/whorrp"
 
 ; Path to the registry directory (containing various settings files)
 ; Although the files in this directory generally do not contain any
@@ -102,7 +102,7 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-username = root
+username = pkpuser
 password = password
 name = ojs
 
@@ -160,11 +160,11 @@ client_charset = utf-8
 ; Must be set to "Off" if not supported by the database server
 ; If enabled, must be the same character set as "client_charset"
 ; (although the actual name may differ slightly depending on the server)
-connection_charset = Off
+connection_charset = utf8
 
 ; Database storage character set
 ; Must be set to "Off" if not supported by the database server
-database_charset = Off
+database_charset = utf8
 
 ; Enable character normalization to utf-8 (recommended)
 ; If disabled, strings will be passed through in their native encoding
@@ -181,7 +181,7 @@ charset_normalization = Off
 ; Complete path to directory to store uploaded files
 ; (This directory should not be directly web-accessible)
 ; Windows users should use forward slashes
-files_dir = /home/anne/ojsfiles/
+files_dir = /home/kathlg/WHO/OJS/files
 
 ; Path to the directory to store public uploaded files
 ; (This directory should be web-accessible and the specified path
