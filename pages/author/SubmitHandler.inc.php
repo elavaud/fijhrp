@@ -61,6 +61,7 @@ class SubmitHandler extends AuthorHandler {
 	function saveSubmit($args, &$request) {
 		$step = isset($args[0]) ? (int) $args[0] : 0;
 		$articleId = $request->getUserVar('articleId');
+                
 		$journal =& $request->getJournal();
 
 		$this->validate($articleId, $step);
@@ -74,7 +75,7 @@ class SubmitHandler extends AuthorHandler {
 		$submitForm->readInputData();
 
 		if (!HookRegistry::call('SubmitHandler::saveSubmit', array($step, &$article, &$submitForm))) {
-
+                
 			// Check for any special cases before trying to save
 			switch ($step) {
 				case 2:
@@ -154,7 +155,7 @@ class SubmitHandler extends AuthorHandler {
 			if (!isset($editData) && $submitForm->validate()) {
 				$articleId = $submitForm->execute($request);
 				HookRegistry::call('Author::SubmitHandler::saveSubmit', array(&$step, &$article, &$submitForm));
-
+                                
 				if ($step == 5) {
 					// Send a notification to associated users
 					import('lib.pkp.classes.notification.NotificationManager');
@@ -200,6 +201,9 @@ class SubmitHandler extends AuthorHandler {
 	 */
 	function submitUploadSuppFile($args, $request) {
 		$articleId = $request->getUserVar('articleId');
+                // Start Edit Raf Tan 04/30/2011
+                $type = $request->getUserVar('type');
+                // End Edit Raf Tan 04/30/2011
 		$journal =& $request->getJournal();
 
 		$this->validate($articleId, 4);
@@ -211,7 +215,12 @@ class SubmitHandler extends AuthorHandler {
 		$submitForm->setData('title', array($article->getLocale() => Locale::translate('common.untitled')));
 		$suppFileId = $submitForm->execute();
 
-		Request::redirect(null, null, 'submitSuppFile', $suppFileId, array('articleId' => $articleId));
+                // Start Edit Raf Tan 04/30/2011
+                //Request::redirect(null, null, 'submitSuppFile', $suppFileId, array('articleId' => $articleId));
+
+                // Bypass dispplaying the supplementay submission form (pass articleId and proposalType)
+                Request::redirect(null, null, 'saveSubmitSuppFile', $suppFileId, array('articleId' => $articleId, 'type' => $type));
+                // End Edit Raf Tan 04/30/2011
 	}
 
 	/**
@@ -244,6 +253,9 @@ class SubmitHandler extends AuthorHandler {
 	 */
 	function saveSubmitSuppFile($args, $request) {
 		$articleId = $request->getUserVar('articleId');
+                // Start Edit Raf Tan 04/30/2011
+                $type = $request->getUserVar('type');
+                // End Edit Raf Tan 04/30/2011
 		$suppFileId = isset($args[0]) ? (int) $args[0] : 0;
 		$journal =& $request->getJournal();
 
@@ -253,6 +265,8 @@ class SubmitHandler extends AuthorHandler {
 
 		import('classes.author.form.submit.AuthorSubmitSuppFileForm');
 		$submitForm = new AuthorSubmitSuppFileForm($article, $journal, $suppFileId);
+                /**
+                 * Start Edit Raf Tan 04/30/2011
 		$submitForm->readInputData();
 
 		if ($submitForm->validate()) {
@@ -261,6 +275,16 @@ class SubmitHandler extends AuthorHandler {
 		} else {
 			$submitForm->display();
 		}
+                 *
+                 */
+
+                //$submitForm->readInputData();
+                $submitForm->setData('title', array($article->getLocale() => $articleId . '-' . $type));
+                $submitForm->setData('type', $type);
+                $submitForm->execute();
+                Request::redirect(null, null, 'submit', '4', array('articleId' => $articleId));
+
+                // End Edit Raf Tan 04/30/2011
 	}
 
 	/**
@@ -330,7 +354,7 @@ class SubmitHandler extends AuthorHandler {
 				Request::redirect(null, null, 'submit');
 			}
 		}
-
+                
 		$this->article =& $article;
 		return true;
 	}

@@ -153,7 +153,7 @@ function checkSubmissionChecklist() {
 
 {/if}{* $currentJournal->getLocalizedSetting('copyrightNotice') != '' *}
 
-<div id="privacyStatement">
+<div id="privacyStatement" style="display: none">
 <h3>{translate key="author.submit.privacyStatement"}</h3>
 <br />
 {$currentJournal->getLocalizedSetting('privacyStatement')|nl2br}
@@ -161,7 +161,7 @@ function checkSubmissionChecklist() {
 
 <div class="separator"></div>
 
-<div id="commentsForEditor">
+<div id="commentsForEditor" style="display: none"> 
 <h3>{translate key="author.submit.commentsForEditor"}</h3>
 
 <table width="100%" class="data">
