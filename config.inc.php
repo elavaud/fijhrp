@@ -181,7 +181,7 @@ charset_normalization = Off
 ; Complete path to directory to store uploaded files
 ; (This directory should not be directly web-accessible)
 ; Windows users should use forward slashes
-files_dir = /home/anne/ojsfiles/
+files_dir = /home/anne/ojsfiles
 
 ; Path to the directory to store public uploaded files
 ; (This directory should be web-accessible and the specified path

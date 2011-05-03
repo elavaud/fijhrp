@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : asiapacific.xml
+    Created on : May 3, 2011, 10:19 AM
+    Author     : Anne Ivy G. Mirasol
+    Description:
+        For use in country where proposal is submitted.
+-->
+
+<countries>
+    <country name="AMS" code="American Samoa"/>
+    <country name="AUS" code="Australia"/>
+    <country name="BLA" code="Palau"/>
+    <country name="BRU" code="Brunei Darussalam"/>
+    <country name="CAM" code="Cambodia"/>
+    <country name="CHN" code="China"/>
+    <country name="COK" code="Cook Islands"/>
+    <country name="FIJ" code="Fiji"/>
+    <country name="FRP" code="French Polynesia"/>
+    <country name="FSM" code="Micronesia, Federated States of"/>
+    <country name="GUM" code="Guam"/>
+    <country name="HOK" code="Hong Kong (China)"/>
+    <country name="JPN" code="Japan"/>
+    <country name="KIR" code="Kiribati"/>
+    <country name="KOR" code="Republic of Korea"/>
+    <country name="LAO" code="Lao People's Democratic Republic"/>
+    <country name="MAA" code="Malaysia"/>
+    <country name="MAC" code="Macao (China)"/>
+    <country name="MOG" code="Mongolia"/>
+    <country name="MSI" code="Marshall Islands"/>
+    <country name="NAU" code="Nauru"/>
+    <country name="NEC" code="New Caledonia"/>
+    <country name="NEZ" code="New Zealand"/>
+    <country name="NIU" code="Niue"/>
+    <country name="NMI" code="Northern Mariana Islands"/>
+    <country name="PCN" code="Pitcairn Islands"/>
+    <country name="PHL" code="Philippines"/>
+    <country name="PNG" code="Papua New Guinea"/>
+    <country name="SIN" code="Singapore"/>
+    <country name="SMA" code="Samoa"/>
+    <country name="SOL" code="Solomon Islands"/>
+    <country name="TOK" code="Tokelau"/>
+    <country name="TON" code="Tonga"/>
+    <country name="TUV" code="Tuvalu"/>
+    <country name="VAN" code="Vanuatu"/>
+    <country name="VTN" code="Viet Nam"/>
+    <country name="WAF" code="Wallis and Futuna"/>
+</countries>
