@@ -184,9 +184,18 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$editorDecisions = $submission->getDecisions($round);
 		$lastDecisionArray = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
-		/********************************
-		Set proposal status, decision and recency of article file/info | Added by Gay Figueroa | Last Update: /5/3/2011
-		********************************/
+
+		/******************************************************
+		 * 
+		 * Derive and set proposal status
+		 * Get last decision and date it was decided
+		 * Get reviewAssignments
+		 * Get date when submission was last modified and set flag if article is more recent than decision
+		 * Added by Gay Figueroa
+		 * Last Update: /5/4/2011
+		 *
+		*******************************************************/
+
 		$lastDecision = $lastDecisionArray['decision'];
 		$lastDecisionDate = $lastDecisionArray['dateDecided'];
 		$reviewAssignments =& $submission->getReviewAssignments($round);
@@ -259,13 +268,23 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('editorDecisionOptions',SectionEditorSubmission::getEditorDecisionOptions());
 	
 		/*************************************************************
-		Set initial review options, exemption options, last decision info, recency flag | Added by Gay Figueroa | Last Update: 5/3/2011
+		 * 
+		 * Added initial review options, exemption options 
+		 * Added details of lastDecision
+		 * Added flag if article is more recent than last decision
+		 * Added by Gay Figueroa
+		 * Last Update: 5/4/2011
+		 * 
 		*************************************************************/
+
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('lastDecision', $lastDecision);
 		$templateMgr->assign('lastDecisionDate', $lastDecisionDate);
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
+		//pass edit_decision_id of lastDecision; this will also be passed from the forms in editorDecision.tpl to SubmissionEditHandler.recordDecision
+		$templateMgr->assign('lastDecisionId', $lastDecisionArray['editDecisionId']);
+
 
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
@@ -402,12 +421,23 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'submission', $articleId);
 	}
 
+	/***************************************************************************
+	 *
+	 * Record editor decision (Added additional editor decision cases)
+	 * Edited by Gay Figueroa
+	 * Last Update: 5/5/2011
+	 *
+	 ***************************************************************************/
+
 	function recordDecision() {
 		$articleId = Request::getUserVar('articleId');
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
 
 		$decision = Request::getUserVar('decision');
+
+		//pass lastDecisionId of this article to update existing row in edit_decisions
+		$lastDecisionId = Request::getUserVar('lastDecisionId');
 
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
@@ -418,49 +448,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				SectionEditorAction::recordDecision($submission, $decision);
-				break;
-		}
-
-		Request::redirect(null, null, 'submissionReview', $articleId);
-	}
-
-	/*************************************************************
-	 *
-	 * Exemption and initial review methods (from editorDecision.tpl)
-	 * Added by Gay Figueroa
-	 * Last Update: 5/3/2011
-	 *
-	 *************************************************************/
-
-	function recordExemption() {
-		$articleId = Request::getUserVar('articleId');
-		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
-		$submission =& $this->submission;
-
-		$exemption = Request::getUserVar('exemption');
-
-		switch ($exemption) {
-			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
-			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
-				SectionEditorAction::recordExemption($submission, $exemption);
-				break;
-		}
-
-		Request::redirect(null, null, 'submissionReview', $articleId);
-	}
-
-	function recordInitialReview() {
-		$articleId = Request::getUserVar('articleId');
-		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
-		$submission =& $this->submission;
-
-		$initialReview = Request::getUserVar('initialReview');
-
-		switch ($initialReview) {
-			case SUBMISSION_EDITOR_DECISION_COMPLETE:
-			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				SectionEditorAction::recordInitialReview($submission, $initialReview);
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId);
+				//SectionEditorAction::recordDecision($submission, $decision);
 				break;
 		}
 

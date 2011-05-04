@@ -186,6 +186,22 @@ class SectionEditorSubmissionDAO extends DAO {
 							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'])
 						);
 					}
+	/********************************************************
+	 *
+	 * If editDecisionId is not null, just update the existing row in the database
+	 * Added by Gay Figueroa
+	 * Last Update: 5/4/2011
+	 *
+	*********************************************************/
+					else {
+						$this->update(
+							sprintf('UPDATE edit_decisions SET
+								round = ?, decision = ?, date_decided = %s 
+								WHERE edit_decision_id = ?',
+								$this->datetimeToDB($editorDecision['dateDecided'])),
+							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'], $editorDecision['editDecisionId'])
+						);
+					}
 				}
 			}
 		}

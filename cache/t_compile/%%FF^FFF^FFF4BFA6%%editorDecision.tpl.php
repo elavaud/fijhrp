@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-04 18:47:43
+<?php /* Smarty version 2.6.26, created on 2011-05-04 23:16:59
          compiled from sectionEditor/submission/editorDecision.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 42, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 62, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 65, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 225, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 67, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 168, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 220, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 42, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 62, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 66, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 230, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 68, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 173, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 225, false),)), $this); ?>
 	
 <?php $this->assign('proposalStatusKey', $this->_tpl_vars['submission']->getProposalStatusKey()); ?>
 <?php $this->assign('proposalStatus', $this->_tpl_vars['submission']->getProposalStatus()); ?>
@@ -41,6 +41,8 @@ unset($_smarty_tpl_vars);
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+" />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['initialReviewOptions'],'selected' => 1), $this);?>
 
@@ -59,6 +61,8 @@ unset($_smarty_tpl_vars);
 			<form method="post" action="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'recordDecision'), $this);?>
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
+" />
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
 " />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['exemptionOptions'],'selected' => 1), $this);?>
@@ -79,6 +83,8 @@ unset($_smarty_tpl_vars);
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+" />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['editorDecisionOptions'],'selected' => 1), $this);?>
 
@@ -97,6 +103,8 @@ unset($_smarty_tpl_vars);
 				<form method="post" action="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'recordDecision'), $this);?>
 ">
 					<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
+" />
+					<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
 " />
 					<select name="decision" size="1" class="selectMenu">
 						<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['initialReviewOptions'],'selected' => 1), $this);?>
@@ -119,6 +127,8 @@ unset($_smarty_tpl_vars);
 			<form method="post" action="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'recordDecision'), $this);?>
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
+" />
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
 " />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['editorDecisionOptions'],'selected' => 1), $this);?>

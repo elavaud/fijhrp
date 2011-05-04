@@ -61,6 +61,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$initialReviewOptions selected=1}
 				</select>
@@ -81,6 +82,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$exemptionOptions selected=1}
 				</select>
@@ -101,6 +103,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$editorDecisionOptions selected=1}
 				</select>
@@ -121,6 +124,7 @@
 			<td width="80%" class="value">
 				<form method="post" action="{url op="recordDecision"}">
 					<input type="hidden" name="articleId" value="{$submission->getId()}" />
+					<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
 					<select name="decision" size="1" class="selectMenu">
 						{html_options_translate options=$initialReviewOptions selected=1}
 					</select>
@@ -144,6 +148,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$editorDecisionOptions selected=1}
 				</select>
