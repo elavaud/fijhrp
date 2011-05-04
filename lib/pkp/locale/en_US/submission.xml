@@ -358,6 +358,19 @@
 	<message key="submissions.queuedEditing">In Editing</message>
 	<message key="submissions.queued">Queued</message>
 	<message key="submissions.queuedUnassigned">Awaiting assignment</message>
+
+
+	<!-- ***************************************** 
+	 * Submissions proposal status 
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	****************************************** -->
+	<message key="submissions.proposal.submitted">Submitted</message>
+	<message key="submissions.proposal.returned">Returned (Incomplete)</message>
+	<message key="submissions.proposal.checked">Checked (Complete)</message>
+	<message key="submissions.proposal.exempted">Exempted From Review</message>
+	<message key="submissions.proposal.assigned">Assigned For Review</message>
+	<message key="submissions.proposal.reviewed">Reviewed</message>
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Submit</message>
 	<message key="submissions.submitted">Submitted</message>

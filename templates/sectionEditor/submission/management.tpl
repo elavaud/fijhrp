@@ -40,7 +40,20 @@
 		<td class="label">{translate key="article.suppFilesAbbrev"}</td>
 		<td colspan="2" class="value">
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}
-				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}&nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;{if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br />
+				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}
+
+
+{************************************
+ *
+ *
+ * Do not allow section editor and editor to edit and add files and metadata
+ * Edited by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *
+&nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br /> 
+*************************************}
+
 				{assign var=notFirst value=1}
 			{foreachelse}
 				{translate key="common.none"}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>
@@ -63,7 +76,18 @@
 	<tr>
 		<td class="label">{translate key="section.section"}</td>
 		<td class="value">{$submission->getSectionTitle()|escape}</td>
-		<td class="value"><form action="{url op="updateSection" path=$submission->getId()}" method="post">{translate key="submission.changeSection"} <select name="section" size="1" class="selectMenu">{html_options options=$sections selected=$submission->getSectionId()}</select> <input type="submit" value="{translate key="common.record"}" class="button" /></form></td>
+
+		{*********************************************
+		 *
+		 * Section is set by default, do not allow editor and section editor to change section
+		 * Edited by Gay Figueroa
+		 * Last Update: 5/3/2011
+		 *
+		 *
+			<td class="value">
+			<form action="{url op="updateSection" path=$submission->getId()}" method="post">{translate key="submission.changeSection"} <select 				name="section" size="1" class="selectMenu">{html_options options=$sections selected=$submission->getSectionId()}</select> <input type="submit" 				value="{translate key="common.record"}" class="button" /></form>
+			</td>
+		***********************************************}
 	</tr>
 	{if $submission->getCommentsToEditor()}
 	<tr valign="top">

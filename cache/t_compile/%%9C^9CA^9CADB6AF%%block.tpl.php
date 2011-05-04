@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-01 15:52:24
+<?php /* Smarty version 2.6.26, created on 2011-05-03 21:47:51
          compiled from file:/var/www/whorrp/whorrp/plugins/blocks/help/block.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'get_help_id', 'file:/var/www/whorrp/whorrp/plugins/blocks/help/block.tpl', 12, false),array('function', 'url', 'file:/var/www/whorrp/whorrp/plugins/blocks/help/block.tpl', 12, false),array('function', 'translate', 'file:/var/www/whorrp/whorrp/plugins/blocks/help/block.tpl', 12, false),array('modifier', 'escape', 'file:/var/www/whorrp/whorrp/plugins/blocks/help/block.tpl', 12, false),)), $this); ?>

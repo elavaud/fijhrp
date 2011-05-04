@@ -23,6 +23,16 @@ define('SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS', 2);
 define('SUBMISSION_EDITOR_DECISION_RESUBMIT', 3);
 define('SUBMISSION_EDITOR_DECISION_DECLINE', 4);
 
+/**************************************
+ * Additional editor decision codes
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+***************************************/
+define('SUBMISSION_EDITOR_DECISION_COMPLETE', 5);
+define('SUBMISSION_EDITOR_DECISION_INCOMPLETE', 6);
+define('SUBMISSION_EDITOR_DECISION_EXEMPTED', 7);
+define('SUBMISSION_EDITOR_DECISION_ASSIGNED', 8);
+
 /* These constants are used as search fields for the various submission lists */
 define('SUBMISSION_FIELD_AUTHOR', 1);
 define('SUBMISSION_FIELD_EDITOR', 2);

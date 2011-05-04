@@ -640,40 +640,6 @@ class SectionEditorSubmissionDAO extends DAO {
 	}
 
 	/**
-	 * Get the editor decisions for a review round of an article.
-	 * @param $articleId int
-	 * @param $round int
-	 */
-	function getEditorDecisions($articleId, $round = null) {
-		$decisions = array();
-
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
-				array($articleId, $round)
-			);
-		}
-
-		while (!$result->EOF) {
-			$decisions[] = array(
-				'editDecisionId' => $result->fields['edit_decision_id'],
-				'editorId' => $result->fields['editor_id'],
-				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
-			);
-			$result->moveNext();
-		}
-		$result->Close();
-		unset($result);
-
-		return $decisions;
-	}
-
-	/**
 	 * Get the highest review round.
 	 * @param $articleId int
 	 * @return int
@@ -1186,6 +1152,70 @@ class SectionEditorSubmissionDAO extends DAO {
 			case 'name': return 'u.last_name';
 			default: return null;
 		}
+	}
+
+	/**
+	 * Get the editor decisions for a review round of an article.
+	 * @param $articleId int
+	 * @param $round int
+	 */
+	function getEditorDecisions($articleId, $round = null) {
+		$decisions = array();
+
+		if ($round == null) {
+			$result =& $this->retrieve(
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+			);
+		} else {
+			$result =& $this->retrieve(
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				array($articleId, $round)
+			);
+		}
+
+		while (!$result->EOF) {
+			$decisions[] = array(
+				'editDecisionId' => $result->fields['edit_decision_id'],
+				'editorId' => $result->fields['editor_id'],
+				'decision' => $result->fields['decision'],
+				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
+			);
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $decisions;
+	}
+
+	function getProposalStatusByDecisionAndReview($decision, $reviewAssignments, $articleMoreRecent) {
+		$reviewAssignmentsEmpty = empty($reviewAssignments)? true : false;	
+		switch ($decision) {
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_COMPLETE:
+					$proposalStatus = PROPOSAL_STATUS_CHECKED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:			
+					$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_ACCEPT:
+			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
+			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
+			case SUBMISSION_EDITOR_DECISION_DECLINE:
+				$proposalStatus = PROPOSAL_STATUS_REVIEWED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
+				//if (!$articleMoreRecent) {
+					$proposalStatus = PROPOSAL_STATUS_RETURNED;
+					break;
+				//}
+			default:
+				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
+				break;
+		}					
+		return $proposalStatus;
 	}
 }
 

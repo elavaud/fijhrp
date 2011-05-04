@@ -21,7 +21,7 @@
 	<li><a href="{url op="submissionCitations" path=$submission->getId()}">{translate key="submission.citations"}</a></li>
 </ul>
 
-{include file="sectionEditor/submission/peerReview.tpl"}
+{include file="sectionEditor/submission/management.tpl"}
 
 <div class="separator"></div>
 

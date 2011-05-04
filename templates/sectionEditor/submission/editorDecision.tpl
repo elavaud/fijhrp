@@ -8,35 +8,212 @@
  *
  * $Id$
  *}
+	{*******************************************************
+	 *
+	 * Get proposal status key and proposal status
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	 *
+	 *******************************************************}
+
+{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
+{assign var="proposalStatus" value=$submission->getProposalStatus()}
+
+{** include file="sectionEditor/submission/status.tpl" 
+<div class="separator"></div>
+*}
+
+{ if $proposalStatus == PROPOSAL_STATUS_ASSIGNED}
+	{*******************************************************
+	 *
+	 * Assign reviewers if not exempted
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	 *
+	 *******************************************************}
+
+	<div id="peerReview">
+		{include file="sectionEditor/submission/peerReview.tpl"}
+		<div class="separator"></div>
+	</div>
+{/if}
+
 <div id="editorDecision">
 <h3>{translate key="submission.editorDecision"}</h3>
 
 <table id="table1" width="100%" class="data">
+
 <tr valign="top">
-	<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
-	<td width="80%" class="value">
-		<form method="post" action="{url op="recordDecision"}">
-			<input type="hidden" name="articleId" value="{$submission->getId()}" />
-			<select name="decision" size="1" class="selectMenu"{if not $allowRecommendation} disabled="disabled"{/if}>
-				{html_options_translate options=$editorDecisionOptions selected=$lastDecision}
-			</select>
-			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}" {if not $allowRecommendation}disabled="disabled"{/if} class="button" />
-			{if not $allowRecommendation}&nbsp;&nbsp;{translate key="editor.article.cannotRecord}{/if}
-		</form>
-	</td>
+	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
+	<td width="80%" class="value">{translate key=$proposalStatusKey}{**translate key=$proposalStatus*}</td>
 </tr>
+
+{*******************************************************
+ *
+ * Review for completeness
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *******************************************************}
+<tr valign="top">
+	{if $proposalStatus == PROPOSAL_STATUS_SUBMITTED }
+		<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
+		<td width="80%" class="value">
+			<form method="post" action="{url op="recordDecision"}">
+				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<select name="decision" size="1" class="selectMenu">
+					{html_options_translate options=$initialReviewOptions selected=1}
+				</select>
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.recordInitialReview"}"  class="button" />
+			</form>
+		</td>
+
+{*******************************************************
+ *
+ * Review for exemption
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *******************************************************}
+
+	{ elseif $proposalStatus == PROPOSAL_STATUS_CHECKED}
+		<td class="label" width="20%">{translate key="editor.article.selectExemptionDecision"}</td>
+		<td width="80%" class="value">
+			<form method="post" action="{url op="recordDecision"}">
+				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<select name="decision" size="1" class="selectMenu">
+					{html_options_translate options=$exemptionOptions selected=1}
+				</select>
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmExemption"}')" name="submit" value="{translate key="editor.article.recordExemptionDecision"}"  class="button" />
+			</form>
+		</td>
+
+{*******************************************************
+ *
+ * Record final decision if exempted from review
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *******************************************************}
+
+	{ elseif $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
+		<td width="80%" class="value">
+			<form method="post" action="{url op="recordDecision"}">
+				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<select name="decision" size="1" class="selectMenu">
+					{html_options_translate options=$editorDecisionOptions selected=1}
+				</select>
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
+			</form>
+		</td>
+{*******************************************************
+ *
+ * Allow review of recently resubmitted proposal if proposal was returned
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *******************************************************}
+	
+	{ elseif $proposalStatus == PROPOSAL_STATUS_RETURNED}
+		{if $articleMoreRecent}
+			<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
+			<td width="80%" class="value">
+				<form method="post" action="{url op="recordDecision"}">
+					<input type="hidden" name="articleId" value="{$submission->getId()}" />
+					<select name="decision" size="1" class="selectMenu">
+						{html_options_translate options=$initialReviewOptions selected=1}
+					</select>
+					<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.recordInitialReview"}"  class="button" />
+				</form>
+			</td>
+		{else}
+			<td class="label" width="20%">Submission Status</td>
+			<td width="80%" class="value">Waiting for resubmission of proposal</td>
+		{/if}
+
+{*******************************************************
+ *
+ * If proposal status is reviewed and last decision was RESUBMIT and article was recently updated, submit new final decision
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *******************************************************}
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT && $articleMoreRecent}	
+		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
+		<td width="80%" class="value">
+			<form method="post" action="{url op="recordDecision"}">
+				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<select name="decision" size="1" class="selectMenu">
+					{html_options_translate options=$editorDecisionOptions selected=1}
+				</select>
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
+			</form>
+		</td>
+		
+	{/if}
+</tr>
+{*******************************************************
+ *
+ * Indicate if this submission is a revision or resubmission
+ * Added by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ *******************************************************}
+
+{if $articleMoreRecent && (($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT)) }
+	<tr valign="top">
+		<td class="label"></td>
+		{assign var="articleLastModified" value=$submission->getLastModified()}
+		<td width="80%" class="value">{translate key="editor.article.proposalResubmitted"}&nbsp&nbsp&nbsp{$articleLastModified|date_format:$dateFormatShort}
+</td>
+	</tr>
+{/if}
+{************************************************
+ *
+ * Display last decision only and date decided
+ * Edited by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+ ************************************************}
+
 <tr valign="top">
 	<td class="label">{translate key="editor.article.decision"}</td>
 	<td class="value">
-		{foreach from=$submission->getDecisions($round) item=editorDecision key=decisionKey}
+		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED}
+			{assign var="decision" value=$lastDecision}
+			{if $lastDecision == SUBMISSION_EDITOR_DECISION_ACCEPT}
+				{translate key="editor.article.decision.accept"}
+			{elseif $lastDecision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS}
+				{translate key="editor.article.decision.pendingRevisions"}
+			{elseif $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
+				{translate key="editor.article.decision.resubmit"}
+			{elseif $lastDecision == SUBMISSION_EDITOR_DECISION_DECLINE}
+				{translate key="editor.article.decision.decline"}
+			{/if}
+			{$lastDecisionDate|date_format:$dateFormatShort}
+			{else}
+				{translate key="common.none"}
+		{/if}
+		{************************************************
+		 *
+		 * Display all decisions and date
+		 * Edited by Gay Figueroa
+		 * Last Update: 5/3/2011
+		 *
+		 foreach from=$submission->getDecisions($round) item=editorDecision key=decisionKey}
 			{if $decisionKey neq 0} | {/if}
 			{assign var="decision" value=$editorDecision.decision}
 			{translate key=$editorDecisionOptions.$decision}&nbsp;&nbsp;{$editorDecision.dateDecided|date_format:$dateFormatShort}
 		{foreachelse}
 			{translate key="common.none"}
-		{/foreach}
+		{/foreach 
+		*************************************************}
 	</td>
 </tr>
+
+
+
 <tr valign="top">
 	<td class="label">{translate key="submission.notifyAuthor"}</td>
 	<td class="value">
@@ -103,6 +280,17 @@
 		</tr>
 	{/if}
 
+
+
+
+	{************************************************
+	 *
+	 * Do not allow uploading other version of proposal files
+	 * Edited by Gay Figueroa
+	 * Last Update: 5/3/2011
+	 *
+
+
 	{if $reviewFile}
 		<tr valign="top">
 			<td width="20%" class="label">{translate key="submission.reviewVersion"}</td>
@@ -118,6 +306,7 @@
 			</td>
 		</tr>
 	{/if}
+
 	{assign var="firstItem" value=true}
 	{foreach from=$authorFiles item=authorFile key=key}
 		<tr valign="top">
@@ -161,6 +350,8 @@
 			<td width="80%" class="nodata">{translate key="common.none"}</td>
 		</tr>
 	{/foreach}
+
+
 	<tr valign="top">
 		<td class="label">&nbsp;</td>
 		<td class="value">
@@ -168,7 +359,7 @@
 			<input type="submit" name="submit" value="{translate key="common.upload"}" class="button" />
 		</td>
 	</tr>
-
+	************************************************}
 </table>
 
 </form>

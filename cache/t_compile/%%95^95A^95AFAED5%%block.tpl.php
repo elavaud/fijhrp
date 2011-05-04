@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-01 15:52:24
+<?php /* Smarty version 2.6.26, created on 2011-05-03 21:47:51
          compiled from file:/var/www/whorrp/whorrp/plugins/blocks/notification/block.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'file:/var/www/whorrp/whorrp/plugins/blocks/notification/block.tpl', 13, false),array('function', 'url', 'file:/var/www/whorrp/whorrp/plugins/blocks/notification/block.tpl', 16, false),)), $this); ?>

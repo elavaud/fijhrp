@@ -169,7 +169,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$this->setupTemplate(true, $articleId);
 
 		Locale::requireComponents(array(LOCALE_COMPONENT_OJS_MANAGER));
-
+		
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
@@ -183,7 +183,20 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$showPeerReviewOptions = $round == $submission->getCurrentRound() && $submission->getReviewFile() != null ? true : false;
 
 		$editorDecisions = $submission->getDecisions($round);
-		$lastDecision = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1]['decision'] : null;
+		$lastDecisionArray = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
+		/********************************
+		Set proposal status, decision and recency of article file/info | Added by Gay Figueroa | Last Update: /5/3/2011
+		********************************/
+		$lastDecision = $lastDecisionArray['decision'];
+		$lastDecisionDate = $lastDecisionArray['dateDecided'];
+		$reviewAssignments =& $submission->getReviewAssignments($round);
+		$modifiedDate = $submission->getLastModified();
+		$articleMoreRecent = false;
+		if(strtotime($modifiedDate)>strtotime($lastDecisionDate)) {
+			$articleMoreRecent = true;
+		}
+		$submission->setProposalStatus($sectionEditorSubmissionDao->getProposalStatusByDecisionAndReview($lastDecision, $reviewAssignments, $articleMoreRecent));
+		
 
 		$editAssignments =& $submission->getEditAssignments();
 		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
@@ -216,7 +229,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
 		$reviewFormTitles = array();
 
-		foreach ($submission->getReviewAssignments($round) as $reviewAssignment) {
+		foreach ($reviewAssignments as $reviewAssignment) {
 			$reviewForm =& $reviewFormDao->getReviewForm($reviewAssignment->getReviewFormId());
 			if ($reviewForm) {
 				$reviewFormTitles[$reviewForm->getId()] = $reviewForm->getLocalizedTitle();
@@ -244,7 +257,15 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('showPeerReviewOptions', $showPeerReviewOptions);
 		$templateMgr->assign_by_ref('sections', $sections->toArray());
 		$templateMgr->assign('editorDecisionOptions',SectionEditorSubmission::getEditorDecisionOptions());
-		$templateMgr->assign_by_ref('lastDecision', $lastDecision);
+	
+		/*************************************************************
+		Set initial review options, exemption options, last decision info, recency flag | Added by Gay Figueroa | Last Update: 5/3/2011
+		*************************************************************/
+		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
+		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
+		$templateMgr->assign('lastDecision', $lastDecision);
+		$templateMgr->assign('lastDecisionDate', $lastDecisionDate);
+		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
@@ -393,7 +414,53 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
+			case SUBMISSION_EDITOR_DECISION_COMPLETE:
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
 				SectionEditorAction::recordDecision($submission, $decision);
+				break;
+		}
+
+		Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+
+	/*************************************************************
+	 *
+	 * Exemption and initial review methods (from editorDecision.tpl)
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	 *
+	 *************************************************************/
+
+	function recordExemption() {
+		$articleId = Request::getUserVar('articleId');
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$submission =& $this->submission;
+
+		$exemption = Request::getUserVar('exemption');
+
+		switch ($exemption) {
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
+				SectionEditorAction::recordExemption($submission, $exemption);
+				break;
+		}
+
+		Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+
+	function recordInitialReview() {
+		$articleId = Request::getUserVar('articleId');
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$submission =& $this->submission;
+
+		$initialReview = Request::getUserVar('initialReview');
+
+		switch ($initialReview) {
+			case SUBMISSION_EDITOR_DECISION_COMPLETE:
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
+				SectionEditorAction::recordInitialReview($submission, $initialReview);
 				break;
 		}
 
