@@ -9,41 +9,41 @@
 -->
 
 <countries>
-    <country name="AMS" code="American Samoa"/>
-    <country name="AUS" code="Australia"/>
-    <country name="BLA" code="Palau"/>
-    <country name="BRU" code="Brunei Darussalam"/>
-    <country name="CAM" code="Cambodia"/>
-    <country name="CHN" code="China"/>
-    <country name="COK" code="Cook Islands"/>
-    <country name="FIJ" code="Fiji"/>
-    <country name="FRP" code="French Polynesia"/>
-    <country name="FSM" code="Micronesia, Federated States of"/>
-    <country name="GUM" code="Guam"/>
-    <country name="HOK" code="Hong Kong (China)"/>
-    <country name="JPN" code="Japan"/>
-    <country name="KIR" code="Kiribati"/>
-    <country name="KOR" code="Republic of Korea"/>
-    <country name="LAO" code="Lao People's Democratic Republic"/>
-    <country name="MAA" code="Malaysia"/>
-    <country name="MAC" code="Macao (China)"/>
-    <country name="MOG" code="Mongolia"/>
-    <country name="MSI" code="Marshall Islands"/>
-    <country name="NAU" code="Nauru"/>
-    <country name="NEC" code="New Caledonia"/>
-    <country name="NEZ" code="New Zealand"/>
-    <country name="NIU" code="Niue"/>
-    <country name="NMI" code="Northern Mariana Islands"/>
-    <country name="PCN" code="Pitcairn Islands"/>
-    <country name="PHL" code="Philippines"/>
-    <country name="PNG" code="Papua New Guinea"/>
-    <country name="SIN" code="Singapore"/>
-    <country name="SMA" code="Samoa"/>
-    <country name="SOL" code="Solomon Islands"/>
-    <country name="TOK" code="Tokelau"/>
-    <country name="TON" code="Tonga"/>
-    <country name="TUV" code="Tuvalu"/>
-    <country name="VAN" code="Vanuatu"/>
-    <country name="VTN" code="Viet Nam"/>
-    <country name="WAF" code="Wallis and Futuna"/>
+    <country code="AMS" name="American Samoa"/>
+    <country code="AUS" name="Australia"/>
+    <country code="BLA" name="Palau"/>
+    <country code="BRU" name="Brunei Darussalam"/>
+    <country code="CAM" name="Cambodia"/>
+    <country code="CHN" name="China"/>
+    <country code="COK" name="Cook Islands"/>
+    <country code="FIJ" name="Fiji"/>
+    <country code="FRP" name="French Polynesia"/>
+    <country code="FSM" name="Micronesia, Federated States of"/>
+    <country code="GUM" name="Guam"/>
+    <country code="HOK" name="Hong Kong (China)"/>
+    <country code="JPN" name="Japan"/>
+    <country code="KIR" name="Kiribati"/>
+    <country code="KOR" name="Republic of Korea"/>
+    <country code="LAO" name="Lao People's Democratic Republic"/>
+    <country code="MAA" name="Malaysia"/>
+    <country code="MAC" name="Macao (China)"/>
+    <country code="MOG" name="Mongolia"/>
+    <country code="MSI" name="Marshall Islands"/>
+    <country code="NAU" name="Nauru"/>
+    <country code="NEC" name="New Caledonia"/>
+    <country code="NEZ" name="New Zealand"/>
+    <country code="NIU" name="Niue"/>
+    <country code="NMI" name="Northern Mariana Islands"/>
+    <country code="PCN" name="Pitcairn Islands"/>
+    <country code="PHL" name="Philippines"/>
+    <country code="PNG" name="Papua New Guinea"/>
+    <country code="SIN" name="Singapore"/>
+    <country code="SMA" name="Samoa"/>
+    <country code="SOL" name="Solomon Islands"/>
+    <country code="TOK" name="Tokelau"/>
+    <country code="TON" name="Tonga"/>
+    <country code="TUV" name="Tuvalu"/>
+    <country code="VAN" name="Vanuatu"/>
+    <country code="VTN" name="Viet Nam"/>
+    <country code="WAF" name="Wallis and Futuna"/>
 </countries>

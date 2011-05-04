@@ -69,6 +69,8 @@
   'author.submit.form.startDateRequired' => 'Please enter the start date of your research proposal.',
   'author.submit.form.endDateRequired' => 'Please enter the end date of your research proposal.',
   'author.submit.form.fundsRequiredRequired' => 'Please enter the funds required for your research.',
+  'author.submit.form.proposalCountryRequired' => 'Please enter the country of submission for this proposal.',
+  'author.submit.form.technicalUnitRequired' => 'Please enter the WHO technical unit for this proposal.',
   'author.submit.form.proposalTypeRequired' => 'Please enter the research proposal type.',
   'author.submit.form.submittedAsPiRequired' => 'Please select Yes or No (Submitting as Primary Investigator?).',
   'author.submit.form.conflictOfInterestRequired' => 'Please select Yes or No (Conflict Of Interest?).',

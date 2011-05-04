@@ -409,7 +409,7 @@ class DAO {
 		$idFields[] = 'locale';
 		$idFields[] = 'setting_name';
 
-		// Build a data structure that we can process efficiently.
+                // Build a data structure that we can process efficiently.
 		$translated = $metadata = 1;
 		$settings = !$metadata;
 		$settingFields = array(

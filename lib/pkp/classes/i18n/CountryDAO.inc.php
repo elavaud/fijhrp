@@ -36,9 +36,9 @@ class CountryDAO extends DAO {
 
 	function &_getCountryCache($locale = null) {
 		$caches =& Registry::get('allCountries', true, array());
-
+                
 		if (!isset($locale)) $locale = Locale::getLocale();
-
+                
 		if (!isset($caches[$locale])) {
 			$cacheManager =& CacheManager::getManager();
 			$caches[$locale] = $cacheManager->getFileCache(
@@ -52,24 +52,25 @@ class CountryDAO extends DAO {
 				$caches[$locale]->flush();
 			}
 		}
+                
 		return $caches[$locale];
 	}
 
 	function _countryCacheMiss(&$cache, $id) {
 		$countries =& Registry::get('allCountriesData', true, array());
-
+                
 		if (!isset($countries[$id])) {
 			// Reload country registry file
 			$xmlDao = new XMLDAO();
 			$data = $xmlDao->parseStruct($this->getFilename(), array('countries', 'country'));
 
-			if (isset($data['countries'])) {
+                        if (isset($data['countries'])) {
 				foreach ($data['country'] as $countryData) {
 					$countries[$id][$countryData['attributes']['code']] = $countryData['attributes']['name'];
 				}
 			}
 			asort($countries[$id]);
-			$cache->setEntireCache($countries[$id]);
+                        $cache->setEntireCache($countries[$id]);
 		}
 		return null;
 	}
@@ -81,7 +82,7 @@ class CountryDAO extends DAO {
 	 */
 	function &getCountries($locale = null) {
 		$cache =& $this->_getCountryCache($locale);
-		return $cache->getContents();
+                return $cache->getContents();
 	}
 
 	/**

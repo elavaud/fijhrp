@@ -38,15 +38,17 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 		}
 
                 /************************************************************************************************************/
-                /*  Validation code for additional proposal metadata
+                /*  Validation code for additional proposal metadata (keys found in author.xml)
                  *  Added by:  Anne Ivy Mirasol
-                 *  Last Update: April 25, 2011
+                 *  Last Update: May 3, 2011
                  ************************************************************************************************************/
                 $this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
@@ -77,16 +79,18 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 				'sponsor' => $article->getSponsor(null), // Localized
 				'section' => $sectionDao->getSection($article->getSectionId()),
 				'citations' => $article->getCitations(),
-                                /*
+                                /***********************************************************
                                  *  Init code for additional proposal metadata
                                  *  Added by: Anne Ivy Mirasol
-                                 *  Last Edited: April 25, 2011
-                                 */
+                                 *  Last Edited: May 3, 2011
+                                 ***********************************************************/
                                  'objectives' => $article->getObjectives(null),
                                  'keywords' => $article->getKeywords(null),
                                  'startDate' => $article->getStartDate(null),
                                  'endDate' => $article->getEndDate(null),
                                  'fundsRequired' => $article->getFundsRequired(null),
+                                 'proposalCountry' => $article->getProposalCountry(null),
+                                 'technicalUnit' => $article->getTechnicalUnit(null),
                                  'proposalType' => $article->getProposalType(null),
                                  'submittedAsPi' => $article->getSubmittedAsPi(null),
                                  'conflictOfInterest' => $article->getConflictOfInterest(null),
@@ -140,16 +144,18 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 				'language',
 				'sponsor',
 				'citations',
-                                /*
+                                /*********************************************************
                                  *  Read input code for additional proposal metadata
                                  *  Added by: Anne Ivy Mirasol
-                                 *  Last Edited: April 25, 2011
-                                 */
+                                 *  Last Edited: May 3, 2011
+                                 *********************************************************/
                                  'objectives',
                                  'keywords',
                                  'startDate',
                                  'endDate',
                                  'fundsRequired',
+                                 'proposalCountry',
+                                 'technicalUnit',
                                  'proposalType',
                                  'submittedAsPi',
                                  'conflictOfInterest',
@@ -174,8 +180,12 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
+                /*******************************************************************
+                 * Edited by Anne Ivy Mirasol -- Addition of fields
+                 * Last Updated: May 3, 2011
+                 *******************************************************************/
 		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -186,8 +196,8 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 
 		$countryDao =& DAORegistry::getDAO('CountryDAO');
 		$countries =& $countryDao->getCountries();
-		$templateMgr->assign_by_ref('countries', $countries);
-
+                $templateMgr->assign_by_ref('countries', $countries);
+                
 		if (Request::getUserVar('addAuthor') || Request::getUserVar('delAuthor')  || Request::getUserVar('moveAuthor')) {
 			$templateMgr->assign('scrollToAuthor', true);
 		}
@@ -200,8 +210,29 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $articleDao =& DAORegistry::getDAO('ArticleDAO');
                 $proposalTypes = $articleDao->getProposalTypes();
                 $templateMgr->assign_by_ref('proposalTypes', &$proposalTypes);
-                
-		parent::display();
+
+                /*********************************************************************
+                 *  Get list of Asia Pacific countries from the XML file
+                 *  Added by:  Anne Ivy Mirasol
+                 *  Last Updated: May 3, 2011
+                 *********************************************************************/
+
+                $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+                $proposalCountries =& $countryDAO->getAsiaPacificCountries();
+                $templateMgr->assign_by_ref('proposalCountries', $proposalCountries);
+
+
+                /*********************************************************************
+                 *  Get list of WHO technical units from the XML file
+                 *  Added by:  Anne Ivy Mirasol
+                 *  Last Updated: May 3, 2011
+                 *********************************************************************/
+
+                $technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+                $technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+                $templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+
+                parent::display();
 	}
 
 	/**
@@ -236,20 +267,25 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 		}
 
                 /***********************************************************
-                 *  Added by: Anne Ivy Mirasol
-                 *  Last Edited: April 25, 2011
-                 */
+                 *  Edited by: Anne Ivy Mirasol
+                 *  Last Updated: April 25, 2011
+                 ***********************************************************/
                  
                 $article->setObjectives($this->getData('objectives'), null); // Localized
                 $article->setKeywords($this->getData('keywords'), null); // Localized
                 $article->setStartDate($this->getData('startDate'), null); // Localized
                 $article->setEndDate($this->getData('endDate'), null); // Localized
                 $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
+                $article->setProposalCountry($this->getData('proposalCountry'), null); // Localized
+                $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
                 $article->setProposalType($this->getData('proposalType'), null); // Localized
                 $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
                 $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
                 $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
                 $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
+                 
+                /***************** END OF EDIT *****************************/
+
                 //
                 // Update authors
 		$authors = $this->getData('authors');
