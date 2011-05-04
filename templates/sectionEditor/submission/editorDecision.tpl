@@ -132,8 +132,8 @@
 				</form>
 			</td>
 		{else}
-			<td class="label" width="20%">Submission Status</td>
-			<td width="80%" class="value">Waiting for resubmission of proposal</td>
+			<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
+			<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
 		{/if}
 
 {*******************************************************
@@ -143,19 +143,23 @@
  * Last Update: 5/3/2011
  *
  *******************************************************}
-	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT && $articleMoreRecent}	
-		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
-		<td width="80%" class="value">
-			<form method="post" action="{url op="recordDecision"}">
-				<input type="hidden" name="articleId" value="{$submission->getId()}" />
-				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
-				<select name="decision" size="1" class="selectMenu">
-					{html_options_translate options=$editorDecisionOptions selected=1}
-				</select>
-				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
-			</form>
-		</td>
-		
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT}	
+		{if $articleMoreRecent}
+			<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
+			<td width="80%" class="value">
+				<form method="post" action="{url op="recordDecision"}">
+					<input type="hidden" name="articleId" value="{$submission->getId()}" />
+					<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
+					<select name="decision" size="1" class="selectMenu">
+						{html_options_translate options=$editorDecisionOptions selected=1}
+					</select>
+					<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
+				</form>
+			</td>
+		{else}
+			<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
+			<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
+		{/if}		
 	{/if}
 </tr>
 {*******************************************************
@@ -170,7 +174,7 @@
 	<tr valign="top">
 		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
-		<td width="80%" class="value">{translate key="editor.article.proposalResubmitted"}&nbsp&nbsp&nbsp{$articleLastModified|date_format:$dateFormatShort}
+		<td width="80%" class="value">{translate key="editor.article.proposalResubmitted"}  {$articleLastModified|date_format:$dateFormatShort}
 </td>
 	</tr>
 {/if}
