@@ -1,13 +1,13 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-04 23:16:59
+<?php /* Smarty version 2.6.26, created on 2011-05-08 15:45:18
          compiled from sectionEditor/submission/editorDecision.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 42, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 62, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 66, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 230, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 68, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 173, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 225, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 42, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 62, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 66, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 234, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 68, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 177, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 229, false),)), $this); ?>
 	
 <?php $this->assign('proposalStatusKey', $this->_tpl_vars['submission']->getProposalStatusKey()); ?>
 <?php $this->assign('proposalStatus', $this->_tpl_vars['submission']->getProposalStatus()); ?>
 
 
-<?php if ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_ASSIGNED): ?>
+<?php if ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_ASSIGNED || ( $this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_REVIEWED && $this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT )): ?>
 	
 	<div id="peerReview">
 		<?php $_smarty_tpl_vars = $this->_tpl_vars;
@@ -41,7 +41,7 @@ unset($_smarty_tpl_vars);
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
-				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionArray']['editDecisionId']; ?>
 " />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['initialReviewOptions'],'selected' => 1), $this);?>
@@ -62,7 +62,7 @@ unset($_smarty_tpl_vars);
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
-				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionArray']['editDecisionId']; ?>
 " />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['exemptionOptions'],'selected' => 1), $this);?>
@@ -83,7 +83,7 @@ unset($_smarty_tpl_vars);
 ">
 				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
-				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionArray']['editDecisionId']; ?>
 " />
 				<select name="decision" size="1" class="selectMenu">
 					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['editorDecisionOptions'],'selected' => 1), $this);?>
@@ -104,7 +104,7 @@ unset($_smarty_tpl_vars);
 ">
 					<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
-					<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+					<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionArray']['editDecisionId']; ?>
 " />
 					<select name="decision" size="1" class="selectMenu">
 						<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['initialReviewOptions'],'selected' => 1), $this);?>
@@ -116,39 +116,47 @@ unset($_smarty_tpl_vars);
 				</form>
 			</td>
 		<?php else: ?>
-			<td class="label" width="20%">Submission Status</td>
-			<td width="80%" class="value">Waiting for resubmission of proposal</td>
+			<td class="label" width="20%"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.submissionStatus"), $this);?>
+</td>
+			<td width="80%" class="value"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.waitingForResubmission"), $this);?>
+</td>
 		<?php endif; ?>
 
-	<?php elseif ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_REVIEWED && $this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && $this->_tpl_vars['articleMoreRecent']): ?>	
-		<td class="label" width="20%"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.selectDecision"), $this);?>
+	<?php elseif ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_REVIEWED && ( $this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT || $this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS )): ?>	
+		<?php if ($this->_tpl_vars['articleMoreRecent']): ?>
+			<td class="label" width="20%"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.selectDecision"), $this);?>
 </td>
-		<td width="80%" class="value">
-			<form method="post" action="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'recordDecision'), $this);?>
+			<td width="80%" class="value">
+				<form method="post" action="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'recordDecision'), $this);?>
 ">
-				<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
+					<input type="hidden" name="articleId" value="<?php echo $this->_tpl_vars['submission']->getId(); ?>
 " />
-				<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionId']; ?>
+					<input type="hidden" name="lastDecisionId" value="<?php echo $this->_tpl_vars['lastDecisionArray']['editDecisionId']; ?>
 " />
-				<select name="decision" size="1" class="selectMenu">
-					<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['editorDecisionOptions'],'selected' => 1), $this);?>
+					<select name="decision" size="1" class="selectMenu">
+						<?php echo $this->_plugins['function']['html_options_translate'][0][0]->smartyHtmlOptionsTranslate(array('options' => $this->_tpl_vars['editorDecisionOptions'],'selected' => 1), $this);?>
 
-				</select>
-				<input type="submit" onclick="return confirm('<?php echo ((is_array($_tmp=$this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.submissionReview.confirmDecision"), $this))) ? $this->_run_mod_handler('escape', true, $_tmp, 'jsparam') : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp, 'jsparam'));?>
+					</select>
+					<input type="submit" onclick="return confirm('<?php echo ((is_array($_tmp=$this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.submissionReview.confirmDecision"), $this))) ? $this->_run_mod_handler('escape', true, $_tmp, 'jsparam') : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp, 'jsparam'));?>
 ')" name="submit" value="<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.recordDecision"), $this);?>
 "  class="button" />
-			</form>
-		</td>
-		
+				</form>
+			</td>
+		<?php else: ?>
+			<td class="label" width="20%"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.submissionStatus"), $this);?>
+</td>
+			<td width="80%" class="value"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.waitingForResubmission"), $this);?>
+</td>
+		<?php endif; ?>		
 	<?php endif; ?>
 </tr>
 
-<?php if ($this->_tpl_vars['articleMoreRecent'] && ( ( $this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_RETURNED ) || ( $this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_REVIEWED && $this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT ) )): ?>
+<?php if ($this->_tpl_vars['articleMoreRecent'] && ( ( $this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_RETURNED ) || ( $this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_REVIEWED && ( $this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT || $this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS ) ) )): ?>
 	<tr valign="top">
 		<td class="label"></td>
 		<?php $this->assign('articleLastModified', $this->_tpl_vars['submission']->getLastModified()); ?>
 		<td width="80%" class="value"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.proposalResubmitted"), $this);?>
-&nbsp&nbsp&nbsp<?php echo ((is_array($_tmp=$this->_tpl_vars['articleLastModified'])) ? $this->_run_mod_handler('date_format', true, $_tmp, $this->_tpl_vars['dateFormatShort']) : smarty_modifier_date_format($_tmp, $this->_tpl_vars['dateFormatShort'])); ?>
+  <?php echo ((is_array($_tmp=$this->_tpl_vars['articleLastModified'])) ? $this->_run_mod_handler('date_format', true, $_tmp, $this->_tpl_vars['dateFormatShort']) : smarty_modifier_date_format($_tmp, $this->_tpl_vars['dateFormatShort'])); ?>
 
 </td>
 	</tr>
@@ -159,21 +167,21 @@ unset($_smarty_tpl_vars);
 </td>
 	<td class="value">
 		<?php if ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_REVIEWED): ?>
-			<?php $this->assign('decision', $this->_tpl_vars['lastDecision']); ?>
-			<?php if ($this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_ACCEPT): ?>
+			<?php $this->assign('decision', $this->_tpl_vars['lastDecisionArray']['decision']); ?>
+			<?php if ($this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT): ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.decision.accept"), $this);?>
 
-			<?php elseif ($this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS): ?>
+			<?php elseif ($this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS): ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.decision.pendingRevisions"), $this);?>
 
-			<?php elseif ($this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT): ?>
+			<?php elseif ($this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT): ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.decision.resubmit"), $this);?>
 
-			<?php elseif ($this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_DECLINE): ?>
+			<?php elseif ($this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_DECLINE): ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.decision.decline"), $this);?>
 
 			<?php endif; ?>
-			<?php echo ((is_array($_tmp=$this->_tpl_vars['lastDecisionDate'])) ? $this->_run_mod_handler('date_format', true, $_tmp, $this->_tpl_vars['dateFormatShort']) : smarty_modifier_date_format($_tmp, $this->_tpl_vars['dateFormatShort'])); ?>
+			<?php echo ((is_array($_tmp=$this->_tpl_vars['lastDecisionArray']['dateDecided'])) ? $this->_run_mod_handler('date_format', true, $_tmp, $this->_tpl_vars['dateFormatShort']) : smarty_modifier_date_format($_tmp, $this->_tpl_vars['dateFormatShort'])); ?>
 
 			<?php else: ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.none"), $this);?>
@@ -243,36 +251,6 @@ unset($_smarty_tpl_vars);
 <?php if ($this->_tpl_vars['reviewFile']): ?>
 	<?php $this->assign('reviewVersionExists', 1); ?>
 <?php endif; ?>
-
-<table id="table2" class="data" width="100%">
-	<?php if ($this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT): ?>
-		<tr>
-			<td width="20%">&nbsp;</td>
-			<td width="80%">
-				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.resubmitFileForPeerReview"), $this);?>
-
-				<input type="submit" name="resubmit" <?php if (! ( $this->_tpl_vars['editorRevisionExists'] || $this->_tpl_vars['authorRevisionExists'] || $this->_tpl_vars['reviewVersionExists'] )): ?>disabled="disabled" <?php endif; ?>value="<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "form.resubmit"), $this);?>
-" class="button" />
-			</td>
-		</tr>
-	<?php elseif ($this->_tpl_vars['lastDecision'] == SUBMISSION_EDITOR_DECISION_ACCEPT): ?>
-		<tr valign="top">
-			<td width="20%">&nbsp;</td>
-			<td width="80%">
-				<?php if (! ( $this->_tpl_vars['editorRevisionExists'] || $this->_tpl_vars['authorRevisionExists'] || $this->_tpl_vars['reviewVersionExists'] ) || ! $this->_tpl_vars['submission']->getMostRecentEditorDecisionComment()): ?><?php $this->assign('copyeditingUnavailable', 1); ?><?php else: ?><?php $this->assign('copyeditingUnavailable', 0); ?><?php endif; ?>
-				<input type="submit" <?php if ($this->_tpl_vars['copyeditingUnavailable']): ?>disabled="disabled" <?php endif; ?>name="setCopyeditFile" value="<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.submissionReview.sendToCopyediting"), $this);?>
-" class="button" />
-				<?php if ($this->_tpl_vars['copyeditingUnavailable']): ?>
-					<br/>
-					<span class="instruct"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.submissionReview.cannotSendToCopyediting"), $this);?>
-</span>
-				<?php endif; ?>
-			</td>
-		</tr>
-	<?php endif; ?>
-
-
-
 
 	</table>
 

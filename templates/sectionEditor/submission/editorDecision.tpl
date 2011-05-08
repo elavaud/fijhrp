@@ -23,10 +23,10 @@
 <div class="separator"></div>
 *}
 
-{ if $proposalStatus == PROPOSAL_STATUS_ASSIGNED}
+{ if $proposalStatus == PROPOSAL_STATUS_ASSIGNED || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)}
 	{*******************************************************
 	 *
-	 * Assign reviewers if not exempted
+	 * Assign reviewers if not exempted, or if reviewed and decision was Resubmit for review
 	 * Added by Gay Figueroa
 	 * Last Update: 5/3/2011
 	 *
@@ -61,7 +61,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
-				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$initialReviewOptions selected=1}
 				</select>
@@ -82,7 +82,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
-				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$exemptionOptions selected=1}
 				</select>
@@ -103,7 +103,7 @@
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
-				<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$editorDecisionOptions selected=1}
 				</select>
@@ -124,7 +124,7 @@
 			<td width="80%" class="value">
 				<form method="post" action="{url op="recordDecision"}">
 					<input type="hidden" name="articleId" value="{$submission->getId()}" />
-					<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
+					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
 					<select name="decision" size="1" class="selectMenu">
 						{html_options_translate options=$initialReviewOptions selected=1}
 					</select>
@@ -143,13 +143,13 @@
  * Last Update: 5/3/2011
  *
  *******************************************************}
-	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT}	
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && ($lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS)}	
 		{if $articleMoreRecent}
 			<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 			<td width="80%" class="value">
 				<form method="post" action="{url op="recordDecision"}">
 					<input type="hidden" name="articleId" value="{$submission->getId()}" />
-					<input type="hidden" name="lastDecisionId" value="{$lastDecisionId}" />
+					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
 					<select name="decision" size="1" class="selectMenu">
 						{html_options_translate options=$editorDecisionOptions selected=1}
 					</select>
@@ -170,7 +170,7 @@
  *
  *******************************************************}
 
-{if $articleMoreRecent && (($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT)) }
+{if $articleMoreRecent && (($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && ($lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS))) }
 	<tr valign="top">
 		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
@@ -190,17 +190,17 @@
 	<td class="label">{translate key="editor.article.decision"}</td>
 	<td class="value">
 		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED}
-			{assign var="decision" value=$lastDecision}
-			{if $lastDecision == SUBMISSION_EDITOR_DECISION_ACCEPT}
+			{assign var="decision" value=$lastDecisionArray.decision}
+			{if $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_ACCEPT}
 				{translate key="editor.article.decision.accept"}
-			{elseif $lastDecision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS}
+			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS}
 				{translate key="editor.article.decision.pendingRevisions"}
-			{elseif $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
+			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
 				{translate key="editor.article.decision.resubmit"}
-			{elseif $lastDecision == SUBMISSION_EDITOR_DECISION_DECLINE}
+			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_DECLINE}
 				{translate key="editor.article.decision.decline"}
 			{/if}
-			{$lastDecisionDate|date_format:$dateFormatShort}
+			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 		{/if}
@@ -265,7 +265,7 @@
 {if $reviewFile}
 	{assign var="reviewVersionExists" value=1}
 {/if}
-
+{**
 <table id="table2" class="data" width="100%">
 	{if $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
 		<tr>
@@ -289,8 +289,7 @@
 		</tr>
 	{/if}
 
-
-
+*}
 
 	{************************************************
 	 *

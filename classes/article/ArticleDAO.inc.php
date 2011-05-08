@@ -638,6 +638,80 @@ class ArticleDAO extends DAO {
 
 		return $returner;
 	}
+
+	/**********************************************************************
+	 *
+	 * Get proposal status based on last decision on article
+	 * Added by Gay Figueroa
+	 * Last Update: 5/8/2011
+	 *
+	 ***********************************************************************/
+
+	function getProposalStatus($articleId, $round = null) {
+		$decision = $this->getLastEditorDecision($articleId, $round);
+		switch ($decision[0]['decision']) {
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_COMPLETE:
+				$proposalStatus = PROPOSAL_STATUS_CHECKED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:			
+				$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_ACCEPT:
+			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
+			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
+			case SUBMISSION_EDITOR_DECISION_DECLINE:
+				$proposalStatus = PROPOSAL_STATUS_REVIEWED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
+				$proposalStatus = PROPOSAL_STATUS_RETURNED;
+					break;
+			default:
+				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
+				break;
+		}					
+		return $proposalStatus;
+	}
+
+	/**********************************************************************
+	 *
+	 * Get last decision on article
+	 * Added by Gay Figueroa
+	 * Last Update: 5/8/2011
+	 *
+	 ***********************************************************************/
+
+	function getLastEditorDecision($articleId, $round = null) {
+		$decisions = array();
+
+		if ($round == null) {
+			$result =& $this->retrieve(
+				'SELECT max(edit_decision_id) as edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+			);
+		} else {
+			$result =& $this->retrieve(
+				'SELECT max(edit_decision_id), editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				array($articleId, $round)
+			);
+		}
+
+		$resultArray = $result->GetArray();
+
+		foreach($resultArray as $row){
+			$decision[] = array(
+				'editDecisionId' => $row['edit_decision_id'],
+				'editorId' => $row['editor_id'],
+				'decision' => $row['decision'],
+				'dateDecided' => $this->datetimeFromDB($row['date_decided'])
+			);
+		}
+		$result->Close();
+		unset($result);
+
+		return $decision;
+	}
 }
 
 ?>

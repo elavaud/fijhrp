@@ -1204,35 +1204,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $decisions;
 	}
 
-	function getProposalStatusByDecisionAndReview($decision, $reviewAssignments, $articleMoreRecent) {
-		$reviewAssignmentsEmpty = empty($reviewAssignments)? true : false;	
-		switch ($decision) {
-			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
-				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_COMPLETE:
-					$proposalStatus = PROPOSAL_STATUS_CHECKED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_ASSIGNED:			
-					$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
-			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
-			case SUBMISSION_EDITOR_DECISION_DECLINE:
-				$proposalStatus = PROPOSAL_STATUS_REVIEWED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				//if (!$articleMoreRecent) {
-					$proposalStatus = PROPOSAL_STATUS_RETURNED;
-					break;
-				//}
-			default:
-				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
-				break;
-		}					
-		return $proposalStatus;
-	}
+	
 }
 
 ?>
