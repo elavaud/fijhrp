@@ -169,7 +169,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$this->setupTemplate(true, $articleId);
 
 		Locale::requireComponents(array(LOCALE_COMPONENT_OJS_MANAGER));
-		
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');		
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
@@ -191,7 +191,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Get reviewAssignments
 		 * Get date when submission was last modified and set flag if article is more recent than decision
 		 * Added by Gay Figueroa
-		 * Last Update: /5/4/2011
+		 * Last Update: /5/8/2011
 		 *
 		*******************************************************/
 		$lastDecisionArray = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
@@ -273,17 +273,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Added details of lastDecision
 		 * Added flag if article is more recent than last decision
 		 * Added by Gay Figueroa
-		 * Last Update: 5/4/2011
+		 * Last Update: 5/8/2011
 		 * 
 		*************************************************************/
 
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
-//		$templateMgr->assign('lastDecision', $lastDecision);
-//		$templateMgr->assign('lastDecisionDate', $lastDecisionDate);
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		//pass edit_decision_id of lastDecision; this will also be passed from the forms in editorDecision.tpl to SubmissionEditHandler.recordDecision
-//		$templateMgr->assign('lastDecisionId', $lastDecisionArray['editDecisionId']);
 		$templateMgr->assign('lastDecisionArray', $lastDecisionArray);
 
 

@@ -28,7 +28,7 @@
 	 *
 	 * Assign reviewers if not exempted, or if reviewed and decision was Resubmit for review
 	 * Added by Gay Figueroa
-	 * Last Update: 5/3/2011
+	 * Last Update: 5/8/2011
 	 *
 	 *******************************************************}
 
@@ -52,7 +52,7 @@
  *
  * Review for completeness
  * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Last Update: 5/8/2011
  *
  *******************************************************}
 <tr valign="top">
@@ -73,7 +73,7 @@
  *
  * Review for exemption
  * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Last Update: 5/8/2011
  *
  *******************************************************}
 
@@ -98,7 +98,7 @@
  *
  *******************************************************}
 
-	{ elseif $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+	{ elseif $proposalStatus == PROPOSAL_STATUS_EXEMPTED || $proposalStatus == PROPOSAL_STATUS_ASSIGNED}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
@@ -114,7 +114,7 @@
  *
  * Allow review of recently resubmitted proposal if proposal was returned
  * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Last Update: 5/8/2011
  *
  *******************************************************}
 	
@@ -140,7 +140,7 @@
  *
  * If proposal status is reviewed and last decision was RESUBMIT and article was recently updated, submit new final decision
  * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Last Update: 5/8/2011
  *
  *******************************************************}
 	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && ($lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS)}	
@@ -166,7 +166,7 @@
  *
  * Indicate if this submission is a revision or resubmission
  * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Last Update: 5/8/2011
  *
  *******************************************************}
 
@@ -182,7 +182,7 @@
  *
  * Display last decision only and date decided
  * Edited by Gay Figueroa
- * Last Update: 5/3/2011
+ * Last Update: 5/8/2011
  *
  ************************************************}
 
@@ -265,7 +265,14 @@
 {if $reviewFile}
 	{assign var="reviewVersionExists" value=1}
 {/if}
-{**
+
+{**********************************************************************
+ *
+ * Disable resubmit file for peer review
+ * Edited by Gay Figueroa
+ * Last Update: 5/8/2011
+ *
+
 <table id="table2" class="data" width="100%">
 	{if $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
 		<tr>
@@ -289,7 +296,7 @@
 		</tr>
 	{/if}
 
-*}
+*******************************************************************}
 
 	{************************************************
 	 *
