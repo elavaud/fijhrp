@@ -451,6 +451,11 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				break;
 		}
 
+		//if submitted decision is RESUBMIT, start a new round of review
+		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
+			SectionEditorAction::initiateNewReviewRound($submission);
+		}
+
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 

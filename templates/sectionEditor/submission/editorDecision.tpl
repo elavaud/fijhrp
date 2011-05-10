@@ -23,7 +23,7 @@
 <div class="separator"></div>
 *}
 
-{ if $proposalStatus == PROPOSAL_STATUS_ASSIGNED || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)}
+{ if $proposalStatus == PROPOSAL_STATUS_ASSIGNED} 
 	{*******************************************************
 	 *
 	 * Assign reviewers if not exempted, or if reviewed and decision was Resubmit for review
@@ -36,6 +36,20 @@
 		{include file="sectionEditor/submission/peerReview.tpl"}
 		<div class="separator"></div>
 	</div>
+{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT }
+	{if $articleMoreRecent}
+		{include file="sectionEditor/submission/peerReview.tpl"}
+		<div class="separator"></div>
+	{else}
+		<h3>{translate key="submission.peerReview"}</h3>
+		<table id="table11" width="100%" class="data">
+			<tr valign="top">
+				<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
+				<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
+			</tr>
+		</table>
+		<div class="separator"></div>
+	{/if}
 {/if}
 
 <div id="editorDecision">
@@ -92,13 +106,13 @@
 
 {*******************************************************
  *
- * Record final decision if exempted from review
+ * Record final decision if assigned for review
  * Added by Gay Figueroa
  * Last Update: 5/3/2011
  *
  *******************************************************}
 
-	{ elseif $proposalStatus == PROPOSAL_STATUS_EXEMPTED || $proposalStatus == PROPOSAL_STATUS_ASSIGNED}
+	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
