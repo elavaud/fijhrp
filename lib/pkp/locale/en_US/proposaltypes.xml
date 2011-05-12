@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : proposaltypes.xml
+    Created on : May 12, 2011, 6:18 PM
+    Author     : anne
+    Description:
+        {Proposal Types.
+-->
+
+<proposaltypes>
+    <proposaltype name="Clinical Trial with Human Subjects" code="CWHS" />
+    <proposaltype name="Proposal with Human Subjects" code="PWHS" />
+    <proposaltype name="Proposal without Human Subjects" code="PNHS" />
+</proposaltypes>
