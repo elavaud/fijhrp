@@ -625,6 +625,27 @@ class ArticleDAO extends DAO {
 	 * @return array proposalTypes
 	 */
 	function getProposalTypes() {
+            $locale = Locale::getLocale();
+            $filename = "lib/pkp/locale/".$locale."/proposaltypes.xml";
+            
+            $xmlDao = new XMLDAO();
+            $data = $xmlDao->parseStruct($filename, array('proposaltypes', 'proposaltype'));
+            
+            //print_r($data);
+            $proposalTypes = array();
+            if (isset($data['proposaltypes'])) {
+                $i=0;
+		foreach ($data['proposaltype'] as $proposalTypeData) {
+                        $proposalType['code'] = $proposalTypeData['attributes']['code'];
+                        $proposalType['name'] = $proposalTypeData['attributes']['name'];
+                        array_push($proposalTypes, $proposalType);
+		}
+                $i++;
+            }
+
+            
+            return $proposalTypes;
+                /*
 		$result =& $this->retrieve('SELECT * FROM proposal_types');
 		$resultArray = $result->GetArray();
 
@@ -638,6 +659,8 @@ class ArticleDAO extends DAO {
                 
 		$result->Close();
 		unset($result);
+                 *
+                 */
 
 		return $returner;
 	}

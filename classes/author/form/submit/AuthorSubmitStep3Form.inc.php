@@ -209,7 +209,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                  *********************************************************************/
                 $articleDao =& DAORegistry::getDAO('ArticleDAO');
                 $proposalTypes = $articleDao->getProposalTypes();
-                $templateMgr->assign_by_ref('proposalTypes', &$proposalTypes);
+                $templateMgr->assign('proposalTypes', $proposalTypes);
 
                 /*********************************************************************
                  *  Get list of Asia Pacific countries from the XML file

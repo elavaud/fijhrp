@@ -291,8 +291,8 @@ $(document).ready(function() {
 	<td width="80%" class="value">
             <select name="proposalType[{$formLocale|escape}]" id="proposalType" class="selectMenu">
                 <option value=""></option>
-                {foreach from=$proposalTypes key=myId item=ptype}
-                <option value="{$ptype.id}" {if  $proposalType[$formLocale] == $ptype.id } selected="selected"{/if} >{$ptype.type}</option>
+                {foreach from=$proposalTypes key=id item=ptype}
+                <option value="{$ptype.code}" {if  $proposalType[$formLocale] == $ptype.code } selected="selected"{/if} >{$ptype.name}</option>
                 {/foreach}
             </select>
         </td>
