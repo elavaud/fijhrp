@@ -106,13 +106,13 @@
 
 {*******************************************************
  *
- * Record final decision if assigned for review
+ * Record final decision when review is done or if exempted
  * Added by Gay Figueroa
  * Last Update: 5/3/2011
  *
  *******************************************************}
 
-	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED}
+	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
