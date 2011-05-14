@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-10 22:33:51
+<?php /* Smarty version 2.6.26, created on 2011-05-12 13:38:19
          compiled from sectionEditor/submission/editorDecision.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 44, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 76, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 80, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 248, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 82, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 191, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 243, false),)), $this); ?>
@@ -96,7 +96,7 @@ unset($_smarty_tpl_vars);
 		</td>
 
 
-	<?php elseif ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_ASSIGNED): ?>
+	<?php elseif ($this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_ASSIGNED || $this->_tpl_vars['proposalStatus'] == PROPOSAL_STATUS_EXEMPTED): ?>
 		<td class="label" width="20%"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.selectDecision"), $this);?>
 </td>
 		<td width="80%" class="value">
