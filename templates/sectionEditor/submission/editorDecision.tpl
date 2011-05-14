@@ -37,10 +37,12 @@
 		<div class="separator"></div>
 	</div>
 {elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT }
-	{if $articleMoreRecent}
+	{**if $articleMoreRecent*}
 		{include file="sectionEditor/submission/peerReview.tpl"}
 		<div class="separator"></div>
-	{else}
+	{**else}
+		 {** TODO/FIX: if article not recent, wait for article to be resubmitted first }
+		 {** TODO/FIX: Round does not increment when review assignment is not yet done}
 		<h3>{translate key="submission.peerReview"}</h3>
 		<table id="table11" width="100%" class="data">
 			<tr valign="top">
@@ -49,7 +51,7 @@
 			</tr>
 		</table>
 		<div class="separator"></div>
-	{/if}
+	{**/if*}
 {/if}
 
 <div id="editorDecision">
