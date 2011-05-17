@@ -81,6 +81,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 				'commentsToEditor' => $this->article->getCommentsToEditor()
 			);
 		}
+
 	}
 
 	/**
@@ -123,6 +124,18 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		}
 	}
 
+        /************************************************
+         * Edited by:  Anne Ivy Mirasol -- added fields
+         * Last Updated: May 4, 2011
+         ************************************************/
+
+        function getLocaleFieldNames() {
+                return array(
+			'whoId'
+		);
+	}
+
+
 	/**
 	 * Save changes to article.
 	 */
@@ -136,14 +149,33 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		// Update article
 		$article =& $this->article;
 
-		if ($this->getData('commentsToEditor') != '') {
+                /*************************************************************************************
+                 * Edited by: Anne Ivy Mirasol
+                 * Last Updated: May 4, 2011
+                 * Set WHO proposal ID
+                 * yyyy.nn.ccc.nn.uuu
+                 *************************************************************************************/
+                
+                if($article->getDateSubmitted() == null) {
+                    $year = substr(Core::getCurrentDate(), 0, 4);
+                    
+                    $countyear = $articleDao->getSubmissionsForYearCount($year) + 1;
+
+                    $country = $article->getProposalCountry($this->getFormLocale());
+                    $countyearcountry = $articleDao->getSubmissionsForYearForCountryCount($year, $country) + 1;
+                    
+                    $unit = $article->getTechnicalUnit($this->getFormLocale());
+
+                    $article->setWhoId($year. '.' . $countyear . '.' . $country . '.' . $countyearcountry . '.' .$unit , $this->getFormLocale());
+                }
+                if ($this->getData('commentsToEditor') != '') {
 			$article->setCommentsToEditor($this->getData('commentsToEditor'));
 		}
 
 		$article->setDateSubmitted(Core::getCurrentDate());
 		$article->setSubmissionProgress(0);
 		$article->stampStatusModified();
-		$articleDao->updateArticle($article);
+                $articleDao->updateArticle($article);
 
 		// Designate this as the review version by default.
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');

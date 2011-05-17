@@ -83,6 +83,8 @@
   'proposal.endDate' => 'End Date',
   'proposal.fundsRequired' => 'Funds Required',
   'proposal.proposalType' => 'Proposal Type',
+  'proposal.proposalCountry' => 'Country',
+  'proposal.technicalUnit' => 'Technical Unit',
   'proposal.conflictOfInterest' => 'Conflict of Interest?',
   'proposal.informedConsentIncluded' => 'Informed Consent Included?',
   'proposal.dataCollectionQuestionnairesIncluded' => 'Data Collection Questionnaires Included?',

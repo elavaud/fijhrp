@@ -48,10 +48,15 @@ class ArticleDAO extends DAO {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
+                /************************************************
+                 * Edited by:  Anne Ivy Mirasol -- added fields
+                 * Last Updated: May 4, 2011
+                 ************************************************/
 		return array(
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision'
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry', 
+                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId'
 		);
 	}
 
@@ -609,12 +614,10 @@ class ArticleDAO extends DAO {
 		unset($cache);
 	}
 
-        /**************************************************************************************************************************************/
-        /*
-         *  Added by:  Anne Ivy Mirasol
+        /*******************************************************************************************/
+        /*  Added by:  Anne Ivy Mirasol
          *  Last updated: April 25, 2011
-         */
-
+         ******************************************************************************************/
 
         /**
 	 * Get all possible proposal types.
@@ -622,6 +625,27 @@ class ArticleDAO extends DAO {
 	 * @return array proposalTypes
 	 */
 	function getProposalTypes() {
+            $locale = Locale::getLocale();
+            $filename = "lib/pkp/locale/".$locale."/proposaltypes.xml";
+            
+            $xmlDao = new XMLDAO();
+            $data = $xmlDao->parseStruct($filename, array('proposaltypes', 'proposaltype'));
+            
+            //print_r($data);
+            $proposalTypes = array();
+            if (isset($data['proposaltypes'])) {
+                $i=0;
+		foreach ($data['proposaltype'] as $proposalTypeData) {
+                        $proposalType['code'] = $proposalTypeData['attributes']['code'];
+                        $proposalType['name'] = $proposalTypeData['attributes']['name'];
+                        array_push($proposalTypes, $proposalType);
+		}
+                $i++;
+            }
+
+            
+            return $proposalTypes;
+                /*
 		$result =& $this->retrieve('SELECT * FROM proposal_types');
 		$resultArray = $result->GetArray();
 
@@ -635,6 +659,8 @@ class ArticleDAO extends DAO {
                 
 		$result->Close();
 		unset($result);
+                 *
+                 */
 
 		return $returner;
 	}
@@ -712,6 +738,42 @@ class ArticleDAO extends DAO {
 
 		return $decision;
 	}
-}
+
+        /*******************************************************************************************/
+        /*  Added by:  Anne Ivy Mirasol
+         *  Last updated: May 4, 2011
+         ******************************************************************************************/
+
+     /**
+	 * Get the number of submissions for the year.
+	 * @param $year
+	 * @return integer
+	 */
+	function getSubmissionsForYearCount($year) {
+		$result =& $this->retrieve('SELECT * FROM articles where date_submitted is not null and extract(year from date_submitted) = ?', $year);
+		$count = $result->NumRows();
+                
+        return $count;
+        }
+
+
+     /**
+	 * Get the number of submissions for the country for the year.
+	 * @param $year
+	 * @return integer
+	 */
+	function getSubmissionsForYearForCountryCount($year, $country) {
+		$result =& $this->retrieve('SELECT * FROM articles
+                                   WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
+                                            article_id in (
+                                                SELECT article_id from article_settings where setting_name = ? and setting_value = ?
+                                            )',
+                                            array($year, 'proposalCountry', $country));
+		$count = $result->NumRows();
+
+                return $count;
+        }
+
+
 
 ?>

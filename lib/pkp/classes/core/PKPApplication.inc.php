@@ -296,6 +296,7 @@ class PKPApplication {
 	function getDAOMap() {
 		return array(
 			'AccessKeyDAO' => 'lib.pkp.classes.security.AccessKeyDAO',
+                        'AsiaPacificCountryDAO' => 'lib.pkp.classes.who.AsiaPacificCountryDAO', //Added by: Anne Ivy Mirasol, May 3, 2011
 			'AuthSourceDAO' => 'lib.pkp.classes.security.AuthSourceDAO',
 			'CaptchaDAO' => 'lib.pkp.classes.captcha.CaptchaDAO',
 			'ControlledVocabDAO' => 'lib.pkp.classes.controlledVocab.ControlledVocabDAO',
@@ -320,6 +321,7 @@ class PKPApplication {
 			'TimeZoneDAO' => 'lib.pkp.classes.i18n.TimeZoneDAO',
 			'TemporaryFileDAO' => 'lib.pkp.classes.file.TemporaryFileDAO',
 			'VersionDAO' => 'lib.pkp.classes.site.VersionDAO',
+                        'TechnicalUnitDAO' => 'lib.pkp.classes.who.TechnicalUnitDAO', //Added by: Anne Ivy Mirasol, May 3, 2011
 			'XMLDAO' => 'lib.pkp.classes.db.XMLDAO'
 		);
 	}

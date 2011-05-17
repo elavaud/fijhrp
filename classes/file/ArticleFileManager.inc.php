@@ -346,7 +346,9 @@ class ArticleFileManager extends FileManager {
 	 * @return string
 	 */
 	function typeToPath($type) {
-		switch ($type) {
+                /* This determines the directory path where the file will be saved.  This is also the "type" column in article_files */
+
+                switch ($type) {
 			case ARTICLE_FILE_PUBLIC: return 'public';
 			case ARTICLE_FILE_SUPP: return 'supp';
 			case ARTICLE_FILE_NOTE: return 'note';

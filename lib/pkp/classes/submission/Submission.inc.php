@@ -1094,6 +1094,62 @@ class Submission extends DataObject {
 
 
         /**
+	 * Get "localized" proposal country (if applicable).
+	 * @return string
+	 */
+	function getLocalizedProposalCountry() {
+		return $this->getLocalizedData('proposalCountry');
+	}
+
+	/**
+	 * Get proposal country.
+	 * @param $locale
+	 * @return string
+	 */
+	function getProposalCountry($locale) {
+		return $this->getData('proposalCountry', $locale);
+	}
+
+	/**
+	 * Set proposal country.
+	 * @param $proposalCountry string
+	 * @param $locale
+	 */
+	function setProposalCountry($proposalCountry, $locale) {
+		return $this->setData('proposalCountry', $proposalCountry, $locale);
+	}
+
+
+
+        /**
+	 * Get "localized" technical unit (if applicable).
+	 * @return string
+	 */
+	function getLocalizedTechnicalUnit() {
+		return $this->getLocalizedData('technicalUnit');
+	}
+
+	/**
+	 * Get technical unit.
+	 * @param $locale
+	 * @return string
+	 */
+	function getTechnicalUnit($locale) {
+		return $this->getData('technicalUnit', $locale);
+	}
+
+	/**
+	 * Set technical unit.
+	 * @param $technicalUnit string
+	 * @param $locale
+	 */
+	function setTechnicalUnit($technicalUnit, $locale) {
+		return $this->setData('technicalUnit', $technicalUnit, $locale);
+	}
+
+
+
+        /**
 	 * Get "localized" proposal type (if applicable).
 	 * @return string
 	 */
@@ -1275,6 +1331,30 @@ class Submission extends DataObject {
 		return $proposalStatusMap[$this->getProposalStatus()];
 	}
 
-}
+    /**
+	 * Get "localized" WHO ID (if applicable).
+	 * @return string
+	 */
+	function getLocalizedWhoId() {
+		return $this->getLocalizedData('whoId');
+	}
+
+	/**
+	 * Get WHO ID.
+	 * @param $locale
+	 * @return string
+	 */
+	function getWhoId($locale) {
+		return $this->getData('whoId', $locale);
+	}
+
+	/**
+	 * Set WHO ID.
+	 * @param $whoId string
+	 * @param $locale
+	 */
+	function setWhoId($whoId, $locale) {
+		return $this->setData('whoId', $whoId, $locale);
+	}
 
 ?>

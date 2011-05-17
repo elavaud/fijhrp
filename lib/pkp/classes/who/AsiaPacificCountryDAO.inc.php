@@ -1,48 +1,46 @@
 <?php
 
 /**
- * @file classes/i18n/CountryDAO.inc.php
+ * @file classes/who/AsiaPacificCountryDAO.inc.php
  *
- * Copyright (c) 2000-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @class CountryDAO
- * @package i18n
+ * @class AsiaPacificCountryDAO
+ * @package who
  *
- * @brief Provides methods for loading localized country name data.
+ * @brief Provides methods for loading localized Asia Pacific country name data.
  *
  */
 
 // $Id$
 
 
-class CountryDAO extends DAO {
+class AsiaPacificCountryDAO extends DAO {
 	var $cache;
 
 	/**
 	 * Constructor.
 	 */
-	function CountryDAO() {
+	function AsiaPacificCountryDAO() {
 	}
 
 	/**
-	 * Get the filename of the countries registry file for the given locale.
+	 * Get the filename of the Asia Pacific countries registry file for the given locale.
 	 * @param $locale string Name of locale (optional)
 	 */
 	function getFilename($locale = null) {
 		if ($locale === null) $locale = Locale::getLocale();
-		return "lib/pkp/locale/$locale/countries.xml";
+		return "lib/pkp/locale/$locale/asiapacific.xml";
 	}
 
 	function &_getCountryCache($locale = null) {
-		$caches =& Registry::get('allCountries', true, array());
+		$caches =& Registry::get('allAsiaPacificCountries', true, array());
                 
 		if (!isset($locale)) $locale = Locale::getLocale();
                 
 		if (!isset($caches[$locale])) {
 			$cacheManager =& CacheManager::getManager();
 			$caches[$locale] = $cacheManager->getFileCache(
-				'country', $locale,
+				'asiapacific', $locale,
 				array(&$this, '_countryCacheMiss')
 			);
 
@@ -52,37 +50,37 @@ class CountryDAO extends DAO {
 				$caches[$locale]->flush();
 			}
 		}
-                
 		return $caches[$locale];
 	}
 
 	function _countryCacheMiss(&$cache, $id) {
-		$countries =& Registry::get('allCountriesData', true, array());
+		$countriesAsiaPacific =& Registry::get('allAsiaPacificCountriesData', true, array());
                 
-		if (!isset($countries[$id])) {
+                
+		if (!isset($countriesAsiaPacific[$id])) {
 			// Reload country registry file
 			$xmlDao = new XMLDAO();
 			$data = $xmlDao->parseStruct($this->getFilename(), array('countries', 'country'));
 
                         if (isset($data['countries'])) {
 				foreach ($data['country'] as $countryData) {
-					$countries[$id][$countryData['attributes']['code']] = $countryData['attributes']['name'];
+					$countriesAsiaPacific[$id][$countryData['attributes']['code']] = $countryData['attributes']['name'];
 				}
 			}
-			asort($countries[$id]);
-                        $cache->setEntireCache($countries[$id]);
+			asort($countriesAsiaPacific[$id]);
+			$cache->setEntireCache($countriesAsiaPacific[$id]);
 		}
 		return null;
 	}
 
 	/**
-	 * Return a list of all countries.
+	 * Return a list of all Asia Pacific countries.
 	 * @param $locale string Name of locale (optional)
 	 * @return array
 	 */
-	function &getCountries($locale = null) {
+	function &getAsiaPacificCountries($locale = null) {
 		$cache =& $this->_getCountryCache($locale);
-                return $cache->getContents();
+		return $cache->getContents();
 	}
 
 	/**
@@ -90,7 +88,7 @@ class CountryDAO extends DAO {
 	 * @param $locale string Name of locale (optional)
 	 * @return array
 	 */
-	function getCountry($code, $locale = null) {
+	function getAsiaPacificCountry($code, $locale = null) {
 		$cache =& $this->_getCountryCache($locale);
 		return $cache->get($code);
 	}

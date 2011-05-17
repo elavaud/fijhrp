@@ -33,8 +33,13 @@ function moveAuthor(dir, authorIndex) {
 // -->
 
 $(document).ready(function() {
-    if($('input[name^="reviewedByOtherErc"]:checked').val() == "No")
+    if($('input[name^="reviewedByOtherErc"]:checked').val() == "No" || $('input[name^="reviewedByOtherErc"]:checked').val() == null) {
+        //$('#otherErcDecision option:selected').removeAttr('selected');
+        //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+
         $('#otherErcDecisionField').hide();
+        $('#otherErcDecision').val("NA");
+    }
         
     $('input[name^="reviewedByOtherErc"]').change(function(){
         var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
@@ -44,6 +49,9 @@ $(document).ready(function() {
         } else {
             $('#otherErcDecisionField').hide();
             $('#otherErcDecision').val("NA");
+                
+            //$('#otherErcDecision option:selected').removeAttr('selected');
+            //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
             
         }
     });
@@ -222,6 +230,7 @@ $(document).ready(function() {
 
 <table width="100%" class="data">
 
+
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="title" required="true" key="proposal.title"}</td>
 	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="60" maxlength="255" /></td>
@@ -258,12 +267,32 @@ $(document).ready(function() {
 </tr>
 
 <tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
+	<td width="80%" class="value">
+            <select name="proposalCountry[{$formLocale|escape}]" id="proposalCountry" class="selectMenu">
+                <option value=""></option>
+		{html_options options=$proposalCountries selected=$proposalCountry[$formLocale]}
+            </select>
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="technicalUnit" required="true" key="proposal.technicalUnit"}</td>
+	<td width="80%" class="value">
+            <select name="technicalUnit[{$formLocale|escape}]" id="technicalUnit" class="selectMenu">
+                <option value=""></option>
+		{html_options options=$technicalUnits selected=$technicalUnit[$formLocale]}
+            </select>
+        </td>
+</tr>
+
+<tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="proposalType" required="true" key="proposal.proposalType"}</td>
 	<td width="80%" class="value">
-            <select name="proposalType[{$formLocale|escape}]" id="proposalType" value="{$proposalType[$formLocale]|escape}">
-                <option value="">Select One:</option>
-                {foreach from=$proposalTypes key=myId item=ptype}
-                <option value="{$ptype.id}" {if  $proposalType[$formLocale] == $ptype.id } selected="selected"{/if} >{$ptype.type}</option>
+            <select name="proposalType[{$formLocale|escape}]" id="proposalType" class="selectMenu">
+                <option value=""></option>
+                {foreach from=$proposalTypes key=id item=ptype}
+                <option value="{$ptype.code}" {if  $proposalType[$formLocale] == $ptype.code } selected="selected"{/if} >{$ptype.name}</option>
                 {/foreach}
             </select>
         </td>
@@ -299,8 +328,8 @@ $(document).ready(function() {
 <tr valign="top" id="otherErcDecisionField">
 	<td width="20%" class="label">{fieldLabel name="otherErcDecision" required="false" key="proposal.otherErcDecision"}</td>
 	<td width="80%" class="value">
-            <select name="otherErcDecision[{$formLocale|escape}]" id="otherErcDecision" value="{$otherErcDecision[$formLocale]|escape}">
-                <option value="NA">Select One:</option>
+            <select name="otherErcDecision[{$formLocale|escape}]" id="otherErcDecision" class="selectMenu">
+                <option value="NA"></option>
                 <option value="Submitted" {if  $otherErcDecision[$formLocale] == "Submitted" } selected="selected"{/if} >Submitted</option>
                 <option value="Reviewed" {if  $otherErcDecision[$formLocale] == "Reviewed" } selected="selected"{/if} >Reviewed</option>
             </select>
