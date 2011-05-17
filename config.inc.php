@@ -102,8 +102,10 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-username = pkpuser
-password = password
+;username = pkpuser
+;password = password
+username = ojs
+password = ojs
 name = ojs
 
 ; Enable persistent connections
