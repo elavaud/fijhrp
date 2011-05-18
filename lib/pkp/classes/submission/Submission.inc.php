@@ -1357,4 +1357,5 @@ class Submission extends DataObject {
 		return $this->setData('whoId', $whoId, $locale);
 	}
 
+}
 ?>
