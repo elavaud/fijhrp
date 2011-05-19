@@ -669,13 +669,13 @@ class ArticleDAO extends DAO {
 	 *
 	 * Get proposal status based on last decision on article
 	 * Added by Gay Figueroa
-	 * Last Update: 5/8/2011
+	 * Last Update: 5/18/2011
 	 *
 	 ***********************************************************************/
 
 	function getProposalStatus($articleId, $round = null) {
 		$decision = $this->getLastEditorDecision($articleId, $round);
-		switch ($decision[0]['decision']) {
+		switch ($decision['decision']) {
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
 				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
 				break;
@@ -705,7 +705,7 @@ class ArticleDAO extends DAO {
 	 *
 	 * Get last decision on article
 	 * Added by Gay Figueroa
-	 * Last Update: 5/8/2011
+	 * Last Update: 5/18/2011
 	 *
 	 ***********************************************************************/
 
@@ -724,19 +724,12 @@ class ArticleDAO extends DAO {
 		}
 
 		$resultArray = $result->GetArray();
+		$last = count($resultArray) - 1;
 
-		foreach($resultArray as $row){
-			$decision[] = array(
-				'editDecisionId' => $row['edit_decision_id'],
-				'editorId' => $row['editor_id'],
-				'decision' => $row['decision'],
-				'dateDecided' => $this->datetimeFromDB($row['date_decided'])
-			);
-		}
 		$result->Close();
 		unset($result);
 
-		return $decision;
+		return 	$resultArray[$last];
 	}
 
         /*******************************************************************************************/
