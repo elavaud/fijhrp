@@ -29,7 +29,7 @@
 installed = On
 
 ; The canonical URL to the OJS installation (excluding the trailing slash)
-base_url = "http://localhost/whorrp/whorrp"
+base_url = "http://localhost/whorrp2"
 
 ; Path to the registry directory (containing various settings files)
 ; Although the files in this directory generally do not contain any
@@ -102,11 +102,11 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-;username = pkpuser
-;password = password
-username = ojs
-password = ojs
-name = ojs
+username = pkpuser
+password = password
+;username = ojs
+;password = ojs
+name = ojs5
 
 ; Enable persistent connections
 persistent = Off
@@ -191,7 +191,7 @@ charset_normalization = Off
 ; files_dir = /home/anne/ojsfiles
 
 ; Susan's local folder (Macbook Pro)
-files_dir = "/Applications/MAMP/htdocs/ojs-2.3.4/files"
+files_dir = /Users/spf/ojsfiles
 
 ; Path to the directory to store public uploaded files
 ; (This directory should be web-accessible and the specified path
@@ -231,7 +231,7 @@ session_check_ip = On
 ; The encryption (hashing) algorithm to use for encrypting user passwords
 ; Valid values are: md5, sha1
 ; Note that sha1 requires PHP >= 4.3.0
-encryption = sha1
+encryption = md5
 
 ; Allowed HTML tags for fields that permit restricted HTML.
 allowed_html = "<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd> <b> <i> <u> <img> <sup> <sub> <br> <p>"

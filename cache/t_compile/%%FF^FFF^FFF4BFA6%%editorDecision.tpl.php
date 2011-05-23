@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-12 13:38:19
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:49:29
          compiled from sectionEditor/submission/editorDecision.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 44, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 76, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 80, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 248, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 82, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 191, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 243, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'sectionEditor/submission/editorDecision.tpl', 58, false),array('function', 'url', 'sectionEditor/submission/editorDecision.tpl', 78, false),array('function', 'html_options_translate', 'sectionEditor/submission/editorDecision.tpl', 82, false),array('function', 'icon', 'sectionEditor/submission/editorDecision.tpl', 250, false),array('modifier', 'escape', 'sectionEditor/submission/editorDecision.tpl', 84, false),array('modifier', 'date_format', 'sectionEditor/submission/editorDecision.tpl', 193, false),array('modifier', 'assign', 'sectionEditor/submission/editorDecision.tpl', 245, false),)), $this); ?>
 	
 <?php $this->assign('proposalStatusKey', $this->_tpl_vars['submission']->getProposalStatusKey()); ?>
 <?php $this->assign('proposalStatus', $this->_tpl_vars['submission']->getProposalStatus()); ?>
@@ -18,27 +18,13 @@ unset($_smarty_tpl_vars);
 		<div class="separator"></div>
 	</div>
 <?php elseif ($this->_tpl_vars['lastDecisionArray']['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT): ?>
-	<?php if ($this->_tpl_vars['articleMoreRecent']): ?>
-		<?php $_smarty_tpl_vars = $this->_tpl_vars;
+			<?php $_smarty_tpl_vars = $this->_tpl_vars;
 $this->_smarty_include(array('smarty_include_tpl_file' => "sectionEditor/submission/peerReview.tpl", 'smarty_include_vars' => array()));
 $this->_tpl_vars = $_smarty_tpl_vars;
 unset($_smarty_tpl_vars);
  ?>
 		<div class="separator"></div>
-	<?php else: ?>
-		<h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submission.peerReview"), $this);?>
-</h3>
-		<table id="table11" width="100%" class="data">
-			<tr valign="top">
-				<td class="label" width="20%"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.submissionStatus"), $this);?>
-</td>
-				<td width="80%" class="value"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "editor.article.waitingForResubmission"), $this);?>
-</td>
-			</tr>
-		</table>
-		<div class="separator"></div>
 	<?php endif; ?>
-<?php endif; ?>
 
 <div id="editorDecision">
 <h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submission.editorDecision"), $this);?>

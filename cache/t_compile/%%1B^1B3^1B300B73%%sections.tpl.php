@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-01 16:02:32
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:35:48
          compiled from manager/sections/sections.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'manager/sections/sections.tpl', 30, false),array('function', 'url', 'manager/sections/sections.tpl', 42, false),array('function', 'page_info', 'manager/sections/sections.tpl', 58, false),array('function', 'page_links', 'manager/sections/sections.tpl', 59, false),array('block', 'iterate', 'manager/sections/sections.tpl', 37, false),array('modifier', 'escape', 'manager/sections/sections.tpl', 39, false),)), $this); ?>

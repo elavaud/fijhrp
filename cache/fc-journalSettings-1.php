@@ -3,8 +3,8 @@
   'allowRegReader' => true,
   'allowRegReviewer' => true,
   'emailSignature' => '________________________________________________________________________
-WHO Research Registration Portal
-http://localhost/whorrp/index.php/whorrp',
+Research Registration Portal
+http://localhost/whorrp2/index.php/rrp',
   'fastTrackFee' => 0,
   'itemsPerPage' => 25,
   'membershipFee' => 0,
@@ -37,7 +37,7 @@ http://localhost/whorrp/index.php/whorrp',
   ),
   'authorInformation' => 
   array (
-    'en_US' => 'Interested in submitting to this journal? We recommend that you review the <a href="http://localhost/whorrp/index.php/whorrp/about">About the Journal</a> page for the journal\'s section policies, as well as the <a href="http://localhost/whorrp/index.php/whorrp/about/submissions#authorGuidelines">Author Guidelines</a>. Authors need to <a href="http://localhost/whorrp/index.php/whorrp/user/register">register</a> with the journal prior to submitting or, if already registered, can simply <a href="http://localhost/whorrp/index.php/index/login">log in</a> and begin the five-step process.',
+    'en_US' => 'Interested in submitting to this journal? We recommend that you review the <a href="http://localhost/whorrp2/index.php/rrp/about">About the Journal</a> page for the journal\'s section policies, as well as the <a href="http://localhost/whorrp2/index.php/rrp/about/submissions#authorGuidelines">Author Guidelines</a>. Authors need to <a href="http://localhost/whorrp2/index.php/rrp/user/register">register</a> with the journal prior to submitting or, if already registered, can simply <a href="http://localhost/whorrp2/index.php/index/login">log in</a> and begin the five-step process.',
   ),
   'authorSelfArchivePolicy' => 
   array (
@@ -181,7 +181,7 @@ Please follow the following protocol for making electronic revisions to your man
   ),
   'readerInformation' => 
   array (
-    'en_US' => 'We encourage readers to sign up for the publishing notification service for this journal. Use the <a href="http://localhost/whorrp/index.php/whorrp/user/register">Register</a> link at the top of the home page for the journal. This registration will result in the reader receiving the Table of Contents by email for each new issue of the journal. This list also allows the journal to claim a certain level of support or readership. See the journal\'s <a href="http://localhost/whorrp/index.php/whorrp/about/submissions#privacyStatement">Privacy Statement</a>, which assures readers that their name and email address will not be used for other purposes.',
+    'en_US' => 'We encourage readers to sign up for the publishing notification service for this journal. Use the <a href="http://localhost/whorrp2/index.php/rrp/user/register">Register</a> link at the top of the home page for the journal. This registration will result in the reader receiving the Table of Contents by email for each new issue of the journal. This list also allows the journal to claim a certain level of support or readership. See the journal\'s <a href="http://localhost/whorrp2/index.php/rrp/about/submissions#privacyStatement">Privacy Statement</a>, which assures readers that their name and email address will not be used for other purposes.',
   ),
   'refLinkInstructions' => 
   array (
@@ -234,12 +234,12 @@ Please follow the following protocol for making electronic revisions to your man
       ),
       4 => 
       array (
-        'content' => 'The text adheres to the stylistic and bibliographic requirements outlined in the <a href="http://localhost/whorrp/index.php/whorrp/about/submissions#authorGuidelines" target="_new">Author Guidelines</a>, which is found in About the Journal.',
+        'content' => 'The text adheres to the stylistic and bibliographic requirements outlined in the <a href="http://localhost/whorrp2/index.php/rrp/about/submissions#authorGuidelines" target="_new">Author Guidelines</a>, which is found in About the Journal.',
         'order' => '5',
       ),
       5 => 
       array (
-        'content' => 'If submitting to a peer-reviewed section of the journal, the instructions in <a href="javascript:openHelp(\'http://localhost/whorrp/index.php/whorrp/help/view/editorial/topic/000044\')">Ensuring a Blind Review</a> have been followed.',
+        'content' => 'If submitting to a peer-reviewed section of the journal, the instructions in <a href="javascript:openHelp(\'http://localhost/whorrp2/index.php/rrp/help/view/editorial/topic/000044\')">Ensuring a Blind Review</a> have been followed.',
         'order' => '6',
       ),
     ),
@@ -254,7 +254,7 @@ Please follow the following protocol for making electronic revisions to your man
   ),
   'title' => 
   array (
-    'en_US' => 'WHO Research Registration Portal',
+    'en_US' => 'Research Registration Portal',
   ),
   'waiverPolicy' => 
   array (

@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-10 21:37:31
+<?php /* Smarty version 2.6.26, created on 2011-05-23 14:37:07
          compiled from submission/comment/header.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'submission/comment/header.tpl', 16, false),array('modifier', 'escape', 'submission/comment/header.tpl', 17, false),)), $this); ?>

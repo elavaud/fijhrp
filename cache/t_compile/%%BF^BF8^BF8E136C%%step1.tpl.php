@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-01 16:54:22
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:39:08
          compiled from author/submit/step1.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submit/step1.tpl', 20, false),array('function', 'url', 'author/submit/step1.tpl', 24, false),array('function', 'fieldLabel', 'author/submit/step1.tpl', 50, false),array('function', 'html_options', 'author/submit/step1.tpl', 51, false),array('modifier', 'escape', 'author/submit/step1.tpl', 26, false),array('modifier', 'assign', 'author/submit/step1.tpl', 43, false),array('modifier', 'nl2br', 'author/submit/step1.tpl', 124, false),)), $this); ?>
@@ -182,7 +182,7 @@ if ($this->_foreach['checklist']['total'] > 0):
 <div class="separator"></div>
 
 <?php endif; ?>
-<div id="privacyStatement">
+<div id="privacyStatement" style="display: none">
 <h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submit.privacyStatement"), $this);?>
 </h3>
 <br />
@@ -192,7 +192,7 @@ if ($this->_foreach['checklist']['total'] > 0):
 
 <div class="separator"></div>
 
-<div id="commentsForEditor">
+<div id="commentsForEditor" style="display: none"> 
 <h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submit.commentsForEditor"), $this);?>
 </h3>
 

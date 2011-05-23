@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-03 23:54:25
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:24:46
          compiled from core:user/login.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'core:user/login.tpl', 24, false),array('function', 'url', 'core:user/login.tpl', 36, false),array('modifier', 'escape', 'core:user/login.tpl', 41, false),)), $this); ?>
