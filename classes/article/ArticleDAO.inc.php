@@ -768,5 +768,5 @@ class ArticleDAO extends DAO {
         }
 
 
-
+}
 ?>
