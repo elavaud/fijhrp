@@ -1356,7 +1356,13 @@ class Submission extends DataObject {
 	function setWhoId($whoId, $locale) {
 		return $this->setData('whoId', $whoId, $locale);
 	}
+<<<<<<< HEAD
 
 }
 
 ?>
+=======
+
+}
+?>
+>>>>>>> 16339c6b8c5a64ad4ad823ecdc6151340a7040be

@@ -169,8 +169,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$this->setupTemplate(true, $articleId);
 
 		Locale::requireComponents(array(LOCALE_COMPONENT_OJS_MANAGER));
-
-		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');		
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
 
@@ -183,7 +183,29 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$showPeerReviewOptions = $round == $submission->getCurrentRound() && $submission->getReviewFile() != null ? true : false;
 
 		$editorDecisions = $submission->getDecisions($round);
-		$lastDecision = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1]['decision'] : null;
+
+		/******************************************************
+		 * 
+		 * Set proposal status of submission
+		 * Get last decision and date it was decided
+		 * Get reviewAssignments
+		 * Get date when submission was last modified and set flag if article is more recent than decision
+		 * Added by Gay Figueroa
+		 * Last Update: /5/8/2011
+		 *
+		*******************************************************/
+		$lastDecisionArray = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
+		$lastDecision = $lastDecisionArray['decision'];
+		$lastDecisionDate = $lastDecisionArray['dateDecided'];
+		$reviewAssignments =& $submission->getReviewAssignments($round);
+		$modifiedDate = $submission->getLastModified();
+		$articleMoreRecent = false;
+
+		if(strtotime($modifiedDate)>strtotime($lastDecisionDate)) {
+			$articleMoreRecent = true;
+		}
+		$submission->setProposalStatus($articleDao->getProposalStatus($articleId, $round));
+		
 
 		$editAssignments =& $submission->getEditAssignments();
 		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
@@ -216,7 +238,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
 		$reviewFormTitles = array();
 
-		foreach ($submission->getReviewAssignments($round) as $reviewAssignment) {
+		foreach ($reviewAssignments as $reviewAssignment) {
 			$reviewForm =& $reviewFormDao->getReviewForm($reviewAssignment->getReviewFormId());
 			if ($reviewForm) {
 				$reviewFormTitles[$reviewForm->getId()] = $reviewForm->getLocalizedTitle();
@@ -244,7 +266,24 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('showPeerReviewOptions', $showPeerReviewOptions);
 		$templateMgr->assign_by_ref('sections', $sections->toArray());
 		$templateMgr->assign('editorDecisionOptions',SectionEditorSubmission::getEditorDecisionOptions());
-		$templateMgr->assign_by_ref('lastDecision', $lastDecision);
+	
+		/*************************************************************
+		 * 
+		 * Added initial review options, exemption options 
+		 * Added details of lastDecision
+		 * Added flag if article is more recent than last decision
+		 * Added by Gay Figueroa
+		 * Last Update: 5/8/2011
+		 * 
+		*************************************************************/
+
+		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
+		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
+		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
+		//pass edit_decision_id of lastDecision; this will also be passed from the forms in editorDecision.tpl to SubmissionEditHandler.recordDecision
+		$templateMgr->assign('lastDecisionArray', $lastDecisionArray);
+
+
 
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
@@ -381,6 +420,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'submission', $articleId);
 	}
 
+	/***************************************************************************
+	 *
+	 * Record editor decision (Added additional editor decision cases)
+	 * Edited by Gay Figueroa
+	 * Last Update: 5/5/2011
+	 *
+	 ***************************************************************************/
+
 	function recordDecision() {
 		$articleId = Request::getUserVar('articleId');
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
@@ -388,13 +435,25 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$decision = Request::getUserVar('decision');
 
+		//pass lastDecisionId of this article to update existing row in edit_decisions
+		$lastDecisionId = Request::getUserVar('lastDecisionId');
+
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
-				SectionEditorAction::recordDecision($submission, $decision);
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
+			case SUBMISSION_EDITOR_DECISION_COMPLETE:
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId);
 				break;
+		}
+
+		//if submitted decision is RESUBMIT, start a new round of review
+		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
+			SectionEditorAction::initiateNewReviewRound($submission);
 		}
 
 		Request::redirect(null, null, 'submissionReview', $articleId);

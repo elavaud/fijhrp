@@ -656,20 +656,20 @@ class ArticleDAO extends DAO {
 	 *
 	 * Get proposal status based on last decision on article
 	 * Added by Gay Figueroa
-	 * Last Update: 5/8/2011
+	 * Last Update: 5/18/2011
 	 *
 	 ***********************************************************************/
 
 	function getProposalStatus($articleId, $round = null) {
 		$decision = $this->getLastEditorDecision($articleId, $round);
-		switch ($decision[0]['decision']) {
+		switch ($decision['decision']) {
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
 				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
 				break;
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 				$proposalStatus = PROPOSAL_STATUS_CHECKED;
 				break;
-			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:			
 				$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
 				break;
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
@@ -684,7 +684,7 @@ class ArticleDAO extends DAO {
 			default:
 				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
 				break;
-		}
+		}					
 		return $proposalStatus;
 	}
 
@@ -692,50 +692,33 @@ class ArticleDAO extends DAO {
 	 *
 	 * Get last decision on article
 	 * Added by Gay Figueroa
-	 * Last Update: 5/8/2011
+	 * Last Update: 5/18/2011
 	 *
+         * Updated: 5/24/2011 - After adding GROUP BY, it always returns first decision instead of last;
+         *                      Removed MAX and GROUP BY since it will always take the last row anyway
 	 ***********************************************************************/
 
 	function getLastEditorDecision($articleId, $round = null) {
 		$decisions = array();
-                /*
+
 		if ($round == null) {
 			$result =& $this->retrieve(
-				'SELECT max(edit_decision_id) as edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
 			);
-                 } else {
-			$result =& $this->retrieve(
-				'SELECT max(edit_decision_id), editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
-				array($articleId, $round)
-			);
-		}
-                 *
-                 */
-                if ($round == null) {
-			$result =& $this->retrieve(
-                                'SELECT * from edit_decisions where article_id = ? and edit_decision_id in (select max(edit_decision_id) from edit_decisions group by article_id)', $articleId
-                        );
 		} else {
 			$result =& $this->retrieve(
-				'SELECT * from edit_decisions where article_id = ? and round = ? and edit_decision_id in (select max(edit_decision_id) from edit_decisions group by article_id)',
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
 				array($articleId, $round)
 			);
 		}
 
 		$resultArray = $result->GetArray();
+		$last = count($resultArray) - 1;
 
-		foreach($resultArray as $row){
-			$decision[] = array(
-				'editDecisionId' => $row['edit_decision_id'],
-				'editorId' => $row['editor_id'],
-				'decision' => $row['decision'],
-				'dateDecided' => $this->datetimeFromDB($row['date_decided'])
-			);
-		}
 		$result->Close();
 		unset($result);
 
-		return $decision;
+		return 	$resultArray[$last];
 	}
 
 
@@ -770,10 +753,12 @@ class ArticleDAO extends DAO {
                                             WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
                                             article_id in (SELECT article_id from article_settings where setting_name = ? and setting_value = ?)',
                                             array($year, 'proposalCountry', $country));
-		$count = $result->NumRows();
+
+                $count = $result->NumRows();
 
                 return $count;
         }
+
 
         /************************************
          * Added by: Anne Ivy Mirasol

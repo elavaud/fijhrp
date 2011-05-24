@@ -47,7 +47,7 @@ class SectionEditorAction extends Action {
 	 * Records an editor's submission decision.
 	 * @param $sectionEditorSubmission object
 	 * @param $decision int
-	 */
+	 
 	function recordDecision($sectionEditorSubmission, $decision) {
 		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
 		if (empty($editAssignments)) return;
@@ -75,6 +75,56 @@ class SectionEditorAction extends Action {
 			ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_EDITOR_DECISION, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.decision', array('editorName' => $user->getFullName(), 'articleId' => $sectionEditorSubmission->getArticleId(), 'decision' => Locale::translate($decisions[$decision])));
 		}
 	}
+	*/
+
+	/**
+	 * Records an editor's submission decision. (Modified: Update if there is already an existing decision.)
+	 * @param $sectionEditorSubmission object
+	 * @param $decision int
+	 * @param $lastDecisionId int (Added)
+	 * Edited by Gay Figueroa
+	 * Last Update: 5/4/2011
+	 */
+	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId) {
+		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
+		if (empty($editAssignments)) return;
+
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+		$user =& Request::getUser();
+
+		//check if there is already a decisionId
+		if($lastDecisionId == null ) {
+			$editorDecision = array(
+				'editDecisionId' => null,
+				'editorId' => $user->getId(),
+				'decision' => $decision,
+				'dateDecided' => date(Core::getCurrentDate())
+			);
+		}
+		else {
+			$editorDecision = array(
+				'editDecisionId' => $lastDecisionId,
+				'editorId' => $user->getId(),
+				'decision' => $decision,
+				'dateDecided' => date(Core::getCurrentDate())
+			);
+		}
+
+		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
+			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
+			$sectionEditorSubmission->stampStatusModified();
+			$sectionEditorSubmission->addDecision($editorDecision, $sectionEditorSubmission->getCurrentRound());
+			$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
+
+			$decisions = SectionEditorSubmission::getEditorDecisionOptions();
+			// Add log
+			import('classes.article.log.ArticleLog');
+			import('classes.article.log.ArticleEventLogEntry');
+			Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON, LOCALE_COMPONENT_OJS_EDITOR));
+			ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_EDITOR_DECISION, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.decision', array('editorName' => $user->getFullName(), 'articleId' => $sectionEditorSubmission->getArticleId(), 'decision' => Locale::translate($decisions[$decision])));
+		}
+	}
+
 
 	/**
 	 * Assigns a reviewer to a submission.
@@ -773,6 +823,24 @@ class SectionEditorAction extends Action {
 			import('classes.article.log.ArticleLog');
 			import('classes.article.log.ArticleEventLogEntry');
 			ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_COPYEDIT_SET_FILE, ARTICLE_LOG_TYPE_COPYEDIT, $sectionEditorSubmission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true), 'log.copyedit.copyeditFileSet');
+		}
+	}
+
+	function initiateNewReviewRound($sectionEditorSubmission) {
+		if (!HookRegistry::call('SectionEditorAction::initiateNewReviewRound', array(&$sectionEditorSubmission))) {
+			// Increment the round
+			$currentRound = $sectionEditorSubmission->getCurrentRound();
+			$sectionEditorSubmission->setCurrentRound($currentRound + 1);
+			$sectionEditorSubmission->stampStatusModified();
+			// Now, reassign all reviewers that submitted a review for this new round of reviews.
+			$previousRound = $sectionEditorSubmission->getCurrentRound() - 1;
+			foreach ($sectionEditorSubmission->getReviewAssignments($previousRound) as $reviewAssignment) {
+				if ($reviewAssignment->getRecommendation() !== null && $reviewAssignment->getRecommendation() !== '') {
+					// Then this reviewer submitted a review.
+					SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewAssignment->getReviewerId(), $sectionEditorSubmission->getCurrentRound());
+				}
+			}
+
 		}
 	}
 

@@ -23,12 +23,21 @@
 			{/if}
 		</td>
 		<td width="50%" class="value">
+		</td>
+
+{*****************************************
+ *
+ * Remove reject and archive / restore to queue function
+ * Edited by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
 			{if $status != STATUS_ARCHIVED}
 				<a href="{url op="unsuitableSubmission" articleId=$submission->getId()}" class="action">{translate key="editor.article.archiveSubmission"}</a>
 			{else}
 				<a href="{url op="restoreToQueue" path=$submission->getId()}" class="action">{translate key="editor.article.restoreToQueue"}</a>
 			{/if}
-		</td>
+******************************************}
+
 	</tr>
 	<tr>
 		<td class="label">{translate key="submission.initiated"}</td>

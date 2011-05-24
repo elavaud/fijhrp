@@ -17,6 +17,7 @@
 
 
 import('classes.submission.editor.EditorSubmission');
+import('classes.submission.sectionEditor.SectionEditorSubmissionDAO');
 
 // Bring in editor decision constants
 import('classes.submission.common.Action');
@@ -696,6 +697,17 @@ class EditorSubmissionDAO extends DAO {
 			case 'status': return 'a.status';
 			default: return null;
 		}
+	}
+
+	/*******************************************
+	 * Get proposal status method
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	********************************************/
+
+	function getProposalStatusByArticleId($articleId) {
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+		return $sectionEditorSubmissionDao->getProposalStatusByArticleId($articleId);
 	}
 }
 

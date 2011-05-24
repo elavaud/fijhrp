@@ -186,6 +186,22 @@ class SectionEditorSubmissionDAO extends DAO {
 							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'])
 						);
 					}
+	/********************************************************
+	 *
+	 * If editDecisionId is not null, just update the existing row in the database
+	 * Added by Gay Figueroa
+	 * Last Update: 5/4/2011
+	 *
+	*********************************************************/
+					else {
+						$this->update(
+							sprintf('UPDATE edit_decisions SET
+								round = ?, decision = ?, date_decided = %s 
+								WHERE edit_decision_id = ?',
+								$this->datetimeToDB($editorDecision['dateDecided'])),
+							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'], $editorDecision['editDecisionId'])
+						);
+					}
 				}
 			}
 		}
@@ -637,40 +653,6 @@ class SectionEditorSubmissionDAO extends DAO {
 			'DELETE FROM review_rounds WHERE submission_id = ?',
 			$articleId
 		);
-	}
-
-	/**
-	 * Get the editor decisions for a review round of an article.
-	 * @param $articleId int
-	 * @param $round int
-	 */
-	function getEditorDecisions($articleId, $round = null) {
-		$decisions = array();
-
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
-				array($articleId, $round)
-			);
-		}
-
-		while (!$result->EOF) {
-			$decisions[] = array(
-				'editDecisionId' => $result->fields['edit_decision_id'],
-				'editorId' => $result->fields['editor_id'],
-				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
-			);
-			$result->moveNext();
-		}
-		$result->Close();
-		unset($result);
-
-		return $decisions;
 	}
 
 	/**
@@ -1187,6 +1169,42 @@ class SectionEditorSubmissionDAO extends DAO {
 			default: return null;
 		}
 	}
+
+	/**
+	 * Get the editor decisions for a review round of an article.
+	 * @param $articleId int
+	 * @param $round int
+	 */
+	function getEditorDecisions($articleId, $round = null) {
+		$decisions = array();
+
+		if ($round == null) {
+			$result =& $this->retrieve(
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+			);
+		} else {
+			$result =& $this->retrieve(
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				array($articleId, $round)
+			);
+		}
+
+		while (!$result->EOF) {
+			$decisions[] = array(
+				'editDecisionId' => $result->fields['edit_decision_id'],
+				'editorId' => $result->fields['editor_id'],
+				'decision' => $result->fields['decision'],
+				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
+			);
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $decisions;
+	}
+
+	
 }
 
 ?>

@@ -476,6 +476,36 @@ class SectionEditorSubmission extends Article {
 		return $editorDecisionOptions;
 	}
 
+	/********************************************
+	 * Return array mapping submission completeness options to their locale strings
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	********************************************/
+
+	function &getInitialReviewOptions() {
+		static $initialReviewOptions = array(
+			'' => 'common.chooseOne',
+			SUBMISSION_EDITOR_DECISION_COMPLETE => 'editor.article.decision.complete',
+			SUBMISSION_EDITOR_DECISION_INCOMPLETE=> 'editor.article.decision.incomplete'
+		);
+		return $initialReviewOptions;
+	}
+
+	/********************************************
+	 * Return array mapping exemption options to their locale strings
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	********************************************/
+	
+	function &getExemptionOptions() {
+		static $exemptionOptions = array(
+			'' => 'common.chooseOne',
+			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned'
+		);
+		return $exemptionOptions;
+	}
+
 	/**
 	 * Get the CSS class for highlighting this submission in a list, based on status.
 	 * @return string

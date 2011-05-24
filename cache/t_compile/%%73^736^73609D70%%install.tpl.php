@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-04-23 22:08:27
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:23:25
          compiled from core:install/install.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'core:install/install.tpl', 30, false),array('function', 'url', 'core:install/install.tpl', 41, false),array('function', 'fieldLabel', 'core:install/install.tpl', 66, false),array('function', 'html_options', 'core:install/install.tpl', 69, false),array('modifier', 'assign', 'core:install/install.tpl', 30, false),array('modifier', 'escape', 'core:install/install.tpl', 79, false),)), $this); ?>

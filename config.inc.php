@@ -29,7 +29,7 @@
 installed = On
 
 ; The canonical URL to the OJS installation (excluding the trailing slash)
-base_url = "http://localhost/whorrp"
+base_url = "http://localhost/whorrp2"
 
 ; Path to the registry directory (containing various settings files)
 ; Although the files in this directory generally do not contain any
@@ -102,9 +102,11 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-username = root
+username = pkpuser
 password = password
-name = ojs
+;username = ojs
+;password = ojs
+name = ojs5
 
 ; Enable persistent connections
 persistent = Off
@@ -181,7 +183,15 @@ charset_normalization = Off
 ; Complete path to directory to store uploaded files
 ; (This directory should not be directly web-accessible)
 ; Windows users should use forward slashes
-files_dir = /home/anne/ojsfiles
+
+; Gay's local folder
+; files_dir = /home/kathlg/WHO/OJS/files
+
+; Ivy's local folder
+; files_dir = /home/anne/ojsfiles
+
+; Susan's local folder (Macbook Pro)
+files_dir = /Users/spf/ojsfiles
 
 ; Path to the directory to store public uploaded files
 ; (This directory should be web-accessible and the specified path
