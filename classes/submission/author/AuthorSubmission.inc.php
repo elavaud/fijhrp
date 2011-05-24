@@ -158,8 +158,23 @@ class AuthorSubmission extends Article {
 	 * changes here should be propagated.
 	 */
 	function getSubmissionStatus() {
-		$status = $this->getStatus();
-		if ($status == STATUS_ARCHIVED || $status == STATUS_PUBLISHED ||
+
+                /*
+                 * Added by: Anne Ivy Mirasol
+                 * Last Updated: May 17, 2011
+                 */
+
+                if ($this->getSubmissionProgress()) return (STATUS_INCOMPLETE);
+
+		$status = $this->getProposalStatus();
+                return $status;
+
+                
+                //Unreachable code -- clean up later
+
+                $status = $this->getStatus();
+
+                if ($status == STATUS_ARCHIVED || $status == STATUS_PUBLISHED ||
 		    $status == STATUS_DECLINED) return $status;
 
 		// The submission is STATUS_QUEUED or the author's submission was STATUS_INCOMPLETE.

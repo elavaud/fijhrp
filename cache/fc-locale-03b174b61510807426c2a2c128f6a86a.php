@@ -72,6 +72,7 @@
   'common.deactivate' => 'Deactivate',
   'common.default' => 'Default',
   'common.delete' => 'Delete',
+  'common.withdraw' => 'Withdraw Proposal',
   'common.deleteSelection' => 'Delete Selection',
   'common.description' => 'Description',
   'common.disable' => 'Disable',

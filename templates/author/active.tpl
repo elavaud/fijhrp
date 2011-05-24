@@ -33,8 +33,19 @@
 		{if $progress == 0}
 			<td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
 			<td align="right">
-				{assign var="status" value=$submission->getSubmissionStatus()}
-				{if $status==STATUS_QUEUED_UNASSIGNED}{translate key="submissions.queuedUnassigned"}
+                                {assign var="status" value=$submission->getSubmissionStatus()}
+                                {assign var="statuskey" value=$submission->getProposalStatusKey()}
+                                
+                                {if $status==PROPOSAL_STATUS_SUBMITTED}
+                                    {translate key=$statuskey}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmWithdraw"}')">{translate key="common.withdraw"}</a>
+                                {elseif $status==PROPOSAL_STATUS_RETURNED}
+                                 
+                                    {translate key=$statuskey}<br /><a href="{url op="resubmit" path=$articleId}" class="action">Resubmit</a>
+                                {/if}
+                         </td>
+
+                                {*
+                                {if $status==STATUS_QUEUED_UNASSIGNED}{translate key="submissions.queuedUnassigned"}
 				{elseif $status==STATUS_QUEUED_REVIEW}
 					<a href="{url op="submissionReview" path=$articleId}" class="action">
 						{assign var=decision value=$submission->getMostRecentDecision()}
@@ -52,8 +63,10 @@
 						{/if}
 					</a>
 				{/if}
+                                *}
 
 				{** Payment related actions *}
+                                {*
 				{if $status==STATUS_QUEUED_UNASSIGNED || $status==STATUS_QUEUED_REVIEW}
 					{if $submissionEnabled && !$completedPaymentDAO->hasPaidSubmission($submission->getJournalId(), $submission->getArticleId())}
 						<br />
@@ -74,9 +87,10 @@
 						{else}
 						 	<a href="{url op="payPublicationFee" path="$articleId"}" class="action">{translate key="payment.publication.payPublication"}</a>
 						 {/if}
-				{/if}		
-		{/if}
-			</td>
+                                        {/if}
+                        {/if}
+                        *}
+			
 		{else}
 			<td><a href="{url op="submit" path=$progress articleId=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
 			<td align="right">{translate key="submissions.incomplete"}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmDelete"}')">{translate key="common.delete"}</a></td>

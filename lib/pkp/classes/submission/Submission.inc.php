@@ -15,7 +15,12 @@
  *
  * @brief Submission class.
  */
-
+define('PROPOSAL_STATUS_SUBMITTED',1);
+define('PROPOSAL_STATUS_RETURNED',2);
+define('PROPOSAL_STATUS_CHECKED',3);
+define('PROPOSAL_STATUS_ASSIGNED',4);
+define('PROPOSAL_STATUS_EXEMPTED',5);
+define('PROPOSAL_STATUS_REVIEWED',6);
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
@@ -1225,9 +1230,9 @@ class Submission extends DataObject {
 	function setConflictOfInterest($conflictOfInterest, $locale) {
 		return $this->setData('conflictOfInterest', $conflictOfInterest, $locale);
 	}
-        
-        
-        
+
+
+
         /**
 	 * Get "localized" reviewedByOtherErc (if applicable).
 	 * @return string
@@ -1282,12 +1287,51 @@ class Submission extends DataObject {
 		return $this->setData('otherErcDecision', $otherErcDecision, $locale);
 	}
 
+	/***********************************************
+	 *
+	 * Proposal status getters and setters and locale key methods
+	 * Added by Gay Figueroa
+	 * Last Update: 5/3/2011
+	 *
+	************************************************/
 
+	function getProposalStatus() {
+		return $this->getData('proposalStatus');
+	}
 
+	function setProposalStatus($proposalStatus) {
+		return $this->setData('proposalStatus', $proposalStatus);
+	}
 
+	/**
+	 * Get a map for proposal status constant to locale key.
+	 * @return array
+	 */
+	function &getProposalStatusMap() {
+		static $proposalStatusMap;
+		if (!isset($proposalStatusMap)) {
+			$proposalStatusMap = array(
+				PROPOSAL_STATUS_SUBMITTED => 'submissions.proposal.submitted',
+				PROPOSAL_STATUS_RETURNED => 'submissions.proposal.returned',
+				PROPOSAL_STATUS_CHECKED => 'submissions.proposal.checked',
+				PROPOSAL_STATUS_EXEMPTED => 'submissions.proposal.exempted',
+				PROPOSAL_STATUS_ASSIGNED => 'submissions.proposal.assigned',
+				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed'
+			);
+		}
+		return $proposalStatusMap;
+	}
 
+	/**
+	 * Get a locale key for the paper's current proposal status.
+	 * @return string
+	 */
+	function getProposalStatusKey() {
+		$proposalStatusMap =& $this->getProposalStatusMap();
+		return $proposalStatusMap[$this->getProposalStatus()];
+	}
 
-        /**
+    /**
 	 * Get "localized" WHO ID (if applicable).
 	 * @return string
 	 */
@@ -1312,6 +1356,7 @@ class Submission extends DataObject {
 	function setWhoId($whoId, $locale) {
 		return $this->setData('whoId', $whoId, $locale);
 	}
+
 }
 
 ?>

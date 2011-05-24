@@ -27,17 +27,38 @@ class SubmitHandler extends AuthorHandler {
 		parent::AuthorHandler();
 	}
 
+        /************************************
+         *  Added by:  Anne Ivy Mirasol
+         *  Last Updated: May 18, 2011
+         *  Resubmit a proposal
+         ************************************/
+        function resubmit($args, $request) {
+            $articleId = isset($args[0]) ? (int) $args[0] : 0;
+
+            //If article is not incomplete, do not allow re-submit
+            $articleDAO = DAORegistry::getDAO('ArticleDAO');
+            if($articleDAO->getProposalStatus($articleId) != PROPOSAL_STATUS_RETURNED) {
+                Request::redirect(null, 'author', '');
+            }
+
+            $step = 2;
+            $articleDAO->changeArticleProgress($articleId, $step);
+            Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
+        }
+
 	/**
 	 * Display journal author article submission.
 	 * Displays author index page if a valid step is not specified.
 	 * @param $args array optional, if set the first parameter is the step to display
 	 */
 	function submit($args, $request) {
+                
 		$step = isset($args[0]) ? (int) $args[0] : 0;
 		$articleId = $request->getUserVar('articleId');
-		$journal =& $request->getJournal();
+                $journal =& $request->getJournal();
 
-		$this->validate($articleId, $step, 'author.submit.authorSubmitLoginMessage');
+
+                $this->validate($articleId, $step, 'author.submit.authorSubmitLoginMessage');
 		$article =& $this->article;
 		$this->setupTemplate(true);
 

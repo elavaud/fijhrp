@@ -72,6 +72,7 @@ class AuthorHandler extends Handler {
 			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		} else {
 			$submissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+
 		}
 
 		$templateMgr =& TemplateManager::getManager();

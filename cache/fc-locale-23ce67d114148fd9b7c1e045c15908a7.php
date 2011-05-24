@@ -30,6 +30,7 @@
   'author.submissions.uploadCopyeditedVersion' => 'Upload Copyedited Version',
   'author.submissions.proofreadingCorrections' => 'Proofreading Corrections',
   'author.submissions.confirmDelete' => 'Are you sure you want to delete this incomplete submission?',
+  'author.submissions.confirmWithdraw' => 'Are you sure you want to withdraw your submission? This will delete all files related to this submission.',
   'author.submissions.viewStatus' => 'View Status',
   'author.submissions.noSubmissions' => 'No submissions.',
   'author.submit.howToSubmit' => 'Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance ({$supportPhone}).',

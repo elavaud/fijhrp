@@ -54,8 +54,8 @@ class ArticleDAO extends DAO {
                  ************************************************/
 		return array(
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
-			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry', 
+			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
                         'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId'
 		);
 	}
@@ -158,6 +158,11 @@ class ArticleDAO extends DAO {
 		$article->setDateStatusModified($this->datetimeFromDB($row['date_status_modified']));
 		$article->setLastModified($this->datetimeFromDB($row['last_modified']));
 		$article->setStatus($row['status']);
+
+                //Added by Anne Ivy Mirasol, May 18, 2011
+                $articleDao =& DAORegistry::getDAO('ArticleDAO');
+                $article->setProposalStatus($articleDao->getProposalStatus($article->getId()));
+
 		$article->setSubmissionProgress($row['submission_progress']);
 		$article->setCurrentRound($row['current_round']);
 		$article->setSubmissionFileId($row['submission_file_id']);
@@ -614,8 +619,8 @@ class ArticleDAO extends DAO {
 		unset($cache);
 	}
 
-        /*******************************************************************************************/
-        /*  Added by:  Anne Ivy Mirasol
+        /*******************************************************************************************
+         *  Added by:  Anne Ivy Mirasol
          *  Last updated: April 25, 2011
          ******************************************************************************************/
 
@@ -627,11 +632,10 @@ class ArticleDAO extends DAO {
 	function getProposalTypes() {
             $locale = Locale::getLocale();
             $filename = "lib/pkp/locale/".$locale."/proposaltypes.xml";
-            
+
             $xmlDao = new XMLDAO();
             $data = $xmlDao->parseStruct($filename, array('proposaltypes', 'proposaltype'));
-            
-            //print_r($data);
+
             $proposalTypes = array();
             if (isset($data['proposaltypes'])) {
                 $i=0;
@@ -643,31 +647,103 @@ class ArticleDAO extends DAO {
                 $i++;
             }
 
-            
+
             return $proposalTypes;
-                /*
-		$result =& $this->retrieve('SELECT * FROM proposal_types');
-		$resultArray = $result->GetArray();
 
-                $returner = array();
-                foreach($resultArray as $row) {
-                    $temp['id'] = $row[0];
-                    $temp['type'] = $row[1];
-
-                    array_push($returner, $temp);
-                }
-                
-		$result->Close();
-		unset($result);
-                 *
-                 */
-
-		return $returner;
 	}
 
+	/**********************************************************************
+	 *
+	 * Get proposal status based on last decision on article
+	 * Added by Gay Figueroa
+	 * Last Update: 5/8/2011
+	 *
+	 ***********************************************************************/
+
+	function getProposalStatus($articleId, $round = null) {
+		$decision = $this->getLastEditorDecision($articleId, $round);
+		switch ($decision[0]['decision']) {
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_COMPLETE:
+				$proposalStatus = PROPOSAL_STATUS_CHECKED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
+				$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_ACCEPT:
+			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
+			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
+			case SUBMISSION_EDITOR_DECISION_DECLINE:
+				$proposalStatus = PROPOSAL_STATUS_REVIEWED;
+				break;
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
+				$proposalStatus = PROPOSAL_STATUS_RETURNED;
+					break;
+			default:
+				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
+				break;
+		}
+		return $proposalStatus;
+	}
+
+	/**********************************************************************
+	 *
+	 * Get last decision on article
+	 * Added by Gay Figueroa
+	 * Last Update: 5/8/2011
+	 *
+	 ***********************************************************************/
+
+	function getLastEditorDecision($articleId, $round = null) {
+		$decisions = array();
+                /*
+		if ($round == null) {
+			$result =& $this->retrieve(
+				'SELECT max(edit_decision_id) as edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+			);
+                 } else {
+			$result =& $this->retrieve(
+				'SELECT max(edit_decision_id), editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				array($articleId, $round)
+			);
+		}
+                 *
+                 */
+                if ($round == null) {
+			$result =& $this->retrieve(
+                                'SELECT * from edit_decisions where article_id = ? and edit_decision_id in (select max(edit_decision_id) from edit_decisions group by article_id)', $articleId
+                        );
+		} else {
+			$result =& $this->retrieve(
+				'SELECT * from edit_decisions where article_id = ? and round = ? and edit_decision_id in (select max(edit_decision_id) from edit_decisions group by article_id)',
+				array($articleId, $round)
+			);
+		}
+
+		$resultArray = $result->GetArray();
+
+		foreach($resultArray as $row){
+			$decision[] = array(
+				'editDecisionId' => $row['edit_decision_id'],
+				'editorId' => $row['editor_id'],
+				'decision' => $row['decision'],
+				'dateDecided' => $this->datetimeFromDB($row['date_decided'])
+			);
+		}
+		$result->Close();
+		unset($result);
+
+		return $decision;
+	}
+
+
         /*******************************************************************************************/
-        /*  Added by:  Anne Ivy Mirasol
+        /*
+         *  Added by:  Anne Ivy Mirasol
          *  Last updated: May 4, 2011
+         *
          ******************************************************************************************/
 
         /**
@@ -678,7 +754,7 @@ class ArticleDAO extends DAO {
 	function getSubmissionsForYearCount($year) {
 		$result =& $this->retrieve('SELECT * FROM articles where date_submitted is not null and extract(year from date_submitted) = ?', $year);
 		$count = $result->NumRows();
-                
+
                 return $count;
         }
 
@@ -687,18 +763,31 @@ class ArticleDAO extends DAO {
 	 * Get the number of submissions for the country for the year.
 	 * @param $year
 	 * @return integer
+         *
 	 */
 	function getSubmissionsForYearForCountryCount($year, $country) {
 		$result =& $this->retrieve('SELECT * FROM articles
                                             WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
-                                            article_id in (
-                                                SELECT article_id from article_settings where setting_name = ? and setting_value = ?
-                                            )',
+                                            article_id in (SELECT article_id from article_settings where setting_name = ? and setting_value = ?)',
                                             array($year, 'proposalCountry', $country));
 		$count = $result->NumRows();
 
                 return $count;
         }
+
+        /************************************
+         * Added by: Anne Ivy Mirasol
+         * Last Updated: May 18, 2011
+         * Reset an article's progress
+         ************************************/
+
+        function changeArticleProgress($articleId, $step) {
+		$this->update(
+			'UPDATE articles SET submission_progress = ? WHERE article_id = ?', array((int) $step, (int) $articleId)
+		);
+
+		$this->flushCache();
+	}
 
 }
 

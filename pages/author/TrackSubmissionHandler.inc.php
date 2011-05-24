@@ -46,6 +46,22 @@ class TrackSubmissionHandler extends AuthorHandler {
 			$articleDao->deleteArticleById($args[0]);
 		}
 
+                /**************************************
+                 * Added by: Anne Ivy Mirasol
+                 * Allow withdrawal of proposal
+                 * Last Updated: May 18, 2011
+                 **************************************/
+
+                if($authorSubmission->getProposalStatus() == PROPOSAL_STATUS_SUBMITTED) {
+			import('classes.file.ArticleFileManager');
+			$articleFileManager = new ArticleFileManager($articleId);
+			$articleFileManager->deleteArticleTree();
+
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			$articleDao->deleteArticleById($args[0]);
+		}
+                
+
 		Request::redirect(null, null, 'index');
 	}
 
