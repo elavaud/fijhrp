@@ -34,13 +34,12 @@
 			<td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
 			<td align="right">
                                 {assign var="status" value=$submission->getSubmissionStatus()}
-                                {assign var="statuskey" value=$submission->getProposalStatusKey()}
                                 
                                 {if $status==PROPOSAL_STATUS_SUBMITTED}
-                                    {translate key=$statuskey}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmWithdraw"}')">{translate key="common.withdraw"}</a>
+                                    {translate key="submissions.proposal.submitted"}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmWithdraw"}')">{translate key="common.withdraw"}</a>
                                 {elseif $status==PROPOSAL_STATUS_RETURNED}
                                  
-                                    {translate key=$statuskey}<br /><a href="{url op="resubmit" path=$articleId}" class="action">Resubmit</a>
+                                    {translate key="submissions.proposal.returned"}<br /><a href="{url op="resubmit" path=$articleId}" class="action">Resubmit</a>
                                 {/if}
                          </td>
 

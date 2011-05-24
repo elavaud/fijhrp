@@ -163,10 +163,19 @@ class AuthorSubmission extends Article {
                  * Added by: Anne Ivy Mirasol
                  * Last Updated: May 17, 2011
                  */
-
+            
                 if ($this->getSubmissionProgress()) return (STATUS_INCOMPLETE);
 
 		$status = $this->getProposalStatus();
+                
+                if($status == PROPOSAL_STATUS_RETURNED) {
+                    $articleDao = DAORegistry::getDAO('ArticleDAO');
+                    $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+
+                    if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
+                    else return PROPOSAL_STATUS_RETURNED;
+                }
+                
                 return $status;
 
                 

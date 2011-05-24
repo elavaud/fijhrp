@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-23 11:34:42
+<?php /* Smarty version 2.6.26, created on 2011-05-24 23:17:04
          compiled from author/active.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'sort_heading', 'author/active.tpl', 15, false),array('function', 'translate', 'author/active.tpl', 16, false),array('function', 'url', 'author/active.tpl', 34, false),array('function', 'page_info', 'author/active.tpl', 100, false),array('function', 'page_links', 'author/active.tpl', 101, false),array('block', 'iterate', 'author/active.tpl', 24, false),array('modifier', 'escape', 'author/active.tpl', 29, false),array('modifier', 'date_format', 'author/active.tpl', 30, false),array('modifier', 'truncate', 'author/active.tpl', 32, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 34, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'sort_heading', 'author/active.tpl', 15, false),array('function', 'translate', 'author/active.tpl', 16, false),array('function', 'url', 'author/active.tpl', 34, false),array('function', 'page_info', 'author/active.tpl', 113, false),array('function', 'page_links', 'author/active.tpl', 114, false),array('block', 'iterate', 'author/active.tpl', 24, false),array('modifier', 'escape', 'author/active.tpl', 29, false),array('modifier', 'date_format', 'author/active.tpl', 30, false),array('modifier', 'truncate', 'author/active.tpl', 32, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 34, false),)), $this); ?>
 <div id="submissions">
 <table class="listing" width="100%">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
@@ -41,66 +41,24 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'sort_headin
 <?php else: ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.untitled"), $this);?>
 <?php endif; ?></a></td>
 			<td align="right">
-				<?php $this->assign('status', $this->_tpl_vars['submission']->getSubmissionStatus()); ?>
-				<?php if ($this->_tpl_vars['status'] == STATUS_QUEUED_UNASSIGNED): ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.queuedUnassigned"), $this);?>
-
-				<?php elseif ($this->_tpl_vars['status'] == STATUS_QUEUED_REVIEW): ?>
-					<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'submissionReview','path' => $this->_tpl_vars['articleId']), $this);?>
-" class="action">
-						<?php $this->assign('decision', $this->_tpl_vars['submission']->getMostRecentDecision()); ?>
-						<?php if ($this->_tpl_vars['decision'] == @SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS): ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.queuedReviewRevisions"), $this);?>
-
-						<?php elseif ($this->_tpl_vars['submission']->getCurrentRound() > 1): ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.queuedReviewSubsequent",'round' => $this->_tpl_vars['submission']->getCurrentRound()), $this);?>
-
-						<?php else: ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.queuedReview"), $this);?>
-
-						<?php endif; ?>
-					</a>
-				<?php elseif ($this->_tpl_vars['status'] == STATUS_QUEUED_EDITING): ?>
-					<?php $this->assign('proofSignoff', $this->_tpl_vars['submission']->getSignoff('SIGNOFF_PROOFREADING_AUTHOR')); ?>
-					<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'submissionEditing','path' => $this->_tpl_vars['articleId']), $this);?>
-" class="action">
-						<?php if ($this->_tpl_vars['proofSignoff']->getDateNotified() && ! $this->_tpl_vars['proofSignoff']->getDateCompleted()): ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.queuedEditingCopyedit"), $this);?>
-
-						<?php elseif ($this->_tpl_vars['proofSignoff']->getDateNotified() && ! $this->_tpl_vars['proofSignoff']->getDateCompleted()): ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.queuedEditingProofread"), $this);?>
-
-						<?php else: ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.queuedEditing"), $this);?>
-
-						<?php endif; ?>
-					</a>
-				<?php endif; ?>
-
-								<?php if ($this->_tpl_vars['status'] == STATUS_QUEUED_UNASSIGNED || $this->_tpl_vars['status'] == STATUS_QUEUED_REVIEW): ?>
-					<?php if ($this->_tpl_vars['submissionEnabled'] && ! $this->_tpl_vars['completedPaymentDAO']->hasPaidSubmission($this->_tpl_vars['submission']->getJournalId(),$this->_tpl_vars['submission']->getArticleId())): ?>
-						<br />
-						<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'paySubmissionFee','path' => ($this->_tpl_vars['articleId'])), $this);?>
-" class="action"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "payment.submission.paySubmission"), $this);?>
-</a>					
-					<?php elseif ($this->_tpl_vars['fastTrackEnabled']): ?>
-						<br />
-						<?php if ($this->_tpl_vars['submission']->getFastTracked()): ?>
-							<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "payment.fastTrack.inFastTrack"), $this);?>
-
-						<?php else: ?>
-							<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'payFastTrackFee','path' => ($this->_tpl_vars['articleId'])), $this);?>
-" class="action"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "payment.fastTrack.payFastTrack"), $this);?>
+                                <?php $this->assign('status', $this->_tpl_vars['submission']->getSubmissionStatus()); ?>
+                                
+                                <?php if ($this->_tpl_vars['status'] == PROPOSAL_STATUS_SUBMITTED): ?>
+                                    <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.submitted"), $this);?>
+<br /><a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'deleteSubmission','path' => $this->_tpl_vars['articleId']), $this);?>
+" class="action" onclick="return confirm('<?php echo ((is_array($_tmp=$this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.confirmWithdraw"), $this))) ? $this->_run_mod_handler('escape', true, $_tmp, 'jsparam') : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp, 'jsparam'));?>
+')"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.withdraw"), $this);?>
 </a>
-						<?php endif; ?>
-					<?php endif; ?>
-				<?php elseif ($this->_tpl_vars['status'] == STATUS_QUEUED_EDITING): ?>
-					<?php if ($this->_tpl_vars['publicationEnabled']): ?>
-						<br />
-						<?php if ($this->_tpl_vars['completedPaymentDAO']->hasPaidPublication($this->_tpl_vars['submission']->getJournalId(),$this->_tpl_vars['submission']->getArticleId())): ?>
-							<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "payment.publication.publicationPaid"), $this);?>
+                                <?php elseif ($this->_tpl_vars['status'] == PROPOSAL_STATUS_RETURNED): ?>
+                                 
+                                    <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.returned"), $this);?>
+<br /><a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'resubmit','path' => $this->_tpl_vars['articleId']), $this);?>
+" class="action">Resubmit</a>
+                                <?php endif; ?>
+                         </td>
 
-						<?php else: ?>
-						 	<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'payPublicationFee','path' => ($this->_tpl_vars['articleId'])), $this);?>
-" class="action"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "payment.publication.payPublication"), $this);?>
-</a>
-						 <?php endif; ?>
-				<?php endif; ?>		
-		<?php endif; ?>
-			</td>
+                                
+				                                			
 		<?php else: ?>
 			<td><a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'submit','path' => $this->_tpl_vars['progress'],'articleId' => $this->_tpl_vars['articleId']), $this);?>
 " class="action"><?php if ($this->_tpl_vars['submission']->getLocalizedTitle()): ?><?php echo ((is_array($_tmp=((is_array($_tmp=$this->_tpl_vars['submission']->getLocalizedTitle())) ? $this->_run_mod_handler('strip_unsafe_html', true, $_tmp) : String::stripUnsafeHtml($_tmp)))) ? $this->_run_mod_handler('truncate', true, $_tmp, 60, "...") : $this->_plugins['modifier']['truncate'][0][0]->smartyTruncate($_tmp, 60, "...")); ?>

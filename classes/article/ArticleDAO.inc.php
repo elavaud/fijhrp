@@ -774,6 +774,29 @@ class ArticleDAO extends DAO {
 		$this->flushCache();
 	}
 
+
+        /**
+         *  Added by:  Anne Ivy Mirasol
+         *  Last Updated: May 24, 2011
+         *
+         *  Compare decision date and submission date of proposal to determine if proposal has been resubmitted
+         *  @return boolean
+         */
+        function isProposalResubmitted($articleId) {
+            $result =& $this->retrieve('SELECT date_submitted FROM articles WHERE article_id = ?', $articleId);
+            $row = $result->FetchRow();
+            $date_submitted = $row['date_submitted'];
+
+
+            $result =& $this->retrieve('SELECT date_decided FROM edit_decisions WHERE edit_decision_id =
+                                             (SELECT MAX(edit_decision_id) FROM edit_decisions WHERE article_id = ? GROUP BY article_id)', $articleId);
+            $row = $result->FetchRow();
+            $date_decided = $row['date_decided'];
+
+            if($date_decided < $date_submitted) return true;
+            else return false;
+        }
+
 }
 
 ?>
