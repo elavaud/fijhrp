@@ -21,6 +21,7 @@ define('PROPOSAL_STATUS_CHECKED',3);
 define('PROPOSAL_STATUS_ASSIGNED',4);
 define('PROPOSAL_STATUS_EXEMPTED',5);
 define('PROPOSAL_STATUS_REVIEWED',6);
+define('PROPOSAL_STATUS_WITHDRAWN',7);
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
@@ -1356,13 +1357,7 @@ class Submission extends DataObject {
 	function setWhoId($whoId, $locale) {
 		return $this->setData('whoId', $whoId, $locale);
 	}
-<<<<<<< HEAD
 
 }
 
 ?>
-=======
-
-}
-?>
->>>>>>> 16339c6b8c5a64ad4ad823ecdc6151340a7040be
