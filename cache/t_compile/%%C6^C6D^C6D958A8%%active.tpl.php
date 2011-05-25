@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-25 10:49:52
+<?php /* Smarty version 2.6.26, created on 2011-05-25 13:41:28
          compiled from author/active.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/active.tpl', 16, false),array('function', 'sort_heading', 'author/active.tpl', 16, false),array('function', 'url', 'author/active.tpl', 33, false),array('function', 'page_info', 'author/active.tpl', 109, false),array('function', 'page_links', 'author/active.tpl', 110, false),array('block', 'iterate', 'author/active.tpl', 24, false),array('modifier', 'escape', 'author/active.tpl', 28, false),array('modifier', 'date_format', 'author/active.tpl', 29, false),array('modifier', 'truncate', 'author/active.tpl', 31, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 33, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/active.tpl', 16, false),array('function', 'sort_heading', 'author/active.tpl', 16, false),array('function', 'url', 'author/active.tpl', 33, false),array('function', 'page_info', 'author/active.tpl', 111, false),array('function', 'page_links', 'author/active.tpl', 112, false),array('block', 'iterate', 'author/active.tpl', 24, false),array('modifier', 'escape', 'author/active.tpl', 28, false),array('modifier', 'date_format', 'author/active.tpl', 29, false),array('modifier', 'truncate', 'author/active.tpl', 31, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 33, false),)), $this); ?>
 <div id="submissions">
 <table class="listing" width="100%">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
@@ -60,6 +60,9 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 " class="action" onclick="return confirm('<?php echo ((is_array($_tmp=$this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.confirmDelete"), $this))) ? $this->_run_mod_handler('escape', true, $_tmp, 'jsparam') : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp, 'jsparam'));?>
 ')"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.delete"), $this);?>
 </a>
+                        <?php elseif ($this->_tpl_vars['status'] == PROPOSAL_STATUS_REVIEWED): ?>
+                            <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.reviewed"), $this);?>
+ TODO: Display decision (?)
                         <?php endif; ?>
                  </td>
 

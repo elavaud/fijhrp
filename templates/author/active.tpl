@@ -42,6 +42,8 @@
                             {translate key="submissions.proposal.withdrawn"}<br />
                         {elseif $status==PROPOSAL_STATUS_DRAFT} 
                             {translate key="submissions.proposal.draft"}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmDelete"}')">{translate key="common.delete"}</a>
+                        {elseif $status==PROPOSAL_STATUS_REVIEWED}
+                            {translate key="submissions.proposal.reviewed"}<br />TODO: Display decision (?)
                         {/if}
                  </td>
 

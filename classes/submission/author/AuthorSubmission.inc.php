@@ -177,11 +177,14 @@ class AuthorSubmission extends Article {
                     if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
                     else return PROPOSAL_STATUS_RETURNED;
                 }
+                else if($status == PROPOSAL_STATUS_REVIEWED) {
+                    //TODO: Return actual decision
+                }
                 
                 return $status;
 
                 
-                //Unreachable code -- clean up later
+                //Unreachable code  TODO: clean up once sure code unneeded
 
                 $status = $this->getStatus();
 
