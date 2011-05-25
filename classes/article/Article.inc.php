@@ -31,6 +31,8 @@ define ('STATUS_QUEUED_REVIEW', 6);
 define ('STATUS_QUEUED_EDITING', 7);
 define ('STATUS_INCOMPLETE', 8);
 
+define ('STATUS_WITHDRAWN', 9); //Added by Anne Ivy Mirasol, May 25, 2011
+
 // Author display in ToC
 define ('AUTHOR_TOC_DEFAULT', 0);
 define ('AUTHOR_TOC_HIDE', 1);

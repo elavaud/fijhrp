@@ -797,6 +797,14 @@ class ArticleDAO extends DAO {
             else return false;
         }
 
+
+        function withdrawProposal($articleId) {
+            $this->update(
+			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_WITHDRAWN, (int) $articleId)
+		);
+
+		$this->flushCache();
+        }
 }
 
 ?>

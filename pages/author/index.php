@@ -37,6 +37,7 @@ switch ($op) {
 	//
 	case 'deleteArticleFile':
 	case 'deleteSubmission':
+        case 'withdrawSubmission':   //Added by Anne Ivy Mirasol, May 25, 2011
 	case 'submission':
 	case 'editSuppFile':
 	case 'setSuppFileVisibility':

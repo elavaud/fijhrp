@@ -12,7 +12,7 @@
 <table class="listing" width="100%">
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
 	<tr valign="bottom" class="heading">
-		<td width="5%">{sort_heading key="common.id" sort="id"}</td>
+		<td width="5%">WHO Proposal ID</td>
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
 		<td width="23%">{sort_heading key="article.authors" sort="authors"}</td>
@@ -23,8 +23,9 @@
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
+        {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
-		<td>{$articleId|escape}</td>
+		<td>{$whoId|escape}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 		<td>{$submission->getSectionAbbrev()|escape}</td>
 		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
@@ -45,9 +46,10 @@
 			</td>
 		{/if}
 		<td align="right">
-			{if $status==STATUS_ARCHIVED}{translate key="submissions.archived"}
-			{elseif $status==STATUS_PUBLISHED}{print_issue_id articleId="$articleId"}
-			{elseif $status==STATUS_DECLINED}{translate key="submissions.declined"}
+			{if $status==STATUS_ARCHIVED}{translate key="submissions.archived"} //Clean up later
+			{elseif $status==STATUS_PUBLISHED}{print_issue_id articleId="$articleId"} //Clean up later
+			{elseif $status==STATUS_DECLINED}{translate key="submissions.declined"}  //Clean up later
+                        {elseif $status==PROPOSAL_STATUS_WITHDRAWN}{translate key="submissions.proposal.withdrawn"}
 			{/if}
 		</td>
 	</tr>

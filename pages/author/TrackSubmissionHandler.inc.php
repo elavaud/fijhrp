@@ -37,15 +37,17 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$this->setupTemplate(true);
 
 		// If the submission is incomplete, allow the author to delete it.
-		if ($authorSubmission->getSubmissionProgress()!=0) {
+		if ($authorSubmission->getSubmissionProgress()!=0 && !$authorSubmission->getDateSubmitted()) { //Edited May 25, 2011
 			import('classes.file.ArticleFileManager');
 			$articleFileManager = new ArticleFileManager($articleId);
 			$articleFileManager->deleteArticleTree();
 
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
 			$articleDao->deleteArticleById($args[0]);
-		}
 
+                        Request::redirect(null, null, 'index');
+		}
+                
                 /**************************************
                  * Added by: Anne Ivy Mirasol
                  * Allow withdrawal of proposal
@@ -61,7 +63,6 @@ class TrackSubmissionHandler extends AuthorHandler {
 			$articleDao->deleteArticleById($args[0]);
 		}
                 
-
 		Request::redirect(null, null, 'index');
 	}
 
@@ -674,6 +675,20 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);
 	}
 
+
+        function withdrawSubmission($args) {
+            $articleId = isset($args[0]) ? $args[0] : 0;
+            $this->validate($articleId);
+            $this->setupTemplate(true);
+            
+            $authorSubmission =& $this->submission;
+            $authorSubmission->setStatus = PROPOSAL_STATUS_WITHDRAWN;
+            
+            $articleDao = DAORegistry::getDAO('ArticleDAO');
+            $articleDao->withdrawProposal($articleId);
+
+            Request::redirect(null, null, 'index');
+        }
 
 }
 ?>

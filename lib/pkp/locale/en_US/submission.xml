@@ -371,7 +371,10 @@
 	<message key="submissions.proposal.exempted">Exempted From Review</message>
 	<message key="submissions.proposal.assigned">Assigned For Review</message>
 	<message key="submissions.proposal.reviewed">Reviewed</message>
+        
         <message key="submissions.proposal.withdrawn">Withdrawn</message>
+        <message key="submissions.proposal.draft">Draft</message>
+
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Submit</message>
 	<message key="submissions.submitted">Submitted</message>

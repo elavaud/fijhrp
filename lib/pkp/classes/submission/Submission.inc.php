@@ -22,8 +22,9 @@ define('PROPOSAL_STATUS_ASSIGNED',4);
 define('PROPOSAL_STATUS_EXEMPTED',5);
 define('PROPOSAL_STATUS_REVIEWED',6);
 
-define('PROPOSAL_STATUS_WITHDRAWN',7);  //Special tag, not part of lifecycle
-define('PROPOSAL_STATUS_RESUBMITTED',8); //Special tag, not part of lifecycle
+
+define('PROPOSAL_STATUS_DRAFT',8); //Replaces STATUS_INCOMPLETE
+define('PROPOSAL_STATUS_WITHDRAWN',9);  //Special tag, not part of lifecycle
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
