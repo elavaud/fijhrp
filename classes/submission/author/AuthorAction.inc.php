@@ -36,16 +36,16 @@ class AuthorAction extends Action {
 	 * @param $designate boolean
 	 */
 	function designateReviewVersion($authorSubmission, $designate = false) {
-		import('classes.file.ArticleFileManager');
+                import('classes.file.ArticleFileManager');
 		$articleFileManager = new ArticleFileManager($authorSubmission->getId());
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 
 		if ($designate && !HookRegistry::call('AuthorAction::designateReviewVersion', array(&$authorSubmission))) {
 			$submissionFile =& $authorSubmission->getSubmissionFile();
 			if ($submissionFile) {
-				$reviewFileId = $articleFileManager->copyToReviewFile($submissionFile->getFileId());
+                                $reviewFileId = $articleFileManager->copyToReviewFile($submissionFile->getFileId());
 
-				$authorSubmission->setReviewFileId($reviewFileId);
+                                $authorSubmission->setReviewFileId($reviewFileId);
 
 				$authorSubmissionDao->updateAuthorSubmission($authorSubmission);
 

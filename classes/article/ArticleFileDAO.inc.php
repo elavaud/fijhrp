@@ -393,6 +393,25 @@ class ArticleFileDAO extends DAO {
 		}
 		return in_array($articleFile->getFileType(), $this->inlineableTypes);
 	}
+
+
+        /**
+         *  Added by: Anne Ivy Mirasol
+         *  Last Updated: May 25, 2011
+         */
+
+        /**
+	 * Delete an article file by source file ID.
+	 * @param $articleId int
+	 * @param $revision int
+	 */
+	function deleteArticleFileBySourceFileId($sourceFileId) {
+
+            return $this->update(
+                    'DELETE FROM article_files WHERE source_file_id = ?', $sourceFileId
+            );
+
+	}
 }
 
 ?>

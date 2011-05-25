@@ -29,7 +29,7 @@ class SubmitHandler extends AuthorHandler {
 
         /************************************
          *  Added by:  Anne Ivy Mirasol
-         *  Last Updated: May 18, 2011
+         *  Last Updated: May 25, 2011
          *  Resubmit a proposal
          ************************************/
         function resubmit($args, $request) {
@@ -43,6 +43,15 @@ class SubmitHandler extends AuthorHandler {
 
             $step = 2;
             $articleDAO->changeArticleProgress($articleId, $step);
+
+            //Delete previous version in submission/review folder (Step 5 copies submission/original into submission/review)
+            $authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
+            $authorSubmission = $authorSubmissionDao->getAuthorSubmission($articleId);
+            $submissionFile =& $authorSubmission->getSubmissionFile();
+            $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
+            $articleFileDao->deleteArticleFileBySourceFileId($submissionFile->getFileId());
+
+
             Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
         }
 
@@ -101,7 +110,7 @@ class SubmitHandler extends AuthorHandler {
 			switch ($step) {
 				case 2:
 					if ($request->getUserVar('uploadSubmissionFile')) {
-						$submitForm->uploadSubmissionFile('submissionFile');
+                                                $submitForm->uploadSubmissionFile('submissionFile');
 						$editData = true;
 					}
 					break;

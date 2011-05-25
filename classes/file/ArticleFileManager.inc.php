@@ -70,7 +70,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadSubmissionFile($fileName, $fileId = null, $overwrite = false) {
-		return $this->handleUpload($fileName, ARTICLE_FILE_SUBMISSION, $fileId, $overwrite);
+                return $this->handleUpload($fileName, ARTICLE_FILE_SUBMISSION, $fileId, $overwrite);
 	}
 
 	/**
@@ -306,7 +306,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file id of the new file.
 	 */
 	function copyToReviewFile($fileId, $revision = null, $destFileId = null) {
-		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_REVIEW, $destFileId);
+                return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_REVIEW, $destFileId);
 	}
 
 	/**
@@ -487,7 +487,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file ID (false if upload failed)
 	 */
 	function handleUpload($fileName, $type, $fileId = null, $overwrite = false) {
-		if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$overwrite, &$result))) return $result;
+                if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$overwrite, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
