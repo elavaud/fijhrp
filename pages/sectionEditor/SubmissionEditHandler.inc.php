@@ -445,6 +445,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
 			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
+			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
 				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId);

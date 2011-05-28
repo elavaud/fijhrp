@@ -685,6 +685,9 @@ class ArticleDAO extends DAO {
 			case SUBMISSION_EDITOR_DECISION_ASSIGNED:			
 				$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
 				break;
+			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
+				$proposalStatus = PROPOSAL_STATUS_EXPEDITED;
+				break;
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
@@ -714,11 +717,11 @@ class ArticleDAO extends DAO {
 
 		if ($round == null) {
 			$result =& $this->retrieve(
-				'SELECT max(edit_decision_id) as edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? GROUP BY article_id ORDER BY edit_decision_id ASC', $articleId
+				'SELECT edit_decision_id as edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? GROUP BY article_id ORDER BY edit_decision_id ASC', $articleId
 			);
 		} else {
 			$result =& $this->retrieve(
-				'SELECT max(edit_decision_id), editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? GROUP BY article_id ORDER BY edit_decision_id ASC',
+				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? GROUP BY article_id ORDER BY edit_decision_id ASC',
 				array($articleId, $round)
 			);
 		}
