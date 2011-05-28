@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-03 21:47:51
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:23:25
          compiled from core:common/header.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'core:common/header.tpl', 10, false),array('function', 'call_hook', 'core:common/header.tpl', 49, false),array('modifier', 'assign', 'core:common/header.tpl', 10, false),array('modifier', 'escape', 'core:common/header.tpl', 21, false),)), $this); ?>

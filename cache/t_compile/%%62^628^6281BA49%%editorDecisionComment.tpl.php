@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-10 21:37:31
+<?php /* Smarty version 2.6.26, created on 2011-05-23 14:37:07
          compiled from submission/comment/editorDecisionComment.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'submission/comment/editorDecisionComment.tpl', 30, false),array('function', 'url', 'submission/comment/editorDecisionComment.tpl', 35, false),array('function', 'fieldLabel', 'submission/comment/editorDecisionComment.tpl', 71, false),array('modifier', 'date_format', 'submission/comment/editorDecisionComment.tpl', 31, false),array('modifier', 'to_array', 'submission/comment/editorDecisionComment.tpl', 35, false),array('modifier', 'escape', 'submission/comment/editorDecisionComment.tpl', 35, false),array('modifier', 'strip_unsafe_html', 'submission/comment/editorDecisionComment.tpl', 42, false),array('modifier', 'nl2br', 'submission/comment/editorDecisionComment.tpl', 42, false),)), $this); ?>

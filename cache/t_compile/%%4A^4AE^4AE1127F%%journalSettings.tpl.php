@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-04-23 22:44:31
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:25:00
          compiled from admin/journalSettings.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'url', 'admin/journalSettings.tpl', 33, false),array('function', 'translate', 'admin/journalSettings.tpl', 42, false),array('function', 'fieldLabel', 'admin/journalSettings.tpl', 48, false),array('function', 'form_language_chooser', 'admin/journalSettings.tpl', 51, false),array('modifier', 'escape', 'admin/journalSettings.tpl', 36, false),array('modifier', 'assign', 'admin/journalSettings.tpl', 50, false),)), $this); ?>

@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-03 21:48:50
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:50:41
          compiled from editor/submissionsInReview.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'sort_search', 'editor/submissionsInReview.tpl', 15, false),array('function', 'translate', 'editor/submissionsInReview.tpl', 16, false),array('function', 'url', 'editor/submissionsInReview.tpl', 45, false),array('function', 'page_info', 'editor/submissionsInReview.tpl', 104, false),array('function', 'page_links', 'editor/submissionsInReview.tpl', 105, false),array('block', 'iterate', 'editor/submissionsInReview.tpl', 37, false),array('modifier', 'escape', 'editor/submissionsInReview.tpl', 40, false),array('modifier', 'date_format', 'editor/submissionsInReview.tpl', 42, false),array('modifier', 'truncate', 'editor/submissionsInReview.tpl', 44, false),array('modifier', 'strip_unsafe_html', 'editor/submissionsInReview.tpl', 45, false),array('modifier', 'default', 'editor/submissionsInReview.tpl', 53, false),)), $this); ?>

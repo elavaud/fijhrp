@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-04 00:36:22
+<?php /* Smarty version 2.6.26, created on 2011-05-23 11:43:21
          compiled from editor/submissionsUnassigned.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'sort_search', 'editor/submissionsUnassigned.tpl', 15, false),array('function', 'translate', 'editor/submissionsUnassigned.tpl', 16, false),array('function', 'url', 'editor/submissionsUnassigned.tpl', 31, false),array('function', 'page_info', 'editor/submissionsUnassigned.tpl', 46, false),array('function', 'page_links', 'editor/submissionsUnassigned.tpl', 47, false),array('block', 'iterate', 'editor/submissionsUnassigned.tpl', 25, false),array('modifier', 'date_format', 'editor/submissionsUnassigned.tpl', 28, false),array('modifier', 'escape', 'editor/submissionsUnassigned.tpl', 29, false),array('modifier', 'truncate', 'editor/submissionsUnassigned.tpl', 30, false),array('modifier', 'strip_unsafe_html', 'editor/submissionsUnassigned.tpl', 31, false),)), $this); ?>

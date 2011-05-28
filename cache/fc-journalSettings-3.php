@@ -1,83 +1,119 @@
 <?php return array (
-  'publicationFeeDescription' => 
-  array (
-    'en_US' => 'If this paper is accepted for publication, you will be asked to pay an Article Publication Fee to cover publications costs.',
-  ),
-  'publicationFee' => 0,
-  'publicationFeeName' => 
-  array (
-    'en_US' => 'Article Publication',
-  ),
+  'allowRegAuthor' => true,
+  'allowRegReader' => true,
+  'allowRegReviewer' => true,
+  'emailSignature' => '________________________________________________________________________
+Research Registration Portal
+http://localhost/whorrp2/index.php/whorrp',
   'fastTrackFee' => 0,
-  'fastTrackFeeName' => 
+  'itemsPerPage' => 25,
+  'membershipFee' => 0,
+  'numPageLinks' => 10,
+  'numWeeksPerReview' => 4,
+  'publicationFee' => 0,
+  'purchaseArticleFee' => 0,
+  'rtAbstract' => true,
+  'rtAddComment' => true,
+  'rtAuthorBio' => true,
+  'rtCaptureCite' => true,
+  'rtDefineTerms' => true,
+  'rtEmailAuthor' => true,
+  'rtEmailOthers' => true,
+  'rtPrinterFriendly' => true,
+  'rtSupplementaryFiles' => true,
+  'rtViewMetadata' => true,
+  'submissionFee' => 0,
+  'supportedFormLocales' => 
   array (
-    'en_US' => 'Fast-Track Review',
+    0 => 'en_US',
+  ),
+  'supportedLocales' => 
+  array (
+    0 => 'en_US',
+  ),
+  'supportedSubmissionLocales' => 
+  array (
+    0 => 'en_US',
+  ),
+  'authorInformation' => 
+  array (
+    'en_US' => 'Interested in submitting to this journal? We recommend that you review the <a href="http://localhost/whorrp2/index.php/whorrp/about">About the Journal</a> page for the journal\'s section policies, as well as the <a href="http://localhost/whorrp2/index.php/whorrp/about/submissions#authorGuidelines">Author Guidelines</a>. Authors need to <a href="http://localhost/whorrp2/index.php/whorrp/user/register">register</a> with the journal prior to submitting or, if already registered, can simply <a href="http://localhost/whorrp2/index.php/index/login">log in</a> and begin the five-step process.',
+  ),
+  'authorSelfArchivePolicy' => 
+  array (
+    'en_US' => 'This journal permits and encourages authors to post items submitted to the journal on personal websites or institutional repositories both prior to and after publication, while providing bibliographic details that credit, if applicable, its publication in this journal.',
+  ),
+  'copyeditInstructions' => 
+  array (
+    'en_US' => 'The copyediting stage is intended to improve the flow, clarity, grammar, wording, and formatting of the article. It represents the last chance for the author to make any substantial changes to the text because the next stage is restricted to typos and formatting corrections. 
+
+The file to be copyedited is in Word or .rtf format and therefore can easily be edited as a word processing document. The set of instructions displayed here proposes two approaches to copyediting. One is based on Microsoft Word\'s Track Changes feature and requires that the copy editor, editor, and author have access to this program. A second system, which is software independent, has been borrowed, with permission, from the Harvard Educational Review. The journal editor is in a position to modify these instructions, so suggestions can be made to improve the process for this journal.
+
+
+<h4>Copyediting Systems</h4>
+
+<strong>1. Microsoft Word\'s Track Changes</strong>
+
+Under Tools in the menu bar, the feature Track Changes enables the copy editor to make insertions (text appears in color) and deletions (text appears crossed out in color or in the margins as deleted). The copy editor can posit queries to both the author (Author Queries) and to the editor (Editor Queries) by inserting these queries in square brackets. The copyedited version is then uploaded, and the editor is notified. The editor then reviews the text and notifies the author.
+
+The editor and author should leave those changes with which they are satisfied. If further changes are necessary, the editor and author can make changes to the initial insertions or deletions, as well as make new insertions or deletions elsewhere in the text. Authors and editors should respond to each of the queries addressed to them, with responses placed inside the square brackets. 
+
+After the text has been reviewed by editor and author, the copy editor will make a final pass over the text accepting the changes in preparation for the layout and galley stage.
+
+
+<strong>2. Harvard Educational Review </strong>
+
+<strong>Instructions for Making Electronic Revisions to the Manuscript</strong>
+
+Please follow the following protocol for making electronic revisions to your manuscript:
+
+<strong>Responding to suggested changes.</strong>
+&nbsp; For each of the suggested changes that you accept, unbold the text.
+&nbsp; For each of the suggested changes that you do not accept, re-enter the original text and <strong>bold</strong> it.
+
+<strong>Making additions and deletions.</strong>
+&nbsp; Indicate additions by <strong>bolding</strong> the new text.
+&nbsp; Replace deleted sections with: <strong>[deleted text]</strong>.
+&nbsp; If you delete one or more sentence, please indicate with a note, e.g., <strong>[deleted 2 sentences]</strong>.
+
+<strong>Responding to Queries to the Author (QAs).</strong>
+&nbsp; Keep all QAs intact and bolded within the text. Do not delete them.
+&nbsp; To reply to a QA, add a comment after it. Comments should be delimited using:
+<strong>[Comment:]</strong>
+&nbsp; e.g., <strong>[Comment: Expanded discussion of methodology as you suggested]</strong>.
+
+<strong>Making comments.</strong>
+&nbsp; Use comments to explain organizational changes or major revisions
+&nbsp; e.g., <strong>[Comment: Moved the above paragraph from p. 5 to p. 7].</strong>
+&nbsp; Note: When referring to page numbers, please use the page numbers from the printed copy of the manuscript that was sent to you. This is important since page numbers may change as a document is revised electronically.
+
+<h4>An Illustration of an Electronic Revision</h4>
+
+<ol>
+<li><strong>Initial copyedit.</strong> The journal copy editor will edit the text to improve flow, clarity, grammar, wording, and formatting, as well as including author queries as necessary. Once the initial edit is complete, the copy editor will upload the revised document through the journal Web site and notify the author that the edited manuscript is available for review.</li>
+<li><strong>Author copyedit.</strong> Before making dramatic departures from the structure and organization of the edited manuscript, authors must check in with the editors who are co-chairing the piece. Authors should accept/reject any changes made during the initial copyediting, as appropriate, and respond to all author queries. When finished with the revisions, authors should rename the file from AuthorNameQA.doc to AuthorNameQAR.doc (e.g., from LeeQA.doc to LeeQAR.doc) and upload the revised document through the journal Web site as directed.</li>
+<li><strong>Final copyedit.</strong> The journal copy editor will verify changes made by the author and incorporate the responses to the author queries to create a final manuscript. When finished, the copy editor will upload the final document through the journal Web site and alert the layout editor to complete formatting.</li>
+</ol>',
+  ),
+  'description' => 
+  array (
+    'en_US' => 'WHO Research Registration Portal',
+  ),
+  'donationFeeDescription' => 
+  array (
+    'en_US' => 'Donations of any amount to this journal are gratefully received and provide a means for the editors to continue to provide a journal of the highest quality to its readers.',
+  ),
+  'donationFeeName' => 
+  array (
+    'en_US' => 'Donations to journal',
   ),
   'fastTrackFeeDescription' => 
   array (
     'en_US' => 'With the payment of this fee, the review, editorial decision, and author notification on this manuscript is guaranteed to take place within 4 weeks.',
   ),
-  'rtAuthorBio' => true,
-  'rtDefineTerms' => true,
-  'rtAddComment' => true,
-  'rtEmailAuthor' => true,
-  'rtEmailOthers' => true,
-  'allowRegReviewer' => false,
-  'allowRegAuthor' => false,
-  'allowRegReader' => false,
-  'submissionFee' => 0,
-  'submissionFeeName' => 
+  'fastTrackFeeName' => 
   array (
-    'en_US' => 'Article Submission',
-  ),
-  'submissionFeeDescription' => 
-  array (
-    'en_US' => 'Authors are required to pay an Article Submission Fee as part of the submission process to contribute to review costs.',
-  ),
-  'submissionChecklist' => 
-  array (
-    'en_US' => 
-    array (
-      0 => 
-      array (
-        'order' => '1',
-        'content' => 'The submission has not been previously published, nor is it before another journal for consideration (or an explanation has been provided in Comments to the Editor).',
-      ),
-      1 => 
-      array (
-        'order' => '2',
-        'content' => 'The submission file is in OpenOffice, Microsoft Word, RTF, or WordPerfect document file format.',
-      ),
-      2 => 
-      array (
-        'order' => '3',
-        'content' => 'Where available, URLs for the references have been provided.',
-      ),
-      3 => 
-      array (
-        'order' => '4',
-        'content' => 'The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses); and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.',
-      ),
-      4 => 
-      array (
-        'order' => '5',
-        'content' => 'The text adheres to the stylistic and bibliographic requirements outlined in the <a href="/whorrp/whorrp/index.php/whorrp/about/submissions#authorGuidelines" target="_new">Author Guidelines</a>, which is found in About the Journal.',
-      ),
-      5 => 
-      array (
-        'order' => '6',
-        'content' => 'If submitting to a peer-reviewed section of the journal, the instructions in <a href="javascript:openHelp(\'http://localhost/whorrp/whorrp/index.php/whorrp/help/view/editorial/topic/000044\')">Ensuring a Blind Review</a> have been followed.',
-      ),
-    ),
-  ),
-  'rtAbstract' => true,
-  'rtCaptureCite' => true,
-  'rtViewMetadata' => true,
-  'rtSupplementaryFiles' => true,
-  'rtPrinterFriendly' => true,
-  'authorInformation' => 
-  array (
-    'en_US' => 'Interested in submitting to this journal? We recommend that you review the <a href="/whorrp/whorrp/index.php/whorrp/about">About the Journal</a> page for the journal\'s section policies, as well as the <a href="/whorrp/whorrp/index.php/whorrp/about/submissions#authorGuidelines">Author Guidelines</a>. Authors need to <a href="/whorrp/whorrp/index.php/whorrp/user/register">register</a> with the journal prior to submitting or, if already registered, can simply <a href="/whorrp/whorrp/index.php/index/login">log in</a> and begin the five-step process.',
+    'en_US' => 'Fast-Track Review',
   ),
   'librarianInformation' => 
   array (
@@ -87,287 +123,145 @@
   array (
     'en_US' => 'This journal utilizes the LOCKSS system to create a distributed archiving system among participating libraries and permits those libraries to create permanent archives of the journal for purposes of preservation and restoration. <a href="http://lockss.org/">More...</a>',
   ),
-  'supportedLocales' => 
+  'membershipFeeDescription' => 
   array (
-    0 => 'en_US',
+    'en_US' => 'The payment of this fee will enroll you as a member in this association for one year and provide you with free access to this journal.',
   ),
-  'supportedFormLocales' => 
+  'membershipFeeName' => 
   array (
-    0 => 'en_US',
+    'en_US' => 'Association Membership',
   ),
-  'supportedSubmissionLocales' => 
-  array (
-    0 => 'en_US',
-  ),
-  'includeCreativeCommons' => true,
-  'displayCurrentIssue' => false,
-  'navItems' => 
-  array (
-    'en_US' => 
-    array (
-      0 => 
-      array (
-        'name' => '',
-        'url' => '',
-      ),
-    ),
-  ),
-  'journalTheme' => 'classicNavy',
-  'readerInformation' => 
-  array (
-    'en_US' => 'We encourage readers to sign up for the publishing notification service for this journal. Use the <a href="/whorrp/whorrp/index.php/whorrp/user/register">Register</a> link at the top of the home page for the journal. This registration will result in the reader receiving the Table of Contents by email for each new issue of the journal. This list also allows the journal to claim a certain level of support or readership. See the journal\'s <a href="/whorrp/whorrp/index.php/whorrp/about/submissions#privacyStatement">Privacy Statement</a>, which assures readers that their name and email address will not be used for other purposes.',
-  ),
-  'refLinkInstructions' => 
-  array (
-    'en_US' => '<h4>To Add Reference Linking to the Layout Process</h4> <p>When turning a submission into HTML or PDF, make sure that all hyperlinks in the submission are active.</p> <h4>A. When the Author Provides a Link with the Reference</h4> <ol> <li>While the submission is still in its word processing format (e.g., Word), add the phrase VIEW ITEM to the end of the reference that has a URL.</li> <li>Turn that phrase into a hyperlink by highlighting it and using Word\'s Insert Hyperlink tool and the URL prepared in #2.</li> </ol> <h4>B. Enabling Readers to Search Google Scholar For References</h4> <ol> <li>While the submission is still in its word processing format (e.g., Word), copy the title of the work referenced in the References list (if it appears to be too common a title—e.g., "Peace"—then copy author and title).</li> <li>Paste the reference\'s title between the %22\'s, placing a + between each word: http://scholar.google.com/scholar?q=%22PASTE+TITLE+HERE%22&amp;hl=en&amp;lr=&amp;btnG=Search.</li> <li>Add the phrase GS SEARCH to the end of each citation in the submission\'s References list.</li> <li>Turn that phrase into a hyperlink by highlighting it and using Word\'s Insert Hyperlink tool and the URL prepared in #2.</li> </ol> <h4>C. Enabling Readers to Search for References with a DOI</h4> <ol> <li>While the submission is still in Word, copy a batch of references into CrossRef Text Query http://www.crossref.org/freeTextQuery/.</li> <li>Paste each DOI that the Query provides in the following URL (between = and &amp;): http://www.cmaj.ca/cgi/external_ref?access_num=PASTE DOI#HERE&amp;link_type=DOI.</li> <li>Add the phrase CrossRef to the end of each citation in the submission\'s References list.</li> <li>Turn that phrase into a hyperlink by highlighting the phrase and using Word\'s Insert Hyperlink tool and the appropriate URL prepared in #2.</li> </ol>',
-  ),
-  'proofInstructions' => 
-  array (
-    'en_US' => '<p>The proofreading stage is intended to catch any errors in the galley\'s spelling, grammar, and formatting. More substantial changes cannot be made at this stage, unless discussed with the Section Editor. In Layout, click on VIEW PROOF to see the HTML, PDF, and other available file formats used in publishing this item.</p> <h4>For Spelling and Grammar Errors</h4> <p>Copy the problem word or groups of words and paste them into the Proofreading Corrections box with "CHANGE-TO" instructions to the editor as follows:</p> <pre>1. CHANGE...
-	then the others
-	TO...
-	than the others</pre> <br /> <pre>2. CHANGE...
-	Malinowsky
-	TO...
-	Malinowski</pre> <br /> <h4>For Formatting Errors</h4> <p>Describe the location and nature of the problem in the Proofreading Corrections box after typing in the title "FORMATTING" as follows:</p> <br /> <pre>3. FORMATTING
-	The numbers in Table 3 are not aligned in the third column.</pre> <br /> <pre>4. FORMATTING
-	The paragraph that begins "This last topic..." is not indented.</pre>',
-  ),
-  'copyeditInstructions' => 
-  array (
-    'en_US' => 'The copyediting stage is intended to improve the flow, clarity, grammar, wording, and formatting of the article. It represents the last chance for the author to make any substantial changes to the text because the next stage is restricted to typos and formatting corrections.   The file to be copyedited is in Word or .rtf format and therefore can easily be edited as a word processing document. The set of instructions displayed here proposes two approaches to copyediting. One is based on Microsoft Word\'s Track Changes feature and requires that the copy editor, editor, and author have access to this program. A second system, which is software independent, has been borrowed, with permission, from the Harvard Educational Review. The journal editor is in a position to modify these instructions, so suggestions can be made to improve the process for this journal.   <h4>Copyediting Systems</h4> <strong>1. Microsoft Word\'s Track Changes</strong> Under Tools in the menu bar, the feature Track Changes enables the copy editor to make insertions (text appears in color) and deletions (text appears crossed out in color or in the margins as deleted). The copy editor can posit queries to both the author (Author Queries) and to the editor (Editor Queries) by inserting these queries in square brackets. The copyedited version is then uploaded, and the editor is notified. The editor then reviews the text and notifies the author.  The editor and author should leave those changes with which they are satisfied. If further changes are necessary, the editor and author can make changes to the initial insertions or deletions, as well as make new insertions or deletions elsewhere in the text. Authors and editors should respond to each of the queries addressed to them, with responses placed inside the square brackets.   After the text has been reviewed by editor and author, the copy editor will make a final pass over the text accepting the changes in preparation for the layout and galley stage.   <strong>2. Harvard Educational Review </strong> <strong>Instructions for Making Electronic Revisions to the Manuscript</strong> Please follow the following protocol for making electronic revisions to your manuscript:  <strong>Responding to suggested changes.</strong> For each of the suggested changes that you accept, unbold the text.   For each of the suggested changes that you do not accept, re-enter the original text and <strong>bold</strong> it.  <strong>Making additions and deletions.</strong> Indicate additions by <strong>bolding</strong> the new text.   Replace deleted sections with: <strong>[deleted text]</strong>.   If you delete one or more sentence, please indicate with a note, e.g., <strong>[deleted 2 sentences]</strong>.  <strong>Responding to Queries to the Author (QAs).</strong> Keep all QAs intact and bolded within the text. Do not delete them.   To reply to a QA, add a comment after it. Comments should be delimited using: <strong>[Comment:]</strong> e.g., <strong>[Comment: Expanded discussion of methodology as you suggested]</strong>.  <strong>Making comments.</strong> Use comments to explain organizational changes or major revisions   e.g., <strong>[Comment: Moved the above paragraph from p. 5 to p. 7].</strong> Note: When referring to page numbers, please use the page numbers from the printed copy of the manuscript that was sent to you. This is important since page numbers may change as a document is revised electronically.  <h4>An Illustration of an Electronic Revision</h4> <ol> <li><strong>Initial copyedit.</strong> The journal copy editor will edit the text to improve flow, clarity, grammar, wording, and formatting, as well as including author queries as necessary. Once the initial edit is complete, the copy editor will upload the revised document through the journal Web site and notify the author that the edited manuscript is available for review.</li> <li><strong>Author copyedit.</strong> Before making dramatic departures from the structure and organization of the edited manuscript, authors must check in with the editors who are co-chairing the piece. Authors should accept/reject any changes made during the initial copyediting, as appropriate, and respond to all author queries. When finished with the revisions, authors should rename the file from AuthorNameQA.doc to AuthorNameQAR.doc (e.g., from LeeQA.doc to LeeQAR.doc) and upload the revised document through the journal Web site as directed.</li> <li><strong>Final copyedit.</strong> The journal copy editor will verify changes made by the author and incorporate the responses to the author queries to create a final manuscript. When finished, the copy editor will upload the final document through the journal Web site and alert the layout editor to complete formatting.</li> </ol>',
-  ),
-  'emailSignature' => '________________________________________________________________________
-WHO RRP
-http://localhost/whorrp/whorrp/index.php/whorrp',
-  'useLayoutEditors' => false,
   'openAccessPolicy' => 
   array (
     'en_US' => 'This journal provides immediate open access to its content on the principle that making research freely available to the public supports a greater global exchange of knowledge.',
-  ),
-  'authorSelfArchivePolicy' => 
-  array (
-    'en_US' => 'This journal permits and encourages authors to post items submitted to the journal on personal websites or institutional repositories both prior to and after publication, while providing bibliographic details that credit, if applicable, its publication in this journal.',
   ),
   'privacyStatement' => 
   array (
     'en_US' => 'The names and email addresses entered in this journal site will be used exclusively for the stated purposes of this journal and will not be made available for any other purpose or to any other party.',
   ),
-  'numWeeksPerReview' => 4,
-  'itemsPerPage' => 25,
-  'numPageLinks' => 10,
-  'waiverPolicy' => 
+  'proofInstructions' => 
   array (
-    'en_US' => 'If you do not have funds to pay such fees, you will have an opportunity to waive each fee. We do not want fees to prevent the publication of worthy work.',
+    'en_US' => '<p>The proofreading stage is intended to catch any errors in the galley\'s spelling, grammar, and formatting. More substantial changes cannot be made at this stage, unless discussed with the Section Editor. In Layout, click on VIEW PROOF to see the HTML, PDF, and other available file formats used in publishing this item.</p>
+	<h4>For Spelling and Grammar Errors</h4>
+
+	<p>Copy the problem word or groups of words and paste them into the Proofreading Corrections box with "CHANGE-TO" instructions to the editor as follows:</p>
+
+	<pre>1. CHANGE...
+	then the others
+	TO...
+	than the others</pre>
+	<br />
+	<pre>2. CHANGE...
+	Malinowsky
+	TO...
+	Malinowski</pre>
+	<br />
+
+	<h4>For Formatting Errors</h4>
+	
+	<p>Describe the location and nature of the problem in the Proofreading Corrections box after typing in the title "FORMATTING" as follows:</p>
+	<br />
+	<pre>3. FORMATTING
+	The numbers in Table 3 are not aligned in the third column.</pre>
+	<br />
+	<pre>4. FORMATTING
+	The paragraph that begins "This last topic..." is not indented.</pre>',
   ),
-  'purchaseArticleFee' => 0,
-  'purchaseArticleFeeName' => 
+  'publicationFeeDescription' => 
   array (
-    'en_US' => 'Purchase Article',
+    'en_US' => 'If this paper is accepted for publication, you will be asked to pay an Article Publication Fee to cover publications costs.',
+  ),
+  'publicationFeeName' => 
+  array (
+    'en_US' => 'Article Publication',
   ),
   'purchaseArticleFeeDescription' => 
   array (
     'en_US' => 'The payment of this fee will enable you to view, download, and print this article.',
   ),
-  'membershipFee' => 0,
-  'membershipFeeName' => 
+  'purchaseArticleFeeName' => 
   array (
-    'en_US' => 'Association Membership',
+    'en_US' => 'Purchase Article',
   ),
-  'membershipFeeDescription' => 
+  'readerInformation' => 
   array (
-    'en_US' => 'The payment of this fee will enroll you as a member in this association for one year and provide you with free access to this journal.',
+    'en_US' => 'We encourage readers to sign up for the publishing notification service for this journal. Use the <a href="http://localhost/whorrp2/index.php/whorrp/user/register">Register</a> link at the top of the home page for the journal. This registration will result in the reader receiving the Table of Contents by email for each new issue of the journal. This list also allows the journal to claim a certain level of support or readership. See the journal\'s <a href="http://localhost/whorrp2/index.php/whorrp/about/submissions#privacyStatement">Privacy Statement</a>, which assures readers that their name and email address will not be used for other purposes.',
   ),
-  'donationFeeName' => 
+  'refLinkInstructions' => 
   array (
-    'en_US' => 'Donations to journal',
+    'en_US' => '<h4>To Add Reference Linking to the Layout Process</h4>
+	<p>When turning a submission into HTML or PDF, make sure that all hyperlinks in the submission are active.</p>
+	<h4>A. When the Author Provides a Link with the Reference</h4>
+	<ol>
+	<li>While the submission is still in its word processing format (e.g., Word), add the phrase VIEW ITEM to the end of the reference that has a URL.</li>
+	<li>Turn that phrase into a hyperlink by highlighting it and using Word\'s Insert Hyperlink tool and the URL prepared in #2.</li>
+	</ol>
+	<h4>B. Enabling Readers to Search Google Scholar For References</h4>
+	<ol>
+		<li>While the submission is still in its word processing format (e.g., Word), copy the title of the work referenced in the References list (if it appears to be too common a title—e.g., "Peace"—then copy author and title).</li>
+		<li>Paste the reference\'s title between the %22\'s, placing a + between each word: http://scholar.google.com/scholar?q=%22PASTE+TITLE+HERE%22&hl=en&lr=&btnG=Search.</li>
+
+	<li>Add the phrase GS SEARCH to the end of each citation in the submission\'s References list.</li>
+	<li>Turn that phrase into a hyperlink by highlighting it and using Word\'s Insert Hyperlink tool and the URL prepared in #2.</li>
+	</ol>
+	<h4>C. Enabling Readers to Search for References with a DOI</h4>
+	<ol>
+	<li>While the submission is still in Word, copy a batch of references into CrossRef Text Query http://www.crossref.org/freeTextQuery/.</li>
+	<li>Paste each DOI that the Query provides in the following URL (between = and &): http://www.cmaj.ca/cgi/external_ref?access_num=PASTE DOI#HERE&link_type=DOI.</li>
+	<li>Add the phrase CrossRef to the end of each citation in the submission\'s References list.</li>
+	<li>Turn that phrase into a hyperlink by highlighting the phrase and using Word\'s Insert Hyperlink tool and the appropriate URL prepared in #2.</li>
+	</ol>',
   ),
-  'donationFeeDescription' => 
-  array (
-    'en_US' => 'Donations of any amount to this journal are gratefully received and provide a means for the editors to continue to provide a journal of the highest quality to its readers.',
-  ),
-  'title' => 
-  array (
-    'en_US' => 'WHO RRP',
-  ),
-  'description' => 
-  array (
-    'en_US' => 'Research Registration Portal',
-  ),
-  'initials' => 
-  array (
-    'en_US' => 'WHORRP',
-  ),
-  'abbreviation' => 
-  array (
-    'en_US' => 'WHORRP',
-  ),
-  'printIssn' => '',
-  'onlineIssn' => '',
-  'doiPrefix' => '',
-  'doiSuffix' => 'default',
-  'doiSuffixPattern' => '',
-  'mailingAddress' => '',
-  'useEditorialBoard' => false,
-  'contactName' => 'Karleen Ann Onagan',
-  'contactTitle' => 
-  array (
-    'en_US' => 'DLSU Student',
-  ),
-  'contactAffiliation' => 
-  array (
-    'en_US' => 'De La Salle University',
-  ),
-  'contactEmail' => 'what.if.im.not.superman@gmail.com',
-  'contactPhone' => '(02)414-0934',
-  'contactFax' => '(02)414-0934',
-  'contactMailingAddress' => 
-  array (
-    'en_US' => 'Quezon City',
-  ),
-  'supportName' => 'Katrina Onagan',
-  'supportEmail' => 'what.if.im.not.superman@gmail.com',
-  'supportPhone' => '(02)414-0934',
-  'sponsorNote' => 
-  array (
-    'en_US' => 'University of the Philippines Diliman College of Fine Arts',
-  ),
-  'sponsors' => 
-  array (
-    0 => 
-    array (
-      'institution' => 'Ateneo De Manila University',
-      'url' => 'http://morningsmockme.wordpress.com',
-    ),
-  ),
-  'publisherInstitution' => 'De La Salle University',
-  'publisherUrl' => 'http://morningsmockme.wordpress.com',
-  'publisherNote' => 
-  array (
-    'en_US' => 'Eletromagnetic Publisher',
-  ),
-  'contributorNote' => 
-  array (
-    'en_US' => 'Additional agencies or organizations that provide financial or in-kind support for the journal will appear in About the Journal and may be accompanied by a note of acknowledgement.',
-  ),
-  'contributors' => 
-  array (
-    0 => 
-    array (
-      'name' => 'Eletromagnetic Publisher',
-      'url' => 'http://morningsmockme.wordpress.com',
-    ),
-  ),
-  'history' => 
-  array (
-    'en_US' => 'This text will appear in the "About" section of the journal website and can be used to describe changes in titles, editorial board, and other items of relevance to the journal\'s publication history.',
-  ),
-  'envelopeSender' => '',
-  'focusScopeDesc' => 
-  array (
-    'en_US' => 'The focus and scope of this journal is the focus and scope of this journal.',
-  ),
-  'remindForInvite' => false,
-  'remindForSubmit' => false,
-  'numDaysBeforeInviteReminder' => 0,
-  'numDaysBeforeSubmitReminder' => 0,
-  'rateReviewerOnQuality' => false,
-  'restrictReviewerFileAccess' => false,
-  'reviewerAccessKeysEnabled' => false,
-  'showEnsuringLink' => false,
-  'reviewPolicy' => 
-  array (
-    'en_US' => 'Outline the journal\'s peer review policy and processes for readers and authors, including the number of reviewers typically used in reviewing a submission, the criteria by which reviewers are asked to judge submissions, typical time taken to conduct the reviews, and the principles for recruiting reviewers. This will appear in About the Journal.',
-  ),
-  'mailSubmissionsToReviewers' => false,
-  'reviewGuidelines' => 
-  array (
-    'en_US' => 'The Review Guidelines will provide reviewers with criteria for judging a submission\'s suitability for publication in the journal, and can include any special instructions for preparing an effective and helpful review. In conducting the review, reviewers are presented with with two open text boxes, the first "for author and editor," and the second "for editor." Alternatively, the Journal Manager can create a peer review form under In all cases, editors will have the option of including the reviews in corresponding with the author.',
-  ),
-  'authorSelectsEditor' => false,
-  'customAboutItems' => 
+  'submissionChecklist' => 
   array (
     'en_US' => 
     array (
       0 => 
       array (
-        'title' => '',
-        'content' => '',
+        'content' => 'The submission has not been previously published, nor is it before another journal for consideration (or an explanation has been provided in Comments to the Editor).',
+        'order' => '1',
+      ),
+      1 => 
+      array (
+        'content' => 'The submission file is in OpenOffice, Microsoft Word, RTF, or WordPerfect document file format.',
+        'order' => '2',
+      ),
+      2 => 
+      array (
+        'content' => 'Where available, URLs for the references have been provided.',
+        'order' => '3',
+      ),
+      3 => 
+      array (
+        'content' => 'The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses); and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.',
+        'order' => '4',
+      ),
+      4 => 
+      array (
+        'content' => 'The text adheres to the stylistic and bibliographic requirements outlined in the <a href="http://localhost/whorrp2/index.php/whorrp/about/submissions#authorGuidelines" target="_new">Author Guidelines</a>, which is found in About the Journal.',
+        'order' => '5',
+      ),
+      5 => 
+      array (
+        'content' => 'If submitting to a peer-reviewed section of the journal, the instructions in <a href="javascript:openHelp(\'http://localhost/whorrp2/index.php/whorrp/help/view/editorial/topic/000044\')">Ensuring a Blind Review</a> have been followed.',
+        'order' => '6',
       ),
     ),
   ),
-  'enableLockss' => false,
-  'reviewerDatabaseLinks' => 
+  'submissionFeeDescription' => 
   array (
-    0 => 
-    array (
-      'title' => '',
-      'url' => '',
-    ),
+    'en_US' => 'Authors are required to pay an Article Submission Fee as part of the submission process to contribute to review costs.',
   ),
-  'notifyAllAuthorsOnDecision' => true,
-  'authorGuidelines' => 
+  'submissionFeeName' => 
   array (
-    'en_US' => 'Set out for authors the bibliographic and formatting standards used for items submitted to the journal (e.g., <em>Publication Manual of the American Psychological Association</em>, 5th edition, 2001). It is often helpful to provide examples of the common citation formats for journals and books to be used in submissions. Also identify the types of appropriate Supplementary Files (e.g., data-sets, research instruments, etc.) which authors should be encouraged to upload, in addition to their submission, to enhance readers\' engagement with their work.',
+    'en_US' => 'Article Submission',
   ),
-  'copyrightNoticeAgree' => true,
-  'requireAuthorCompetingInterests' => true,
-  'requireReviewerCompetingInterests' => true,
-  'metaDiscipline' => false,
-  'metaSubjectClass' => false,
-  'metaSubjectClassUrl' => 
+  'title' => 
   array (
-    'en_US' => 'http://',
+    'en_US' => 'Research Registration Portal',
   ),
-  'metaSubject' => true,
-  'metaSubjectExamples' => 
+  'waiverPolicy' => 
   array (
-    'en_US' => '(E.g., Photosynthesis; Black Holes; Four-Color Map Problem; Bayesian Theory)',
-  ),
-  'metaCoverage' => false,
-  'metaType' => true,
-  'metaTypeExamples' => 
-  array (
-    'en_US' => '(E.g., Historical Inquiry; Quasi-Experimental; Literary Analysis; Survey/Interview)',
-  ),
-  'metaCitations' => false,
-  'metaCitationOutputFilterId' => -1,
-  'copySubmissionAckPrimaryContact' => false,
-  'copySubmissionAckSpecified' => false,
-  'copySubmissionAckAddress' => '',
-  'disableUserReg' => true,
-  'restrictSiteAccess' => true,
-  'restrictArticleAccess' => true,
-  'articleEventLog' => true,
-  'articleEmailLog' => true,
-  'publicationFormatVolume' => false,
-  'publicationFormatNumber' => false,
-  'publicationFormatYear' => false,
-  'publicationFormatTitle' => false,
-  'initialVolume' => 0,
-  'initialNumber' => 0,
-  'initialYear' => 0,
-  'useCopyeditors' => false,
-  'provideRefLinkInstructions' => false,
-  'useProofreaders' => false,
-  'publishingMode' => 2,
-  'showGalleyLinks' => false,
-  'enableAnnouncements' => false,
-  'enableAnnouncementsHomepage' => false,
-  'numAnnouncementsHomepage' => 0,
-  'volumePerYear' => 0,
-  'issuePerVolume' => 0,
-  'enablePublicIssueId' => true,
-  'enablePublicArticleId' => false,
-  'enablePublicGalleyId' => false,
-  'enablePublicSuppFileId' => true,
-  'enablePageNumber' => false,
-  'homeHeaderTitle' => 
-  array (
-    'en_US' => 'WHO Research Registration Portal',
-  ),
-  'pageHeaderTitle' => 
-  array (
-    'en_US' => 'WHO Research Registration Portal',
+    'en_US' => 'If you do not have funds to pay such fees, you will have an opportunity to waive each fee. We do not want fees to prevent the publication of worthy work.',
   ),
 ); ?>
