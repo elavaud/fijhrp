@@ -464,12 +464,13 @@ class SectionEditorSubmission extends Article {
 	 * Return array mapping editor decision constants to their locale strings.
 	 * (Includes default mapping '' => "Choose One".)
 	 * @return array decision => localeString
+	 * Edited by aglet
+	 * Last Update: 5/28/2011
 	 */
 	function &getEditorDecisionOptions() {
 		static $editorDecisionOptions = array(
 			'' => 'common.chooseOne',
 			SUBMISSION_EDITOR_DECISION_ACCEPT => 'editor.article.decision.accept',
-			SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => 'editor.article.decision.pendingRevisions',
 			SUBMISSION_EDITOR_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
 			SUBMISSION_EDITOR_DECISION_DECLINE => 'editor.article.decision.decline'
 		);
@@ -478,7 +479,7 @@ class SectionEditorSubmission extends Article {
 
 	/********************************************
 	 * Return array mapping submission completeness options to their locale strings
-	 * Added by Gay Figueroa
+	 * Added by aglet
 	 * Last Update: 5/3/2011
 	********************************************/
 
@@ -493,15 +494,16 @@ class SectionEditorSubmission extends Article {
 
 	/********************************************
 	 * Return array mapping exemption options to their locale strings
-	 * Added by Gay Figueroa
-	 * Last Update: 5/3/2011
+	 * Added by aglet
+	 * Last Update: 5/28/2011
 	********************************************/
 	
 	function &getExemptionOptions() {
 		static $exemptionOptions = array(
 			'' => 'common.chooseOne',
 			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
-			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned'
+			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
+			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
 		);
 		return $exemptionOptions;
 	}

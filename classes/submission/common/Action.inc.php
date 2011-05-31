@@ -18,20 +18,20 @@
 
 
 /* These constants correspond to editing decision "decision codes". */
-define('SUBMISSION_EDITOR_DECISION_ACCEPT', 1);
-define('SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS', 2);
-define('SUBMISSION_EDITOR_DECISION_RESUBMIT', 3);
-define('SUBMISSION_EDITOR_DECISION_DECLINE', 4);
+define('SUBMISSION_EDITOR_DECISION_ACCEPT', 1);		//APPROVED
+define('SUBMISSION_EDITOR_DECISION_RESUBMIT', 2);	//REVISE AND RESUBMIT
+define('SUBMISSION_EDITOR_DECISION_DECLINE', 3);	//NOT APPROVED
 
 /**************************************
  * Additional editor decision codes
- * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Added by aglet
+ * Last Update: 5/28/2011
 ***************************************/
-define('SUBMISSION_EDITOR_DECISION_COMPLETE', 5);
-define('SUBMISSION_EDITOR_DECISION_INCOMPLETE', 6);
-define('SUBMISSION_EDITOR_DECISION_EXEMPTED', 7);
-define('SUBMISSION_EDITOR_DECISION_ASSIGNED', 8);
+define('SUBMISSION_EDITOR_DECISION_COMPLETE', 4);	//COMPLETE
+define('SUBMISSION_EDITOR_DECISION_INCOMPLETE', 5);	//INCOMPLETE
+define('SUBMISSION_EDITOR_DECISION_EXEMPTED', 6);	//EXEMPTED
+define('SUBMISSION_EDITOR_DECISION_ASSIGNED', 7);	//ASSIGN FOR NORMAL REVIEW
+define('SUBMISSION_EDITOR_DECISION_EXPEDITED', 8);	//ASSIGN FOR EXPEDITED REVIEW
 
 /* These constants are used as search fields for the various submission lists */
 define('SUBMISSION_FIELD_AUTHOR', 1);

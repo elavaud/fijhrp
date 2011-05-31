@@ -37,12 +37,10 @@
 		<div class="separator"></div>
 	</div>
 {elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT }
-	{**if $articleMoreRecent*}
+	{if $articleMoreRecent}
 		{include file="sectionEditor/submission/peerReview.tpl"}
 		<div class="separator"></div>
-	{**else}
-		 {** TODO/FIX: if article not recent, wait for article to be resubmitted first }
-		 {** TODO/FIX: Round does not increment when review assignment is not yet done}
+	{else}
 		<h3>{translate key="submission.peerReview"}</h3>
 		<table id="table11" width="100%" class="data">
 			<tr valign="top">
@@ -51,7 +49,7 @@
 			</tr>
 		</table>
 		<div class="separator"></div>
-	{**/if*}
+	{/if}
 {/if}
 
 <div id="editorDecision">
@@ -114,7 +112,7 @@
  *
  *******************************************************}
 
-	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED || $proposalStatus == PROPOSAL_STATUS_EXPEDITED}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
@@ -159,7 +157,7 @@
  * Last Update: 5/8/2011
  *
  *******************************************************}
-	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && ($lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS)}	
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT}	
 		{if $articleMoreRecent}
 			<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 			<td width="80%" class="value">
@@ -186,7 +184,7 @@
  *
  *******************************************************}
 
-{if $articleMoreRecent && (($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && ($lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS))) }
+{if $articleMoreRecent && (($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)) }
 	<tr valign="top">
 		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
@@ -209,8 +207,6 @@
 			{assign var="decision" value=$lastDecisionArray.decision}
 			{if $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_ACCEPT}
 				{translate key="editor.article.decision.accept"}
-			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS}
-				{translate key="editor.article.decision.pendingRevisions"}
 			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
 				{translate key="editor.article.decision.resubmit"}
 			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_DECLINE}

@@ -102,9 +102,9 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-username=root
-password=password
-name=ojs
+username = pkpuser
+password = password
+name = ojs
 
 ; Enable persistent connections
 persistent = Off
@@ -186,7 +186,7 @@ charset_normalization = Off
 ; files_dir = /home/kathlg/WHO/OJS/files
 
 ; Ivy's local folder
-files_dir = /home/anne/ojsfiles
+files_dir = /Users/spf/ojsfiles
 
 ; Susan's local folder (Macbook Pro)
 ;files_dir = /Users/spf/ojsfiles

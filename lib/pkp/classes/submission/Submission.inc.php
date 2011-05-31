@@ -15,12 +15,13 @@
  *
  * @brief Submission class.
  */
-define('PROPOSAL_STATUS_SUBMITTED',1);
-define('PROPOSAL_STATUS_RETURNED',2);
-define('PROPOSAL_STATUS_CHECKED',3);
-define('PROPOSAL_STATUS_ASSIGNED',4);
-define('PROPOSAL_STATUS_EXEMPTED',5);
-define('PROPOSAL_STATUS_REVIEWED',6);
+define('PROPOSAL_STATUS_SUBMITTED',1);	//NEW
+define('PROPOSAL_STATUS_RETURNED',2);	//INCOMPLETE
+define('PROPOSAL_STATUS_CHECKED',3);	//COMPLETE
+define('PROPOSAL_STATUS_ASSIGNED',4);	//ASSIGNED FOR NORMAL REVIEW
+define('PROPOSAL_STATUS_EXEMPTED',5);	//EXEMPTED FROM REVIEW
+define('PROPOSAL_STATUS_REVIEWED',6);	//DECISION AFTER NORMAL/EXPEDITED REVIEW
+define('PROPOSAL_STATUS_EXPEDITED',7);	//ASSIGNED FOR EXPEDITED REVIEW
 
 
 define('PROPOSAL_STATUS_DRAFT',8); //Replaces STATUS_INCOMPLETE
@@ -1320,6 +1321,7 @@ class Submission extends DataObject {
 				PROPOSAL_STATUS_CHECKED => 'submissions.proposal.checked',
 				PROPOSAL_STATUS_EXEMPTED => 'submissions.proposal.exempted',
 				PROPOSAL_STATUS_ASSIGNED => 'submissions.proposal.assigned',
+				PROPOSAL_STATUS_EXPEDITED => 'submissions.proposal.expedited',
 				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed'
 			);
 		}

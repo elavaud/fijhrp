@@ -1,14 +1,14 @@
 <?php return array (
-  'title' => 
+  'contactEmail' => 
   array (
-    'en_US' => 'Open Journal Systems',
+    'en_US' => 'spfestin@gmail.com',
   ),
   'contactName' => 
   array (
     'en_US' => 'Open Journal Systems',
   ),
-  'contactEmail' => 
+  'title' => 
   array (
-    'en_US' => 'spfestin@gmail.com',
+    'en_US' => 'Open Journal Systems',
   ),
 ); ?>

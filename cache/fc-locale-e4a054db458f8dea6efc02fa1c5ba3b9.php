@@ -1,0 +1,16 @@
+<?php return array (
+  'plugins.generic.openads.description' => 'The OpenAds plugin allows dynamic ads from the OpenAds ad server to be inserted into OJS.',
+  'plugins.generic.openads.descriptionUnconfigured' => 'The OpenAds plugin allows dynamic ads from the OpenAds ad server to be inserted into OJS. <strong>Please read the README file in plugins/generic/openAds for information on enabling this plugin.</strong>',
+  'plugins.generic.openads' => 'OpenAds Plugin',
+  'plugins.generic.openads.settings.description' => 'Use this form to select the OpenAds ad zones that will be displayed in OJS for each potential location.',
+  'plugins.generic.openads.manager.settings' => 'Settings',
+  'plugins.generic.openads.error.configFileNotFound' => 'The configuration file, {$filename}, could not be accessed.',
+  'plugins.generic.openads.error.missingParameter' => 'At least one of the required OpenAds configuration parameters could not be read from the configuration file. The required parameters are dbhost, dbuser, dbpassword, dbname, url_prefix, and table_prefix.',
+  'plugins.generic.openads.error.dbConnectionError' => 'Unable to connect to the OpenAds database.',
+  'plugins.generic.openads.headerAd' => 'Header Ad',
+  'plugins.generic.openads.contentAd' => 'Content Ad',
+  'plugins.generic.openads.sidebarAd' => 'Sidebar Ad',
+  'plugins.generic.openads.orientation.left' => 'Left',
+  'plugins.generic.openads.orientation.centre' => 'Centre',
+  'plugins.generic.openads.orientation.right' => 'Right',
+); ?>

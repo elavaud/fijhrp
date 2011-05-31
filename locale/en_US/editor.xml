@@ -161,36 +161,37 @@
 	<message key="editor.article.assignSectionEditor">Add Section Editor</message>
 	<message key="editor.article.assignEditor">Add Editor</message>
 	<message key="editor.article.selectEditor">Select {$roleName}</message>
-	<message key="editor.article.selectDecision">Select decision</message>
-	<message key="editor.article.decision.accept">Accept Submission</message>
-	<message key="editor.article.decision.pendingRevisions">Revisions Required</message>
-	<message key="editor.article.decision.resubmit">Resubmit for Review</message>
-	<message key="editor.article.decision.decline">Decline Submission</message>
 
 	<!-- *********************************************
 	 * Additional key for editor decisions and confirm dialogs
-	 * Added by Gay Figueroa
+	 * Added by aglet
 	 * Last Update: 5/3/2011
 	********************************************** -->
-	<message key="editor.article.decision.complete">Mark Proposal As Complete</message>
-	<message key="editor.article.decision.incomplete">Return Incomplete Proposal to PI</message>
-	<message key="editor.article.decision.exempted">Exempt Proposal From Review</message>
-	<message key="editor.article.decision.assigned">Assign For Review</message>
+	<message key="editor.article.selectDecision">Select decision</message>
+	<message key="editor.article.decision.accept">Approved</message>
+	<message key="editor.article.decision.pendingRevisions">Revisions Required</message >
+	<message key="editor.article.decision.resubmit">Revise and Resubmit</message>
+	<message key="editor.article.decision.decline">Not Approved</message>
+
+	<message key="editor.article.decision.complete">Complete</message>
+	<message key="editor.article.decision.incomplete">Incomplete</message>
+	<message key="editor.article.decision.exempted">Exempt From Review</message>
+	<message key="editor.article.decision.expedited">For Expedited Review</message>
+	<message key="editor.article.decision.assigned">For ERC Review</message>
 	<message key="editor.article.selectInitialReview">Select Initial Review</message>
-	<message key="editor.article.selectExemptionDecision">Select Exemption Decision</message>
+	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this decision as an initial review?</message>
 	<message key="editor.submissionReview.confirmExemption">Are you sure you wish to record this exemption decision?</message>
 	<message key="editor.submissionReview.confirmExempted">Are you sure you wish to exempt this proposal from review?</message>
 	<message key="editor.submissionReview.confirmAssigned">Are you sure you wish to assign this proposal for review?</message>
-	<message key="editor.article.recordInitialReview">Record Initial Review</message>
-	<message key="editor.article.recordExemptionDecision">Record Exemption Decision</message>
+	<message key="editor.article.recordInitialReview">Submit Initial Review</message>
+	<message key="editor.article.recordExemptionDecision">Submit</message>
 	<message key="editor.article.decision">Final Decision</message>
 	<message key="editor.article.proposalResubmitted">(Resubmitted proposal)</message>
 	<message key="editor.article.waitingForResubmission">Waiting for resubmission of proposal</message>
 	<message key="editor.article.submissionStatus">Submission Status</message>
 
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
-	<message key="editor.article.decision.decline">Decline Submission</message>
 	<message key="editor.article.replaceLayoutEditor">Replace Layout Editor</message>
 	<message key="editor.article.reviewSubmission">Review Submission</message>
 	<message key="editor.article.resubmitForReview">Resubmit file for Review</message>
