@@ -102,7 +102,8 @@ citation_checking_max_processes = 3
 
 driver = mysql
 host = localhost
-username = pkpuser
+;username = pkpuser
+username = root
 password = password
 name = ojs
 
@@ -186,7 +187,7 @@ charset_normalization = Off
 ; files_dir = /home/kathlg/WHO/OJS/files
 
 ; Ivy's local folder
-files_dir = /Users/spf/ojsfiles
+files_dir = /home/anne/ojsfiles
 
 ; Susan's local folder (Macbook Pro)
 ;files_dir = /Users/spf/ojsfiles

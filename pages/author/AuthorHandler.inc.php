@@ -72,16 +72,19 @@ class AuthorHandler extends Handler {
 			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		} else {
 			$submissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
-
+                        //Work-around due to lack of iterate reset, AIM, June 1, 2011
+                        $submissions_copy = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
 		}
 
-		$templateMgr =& TemplateManager::getManager();
+                $templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
 		if (!$active) {
 			// Make view counts available if enabled.
 			$templateMgr->assign('statViews', $journal->getSetting('statViews'));
 		}
-		$templateMgr->assign_by_ref('submissions', $submissions);
+                
+		$templateMgr->assign_by_ref('submissions1', $submissions);
+                $templateMgr->assign_by_ref('submissions2', $submissions_copy);
 
 		// assign payment 
 		import('classes.payment.ojs.OJSPaymentManager');

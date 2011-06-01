@@ -57,8 +57,9 @@ class SuppFileForm extends Form {
 		}
 
 		// Validation checks for this form
-		$this->addCheck(new FormValidatorLocale($this, 'title', 'required', 'author.submit.suppFile.form.titleRequired'));
-		$this->addCheck(new FormValidatorPost($this));
+                // Comment out, AIM, June 1, 2011
+		//$this->addCheck(new FormValidatorLocale($this, 'title', 'required', 'author.submit.suppFile.form.titleRequired'));
+		//$this->addCheck(new FormValidatorPost($this));
 	}
 
 	/**

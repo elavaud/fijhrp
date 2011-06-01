@@ -149,21 +149,16 @@ class AuthorSubmission extends Article {
 
 	/**
 	 * Get the submission status. Returns one of the defined constants
-	 * (STATUS_INCOMPLETE, STATUS_ARCHIVED, STATUS_PUBLISHED,
-	 * STATUS_DECLINED, STATUS_QUEUED_UNASSIGNED, STATUS_QUEUED_REVIEW,
-	 * or STATUS_QUEUED_EDITING). Note that this function never returns
-	 * a value of STATUS_QUEUED -- the three STATUS_QUEUED_... constants
-	 * indicate a queued submission. NOTE that this code is similar to
-	 * getSubmissionStatus in the SectionEditorSubmission class and
-	 * changes here should be propagated.
+         * PROPOSAL_STATUS_DRAFT, PROPOSAL_STATUS_WITHDRAWN, PROPOSAL_STATUS_SUBMITTED,
+         * PROPOSAL_STATUS_RETURNED, PROPOSAL_STATUS_REVIEWED, PROPOSAL_STATUS_EXEMPTED
 	 */
 	function getSubmissionStatus() {
 
-                /*
-                 * Added by: Anne Ivy Mirasol
-                 * Last Updated: May 25, 2011
-                 */
-                
+                /**
+                 * Added by: AIM
+                 * Last Updated: May 31, 2011
+                 * Return status of proposal
+                 **/
                 if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
 
                 //Withdrawn status is reflected in table articles field status
@@ -177,49 +172,29 @@ class AuthorSubmission extends Article {
                     if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
                     else return PROPOSAL_STATUS_RETURNED;
                 }
-                else if($status == PROPOSAL_STATUS_REVIEWED) {
-                    //TODO: Return actual decision
-                }
+
+                if($status == PROPOSAL_STATUS_CHECKED) return PROPOSAL_STATUS_SUBMITTED;
+                if($status == PROPOSAL_STATUS_ASSIGNED) return PROPOSAL_STATUS_SUBMITTED;
+                if($status == PROPOSAL_STATUS_EXPEDITED) return PROPOSAL_STATUS_SUBMITTED;
                 
                 return $status;
-
-                
-                //Unreachable code  TODO: clean up once sure code unneeded
-
-                $status = $this->getStatus();
-
-                if ($status == STATUS_ARCHIVED || $status == STATUS_PUBLISHED ||
-		    $status == STATUS_DECLINED) return $status;
-
-		// The submission is STATUS_QUEUED or the author's submission was STATUS_INCOMPLETE.
-		if ($this->getSubmissionProgress()) return (STATUS_INCOMPLETE);
-
-		// The submission is STATUS_QUEUED. Find out where it's queued.
-		$editAssignments = $this->getEditAssignments();
-		if (empty($editAssignments))
-			return (STATUS_QUEUED_UNASSIGNED);
-
-		$latestDecision = $this->getMostRecentDecision();
-		if ($latestDecision) {
-			if ($latestDecision == SUBMISSION_EDITOR_DECISION_ACCEPT || $latestDecision == SUBMISSION_EDITOR_DECISION_DECLINE) {
-				return STATUS_QUEUED_EDITING;
-			}
-		}
-		return STATUS_QUEUED_REVIEW;
 	}
 
 	/**
 	 * Get the most recent decision.
-	 * @return int SUBMISSION_EDITOR_DECISION_...
+	 * @return int 
 	 */
 	function getMostRecentDecision() {
-		$decisions = $this->getDecisions();
-		$decision = array_pop($decisions);
-		if (!empty($decision)) {
-			$latestDecision = array_pop($decision);
-			if (isset($latestDecision['decision'])) return $latestDecision['decision'];
-		}
-		return null;
+            /**
+             *  Edited by: AIM
+             *  Last Updated: May 31, 2011
+             **/
+            $articleId = $this->getArticleId();
+
+            $articleDao = DAORegistry::getDAO('ArticleDAO');
+            $decision = $articleDao->getLastEditorDecision($articleId);
+            
+            return $decision['decision'];
 	}
 
 	//

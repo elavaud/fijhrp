@@ -160,7 +160,7 @@
         <message key="proposal.keywords">Keywords</message>
         <message key="proposal.startDate">Start Date</message>
         <message key="proposal.endDate">End Date</message>
-        <message key="proposal.fundsRequired">Funds Required</message>
+        <message key="proposal.fundsRequired">Funds Required (in USD)</message>
         <message key="proposal.proposalType">Proposal Type</message>
         <message key="proposal.proposalCountry">Country</message>
         <message key="proposal.technicalUnit">Technical Unit</message>

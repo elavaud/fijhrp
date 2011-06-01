@@ -12,9 +12,17 @@
 {if $suppFileId}
 	{assign var="pageTitle" value="author.submit.editSupplementaryFile"}
 {else}
+       {* Comment out, AIM, June 1, 2011
 	{assign var="pageTitle" value="author.submit.addSupplementaryFile"}
+        *}
+        {assign var="pageTitle" value="author.submit.addProgressReport"}
 {/if}
+{*
 {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
+*}
+
+{assign var="pageCrumbTitle" value="submission.progressReports"}
+
 {include file="common/header.tpl"}
 {/strip}
 
@@ -39,6 +47,9 @@
 </table>
 </div>
 {/if}
+<!--
+{*
+
 <div id="supplementaryFileData">
 <h3>{translate key="author.submit.supplementaryFileData"}</h3>
 <p>{translate key="author.submit.supplementaryFileDataDescription"}</p>
@@ -108,9 +119,16 @@
 	</tr>
 </table>
 </div>
+*}
+-->
+
 <div class="separator"></div>
 <div id="supplementaryFileUpload">
+<!--
 <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
+-->
+
+<h3>{translate key="submission.progressReports"}</h3>
 
 <table id="suppFile" class="data">
 {if $suppFile}
@@ -131,13 +149,16 @@
 		<td class="value">{$suppFile->getDateUploaded()|date_format:$dateFormatShort}</td>
 	</tr>
 </table>
-	
+<!--
+{*
 <table width="100%"  class="data">
 	<tr valign="top">
 		<td width="5%" class="label"><input type="checkbox" name="showReviewers" id="showReviewers" value="1"{if $showReviewers==1} checked="checked"{/if} /></td>
 		<td width="95%" class="value"><label for="showReviewers">{translate key="author.submit.suppFile.availableToPeers"}</label></td>
 	</tr>
 </table>
+*}
+-->
 {else}
 	<tr valign="top">
 		<td colspan="2" class="nodata">{translate key="author.submit.suppFile.noFile"}</td>
@@ -158,6 +179,8 @@
 		</td>
 		<td class="value"><input type="file" name="uploadSuppFile" id="uploadSuppFile" class="uploadField" />&nbsp;&nbsp;{translate key="author.submit.supplementaryFiles.saveToUpload"}</td>
 	</tr>
+        <!--
+        {*
 	{if not $suppFile}
 	<tr valign="top">
 		<td>&nbsp;</td>
@@ -167,6 +190,8 @@
 		</td>
 	</tr>
 	{/if}
+        *}
+        -->
 </table>
 </div>
 

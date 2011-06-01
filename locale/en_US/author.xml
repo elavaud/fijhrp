@@ -100,6 +100,8 @@
         <message key="author.submit.form.conflictOfInterestRequired">Please select Yes or No (Conflict Of Interest?).</message>
         <message key="author.submit.form.reviewedByOtherErcRequired">Please select Yes or No (Reviewed By Other ERC?).</message>
 
+        <message key="author.submit.addProgressReport">Upload Progress Report</message>
+
 
         <!-- ************************************End of Edit ********************************************************************-->
 

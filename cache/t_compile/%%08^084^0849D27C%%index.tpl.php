@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-23 11:34:42
+<?php /* Smarty version 2.6.26, created on 2011-06-01 00:08:17
          compiled from author/index.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'url', 'author/index.tpl', 17, false),array('function', 'translate', 'author/index.tpl', 17, false),array('function', 'call_hook', 'author/index.tpl', 30, false),array('modifier', 'assign', 'author/index.tpl', 26, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'url', 'author/index.tpl', 17, false),array('function', 'translate', 'author/index.tpl', 17, false),array('modifier', 'assign', 'author/index.tpl', 26, false),)), $this); ?>
 <?php echo ''; ?><?php $this->assign('pageTitle', "common.queue.long.".($this->_tpl_vars['pageToDisplay'])); ?><?php echo ''; ?><?php $_smarty_tpl_vars = $this->_tpl_vars;
 $this->_smarty_include(array('smarty_include_tpl_file' => "common/header.tpl", 'smarty_include_vars' => array()));
 $this->_tpl_vars = $_smarty_tpl_vars;
@@ -34,11 +34,4 @@ unset($_smarty_tpl_vars);
 <br />
 </div>
 
-<?php echo $this->_plugins['function']['call_hook'][0][0]->smartyCallHook(array('name' => "Templates::Author::Index::AdditionalItems"), $this);?>
-
-
-<?php $_smarty_tpl_vars = $this->_tpl_vars;
-$this->_smarty_include(array('smarty_include_tpl_file' => "common/footer.tpl", 'smarty_include_vars' => array()));
-$this->_tpl_vars = $_smarty_tpl_vars;
-unset($_smarty_tpl_vars);
- ?>
+<!-- Comment out, AIM, May 31, 2011 -->

@@ -372,9 +372,11 @@
 	<message key="submissions.proposal.assigned">For Normal Review</message>
 	<message key="submissions.proposal.expedited">For Expedited Review</message>
 	<message key="submissions.proposal.reviewed">Reviewed</message>
-        
+
+        <message key="submissions.proposal.resubmit">Revise and Resubmit</message>
         <message key="submissions.proposal.withdrawn">Withdrawn</message>
         <message key="submissions.proposal.draft">Draft</message>
+        <message key="submissions.proposal.approved">Approved</message>
 
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Submit</message>
@@ -386,6 +388,9 @@
 	<message key="submission.submitter">Submitter</message>
 	<message key="submission.summary">Summary</message>
 	<message key="submission.supplementaryFiles">Supplementary Files</message>
+
+        <message key="submission.progressReports">Progress Reports</message>
+
 	<message key="submission.supportingAgencies">Supporting Agencies</message>
 	<message key="submission.currentAgencies">Current Agencies</message>
 	<message key="submission.indexingInformation">Indexing Information</message>

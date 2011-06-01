@@ -27,7 +27,9 @@
 {translate submitUrl=$submitUrl key="author.submit.startHereLink"}<br />
 </div>
 
+<!-- Comment out, AIM, May 31, 2011 -->
+{*
 {call_hook name="Templates::Author::Index::AdditionalItems"}
 
 {include file="common/footer.tpl"}
-
+*}
