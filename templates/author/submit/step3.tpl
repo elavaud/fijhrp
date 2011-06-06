@@ -55,6 +55,9 @@ $(document).ready(function() {
             
         }
     });
+
+    $( "#startDate" ).datepicker();
+    $( "#endDate" ).datepicker();
 });
 </script>
 {/literal}
@@ -145,10 +148,14 @@ $(document).ready(function() {
 		<td width="80%" class="value"><textarea name="authors[{$authorIndex|escape}][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-competingInterests" rows="5" cols="40">{$author.competingInterests[$formLocale]|escape}</textarea></td>
 	</tr>
 {/if}{* requireAuthorCompetingInterests *}
+<!-- Comment Out, AIM, May 31, 2011
+{*
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
 	<td width="80%" class="value"><textarea name="authors[{$authorIndex|escape}][biography][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-biography" rows="5" cols="40">{$author.biography[$formLocale]|escape}</textarea></td>
 </tr>
+*}
+-->
 
 {call_hook name="Templates::Author::Submit::Authors"}
 
@@ -214,10 +221,14 @@ $(document).ready(function() {
 	<td width="80%" class="value"><textarea name="authors[0][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-0-competingInterests" rows="5" cols="40"></textarea></td>
 </tr>
 {/if}
+<!-- Comment out, AIM May 31, 2011
+{*
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="authors-0-biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
 	<td width="80%" class="value"><textarea name="authors[0][biography][{$formLocale|escape}]" class="textArea" id="authors-0-biography" rows="5" cols="40"></textarea></td>
 </tr>
+*}
+-->
 </table>
 {/foreach}
 
@@ -340,6 +351,8 @@ $(document).ready(function() {
 </div>
 
 <div class="separator"></div>
+<!--
+{*
 
 {if $section->getMetaIndexed()==1}
 <div id="indexing">
@@ -496,6 +509,8 @@ $(document).ready(function() {
 </div>
 {/if}
 
+*}
+-->
 <p><input type="submit" value="{translate key="common.saveAndContinue"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="confirmAction('{url page="author"}', '{translate|escape:"jsparam" key="author.submit.cancelSubmission"}')" /></p>
 
 <p><span class="formRequired">{translate key="common.requiredField"}</span></p>

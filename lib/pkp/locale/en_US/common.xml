@@ -92,7 +92,7 @@
 	<message key="common.delete">Delete</message>
 
         <!-- Added by Anne Ivy Mirasol, May 18, 2011  -->
-        <message key="common.withdraw">Withdraw Proposal</message>
+        <message key="common.withdraw">Withdraw</message>
 
 	<message key="common.deleteSelection">Delete Selection</message>
 	<message key="common.description">Description</message>

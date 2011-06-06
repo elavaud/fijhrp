@@ -89,6 +89,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 	 * Display a summary of the status of an author's submission.
 	 */
 	function submission($args) {
+                echo 'here';
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
@@ -102,7 +103,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		// Setting the round.
 		$round = isset($args[1]) ? $args[1] : $submission->getCurrentRound();
-
+                echo $round;
 		$templateMgr =& TemplateManager::getManager();
 
 		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
@@ -128,7 +129,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		import('classes.submission.sectionEditor.SectionEditorSubmission');
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
-
+                echo 'here2';
 		// Set up required Payment Related Information
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
@@ -148,13 +149,15 @@ class TrackSubmissionHandler extends AuthorHandler {
 				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
 			}
 		}
-
+                echo 'here3';
 		$templateMgr->assign('helpTopicId','editorial.authorsRole');
 
-		$initialCopyeditSignoff = $submission->getSignoff('SIGNOFF_COPYEDITING_INITIAL');
-		$templateMgr->assign('canEditMetadata', !$initialCopyeditSignoff->getDateCompleted() && $submission->getStatus() != STATUS_PUBLISHED);
-
+		//$initialCopyeditSignoff = $submission->getSignoff('SIGNOFF_COPYEDITING_INITIAL');
+		//$templateMgr->assign('canEditMetadata', !$initialCopyeditSignoff->getDateCompleted() && $submission->getStatus() != STATUS_PUBLISHED);
+                $templateMgr->assign('canEditMetadata', false);  //Edited by AIM, June 1, 2011
+                
 		$templateMgr->display('author/submission.tpl');
+                
 	}
 
 	/**
@@ -293,7 +296,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$this->validate($articleId);
 		$authorSubmission =& $this->submission;
 		$this->setupTemplate(true, $articleId, 'summary');
-
+                
 		if ($authorSubmission->getStatus() != STATUS_PUBLISHED && $authorSubmission->getStatus() != STATUS_ARCHIVED) {
 			$suppFileId = isset($args[0]) ? (int) $args[0] : 0;
 
@@ -302,6 +305,9 @@ class TrackSubmissionHandler extends AuthorHandler {
 			$journal =& $request->getJournal();
 			$submitForm = new SuppFileForm($authorSubmission, $journal, $suppFileId);
 			$submitForm->readInputData();
+
+                        //Set type as 'Report', AIM, June 1, 2011
+                        $submitForm->setData('type', 'Report');
 
 			if ($submitForm->validate()) {
 				$submitForm->execute();
@@ -475,7 +481,6 @@ class TrackSubmissionHandler extends AuthorHandler {
 	 */
 	function validate($articleId) {
 		parent::validate();
-
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$journal =& Request::getJournal();
