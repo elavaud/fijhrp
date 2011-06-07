@@ -15,13 +15,17 @@
 
 // $Id$
 
+/***************************************************
+ *
+ * New reviewer recommendations, should match new editor decisions
+ * Edited by aglet
+ * Last Update: 6/3/2011
+ *
+ ****************************************************/
 
 define('SUBMISSION_REVIEWER_RECOMMENDATION_ACCEPT', 1);
-define('SUBMISSION_REVIEWER_RECOMMENDATION_PENDING_REVISIONS', 2);
-define('SUBMISSION_REVIEWER_RECOMMENDATION_RESUBMIT_HERE', 3);
-define('SUBMISSION_REVIEWER_RECOMMENDATION_RESUBMIT_ELSEWHERE', 4);
-define('SUBMISSION_REVIEWER_RECOMMENDATION_DECLINE', 5);
-define('SUBMISSION_REVIEWER_RECOMMENDATION_SEE_COMMENTS', 6);
+define('SUBMISSION_REVIEWER_RECOMMENDATION_RESUBMIT', 2);
+define('SUBMISSION_REVIEWER_RECOMMENDATION_DECLINE', 3);
 
 define('SUBMISSION_REVIEWER_RATING_VERY_GOOD', 5);
 define('SUBMISSION_REVIEWER_RATING_GOOD', 4);

@@ -243,7 +243,16 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$submission =& $submissionEditHandler->submission;
 
 		$this->setupTemplate(true);
-		if (SectionEditorAction::emailEditorDecisionComment($submission, Request::getUserVar('send'))) {
+		//if (SectionEditorAction::emailEditorDecisionComment($submission, Request::getUserVar('send'))) {
+		/*
+		 * Redirect to email template and set Send button to automatically send email
+		 * Edited by aglet
+		 * Last Update: 6/5/2011
+		 * TODO: FIX @ SectionEditorAction: does not reflect decision in email 
+		 */
+		
+		if (SectionEditorAction::emailEditorDecisionComment($submission, 'Send')) {
+			Request::redirect(null, null, 'submissionReview', array($articleId));
 			if (Request::getUserVar('blindCcReviewers')) {
 				SubmissionCommentsHandler::blindCcReviewsToReviewers();
 			} else {

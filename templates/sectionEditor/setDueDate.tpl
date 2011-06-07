@@ -8,6 +8,17 @@
  *
  * $Id$
  *}
+
+<script type="text/javascript" src="http://localhost/whorrp-release1/whorrp/lib/pkp/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://localhost/whorrp-release1/whorrp/lib/pkp/js/lib/jquery/plugins/jqueryUi.min.js"></script>
+
+<script type="text/javascript">{literal}
+	$(function() {
+		$( "#dueDate" ).datepicker();
+	});	
+{/literal}</script>
+
+
 {strip}
 {assign var="pageTitle" value="submission.dueDate"}
 {include file="common/header.tpl"}
@@ -26,18 +37,29 @@
 		<tr valign="top">
 			<td class="label">{translate key="editor.article.requestedByDate"}</td>
 			<td class="value">
-				<input type="text" size="11" maxlength="10" name="dueDate" value="{if $dueDate}{$dueDate|date_format:"%Y-%m-%d"}{/if}" class="textField" onfocus="this.form.numWeeks.value=''" />
+				<input type="text" size="11" maxlength="10" name="dueDate" id="dueDate" class="textField" onfocus="this.form.numWeeks.value=''" />
+				{****************
+				<input type="text" size="11" maxlength="10" name="dueDate" id="dueDate" value="{if $dueDate}{$dueDate|date_format:"%Y-%m-%d"}{/if}" class="textField" onfocus="this.form.numWeeks.value=''" />
+				****************}
 				<span class="instruct">{translate key="editor.article.dueDateFormat"}</span>
 			</td>
 		</tr>
+		{********************************************************************
+		 * Set due date only by specifying date, not number of weeks
+		 * Edited by aglet
+		 * Last Update: 6/3/2011
+		 *
 		<tr valign="top">
 			<td>&nbsp;</td>
 			<td class="value"><span class="instruct">{translate key="common.or"}</span></td>
 		</tr>
+
 		<tr valign="top">
 			<td class="label">{translate key="editor.article.numberOfWeeks"}</td>
 			<td class="value"><input type="text" name="numWeeks" value="{if not $dueDate}{$numWeeksPerReview|escape}{/if}" size="3" maxlength="2" class="textField" onfocus="this.form.dueDate.value=''" /></td>
 		</tr>
+		 ********************************************************************}
+
 	</table>
 <p><input type="submit" value="{translate key="common.continue"}" class="button defaultButton" /> <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>
 </form>

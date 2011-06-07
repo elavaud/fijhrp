@@ -486,8 +486,9 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	a.journal_id = ?
-				AND e.editor_id = ?
-				AND a.submission_progress = 0' . (!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'') . '
+				AND e.editor_id = ? '.
+				//AND a.submission_progress = 0' . edited by aglet 6/4/2011 
+				(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'') . '
 				AND edec2.edit_decision_id IS NULL';
 
 		if ($sectionId) {
@@ -580,6 +581,9 @@ class SectionEditorSubmissionDAO extends DAO {
 
 	/**
 	 * Function used for counting purposes for right nav bar
+	 * Edited: removed AND a.submission_progress = 0
+	 * Edited by aglet
+	 * Last Update: 6/4/2011
 	 */
 	function &getSectionEditorSubmissionsCount($sectionEditorId, $journalId) {
 		$submissionsCount = array();
@@ -598,7 +602,6 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
 			WHERE	a.journal_id = ?
 				AND e.editor_id = ?
-				AND a.submission_progress = 0
 				AND a.status = ' . STATUS_QUEUED . '
 				AND d2.edit_decision_id IS NULL
 				AND (d.decision IS NULL OR d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
@@ -618,7 +621,6 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
 			WHERE	a.journal_id = ?
 				AND e.editor_id = ?
-				AND a.submission_progress = 0
 				AND a.status = ' . STATUS_QUEUED . '
 				AND d2.edit_decision_id IS NULL
 				AND d.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
@@ -1204,6 +1206,71 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $decisions;
 	}
 
+	/*
+	 * Get names of review Committe members and external reviewers from reviewcommittee.xml
+	 * Added by aglet
+	 * Last Update: 6/6/2011
+	 */
+	function getErcReviewCommittee() {
+		    $locale = Locale::getLocale();
+            $filename = "lib/pkp/locale/".$locale."/reviewcommittee.xml";
+            
+            $xmlDao = new XMLDAO();
+            $data = $xmlDao->parseStruct($filename, array('committee', 'ercmember'));
+            
+            $committee = array();
+            if (isset($data['committee'])) {
+				foreach ($data['ercmember'] as $ercData) {
+		                        $committeeMember['value'] = $ercData['attributes']['value'];
+		                        $committeeMember['name'] = $ercData['attributes']['name'];
+		                        $committeeMember['type']="ERC Member";
+		                        array_push($committee, $committeeMember);
+				}
+                         }
+            $data = $xmlDao->parseStruct($filename, array('committee', 'externalreviewer'));
+            if (isset($data['committee'])) {
+				foreach ($data['externalreviewer'] as $extData) {
+		                        $committeeMember['value'] = $extData['attributes']['value'];
+		                        $committeeMember['name'] = $extData['attributes']['name'];
+		                        $committeeMember['type']="External Reviewer";
+		                        array_push($committee, $committeeMember);
+				}
+            }
+            return $committee;
+	}
+	
+	function &getSESubmissionsForErcReview($sectionEditorId, $journalId, $sectionId) {
+		$primaryLocale = Locale::getPrimaryLocale();
+		$locale = Locale::getLocale();
+		$seSubmissions = array();
+		$sql = "SELECT DISTINCT
+				a.article_id,
+				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+				aap.last_name AS author_name
+			FROM	articles a
+				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
+				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
+				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
+				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
+			WHERE	a.journal_id = ?
+				AND edec.editor_id = ?				
+				AND edec.decision = " . SUBMISSION_EDITOR_DECISION_ASSIGNED;
+		$result =& $this->retrieve($sql, array('title', 'title', $locale, $journalId, $sectionEditorId));
+		
+		while (!$result->EOF) {
+			$seSubmissions[] = array(
+				'articleId' => $result->fields['article_id'],
+				'submissionTitle' => $result->fields['submission_title'],
+				'authorName' => $result->fields['author_name']
+			);
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $seSubmissions;
+	}
 	
 }
 

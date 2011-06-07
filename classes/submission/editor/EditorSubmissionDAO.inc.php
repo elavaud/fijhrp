@@ -306,8 +306,8 @@ class EditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	edec2.edit_decision_id IS NULL
 				AND ea2.edit_id IS NULL
-				AND a.journal_id = ?
-				AND a.submission_progress = 0' .
+				AND a.journal_id = ? ' .
+				//AND a.submission_progress = 0' . edited by aglet 6/4/2011
 				(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'');
 
 		if ($sectionId) {
@@ -440,13 +440,16 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $dateTo String date to search to
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
+	 * ARTICLE STATUS = 9 if proposal is withdrawn
+	 * Edited by aglet
+	 * Last Update: 6/4/2011
 	 */
 	function &getEditorSubmissionsArchives($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo,
-			'a.status <> ' . STATUS_QUEUED,
+			'a.status <> '. STATUS_QUEUED,
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
@@ -481,6 +484,9 @@ class EditorSubmissionDAO extends DAO {
 
 	/**
 	 * Function used for counting purposes for right nav bar
+	 * Edited: removed AND a.submission_progress = 0				
+	 * Edited by aglet
+	 * Last Update: 6/4/2011				
 	 */
 	function &getEditorSubmissionsCount($journalId) {
 		$submissionsCount = array();
@@ -492,15 +498,15 @@ class EditorSubmissionDAO extends DAO {
 		// "e2" and "e" are used to fetch only a single assignment
 		// if several exist.
 		$result =& $this->retrieve(
-			'SELECT	COUNT(*) AS unassigned_count
+			"SELECT	COUNT(*) AS unassigned_count
 			FROM	articles a
 				LEFT JOIN edit_assignments e ON (a.article_id = e.article_id)
 				LEFT JOIN edit_assignments e2 ON (a.article_id = e2.article_id AND e.edit_id < e2.edit_id)
 			WHERE	a.journal_id = ?
 				AND a.submission_progress = 0
-				AND a.status = ' . STATUS_QUEUED . '
+				AND a.status = " . STATUS_QUEUED . "
 				AND e2.edit_id IS NULL
-				AND e.edit_id IS NULL',
+				AND e.edit_id IS NULL",
 			array((int) $journalId)
 		);
 		$submissionsCount[0] = $result->Fields('unassigned_count');
@@ -519,7 +525,6 @@ class EditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions d ON (a.article_id = d.article_id)
 				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
 			WHERE	a.journal_id = ?
-				AND a.submission_progress = 0
 				AND a.status = ' . STATUS_QUEUED . '
 				AND e2.edit_id IS NULL
 				AND e.edit_id IS NOT NULL
@@ -543,7 +548,6 @@ class EditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions d ON (a.article_id = d.article_id)
 				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
 			WHERE	a.journal_id = ?
-				AND a.submission_progress = 0
 				AND a.status = ' . STATUS_QUEUED . '
 				AND e2.edit_id IS NULL
 				AND e.edit_id IS NOT NULL

@@ -11,7 +11,7 @@
 	{*******************************************************
 	 *
 	 * Get proposal status key and proposal status
-	 * Added by Gay Figueroa
+	 * Added by aglet
 	 * Last Update: 5/3/2011
 	 *
 	 *******************************************************}
@@ -23,34 +23,23 @@
 <div class="separator"></div>
 *}
 
+{*******************************************************
+ *
+ * Assign reviewers if assigned for review
+ * Added by aglet
+ * Last Update: 6/1/2011
+ *
+ *******************************************************}
+
 { if $proposalStatus == PROPOSAL_STATUS_ASSIGNED} 
-	{*******************************************************
-	 *
-	 * Assign reviewers if not exempted, or if reviewed and decision was Resubmit for review
-	 * Added by Gay Figueroa
-	 * Last Update: 5/8/2011
-	 *
-	 *******************************************************}
 
 	<div id="peerReview">
 		{include file="sectionEditor/submission/peerReview.tpl"}
 		<div class="separator"></div>
 	</div>
-{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT }
-	{if $articleMoreRecent}
-		{include file="sectionEditor/submission/peerReview.tpl"}
-		<div class="separator"></div>
-	{else}
-		<h3>{translate key="submission.peerReview"}</h3>
-		<table id="table11" width="100%" class="data">
-			<tr valign="top">
-				<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
-				<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
-			</tr>
-		</table>
-		<div class="separator"></div>
-	{/if}
 {/if}
+
+
 
 <div id="editorDecision">
 <h3>{translate key="submission.editorDecision"}</h3>
@@ -65,7 +54,7 @@
 {*******************************************************
  *
  * Review for completeness
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
@@ -86,7 +75,7 @@
 {*******************************************************
  *
  * Review for exemption
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
@@ -106,13 +95,13 @@
 
 {*******************************************************
  *
- * Record final decision when review is done or if exempted
- * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Ask for final decision if status is for expedited review
+ * Added by aglet
+ * Last Update: 6/1/2011
  *
  *******************************************************}
 
-	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED || $proposalStatus == PROPOSAL_STATUS_EXPEDITED}
+	{ elseif $proposalStatus == PROPOSAL_STATUS_EXPEDITED }
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
@@ -124,15 +113,16 @@
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
 			</form>
 		</td>
+
 {*******************************************************
  *
- * Allow review of recently resubmitted proposal if proposal was returned
- * Added by Gay Figueroa
+ * Initial review of returned proposal
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
 	
-	{ elseif $proposalStatus == PROPOSAL_STATUS_RETURNED}
+	{ elseif $proposalStatus == PROPOSAL_STATUS_RETURNED }
 		{if $articleMoreRecent}
 			<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
 			<td width="80%" class="value">
@@ -153,7 +143,7 @@
 {*******************************************************
  *
  * If proposal status is reviewed and last decision was RESUBMIT and article was recently updated, submit new final decision
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
@@ -179,7 +169,7 @@
 {*******************************************************
  *
  * Indicate if this submission is a revision or resubmission
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
@@ -192,10 +182,11 @@
 </td>
 	</tr>
 {/if}
+
 {************************************************
  *
  * Display last decision only and date decided
- * Edited by Gay Figueroa
+ * Edited by aglet
  * Last Update: 5/8/2011
  *
  ************************************************}
@@ -219,7 +210,7 @@
 		{************************************************
 		 *
 		 * Display all decisions and date
-		 * Edited by Gay Figueroa
+		 * Edited by aglet
 		 * Last Update: 5/3/2011
 		 *
 		 foreach from=$submission->getDecisions($round) item=editorDecision key=decisionKey}
@@ -240,14 +231,18 @@
 	<td class="value">
 		{url|assign:"notifyAuthorUrl" op="emailEditorDecisionComment" articleId=$submission->getId()}
 
-		{if $decision == SUBMISSION_EDITOR_DECISION_DECLINE}
-			{* The last decision was a decline; notify the user that sending this message will archive the submission. *}
-			{translate|escape:"quotes"|assign:"confirmString" key="editor.submissionReview.emailWillArchive"}
-			{icon name="mail" url=$notifyAuthorUrl onclick="return confirm('$confirmString')"}
-		{else}
-			{icon name="mail" url=$notifyAuthorUrl}
-		{/if}
-
+		{*******************************
+		 *
+		 * Edited by aglet
+		 * Last Update: 6/5/2011
+		 *
+		 The last decision was a decline; notify the user that sending this message will archive the submission. }
+		{translate|escape:"quotes"|assign:"confirmString" key="editor.submissionReview.emailWillArchive"}
+		{icon name="mail" url=$notifyAuthorUrl onclick="return confirm('$confirmString')" 
+		*
+		*******************************}
+		{icon name="mail" url=$notifyAuthorUrl}
+	
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		{translate key="submission.editorAuthorRecord"}
 		{if $submission->getMostRecentEditorDecisionComment()}
@@ -281,7 +276,7 @@
 {**********************************************************************
  *
  * Disable resubmit file for peer review
- * Edited by Gay Figueroa
+ * Edited by aglet
  * Last Update: 5/8/2011
  *
 
@@ -313,7 +308,7 @@
 	{************************************************
 	 *
 	 * Do not allow uploading other version of proposal files
-	 * Edited by Gay Figueroa
+	 * Edited by aglet
 	 * Last Update: 5/3/2011
 	 *
 

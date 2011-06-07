@@ -190,7 +190,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Get last decision and date it was decided
 		 * Get reviewAssignments
 		 * Get date when submission was last modified and set flag if article is more recent than decision
-		 * Added by Gay Figueroa
+		 * Added by aglet
 		 * Last Update: /5/8/2011
 		 *
 		*******************************************************/
@@ -272,7 +272,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Added initial review options, exemption options 
 		 * Added details of lastDecision
 		 * Added flag if article is more recent than last decision
-		 * Added by Gay Figueroa
+		 * Added by aglet
 		 * Last Update: 5/8/2011
 		 * 
 		*************************************************************/
@@ -282,8 +282,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		//pass edit_decision_id of lastDecision; this will also be passed from the forms in editorDecision.tpl to SubmissionEditHandler.recordDecision
 		$templateMgr->assign('lastDecisionArray', $lastDecisionArray);
-
-
 
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
@@ -423,7 +421,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	/***************************************************************************
 	 *
 	 * Record editor decision (Added additional editor decision cases)
-	 * Edited by Gay Figueroa
+	 * Edited by aglet
 	 * Last Update: 5/5/2011
 	 *
 	 ***************************************************************************/
@@ -570,6 +568,42 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}
 
 	}
+	
+	/**
+	 * Create a new user as an external reviewer.
+	 * Added by aglet
+	 * Last Update: 6/4/2011
+	 */
+	function createExternalReviewer($args, &$request) {
+		$articleId = isset($args[0]) ? (int) $args[0] : 0;
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$submission =& $this->submission;
+
+		import('classes.sectionEditor.form.CreateExternalReviewerForm');
+		$createReviewerForm = new CreateExternalReviewerForm($articleId);
+		$this->setupTemplate(true, $articleId);
+
+		if (isset($args[1]) && $args[1] === 'create') {
+			$createReviewerForm->readInputData();
+			if ($createReviewerForm->validate()) {
+				// Create a user and enroll them as a reviewer.
+				$newUserId = $createReviewerForm->execute();
+				Request::redirect(null, null, 'selectReviewer', array($articleId, $newUserId));
+			} else {
+				$createReviewerForm->display($args, $request);
+			}
+		} else {
+			// Display the "create user" form.
+			if ($createReviewerForm->isLocaleResubmit()) {
+				$createReviewerForm->readInputData();
+			} else {
+				$createReviewerForm->initData();
+			}
+			$createReviewerForm->display($args, $request);
+		}
+
+	}
+	
 
 	/**
 	 * Get a suggested username, making sure it's not
