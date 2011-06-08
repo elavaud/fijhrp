@@ -450,11 +450,27 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				break;
 		}
 
-		//if submitted decision is RESUBMIT, start a new round of review
+		/*
+		 * Confirm if this is still necessary
+		 * Edited by aglet 6/8/2011
+		 */
+		/*if submitted decision is RESUBMIT, start a new round of review
 		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
 			SectionEditorAction::initiateNewReviewRound($submission);
-		}
+		}*/
 
+		/*
+		 * Automatically send email to author when decision is recorded
+		 * Added by aglet 6/8/2011
+		 * TODO: FIX @ SectionEditorAction: does not reflect decision in email
+		 */
+		switch ($decision) {
+			case SUBMISSION_EDITOR_DECISION_ACCEPT:
+			case SUBMISSION_EDITOR_DECISION_DECLINE:
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+				SectionEditorAction::emailEditorDecisionComment($submission, 'Send');
+				break;
+		}
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 

@@ -1239,39 +1239,27 @@ class SectionEditorSubmissionDAO extends DAO {
             return $committee;
 	}
 	
-	function &getSESubmissionsForErcReview($sectionEditorId, $journalId, $sectionId) {
-		$primaryLocale = Locale::getPrimaryLocale();
-		$locale = Locale::getLocale();
-		$seSubmissions = array();
-		$sql = "SELECT DISTINCT
-				a.article_id,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
-				aap.last_name AS author_name
-			FROM	articles a
-				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
-				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? AND atl.locale = ?)
-				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
-			WHERE	a.journal_id = ?
-				AND edec.editor_id = ?				
-				AND edec.decision = " . SUBMISSION_EDITOR_DECISION_ASSIGNED;
-		$result =& $this->retrieve($sql, array('title', 'title', $locale, $journalId, $sectionEditorId));
-		
+	function &getSectionEditorSubmissionsForErcReview($sectionEditorId, $journalId, $sectionId) {
+		$sectionEditorSubmissions = array();
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
 		while (!$result->EOF) {
-			$seSubmissions[] = array(
-				'articleId' => $result->fields['article_id'],
-				'submissionTitle' => $result->fields['submission_title'],
-				'authorName' => $result->fields['author_name']
-			);
-			$result->moveNext();
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
 		}
+
 		$result->Close();
 		unset($result);
 
-		return $seSubmissions;
+		return $sectionEditorSubmissions;
 	}
-	
+		
 }
 
 ?>

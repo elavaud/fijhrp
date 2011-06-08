@@ -22,22 +22,22 @@
 <h4>Continuing Review or Rereview of Proposal</h4>
 <table class="data">
 		<tr>
-			<td width="10%" class="label">Protocol Title</td>
-			<td class="value">
+			<td class="label" width="10%">Protocol Title</td>
+			<td class="value">			
 				<select name="re_title" id="re_title" class="selectMenu protocolTitle">
 					<option value="none">Choose One</option>
 					{foreach from=$submissions item=submission}
-						<option value="{$submission.articleId}">{$submission.submissionTitle|strip_unsafe_html}</option>						
+						<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
 					{/foreach}
 				</select>
 			</td>
 		</tr>
 		<tr>
-			<td width="10%" class="label">Principal Investigator</td>
-			<td>
+			<td class="label" width="10%">Principal Investigator</td>
+			<td class="value">
 				<label id="re_select_title_pi">Please select a proposal first.</label>
 				{foreach from=$submissions item=submission}
-						<label id="re_principalInvestigator_{$submission.articleId}" class="re_pi_label">{$submission.authorName|strip_unsafe_html|truncate:40:"..."}</label>						
+						<label id="re_principalInvestigator_{$submission->getArticleId()}" class="re_pi_label">{$submission->getAuthorString()|strip_unsafe_html|truncate:40:"..."}</label>						
 				{/foreach}				
 			</td>
 		</tr>

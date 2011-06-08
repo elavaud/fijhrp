@@ -9,8 +9,10 @@
 {** 
  TODO: jQuery does not work when jquery lib is not included
 **}
-<script type="text/javascript" src="http://localhost/whorrp-release1/lib/pkp/js/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="http://localhost/whorrp-release1/lib/pkp/js/lib/jquery/plugins/jqueryUi.min.js"></script>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+
 {literal}
 <script type="text/javascript">
 <!--
@@ -92,7 +94,7 @@
 	</div>
 
 	<input type="button" class="button" name="showInitialReviews" id="showInitialReviews" value="Show Initial Reviews" />&nbsp;
-	 
+	 {************************
 	 <p><div class="separator"></div></p>
 	 
 	<div id="rereviews">
@@ -115,7 +117,7 @@
 	<input type="button" class="button" name="showAmendments" id="showAmendments" value="Show Amendments" />&nbsp;
 	
 	 <p><div class="separator"></div></p>
-	 
+		**************************************}	 
 	 <input type="submit" name="submitMinutes" id="submitMinutes" value="Upload Minutes" class="button" />
  </form>
  {include file="common/footer.tpl"}

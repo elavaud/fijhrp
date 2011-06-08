@@ -47,17 +47,33 @@ class MinutesHandler extends Handler {
 			$minutesObj = new Minutes();
 			$minutesObj->setDateHeld(Request::getUserVar("annc_dateHeld"));
 			$minutesObj->setAnnouncements(Request::getUserVar("annc_announcements"));
-			$minutesObj->setTimeConvened(Array('hour'=>Request::getUserVar("annc_convenedAtHour"),'minute'=>Request::getUserVar("annc_convenedAtMinute"),'amPm'=>Request::getUserVar("annc_convenedAtAmPm")));			
+			$minutesObj->setTimeConvened(Array('hour'=>Request::getUserVar("annc_convenedAtHour"),'minute'=>Request::getUserVar("annc_convenedAtMinute"),'amPm'=>Request::getUserVar("annc_convenedAtAmPm")));						
 		}
+		else {
+			//defaults
+			
+		}
+		
 		$filterSection = FILTER_SECTION_ALL;
 		$committee =& $sectionEditorSubmissionDao->getErcReviewCommittee();
-		$submissions =& $sectionEditorSubmissionDao->getSESubmissionsForErcReview($user->getId(),$journal->getId(),$filterSection);
+		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview($user->getId(),$journal->getId(),$filterSection);
+		
+		for($ctr = 1 ; $ctr<=12 ; $ctr++) {
+			$hours[$ctr] = $ctr;
+		}
+		for($ctr = 1 ; $ctr<=59 ; $ctr++) {
+			$minutes[$ctr] = $ctr;
+		}
+		$amPm = array ('am' => "a.m.", "pm" => "p.m.");
+		
 		$this->setupTemplate();
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('minutesObj', $minutesObj);
 		$templateMgr->assign_by_ref('committee', $committee);
 		$templateMgr->assign('submissions', $submissions);
-		
+		$templateMgr->assign('hours', $hours);
+		$templateMgr->assign('minutes', $minutes);
+		$templateMgr->assign('amPm', $amPm);
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
 		$templateMgr->display("sectionEditor/minutesForm.tpl");
 	}
