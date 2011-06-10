@@ -432,13 +432,15 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$submission =& $this->submission;
 
 		$decision = Request::getUserVar('decision');
-
+		$resubmitCount = Request::getUserVar('resubmitCount');
 		//pass lastDecisionId of this article to update existing row in edit_decisions
 		$lastDecisionId = Request::getUserVar('lastDecisionId');
 
+		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) {
+			$resubmitCount = $resubmitCount + 1; 
+		}
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
@@ -446,7 +448,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId);
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount);
 				break;
 		}
 

@@ -85,10 +85,10 @@ class SectionEditorAction extends Action {
 	 * Edited by Gay Figueroa
 	 * Last Update: 5/4/2011
 	 */
-	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId) {
+	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId, $resubmitCount) {
 		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
 		if (empty($editAssignments)) return;
-
+	
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
 
@@ -98,7 +98,8 @@ class SectionEditorAction extends Action {
 				'editDecisionId' => null,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => date(Core::getCurrentDate())
+				'dateDecided' => date(Core::getCurrentDate()),
+				'resubmitCount' => $resubmitCount
 			);
 		}
 		else {
@@ -106,7 +107,8 @@ class SectionEditorAction extends Action {
 				'editDecisionId' => $lastDecisionId,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => date(Core::getCurrentDate())
+				'dateDecided' => date(Core::getCurrentDate()),
+				'resubmitCount' => $resubmitCount
 			);
 		}
 

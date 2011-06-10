@@ -180,26 +180,26 @@ class SectionEditorSubmissionDAO extends DAO {
 					if ($editorDecision['editDecisionId'] == null) {
 						$this->update(
 							sprintf('INSERT INTO edit_decisions
-								(article_id, round, editor_id, decision, date_decided)
-								VALUES (?, ?, ?, ?, %s)',
+								(article_id, round, editor_id, decision, date_decided, resubmit_count)
+								VALUES (?, ?, ?, ?, %s, ?)',
 								$this->datetimeToDB($editorDecision['dateDecided'])),
-							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'])
+							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'], $editorDecision['resubmitCount'])
 						);
 					}
 	/********************************************************
 	 *
 	 * If editDecisionId is not null, just update the existing row in the database
-	 * Added by Gay Figueroa
+	 * Added by aglet
 	 * Last Update: 5/4/2011
 	 *
 	*********************************************************/
 					else {
 						$this->update(
 							sprintf('UPDATE edit_decisions SET
-								round = ?, decision = ?, date_decided = %s 
+								round = ?, decision = ?, date_decided = %s, resubmit_count = ? 
 								WHERE edit_decision_id = ?',
 								$this->datetimeToDB($editorDecision['dateDecided'])),
-							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'], $editorDecision['editDecisionId'])
+							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'],  $editorDecision['resubmitCount'], $editorDecision['editDecisionId'])
 						);
 					}
 				}
@@ -1176,17 +1176,19 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Get the editor decisions for a review round of an article.
 	 * @param $articleId int
 	 * @param $round int
+	 * Edited by aglet
+	 * Last Update: 6/10/2011
 	 */
 	function getEditorDecisions($articleId, $round = null) {
 		$decisions = array();
 
 		if ($round == null) {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+				'SELECT edit_decision_id, editor_id, decision, date_decided,resubmit_count FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
 			);
 		} else {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
 				array($articleId, $round)
 			);
 		}
@@ -1196,7 +1198,8 @@ class SectionEditorSubmissionDAO extends DAO {
 				'editDecisionId' => $result->fields['edit_decision_id'],
 				'editorId' => $result->fields['editor_id'],
 				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
+				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided']),
+				'resubmitCount' => $result->fields['resubmit_count']
 			);
 			$result->moveNext();
 		}

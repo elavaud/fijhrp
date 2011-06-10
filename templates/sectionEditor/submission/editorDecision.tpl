@@ -65,6 +65,7 @@
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
 				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$initialReviewOptions selected=1}
 				</select>
@@ -86,6 +87,7 @@
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
 				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$exemptionOptions selected=1}
 				</select>
@@ -107,6 +109,7 @@
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
 				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$editorDecisionOptions selected=1}
 				</select>
@@ -129,6 +132,7 @@
 				<form method="post" action="{url op="recordDecision"}">
 					<input type="hidden" name="articleId" value="{$submission->getId()}" />
 					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+					<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 					<select name="decision" size="1" class="selectMenu">
 						{html_options_translate options=$initialReviewOptions selected=1}
 					</select>
@@ -154,6 +158,7 @@
 				<form method="post" action="{url op="recordDecision"}">
 					<input type="hidden" name="articleId" value="{$submission->getId()}" />
 					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+					<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 					<select name="decision" size="1" class="selectMenu">
 						{html_options_translate options=$editorDecisionOptions selected=1}
 					</select>
@@ -178,7 +183,7 @@
 	<tr valign="top">
 		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
-		<td width="80%" class="value">{translate key="editor.article.proposalResubmitted"}  {$articleLastModified|date_format:$dateFormatShort}
+		<td width="80%" class="value">({$lastDecisionArray.resubmitCount}){translate key="editor.article.proposalResubmitted"}  {$articleLastModified|date_format:$dateFormatShort}
 </td>
 	</tr>
 {/if}
