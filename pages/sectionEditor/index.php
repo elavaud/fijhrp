@@ -23,6 +23,7 @@ switch ($op) {
 	//
 	case 'enrollSearch':
 	case 'createReviewer':
+	case 'createExternalReviewer':
 	case 'suggestUsername':
 	case 'enroll':
 	case 'submission':
@@ -147,7 +148,9 @@ switch ($op) {
 	// Submission Comments
 	//
 	case 'viewPeerReviewComments':
-	case 'postPeerReviewComment':
+	case 'postPeerReviewComment':define('HANDLER_CLASS', 'SectionEditorHandler');
+		import('pages.sectionEditor.SectionEditorHandler');
+		break;
 	case 'viewEditorDecisionComments':
 	case 'blindCcReviewsToReviewers':
 	case 'postEditorDecisionComment':
@@ -168,6 +171,12 @@ switch ($op) {
 	case 'instructions':
 		define('HANDLER_CLASS', 'SectionEditorHandler');
 		import('pages.sectionEditor.SectionEditorHandler');
+		break;
+	case 'minutes':
+	case 'saveMinutes':
+	case 'uploadMinutes1':
+		define('HANDLER_CLASS', 'MinutesHandler');
+		import('pages.sectionEditor.MinutesHandler');
 		break;
 }
 

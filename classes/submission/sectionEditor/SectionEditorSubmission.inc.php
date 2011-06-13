@@ -507,7 +507,7 @@ class SectionEditorSubmission extends Article {
 		);
 		return $exemptionOptions;
 	}
-
+	
 	/**
 	 * Get the CSS class for highlighting this submission in a list, based on status.
 	 * @return string

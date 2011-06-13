@@ -52,6 +52,8 @@ class ReviewAssignment extends PKPReviewAssignment {
 	 * Get an associative array matching reviewer recommendation codes with locale strings.
 	 * (Includes default '' => "Choose One" string.)
 	 * @return array recommendation => localeString
+	 * Edited by aglet
+	 * Last Update: 6/1/2011
 	 */
 	function &getReviewerRecommendationOptions() {
 		// Bring in reviewer constants
@@ -60,11 +62,8 @@ class ReviewAssignment extends PKPReviewAssignment {
 		static $reviewerRecommendationOptions = array(
 			'' => 'common.chooseOne',
 			SUBMISSION_REVIEWER_RECOMMENDATION_ACCEPT => 'reviewer.article.decision.accept',
-			SUBMISSION_REVIEWER_RECOMMENDATION_PENDING_REVISIONS => 'reviewer.article.decision.pendingRevisions',
-			SUBMISSION_REVIEWER_RECOMMENDATION_RESUBMIT_HERE => 'reviewer.article.decision.resubmitHere',
-			SUBMISSION_REVIEWER_RECOMMENDATION_RESUBMIT_ELSEWHERE => 'reviewer.article.decision.resubmitElsewhere',
-			SUBMISSION_REVIEWER_RECOMMENDATION_DECLINE => 'reviewer.article.decision.decline',
-			SUBMISSION_REVIEWER_RECOMMENDATION_SEE_COMMENTS => 'reviewer.article.decision.seeComments'
+			SUBMISSION_REVIEWER_RECOMMENDATION_RESUBMIT => 'reviewer.article.decision.resubmit',
+			SUBMISSION_REVIEWER_RECOMMENDATION_DECLINE => 'reviewer.article.decision.decline'
 		);
 		return $reviewerRecommendationOptions;
 	}
