@@ -33,7 +33,12 @@
 		<td class="label">{translate key="article.suppFilesAbbrev"}</td>
 		<td width="30%" class="value">
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}
-				<a href="{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}{url op="editSuppFile" path=$submission->getArticleId()|to_array:$suppFile->getId()}{else}{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}{/if}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}<br />
+                            <!-- Do not allow edit of supp files, Edit by AIM, June 6, 2011
+                            {*
+                            <a href="{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}{url op="editSuppFile" path=$submission->getArticleId()|to_array:$suppFile->getId()}{else}{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}{/if}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}<br />
+                            *}
+                            -->
+                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getType()|escape}<br />
 			{foreachelse}
 				{translate key="common.none"}
 			{/foreach}

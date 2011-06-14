@@ -91,8 +91,9 @@
 	<message key="common.default">Default</message>
 	<message key="common.delete">Delete</message>
 
-        <!-- Added by Anne Ivy Mirasol, May 18, 2011  -->
+        <!-- Added by Anne Ivy Mirasol, June 6, 2011  -->
         <message key="common.withdraw">Withdraw</message>
+        <message key="common.sendtoarchive">Send to Archive</message>
 
 	<message key="common.deleteSelection">Delete Selection</message>
 	<message key="common.description">Description</message>

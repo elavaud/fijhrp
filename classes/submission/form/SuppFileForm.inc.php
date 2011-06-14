@@ -235,7 +235,8 @@ class SuppFileForm extends Form {
 			$suppFile = new SuppFile();
 			$suppFile->setArticleId($this->article->getArticleId());
 			$suppFile->setFileId($fileId);
-			$this->setSuppFileData($suppFile);
+			//$this->setSuppFileData($suppFile);  AIM, June 6, 2011
+                        $suppFile->setType('Progress Report');
 			$suppFileDao->insertSuppFile($suppFile);
 			$this->suppFileId = $suppFile->getId();
 		}

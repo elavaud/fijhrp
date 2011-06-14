@@ -156,7 +156,7 @@ class AuthorSubmission extends Article {
 
                 /**
                  * Added by: AIM
-                 * Last Updated: May 31, 2011
+                 * Last Updated: June 1, 2011
                  * Return status of proposal
                  **/
                 if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
@@ -173,10 +173,7 @@ class AuthorSubmission extends Article {
                     else return PROPOSAL_STATUS_RETURNED;
                 }
 
-                if($status == PROPOSAL_STATUS_CHECKED) return PROPOSAL_STATUS_SUBMITTED;
-                if($status == PROPOSAL_STATUS_ASSIGNED) return PROPOSAL_STATUS_SUBMITTED;
-                if($status == PROPOSAL_STATUS_EXPEDITED) return PROPOSAL_STATUS_SUBMITTED;
-                
+                //For all other statuses
                 return $status;
 	}
 

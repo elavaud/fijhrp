@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-23 17:23:40
+<?php /* Smarty version 2.6.26, created on 2011-06-08 08:16:08
          compiled from author/submission/management.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 55, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'date_format', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 53, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 54, false),array('modifier', 'assign', 'author/submission/management.tpl', 54, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 90, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 60, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'date_format', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 58, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 59, false),array('modifier', 'assign', 'author/submission/management.tpl', 59, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 95, false),)), $this); ?>
 <div id="submission">
 <h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "article.submission"), $this);?>
 </h3>
@@ -42,10 +42,11 @@ if ($this->_foreach['suppFiles']['total'] > 0):
     foreach ($_from as $this->_tpl_vars['suppFile']):
         $this->_foreach['suppFiles']['iteration']++;
 ?>
-				<a href="<?php if ($this->_tpl_vars['submission']->getStatus() != STATUS_PUBLISHED && $this->_tpl_vars['submission']->getStatus() != STATUS_ARCHIVED): ?><?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'editSuppFile','path' => ((is_array($_tmp=$this->_tpl_vars['submission']->getArticleId())) ? $this->_run_mod_handler('to_array', true, $_tmp, $this->_tpl_vars['suppFile']->getId()) : $this->_plugins['modifier']['to_array'][0][0]->smartyToArray($_tmp, $this->_tpl_vars['suppFile']->getId()))), $this);?>
-<?php else: ?><?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'downloadFile','path' => ((is_array($_tmp=$this->_tpl_vars['submission']->getArticleId())) ? $this->_run_mod_handler('to_array', true, $_tmp, $this->_tpl_vars['suppFile']->getFileId()) : $this->_plugins['modifier']['to_array'][0][0]->smartyToArray($_tmp, $this->_tpl_vars['suppFile']->getFileId()))), $this);?>
-<?php endif; ?>" class="file"><?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getFileName())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
-</a>&nbsp;&nbsp;<?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getDateModified())) ? $this->_run_mod_handler('date_format', true, $_tmp, $this->_tpl_vars['dateFormatShort']) : smarty_modifier_date_format($_tmp, $this->_tpl_vars['dateFormatShort'])); ?>
+                            <!-- Do not allow edit of supp files, Edit by AIM, June 6, 2011
+                                                        -->
+                            <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'downloadFile','path' => ((is_array($_tmp=$this->_tpl_vars['submission']->getArticleId())) ? $this->_run_mod_handler('to_array', true, $_tmp, $this->_tpl_vars['suppFile']->getFileId()) : $this->_plugins['modifier']['to_array'][0][0]->smartyToArray($_tmp, $this->_tpl_vars['suppFile']->getFileId()))), $this);?>
+" class="file"><?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getFileName())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
+</a>&nbsp;&nbsp;<?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getType())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
 <br />
 			<?php endforeach; else: ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.none"), $this);?>

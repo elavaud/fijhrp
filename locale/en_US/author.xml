@@ -47,6 +47,7 @@
 
         <!-- Added by Anne Ivy Mirasol, May 18, 2011  -->
         <message key="author.submissions.confirmWithdraw">Are you sure you want to withdraw your submission? You cannot undo this action.</message>
+        <message key="author.submissions.confirmWithdraw">Are you sure you want to send this proposal to the Archive section?</message>
 
 	<message key="author.submissions.viewStatus">View Status</message>
 	<message key="author.submissions.noSubmissions">No submissions.</message>
