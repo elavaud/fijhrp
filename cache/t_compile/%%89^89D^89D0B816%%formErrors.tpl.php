@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-23 11:23:25
+<?php /* Smarty version 2.6.26, created on 2011-06-05 21:27:09
          compiled from common/formErrors.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'common/formErrors.tpl', 13, false),array('modifier', 'escape', 'common/formErrors.tpl', 16, false),)), $this); ?>

@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-01 16:02:42
+<?php /* Smarty version 2.6.26, created on 2011-06-06 10:45:51
          compiled from manager/reviewForms/reviewForms.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'manager/reviewForms/reviewForms.tpl', 21, false),array('function', 'url', 'manager/reviewForms/reviewForms.tpl', 48, false),array('function', 'page_info', 'manager/reviewForms/reviewForms.tpl', 77, false),array('function', 'page_links', 'manager/reviewForms/reviewForms.tpl', 78, false),array('block', 'iterate', 'manager/reviewForms/reviewForms.tpl', 37, false),array('modifier', 'escape', 'manager/reviewForms/reviewForms.tpl', 44, false),)), $this); ?>

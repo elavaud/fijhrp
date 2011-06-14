@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <?php /* Smarty version 2.6.26, created on 2011-06-08 08:16:08
+=======
+<?php /* Smarty version 2.6.26, created on 2011-06-06 14:26:43
+>>>>>>> d7554d63c45bf42f19ddf5f03c145963e9b3724b
          compiled from author/submission/management.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 60, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'date_format', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 58, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 59, false),array('modifier', 'assign', 'author/submission/management.tpl', 59, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 95, false),)), $this); ?>

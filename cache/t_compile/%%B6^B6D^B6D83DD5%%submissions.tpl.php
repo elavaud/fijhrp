@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-05-23 11:43:20
+<?php /* Smarty version 2.6.26, created on 2011-06-06 14:25:01
          compiled from editor/submissions.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'url', 'editor/submissions.tpl', 14, false),array('function', 'translate', 'editor/submissions.tpl', 20, false),array('function', 'html_options', 'editor/submissions.tpl', 28, false),array('function', 'html_options_translate', 'editor/submissions.tpl', 57, false),array('function', 'html_select_date', 'editor/submissions.tpl', 70, false),array('modifier', 'assign', 'editor/submissions.tpl', 14, false),array('modifier', 'escape', 'editor/submissions.tpl', 28, false),)), $this); ?>

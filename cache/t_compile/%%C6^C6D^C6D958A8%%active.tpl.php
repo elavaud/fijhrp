@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <?php /* Smarty version 2.6.26, created on 2011-06-14 16:40:59
+=======
+<?php /* Smarty version 2.6.26, created on 2011-06-06 10:42:56
+>>>>>>> d7554d63c45bf42f19ddf5f03c145963e9b3724b
          compiled from author/active.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/active.tpl', 18, false),array('function', 'sort_heading', 'author/active.tpl', 18, false),array('function', 'url', 'author/active.tpl', 44, false),array('block', 'iterate', 'author/active.tpl', 27, false),array('modifier', 'escape', 'author/active.tpl', 37, false),array('modifier', 'date_format', 'author/active.tpl', 38, false),array('modifier', 'truncate', 'author/active.tpl', 40, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 44, false),)), $this); ?>
