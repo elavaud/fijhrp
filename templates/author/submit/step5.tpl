@@ -47,6 +47,21 @@
 {/foreach}
 </table>
 
+<!-- Added by AIM, June 15, 2011 -->
+
+<div class="separator"></div>
+
+<div id="commentsForEditor">
+<h3>{translate key="author.submit.commentsForEditor"}</h3>
+
+<table width="100%" class="data">
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="commentsToEditor" key="author.submit.comments"}</td>
+	<td width="80%" class="value"><textarea name="commentsToEditor" id="commentsToEditor" rows="3" cols="40" class="textArea">{$commentsToEditor|escape}</textarea></td>
+</tr>
+</table>
+</div>{* commentsForEditor *}
+
 <div class="separator"></div>
 
 {if $authorFees}

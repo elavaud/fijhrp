@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-04-23 22:44:14
+<?php /* Smarty version 2.6.26, created on 2011-06-14 21:12:07
          compiled from file:/var/www/whorrp/plugins/blocks/user/block.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'file:/var/www/whorrp/plugins/blocks/user/block.tpl', 13, false),array('function', 'url', 'file:/var/www/whorrp/plugins/blocks/user/block.tpl', 21, false),array('modifier', 'escape', 'file:/var/www/whorrp/plugins/blocks/user/block.tpl', 18, false),)), $this); ?>

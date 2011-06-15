@@ -133,6 +133,7 @@ function checkSubmissionChecklist() {
 
 {/if}{* if count($sectionOptions) <= 1 *}
 
+        
 {if $currentJournal->getLocalizedSetting('copyrightNotice') != ''}
 <div id="copyrightNotice">
 <h3>{translate key="about.copyrightNotice"}</h3>
@@ -159,7 +160,7 @@ function checkSubmissionChecklist() {
 {$currentJournal->getLocalizedSetting('privacyStatement')|nl2br}
 </div>
 
-<div class="separator"></div>
+<!-- <div class="separator"></div> --> <!-- Comment out, AIM -->
 
 <div id="commentsForEditor" style="display: none"> 
 <h3>{translate key="author.submit.commentsForEditor"}</h3>
@@ -172,7 +173,7 @@ function checkSubmissionChecklist() {
 </table>
 </div>{* commentsForEditor *}
 
-<div class="separator"></div>
+<!-- <div class="separator"></div> --> <!-- Comment out, AIM -->
 
 <p><input type="submit" value="{translate key="common.saveAndContinue"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="{if $articleId}confirmAction('{url page="author"}', '{translate|escape:"jsparam" key="author.submit.cancelSubmission"}'){else}document.location.href='{url page="author" escape=false}'{/if}" /></p>
 

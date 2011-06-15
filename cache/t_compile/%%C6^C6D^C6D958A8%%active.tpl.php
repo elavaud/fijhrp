@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<?php /* Smarty version 2.6.26, created on 2011-06-14 16:40:59
-=======
-<?php /* Smarty version 2.6.26, created on 2011-06-06 10:42:56
->>>>>>> d7554d63c45bf42f19ddf5f03c145963e9b3724b
+<?php /* Smarty version 2.6.26, created on 2011-06-15 02:55:00
          compiled from author/active.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/active.tpl', 18, false),array('function', 'sort_heading', 'author/active.tpl', 18, false),array('function', 'url', 'author/active.tpl', 44, false),array('block', 'iterate', 'author/active.tpl', 27, false),array('modifier', 'escape', 'author/active.tpl', 37, false),array('modifier', 'date_format', 'author/active.tpl', 38, false),array('modifier', 'truncate', 'author/active.tpl', 40, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 44, false),)), $this); ?>
@@ -60,8 +56,13 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 <?php endif; ?></a></td>
                 <?php endif; ?>
                 <td align="right">
-                        
-                        <?php if ($this->_tpl_vars['status'] == PROPOSAL_STATUS_SUBMITTED): ?>
+                        <?php if ($this->_tpl_vars['status'] == PROPOSAL_STATUS_DRAFT): ?>
+                            <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.draft"), $this);?>
+<br /><a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'deleteSubmission','path' => $this->_tpl_vars['articleId']), $this);?>
+" class="action" onclick="return confirm('<?php echo ((is_array($_tmp=$this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.confirmDelete"), $this))) ? $this->_run_mod_handler('escape', true, $_tmp, 'jsparam') : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp, 'jsparam'));?>
+')"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.delete"), $this);?>
+</a>
+                        <?php elseif ($this->_tpl_vars['status'] == PROPOSAL_STATUS_SUBMITTED): ?>
                             <?php $this->assign('count', $this->_tpl_vars['count']+1); ?>
                             <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.submitted"), $this);?>
 <br />
@@ -124,11 +125,10 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
                         <?php endif; ?>
                  </td>
             </tr>
-        <?php endif; ?>
-	<tr>
+            <tr>
 		<td colspan="6" class="<?php if ($this->_tpl_vars['submissions1']->eof()): ?>end<?php endif; ?>separator">&nbsp;</td>
-	</tr>
-
+	    </tr>
+        <?php endif; ?>
 <?php $_block_content = ob_get_contents(); ob_end_clean(); $_block_repeat=false;echo $this->_plugins['block']['iterate'][0][0]->smartyIterate($this->_tag_stack[count($this->_tag_stack)-1][1], $_block_content, $this, $_block_repeat); }  array_pop($this->_tag_stack); ?>
 <?php if ($this->_tpl_vars['count'] == 0): ?>
 	<tr>
@@ -201,7 +201,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 <br />
                     <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'complete','path' => $this->_tpl_vars['articleId']), $this);?>
 " class="action">Complete</a><br />
-                    <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addSuppFile','path' => $this->_tpl_vars['articleId']), $this);?>
+                    <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addProgressReport','path' => $this->_tpl_vars['articleId']), $this);?>
 " class="action">Upload Progress Report</a><br />
                     <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'withdrawSubmission','path' => $this->_tpl_vars['articleId']), $this);?>
 " class="action" onclick="return confirm('<?php echo ((is_array($_tmp=$this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "author.submissions.confirmWithdraw"), $this))) ? $this->_run_mod_handler('escape', true, $_tmp, 'jsparam') : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp, 'jsparam'));?>

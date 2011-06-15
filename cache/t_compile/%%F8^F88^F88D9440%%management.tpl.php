@@ -1,11 +1,7 @@
-<<<<<<< HEAD
-<?php /* Smarty version 2.6.26, created on 2011-06-08 08:16:08
-=======
-<?php /* Smarty version 2.6.26, created on 2011-06-06 14:26:43
->>>>>>> d7554d63c45bf42f19ddf5f03c145963e9b3724b
+<?php /* Smarty version 2.6.26, created on 2011-06-15 01:22:11
          compiled from author/submission/management.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 60, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'date_format', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 58, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 59, false),array('modifier', 'assign', 'author/submission/management.tpl', 59, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 95, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 61, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 59, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 60, false),array('modifier', 'assign', 'author/submission/management.tpl', 60, false),array('modifier', 'date_format', 'author/submission/management.tpl', 66, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 96, false),)), $this); ?>
 <div id="submission">
 <h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "article.submission"), $this);?>
 </h3>
@@ -29,8 +25,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 			<?php if ($this->_tpl_vars['submissionFile']): ?>
 				<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'downloadFile','path' => ((is_array($_tmp=$this->_tpl_vars['submission']->getArticleId())) ? $this->_run_mod_handler('to_array', true, $_tmp, $this->_tpl_vars['submissionFile']->getFileId(), $this->_tpl_vars['submissionFile']->getRevision()) : $this->_plugins['modifier']['to_array'][0][0]->smartyToArray($_tmp, $this->_tpl_vars['submissionFile']->getFileId(), $this->_tpl_vars['submissionFile']->getRevision()))), $this);?>
 " class="file"><?php echo ((is_array($_tmp=$this->_tpl_vars['submissionFile']->getFileName())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
-</a>&nbsp;&nbsp;<?php echo ((is_array($_tmp=$this->_tpl_vars['submissionFile']->getDateModified())) ? $this->_run_mod_handler('date_format', true, $_tmp, $this->_tpl_vars['dateFormatShort']) : smarty_modifier_date_format($_tmp, $this->_tpl_vars['dateFormatShort'])); ?>
-
+</a>
 			<?php else: ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.none"), $this);?>
 
@@ -50,15 +45,15 @@ if ($this->_foreach['suppFiles']['total'] > 0):
                                                         -->
                             <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'downloadFile','path' => ((is_array($_tmp=$this->_tpl_vars['submission']->getArticleId())) ? $this->_run_mod_handler('to_array', true, $_tmp, $this->_tpl_vars['suppFile']->getFileId()) : $this->_plugins['modifier']['to_array'][0][0]->smartyToArray($_tmp, $this->_tpl_vars['suppFile']->getFileId()))), $this);?>
 " class="file"><?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getFileName())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
-</a>&nbsp;&nbsp;<?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getType())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
-<br />
+</a>&nbsp;&nbsp;(<?php echo ((is_array($_tmp=$this->_tpl_vars['suppFile']->getType())) ? $this->_run_mod_handler('escape', true, $_tmp) : $this->_plugins['modifier']['escape'][0][0]->smartyEscape($_tmp)); ?>
+)<br />
 			<?php endforeach; else: ?>
 				<?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.none"), $this);?>
 
 			<?php endif; unset($_from); ?>
 		</td>
 		<td width="50%" class="value">
-			<?php if ($this->_tpl_vars['submission']->getStatus() != STATUS_PUBLISHED && $this->_tpl_vars['submission']->getStatus() != STATUS_ARCHIVED): ?>
+			                        <?php if ($this->_tpl_vars['submission']->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED): ?>
 				<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addSuppFile','path' => $this->_tpl_vars['submission']->getArticleId()), $this);?>
 " class="action"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submission.addSuppFile"), $this);?>
 </a>

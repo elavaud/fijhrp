@@ -232,7 +232,7 @@ class SubmitHandler extends AuthorHandler {
 	function submitUploadSuppFile($args, $request) {
 		$articleId = $request->getUserVar('articleId');
                 // Start Edit Raf Tan 04/30/2011
-                $type = $request->getUserVar('type');
+                $fileTypes = $request->getUserVar('fileType');
                 // End Edit Raf Tan 04/30/2011
 		$journal =& $request->getJournal();
 
@@ -248,8 +248,16 @@ class SubmitHandler extends AuthorHandler {
                 // Start Edit Raf Tan 04/30/2011
                 //Request::redirect(null, null, 'submitSuppFile', $suppFileId, array('articleId' => $articleId));
 
-                // Bypass dispplaying the supplementay submission form (pass articleId and proposalType)
-                Request::redirect(null, null, 'saveSubmitSuppFile', $suppFileId, array('articleId' => $articleId, 'type' => $type));
+                // Bypass displaying the supplementay submission form (pass articleId and proposalType)
+                $suppFileType = $fileTypes[0];
+                $count = 1;
+                foreach ($fileTypes as $type) {
+                    if($count > 1)
+                        $suppFileType = $suppFileType . ', ' . $type;
+                    $count++;
+                }
+                
+                Request::redirect(null, null, 'saveSubmitSuppFile', $suppFileId, array('articleId' => $articleId, 'type' => $suppFileType));
                 // End Edit Raf Tan 04/30/2011
 	}
 
@@ -309,7 +317,10 @@ class SubmitHandler extends AuthorHandler {
                  */
 
                 //$submitForm->readInputData();
-                $submitForm->setData('title', array($article->getLocale() => $articleId . '-' . $type));
+                $suppFileDao = DAORegistry::getDAO('SuppFileDAO');
+                $suppFileCount = count($suppFileDao->getSuppFilesByArticle($articleId));
+                
+                $submitForm->setData('title', array($article->getLocale() => ('SuppFile'.$suppFileCount)));
                 $submitForm->setData('type', $type);
                 $submitForm->execute();
                 Request::redirect(null, null, 'submit', '4', array('articleId' => $articleId));

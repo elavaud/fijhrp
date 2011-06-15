@@ -163,11 +163,11 @@ class SuppFileForm extends Form {
 
 		} else {
 			$this->_data = array(
-				'type' => '',
+				'type' => $this->getData('type'),
 				'showReviewers' => 1
 			);
 		}
-
+                
 	}
 
 	/**
@@ -235,9 +235,9 @@ class SuppFileForm extends Form {
 			$suppFile = new SuppFile();
 			$suppFile->setArticleId($this->article->getArticleId());
 			$suppFile->setFileId($fileId);
-			//$this->setSuppFileData($suppFile);  AIM, June 6, 2011
-                        $suppFile->setType('Progress Report');
-			$suppFileDao->insertSuppFile($suppFile);
+			$this->setSuppFileData($suppFile);
+
+                        $suppFileDao->insertSuppFile($suppFile);
 			$this->suppFileId = $suppFile->getId();
 		}
 
@@ -253,7 +253,7 @@ class SuppFileForm extends Form {
 		$suppFile->setCreator($this->getData('creator'), null); // Localized
 		$suppFile->setSubject($this->getData('subject'), null); // Localized
 		$suppFile->setType($this->getData('type'));
-		$suppFile->setTypeOther($this->getData('typeOther'), null); // Localized
+                $suppFile->setTypeOther($this->getData('typeOther'), null); // Localized
 		$suppFile->setDescription($this->getData('description'), null); // Localized
 		$suppFile->setPublisher($this->getData('publisher'), null); // Localized
 		$suppFile->setSponsor($this->getData('sponsor'), null); // Localized

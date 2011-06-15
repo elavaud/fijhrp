@@ -69,10 +69,14 @@ class AuthorHandler extends Handler {
 			}
 			// Convert submission array back to an ItemIterator class
 			import('lib.pkp.classes.core.ArrayItemIterator');
-			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			$submissions1 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+
+                        //Clumsy workaround due to lack of iterate reset, AIM, June 1, 2011
+                        $submissions2 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+                        $submissions3 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		} else {
 			$submissions1 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
-                        //Clumsy work-around due to lack of iterate reset, AIM, June 1, 2011  TODO: Find better way
+                        //Clumsy workaround due to lack of iterate reset, AIM, June 1, 2011  TODO: Find better way
                         $submissions2 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
                         $submissions3 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
 		}

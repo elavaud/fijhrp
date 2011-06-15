@@ -164,6 +164,9 @@ class AuthorSubmission extends Article {
                 //Withdrawn status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
 
+                //Archived status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
+
                 $status = $this->getProposalStatus();
                 if($status == PROPOSAL_STATUS_RETURNED) {
                     $articleDao = DAORegistry::getDAO('ArticleDAO');

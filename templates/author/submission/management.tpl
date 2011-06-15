@@ -23,7 +23,7 @@
 		<td width="20%" class="label">{translate key="submission.originalFile"}</td>
 		<td width="80%" colspan="2" class="data">
 			{if $submissionFile}
-				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$submissionFile->getFileId():$submissionFile->getRevision()}" class="file">{$submissionFile->getFileName()|escape}</a>&nbsp;&nbsp;{$submissionFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$submissionFile->getFileId():$submissionFile->getRevision()}" class="file">{$submissionFile->getFileName()|escape}</a>
 			{else}
 				{translate key="common.none"}
 			{/if}
@@ -38,13 +38,14 @@
                             <a href="{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}{url op="editSuppFile" path=$submission->getArticleId()|to_array:$suppFile->getId()}{else}{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}{/if}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}<br />
                             *}
                             -->
-                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getType()|escape}<br />
+                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})<br />
 			{foreachelse}
 				{translate key="common.none"}
 			{/foreach}
 		</td>
 		<td width="50%" class="value">
-			{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}
+			{* {if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED} *}
+                        {if $submission->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED}
 				<a href="{url op="addSuppFile" path=$submission->getArticleId()}" class="action">{translate key="submission.addSuppFile"}</a>
 			{else}
 				&nbsp;

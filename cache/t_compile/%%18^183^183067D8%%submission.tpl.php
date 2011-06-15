@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-06-06 14:26:43
+<?php /* Smarty version 2.6.26, created on 2011-06-14 21:27:05
          compiled from author/submission.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission.tpl', 12, false),array('function', 'url', 'author/submission.tpl', 18, false),array('modifier', 'assign', 'author/submission.tpl', 12, false),)), $this); ?>

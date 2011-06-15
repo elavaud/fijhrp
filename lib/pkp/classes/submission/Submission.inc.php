@@ -26,6 +26,7 @@ define('PROPOSAL_STATUS_EXPEDITED',7);	//ASSIGNED FOR EXPEDITED REVIEW
 
 define('PROPOSAL_STATUS_DRAFT',8); //Replaces STATUS_INCOMPLETE
 define('PROPOSAL_STATUS_WITHDRAWN',9);  //Special tag, not part of lifecycle
+define('PROPOSAL_STATUS_ARCHIVED',10);  //To archive Not Approved and Exempt From Review
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
