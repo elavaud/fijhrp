@@ -71,9 +71,10 @@ class AuthorHandler extends Handler {
 			import('lib.pkp.classes.core.ArrayItemIterator');
 			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		} else {
-			$submissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
-                        //Work-around due to lack of iterate reset, AIM, June 1, 2011
-                        $submissions_copy = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+			$submissions1 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+                        //Clumsy work-around due to lack of iterate reset, AIM, June 1, 2011  TODO: Find better way
+                        $submissions2 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+                        $submissions3 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
 		}
 
                 $templateMgr =& TemplateManager::getManager();
@@ -83,8 +84,9 @@ class AuthorHandler extends Handler {
 			$templateMgr->assign('statViews', $journal->getSetting('statViews'));
 		}
                 
-		$templateMgr->assign_by_ref('submissions1', $submissions);
-                $templateMgr->assign_by_ref('submissions2', $submissions_copy);
+		$templateMgr->assign_by_ref('submissions1', $submissions1);
+                $templateMgr->assign_by_ref('submissions2', $submissions2);
+                $templateMgr->assign_by_ref('submissions3', $submissions3);
 
 		// assign payment 
 		import('classes.payment.ojs.OJSPaymentManager');
