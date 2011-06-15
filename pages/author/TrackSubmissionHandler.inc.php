@@ -89,7 +89,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 	 * Display a summary of the status of an author's submission.
 	 */
 	function submission($args) {
-                echo 'here';
+                
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
@@ -103,7 +103,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		// Setting the round.
 		$round = isset($args[1]) ? $args[1] : $submission->getCurrentRound();
-                echo $round;
+                
 		$templateMgr =& TemplateManager::getManager();
 
 		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
@@ -129,7 +129,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		import('classes.submission.sectionEditor.SectionEditorSubmission');
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
-                echo 'here2';
+                
 		// Set up required Payment Related Information
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
@@ -149,7 +149,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
 			}
 		}
-                echo 'here3';
+                
 		$templateMgr->assign('helpTopicId','editorial.authorsRole');
 
 		//$initialCopyeditSignoff = $submission->getSignoff('SIGNOFF_COPYEDITING_INITIAL');
@@ -236,6 +236,41 @@ class TrackSubmissionHandler extends AuthorHandler {
 		}
 	}
 
+        /**
+         * Add a progress report
+         * @param $args array ($articleId)
+         *
+         * Added by: AIM
+         * Last Updated: June 15, 2011
+         */
+
+        function addProgressReport($args, $request) {
+		$articleId = (int) array_shift($args);
+		$journal =& $request->getJournal();
+
+		$this->validate($articleId);
+		$authorSubmission =& $this->submission;
+
+
+		$this->setupTemplate(true, $articleId, 'summary');
+
+		import('classes.submission.form.SuppFileForm');
+
+                $submitForm = new SuppFileForm($authorSubmission, $journal);
+
+                //Added by AIM, June 15 2011
+                $submitForm->setData('type', 'Progress Report');
+                
+                if ($submitForm->isLocaleResubmit()) {
+                    $submitForm->readInputData();
+		} else {
+                    $submitForm->initData();
+		}
+
+                $submitForm->display();
+
+	}
+
 	/**
 	 * Edit a supplementary file.
 	 * @param $args array ($articleId, $suppFileId)
@@ -305,9 +340,6 @@ class TrackSubmissionHandler extends AuthorHandler {
 			$journal =& $request->getJournal();
 			$submitForm = new SuppFileForm($authorSubmission, $journal, $suppFileId);
 			$submitForm->readInputData();
-
-                        //Set type as 'Report', AIM, June 1, 2011
-                        $submitForm->setData('type', 'Report');
 
 			if ($submitForm->validate()) {
 				$submitForm->execute();
@@ -680,17 +712,52 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$paymentManager->displayPaymentForm($queuedPaymentId, $queuedPayment);
 	}
 
+        /**
+         *  Withdraw a proposal.
+         *  Added by: AIM
+         *  Last updated: June 15, 2011
+         */
 
-        function withdrawSubmission($args) {
-            $articleId = isset($args[0]) ? $args[0] : 0;
-            $this->validate($articleId);
+        function withdrawSubmission($args, $request) {
+            $articleId = (int) array_shift($args);
+            $journal =& $request->getJournal();
             $this->setupTemplate(true);
-            
+
+            import('classes.submission.form.SuppFileForm');
+            $submitForm = new SuppFileForm($authorSubmission, $journal);
+
+            //Added by AIM, June 15 2011
+            $submitForm->setData('type', 'Withdraw');
+
+            if ($submitForm->isLocaleResubmit()) {
+                    $submitForm->readInputData();
+		} else {
+                    $submitForm->initData();
+		}
+
+           $submitForm->display();
+           /*
             $authorSubmission =& $this->submission;
             $authorSubmission->setStatus = PROPOSAL_STATUS_WITHDRAWN;
             
             $articleDao = DAORegistry::getDAO('ArticleDAO');
             $articleDao->withdrawProposal($articleId);
+
+            Request::redirect(null, null, 'index');
+           */
+        }
+
+
+        function sendToArchive($args) {
+            $articleId = isset($args[0]) ? $args[0] : 0;
+            $this->validate($articleId);
+            $this->setupTemplate(true);
+
+            //$authorSubmission =& $this->submission;
+            //$authorSubmission->setStatus = PROPOSAL_STATUS_WITHDRAWN;
+
+            $articleDao = DAORegistry::getDAO('ArticleDAO');
+            $articleDao->sendToArchive($articleId);
 
             Request::redirect(null, null, 'index');
         }

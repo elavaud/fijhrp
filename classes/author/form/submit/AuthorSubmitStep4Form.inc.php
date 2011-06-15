@@ -33,26 +33,27 @@ class AuthorSubmitStep4Form extends AuthorSubmitForm {
                 
                 // Start Edit Raf Tan 04/30/2011
                 // Add Options drop-down list for WHO journals
-                $typeOptionsOutput = array(
-                    "author.submit.suppFile.who.summary",
-                    //"author.submit.suppFile.who.proposal",
-                    "author.submit.suppFile.who.informedConsent",
-                    "author.submit.suppFile.who.localEthicalApproval",
-                    "author.submit.suppFile.who.funding",
-                    "author.submit.suppFile.who.cv",
-                    "author.submit.suppFile.who.questionnaire",
-                    "author.submit.suppFile.who.local",
-                    "author.submit.suppFile.who.ethicalClearance",
-                    "author.submit.suppFile.who.proofOfRegistration",
-                    "author.submit.suppFile.who.otherErcDecision",
-                    //"author.submit.suppFile.who.review"
+                $typeOptions = array(
+                    "author.submit.suppFile.who.summary" => "author.submit.suppFile.who.summary",
+                    //"author.submit.suppFile.who.proposal" => "author.submit.suppFile.who.proposal",
+                    "author.submit.suppFile.who.informedConsent" => "author.submit.suppFile.who.informedConsent",
+                    "author.submit.suppFile.who.localEthicalApproval" => "author.submit.suppFile.who.localEthicalApproval",
+                    "author.submit.suppFile.who.funding" => "author.submit.suppFile.who.funding",
+                    "author.submit.suppFile.who.cv" => "author.submit.suppFile.who.cv",
+                    "author.submit.suppFile.who.questionnaire" => "author.submit.suppFile.who.questionnaire",
+                    "author.submit.suppFile.who.local" => "author.submit.suppFile.who.local",
+                    "author.submit.suppFile.who.ethicalClearance" => "author.submit.suppFile.who.ethicalClearance",
+                    "author.submit.suppFile.who.proofOfRegistration" => "author.submit.suppFile.who.proofOfRegistration",
+                    "author.submit.suppFile.who.otherErcDecision" => "author.submit.suppFile.who.otherErcDecision",
+                    //"author.submit.suppFile.who.review" => "author.submit.suppFile.who.review",
+                    "common.other" => "common.other"
 		);
-		$typeOptionsValues = $typeOptionsOutput;
-		array_push($typeOptionsOutput, 'common.other');
-		array_push($typeOptionsValues, '');
+		//$typeOptionsValues = $typeOptionsOutput;
+		//array_push($typeOptionsOutput, 'common.other');
+		//array_push($typeOptionsValues, '');
 
-		$templateMgr->assign('typeOptionsOutput', $typeOptionsOutput);
-		$templateMgr->assign('typeOptionsValues', $typeOptionsValues);
+		$templateMgr->assign('typeOptions', $typeOptions);
+		//$templateMgr->assign('typeOptionsValues', $typeOptionsValues);
                 // End Edit Raf Tan 04/30/2011
 
 		// Get supplementary files for this article

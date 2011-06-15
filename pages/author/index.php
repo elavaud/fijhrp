@@ -28,7 +28,7 @@ switch ($op) {
 	case 'saveSubmitSuppFile':
 	case 'deleteSubmitSuppFile':
 	case 'expediteSubmission':
-        case 'resubmit':   //Added by Anne Ivy Mirasol, May 18, 2011
+        case 'resubmit':   //Added by AIM, May 18, 2011
 		define('HANDLER_CLASS', 'SubmitHandler');
 		import('pages.author.SubmitHandler');
 		break;
@@ -37,12 +37,14 @@ switch ($op) {
 	//
 	case 'deleteArticleFile':
 	case 'deleteSubmission':
-        case 'withdrawSubmission':   //Added by Anne Ivy Mirasol, May 25, 2011
+        case 'withdrawSubmission':   //Added by AIM, May 25, 2011
+        case 'sendToArchive':       //Added by AIM, June 15, 2011
 	case 'submission':
 	case 'editSuppFile':
 	case 'setSuppFileVisibility':
 	case 'saveSuppFile':
 	case 'addSuppFile':
+        case 'addProgressReport':   //Added by AIM, June 15, 2011
 	case 'submissionReview':
 	case 'submissionEditing':
 	case 'uploadRevisedVersion':

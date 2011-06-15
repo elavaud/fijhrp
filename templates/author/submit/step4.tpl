@@ -36,7 +36,7 @@ function confirmForgottenUpload() {
 	<td colspan="5" class="headseparator">&nbsp;</td>
 </tr>
 <tr class="heading" valign="bottom">
-	<td width="5%">{translate key="common.id"}</td>
+	<!-- {* <td width="5%">{translate key="common.id"}</td> *} -->
 	<td width="40%">{translate key="common.title"}</td>
 	<td width="25%">{translate key="common.originalFileName"}</td>
 	<td width="15%" class="nowrap">{translate key="common.dateUploaded"}</td>
@@ -47,8 +47,8 @@ function confirmForgottenUpload() {
 </tr>
 {foreach from=$suppFiles item=file}
 <tr valign="top">
-	<td>{$file->getSuppFileId()}</td>
-	<td>{$file->getSuppFileTitle()|escape}</td>
+	<!-- {* <td>{$file->getSuppFileId()}</td> *} -->
+	<td>{$file->getSuppFileTitle()|escape} ({$file->getType()|escape})</td>
 	<td>{$file->getOriginalFileName()|escape}</td>
 	<td>{$file->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 	<td align="right"><a href="{url op="submitSuppFile" path=$file->getSuppFileId() articleId=$articleId}" class="action">{translate key="common.edit"}</a>&nbsp;|&nbsp;<a href="{url op="deleteSubmitSuppFile" path=$file->getSuppFileId() articleId=$articleId}" onclick="return confirm('{translate|escape:"jsparam" key="author.submit.confirmDeleteSuppFile"}')" class="action">{translate key="common.delete"}</a></td>
@@ -67,7 +67,12 @@ function confirmForgottenUpload() {
 	<td width="30%" class="label">{fieldLabel name="uploadSuppFile" key="author.submit.uploadSuppFile"}</td>
 	<td width="70%" class="value">
 		<!--Start Edit Raf Tan 04/30/2011-->
+                <select name="fileType[]" id="fileType" multiple="multiple" size="11" class="selectMenu">
+                    {html_options_translate options=$typeOptions translateValues="true" selected=$fileType}
+                </select>
+                <!-- {*
                 <select name="type" class="selectMenu" id="type" size="1">{html_options_translate output=$typeOptionsOutput values=$typeOptionsValues translateValues="true" selected=$type}</select>
+                *} -->
                 <!--End Edit Raf Tan 04/30/2011-->
                 <input type="file" name="uploadSuppFile" id="uploadSuppFile"  class="uploadField" />
                 <input name="submitUploadSuppFile" type="submit" class="button" value="{translate key="common.upload"}" /> 

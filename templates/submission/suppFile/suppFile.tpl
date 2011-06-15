@@ -15,13 +15,22 @@
        {* Comment out, AIM, June 1, 2011
 	{assign var="pageTitle" value="author.submit.addSupplementaryFile"}
         *}
-        {assign var="pageTitle" value="author.submit.addProgressReport"}
+        {if $type == "Progress Report"}
+            {assign var="pageTitle" value="author.submit.addProgressReport"}
+        {else}
+            {assign var="pageTitle" value="author.submit.addSupplementaryFile"}
+        {/if}
 {/if}
+
 {*
 {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
 *}
 
-{assign var="pageCrumbTitle" value="submission.progressReports"}
+{if $type == "Progress Report"}
+    {assign var="pageCrumbTitle" value="submission.progressReports"}
+{else}
+    {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
+{/if}
 
 {include file="common/header.tpl"}
 {/strip}
@@ -29,6 +38,7 @@
 <form name="suppFile" method="post" action="{url page=$rolePath op="saveSuppFile" path=$suppFileId}" enctype="multipart/form-data">
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 <input type="hidden" name="from" value="{$from|escape}" />
+<input type="hidden" name="type" value="{$type|escape}" /> <!-- Added by AIM, June 15 2011 -->
 {include file="common/formErrors.tpl"}
 
 {if count($formLocales) > 1}
@@ -128,8 +138,12 @@
 <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
 -->
 
+{if $type == "Progress Report"}
 <h3>{translate key="submission.progressReports"}</h3>
-
+{else}
+    {$type|escape}
+    <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
+{/if}
 <table id="suppFile" class="data">
 {if $suppFile}
 	<tr valign="top">
@@ -163,7 +177,6 @@
 	<tr valign="top">
 		<td colspan="2" class="nodata">{translate key="author.submit.suppFile.noFile"}</td>
 	</tr>
-</table>
 {/if}
 
 <br />

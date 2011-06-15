@@ -156,13 +156,16 @@ class AuthorSubmission extends Article {
 
                 /**
                  * Added by: AIM
-                 * Last Updated: May 31, 2011
+                 * Last Updated: June 1, 2011
                  * Return status of proposal
                  **/
                 if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
 
                 //Withdrawn status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+
+                //Archived status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
 
                 $status = $this->getProposalStatus();
                 if($status == PROPOSAL_STATUS_RETURNED) {
@@ -173,10 +176,7 @@ class AuthorSubmission extends Article {
                     else return PROPOSAL_STATUS_RETURNED;
                 }
 
-                if($status == PROPOSAL_STATUS_CHECKED) return PROPOSAL_STATUS_SUBMITTED;
-                if($status == PROPOSAL_STATUS_ASSIGNED) return PROPOSAL_STATUS_SUBMITTED;
-                if($status == PROPOSAL_STATUS_EXPEDITED) return PROPOSAL_STATUS_SUBMITTED;
-                
+                //For all other statuses
                 return $status;
 	}
 

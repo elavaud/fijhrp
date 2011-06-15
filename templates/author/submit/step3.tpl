@@ -56,8 +56,8 @@ $(document).ready(function() {
         }
     });
 
-    $( "#startDate" ).datepicker();
-    $( "#endDate" ).datepicker();
+    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
+    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
 });
 </script>
 {/literal}

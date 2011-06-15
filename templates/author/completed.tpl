@@ -21,7 +21,7 @@
 		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
-{iterate from=submissions item=submission}
+{iterate from=submissions1 item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
         {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
@@ -49,16 +49,26 @@
 			{if $status==STATUS_ARCHIVED}{translate key="submissions.archived"} //Clean up later
 			{elseif $status==STATUS_PUBLISHED}{print_issue_id articleId="$articleId"} //Clean up later
 			{elseif $status==STATUS_DECLINED}{translate key="submissions.declined"}  //Clean up later
-                        {elseif $status==PROPOSAL_STATUS_WITHDRAWN}{translate key="submissions.proposal.withdrawn"}
+                        {elseif $status==PROPOSAL_STATUS_WITHDRAWN}
+                            {translate key="submissions.proposal.withdrawn"}
+                        {elseif $status==PROPOSAL_STATUS_ARCHIVED}
+                            {assign var="decision" value=$submission->getMostRecentDecision()}
+                            {if $decision==SUBMISSION_EDITOR_DECISION_DECLINE}
+                                {translate key="submissions.proposal.decline"}
+                            {elseif $decision==SUBMISSION_EDITOR_DECISION_EXEMPTED}
+                                {translate key="submissions.proposal.exempted"}
+                            {/if}
+                         {else}
+                            BUG!
 			{/if}
 		</td>
 	</tr>
 
 	<tr>
-		<td colspan="{if $statViews}7{else}6{/if}" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="{if $statViews}7{else}6{/if}" class="{if $submissions1->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
 {/iterate}
-{if $submissions->wasEmpty()}
+{if $submissions1->wasEmpty()}
 	<tr>
 		<td colspan="{if $statViews}7{else}6{/if}" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
@@ -67,8 +77,8 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="{if $statViews}5{else}4{/if}" align="left">{page_info iterator=$submissions}</td>
-		<td colspan="2" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions sort=$sort sortDirection=$sortDirection}</td>
+		<td colspan="{if $statViews}5{else}4{/if}" align="left">{page_info iterator=$submissions1}</td>
+		<td colspan="2" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions1 sort=$sort sortDirection=$sortDirection}</td>
 	</tr>
 {/if}
 </table>

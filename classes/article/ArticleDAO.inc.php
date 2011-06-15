@@ -707,6 +707,7 @@ class ArticleDAO extends DAO {
 			$result =& $this->retrieve(
 				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
 			);
+                        
 		} else {
 			$result =& $this->retrieve(
 				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
@@ -720,7 +721,7 @@ class ArticleDAO extends DAO {
 		$result->Close();
 		unset($result);
 
-		return 	$resultArray[$last];
+                return 	$resultArray[$last];
 	}
 
 
@@ -799,13 +800,36 @@ class ArticleDAO extends DAO {
             else return false;
         }
 
+        /**
+         *  Added by:  Anne Ivy Mirasol
+         *  Last Updated: June 15, 2011
+         *
+         *  Set status in articles table to PROPOSAL_STATUS_WITHDRAWN
+         *  @return boolean
+         */
 
         function withdrawProposal($articleId) {
             $this->update(
 			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_WITHDRAWN, (int) $articleId)
 		);
 
-		$this->flushCache();
+            $this->flushCache();
+        }
+
+        /**
+         *  Added by:  Anne Ivy Mirasol
+         *  Last Updated: June 15, 2011
+         *
+         *  Set status in articles table to PROPOSAL_STATUS_ARCHIVED
+         *  @return boolean
+         */
+        
+        function sendToArchive($articleId) {
+            $this->update(
+			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_ARCHIVED, (int) $articleId)
+		);
+
+            $this->flushCache();
         }
 }
 

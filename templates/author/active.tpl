@@ -46,8 +46,9 @@
                     <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 {/if}
                 <td align="right">
-                        
-                        {if $status==PROPOSAL_STATUS_SUBMITTED}
+                        {if $status==PROPOSAL_STATUS_DRAFT}
+                            {translate key="submissions.proposal.draft"}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmDelete"}')">{translate key="common.delete"}</a>
+                        {elseif $status==PROPOSAL_STATUS_SUBMITTED}
                             {assign var="count" value=$count+1}
                             {translate key="submissions.proposal.submitted"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmWithdraw"}')">{translate key="common.withdraw"}</a>
@@ -84,11 +85,10 @@
                         {/if}
                  </td>
             </tr>
-        {/if}
-	<tr>
+            <tr>
 		<td colspan="6" class="{if $submissions1->eof()}end{/if}separator">&nbsp;</td>
-	</tr>
-
+	    </tr>
+        {/if}
 {/iterate}
 {if $count==0}
 	<tr>
@@ -144,7 +144,7 @@
                 <td align="right">
                     {translate key="submissions.proposal.approved"}<br />
                     <a href="{url op="complete" path=$articleId}" class="action">Complete</a><br />
-                    <a href="{url op="addSuppFile" path=$articleId}" class="action">Upload Progress Report</a><br />
+                    <a href="{url op="addProgressReport" path=$articleId}" class="action">Upload Progress Report</a><br />
                     <a href="{url op="withdrawSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmWithdraw"}')">{translate key="common.withdraw"}</a>
                  </td>
             </tr>
