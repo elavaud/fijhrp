@@ -341,8 +341,8 @@ $(document).ready(function() {
 	<td width="80%" class="value">
             <select name="otherErcDecision[{$formLocale|escape}]" id="otherErcDecision" class="selectMenu">
                 <option value="NA"></option>
-                <option value="Submitted" {if  $otherErcDecision[$formLocale] == "Submitted" } selected="selected"{/if} >Submitted</option>
-                <option value="Reviewed" {if  $otherErcDecision[$formLocale] == "Reviewed" } selected="selected"{/if} >Reviewed</option>
+                <option value="Under Review" {if  $otherErcDecision[$formLocale] == "Under Review" } selected="selected"{/if} >Under Review</option>
+                <option value="Final Decision Available" {if  $otherErcDecision[$formLocale] == "Final Decision Available" } selected="selected"{/if} >Final Decision Available</option>
             </select>
         </td>
 </tr>
