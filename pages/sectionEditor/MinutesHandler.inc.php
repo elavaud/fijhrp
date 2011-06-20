@@ -41,10 +41,13 @@ class MinutesHandler extends Handler {
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-		
 		$submit = Request::getUserVar("submitMinutes");
 		if($submit) {
 			$minutesObj = new Minutes();
+			$currentTime = date(Core::getCurrentDate());
+			$minutesId = "$journalId-$userId-$currentTime";
+			$minutesObj->setMinutesId($minutesId);
+			$minutesObj->setSubmittedBy($user->getFullName(false));
 			$minutesObj->setDateHeld(Request::getUserVar("annc_dateHeld"));
 			$minutesObj->setAnnouncements(Request::getUserVar("annc_announcements"));
 			$minutesObj->setTimeConvened(Array('hour'=>Request::getUserVar("annc_convenedAtHour"),'minute'=>Request::getUserVar("annc_convenedAtMinute"),'amPm'=>Request::getUserVar("annc_convenedAtAmPm")));						
@@ -74,9 +77,18 @@ class MinutesHandler extends Handler {
 		$templateMgr->assign('hours', $hours);
 		$templateMgr->assign('minutes', $minutes);
 		$templateMgr->assign('amPm', $amPm);
+		$templateMgr->assign('name', 'testName');
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
 		$templateMgr->display("sectionEditor/minutesForm.tpl");
+		//$templateMgr->display("sectionEditor/test.tpl")
 	}
+	
+	function submitInitialReview($args, $request) {
+		$name=Request::getUserVar('name');
+		$location=Request::getUserVar('location');		
+	}
+	
+	
 	
 	function minutesxxx($args, $request) {
 		$step = isset($args[0]) ? (int) $args[0] : 0;

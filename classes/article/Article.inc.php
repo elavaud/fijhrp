@@ -594,6 +594,57 @@ class Article extends Submission {
 
 		return $signoff->getUserId();
 	}
+	
+	/**
+	 * Get the most recent decision.
+	 * @return int 
+	 * Transferred from AuthorSubmission.inc.php
+	 * Edited by aglet
+	 * Last Update: 6/19/2011
+	 */
+	function getMostRecentDecision() {
+            /**
+             *  Edited by: AIM
+             *  Last Updated: May 31, 2011
+             **/
+            $articleId = $this->getArticleId();
+
+            $articleDao = DAORegistry::getDAO('ArticleDAO');
+            $decision = $articleDao->getLastEditorDecision($articleId);
+            
+            return $decision['decision'];
+	}
+	
+	/*
+	 * Get a map for editor decision to locale key.
+	 * @return array
+	 * Added by aglet 6/20/2011
+	 */	 
+	function &getEditorDecisionMap() {
+		static $editorDecisionMap;
+		if (!isset($editorDecisionMap)) {
+			$editorDecisionMap = array(
+				SUBMISSION_EDITOR_DECISION_ACCEPT => 'editor.article.decision.accept',
+				SUBMISSION_EDITOR_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
+				SUBMISSION_EDITOR_DECISION_DECLINE => 'editor.article.decision.decline',
+				SUBMISSION_EDITOR_DECISION_COMPLETE => 'editor.article.decision.complete',
+				SUBMISSION_EDITOR_DECISION_INCOMPLETE => 'editor.article.decision.incomplete',
+				SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+				SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
+				SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'			
+			);
+		}
+		return $editorDecisionMap;
+	}
+	
+	/**
+	 * Get a locale key for the paper's most recent decision
+	 * @return string
+	 */
+	function getEditorDecisionKey() {
+		$editorDecisionMap =& $this->getEditorDecisionMap();
+		return $editorDecisionMap[$this->getMostRecentDecision()];
+	}
 }
 
 ?>

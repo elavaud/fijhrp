@@ -174,7 +174,11 @@ switch ($op) {
 		break;
 	case 'minutes':
 	case 'saveMinutes':
-	case 'uploadMinutes1':
+	case 'submitInitialReview':
+	case 'submitContinuingReview':	
+	case 'submitRereview':
+	case 'submitAmendments':
+	case 'submitAdverseEvent':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;

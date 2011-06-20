@@ -18,7 +18,7 @@
 <!--
 	$(document).ready(function() {
 		$("#attendance").hide();
-		$("#initialReviews").hide();
+		//$("#initialReviews").hide();
 		$("#amendments").hide();
 		$("#continuingReviews").hide();
 		$("#rereviews").hide();
@@ -71,7 +71,7 @@
 {include file="common/header.tpl"}
 
  <h4>WPRO-ERC Minutes</h4>
-	 
+ 		
  <form name="minutesStep1" id="minutesStep1" method="post" action="{url op="minutes"}">
  	
  	<div id="announcements">
@@ -93,7 +93,7 @@
 		{include file="sectionEditor/initialReviews.tpl"}
 	</div>
 
-	<input type="button" class="button" name="showInitialReviews" id="showInitialReviews" value="Show Initial Reviews" />&nbsp;
+	<input type="button" class="button" name="showInitialReviews" id="showInitialReviews" value="Hide Initial Reviews" />&nbsp;
 	 {************************
 	 <p><div class="separator"></div></p>
 	 
@@ -115,9 +115,9 @@
 		{include file="sectionEditor/amendments.tpl"}
 	</div>
 	<input type="button" class="button" name="showAmendments" id="showAmendments" value="Show Amendments" />&nbsp;
+		**************************************}	 
 	
 	 <p><div class="separator"></div></p>
-		**************************************}	 
 	 <input type="submit" name="submitMinutes" id="submitMinutes" value="Upload Minutes" class="button" />
  </form>
  {include file="common/footer.tpl"}

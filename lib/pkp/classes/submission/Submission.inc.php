@@ -1323,8 +1323,11 @@ class Submission extends DataObject {
 				PROPOSAL_STATUS_EXEMPTED => 'submissions.proposal.exempted',
 				PROPOSAL_STATUS_ASSIGNED => 'submissions.proposal.assigned',
 				PROPOSAL_STATUS_EXPEDITED => 'submissions.proposal.expedited',
-				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed'
-			);
+				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed',
+				PROPOSAL_STATUS_DRAFT => 'submissions.proposal.draft',
+				PROPOSAL_STATUS_WITHDRAWN => 'submissions.proposal.withdrawn',
+				PROPOSAL_STATUS_ARCHIVED => 'submissions.proposal.archived'
+				);
 		}
 		return $proposalStatusMap;
 	}
