@@ -154,7 +154,7 @@
 <tr valign="top">
 	<td class="label">{translate key="editor.article.finalDecision"}</td>
 	<td class="value">
-		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED || PROPOSAL_STATUS_EXEMPTED}
+		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
 			{assign var="decision" value=$submission->getEditorDecisionKey()}
 			{translate key=$decision}
 			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
