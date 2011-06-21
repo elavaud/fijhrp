@@ -56,7 +56,7 @@ class ArticleDAO extends DAO {
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
                         'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
-                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId'
+                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption'
                         );
 	}
 
@@ -829,6 +829,19 @@ class ArticleDAO extends DAO {
 		);
 
 		$this->flushCache();
+	}
+	
+	/**
+	 * Insert reasons for exemption in article_settings
+	 * @return articleId int
+	 * Added by aglet
+	 * Last Update: 6/21/2011
+	 */
+	function insertReasonsForExemption($article, $reasons) {
+		$this->update('INSERT INTO article_settings (article_id, locale, setting_name, setting_value, setting_type) values (?, ?, ?, ?, ?)', array($article->getId(), $article->getLocale(), 'reasonsForExemption', (int) $reasons, 'int')
+		);
+		$this->flushCache();
+		return $article->getId();
 	}
 }
 

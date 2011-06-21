@@ -34,6 +34,8 @@ switch ($op) {
 	case 'submissionCitations':
 	case 'changeSection':
 	case 'recordDecision':
+	//if proposal is exempted, record reasons for exemption
+	case 'recordReasonsForExemption':
 	case 'selectReviewer':
 	case 'notifyReviewer':
 	case 'notifyAllReviewers':

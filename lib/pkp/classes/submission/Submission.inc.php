@@ -1368,6 +1368,37 @@ class Submission extends DataObject {
 		return $this->setData('whoId', $whoId, $locale);
 	}
 
+	/**
+	 * (For exempted proposals) Getters and setters for reasons for exemption of proposal
+	 * Added by aglet
+	 * Last Update: 6/21/2011
+	 */
+	
+	/**
+	 * Get localized reasons for exemption
+	 * @return int
+	 */
+	function getLocalizedReasonsForExemption() {
+		return $this->getLocalizedData('reasonsForExemption');
+	}
+	
+	/**
+	 * Get reasons for exemption
+	 * @param locale
+	 * @return int
+	 */
+	function getReasonsForExemption($locale) {
+		return $this->getData('reasonsForExemption', $locale);
+	}
+	
+	/**
+	 * Set reasons for exemption
+	 * @param reasons string
+	 * @param locale
+	 */
+	function setReasonsForExemption($reasons, $locale) {
+		return $this->setData('reasonsForExemption', $reasons, $locale);
+	}
 }
 
 ?>

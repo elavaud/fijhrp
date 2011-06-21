@@ -269,7 +269,20 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		$templateMgr->assign('lastDecisionArray', $lastDecision);
-
+		$reasonsLocale = $submission->getLocalizedReasonsForExemption();
+		$reasons = array();
+		for($i=5; $i>=0; $i--) {
+			$num = pow(2, $i);
+			if($num <= $reasonsLocale) {
+				$reasons[$i] = 1;
+				$reasonsLocale = $reasonsLocale - $num;
+			}
+			else
+				$reasons[$i] = 0;
+			
+		}
+		$templateMgr->assign('reasonsForExemption', $reasons);
+		
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign_by_ref('reviewerRatingOptions', ReviewAssignment::getReviewerRatingOptions());
@@ -461,6 +474,28 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				break;
 		}
 		Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+	
+	/*
+	 * If proposal is exempted, record reasons for exemption
+	 */
+	function recordReasonsForExemption($args, $request) {
+		$decision = Request::getUserVar('decision');
+		if($decision == SUBMISSION_EDITOR_DECISION_EXEMPTED) {
+			$articleId = Request::getUserVar('articleId');			
+			$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+			$submission =& $this->submission;
+			$selectedReasons = Request::getUserVar('exemptionReasons');
+			$reasons = 0;
+			foreach($selectedReasons as $reason) {
+				$reasons = $reasons + (int) $reason;
+			}
+			$submission->setReasonsForExemption($reasons, null);			
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			if($articleDao->insertReasonsForExemption($submission, $reasons)) {
+				Request::redirect(null, null, 'submissionReview', $articleId);
+			}
+		}		
 	}
 
 	//
