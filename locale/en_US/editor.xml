@@ -171,8 +171,7 @@
 	<message key="editor.article.decision.accept">Approved</message>
 	<message key="editor.article.decision.pendingRevisions">Revisions Required</message >
 	<message key="editor.article.decision.resubmit">Revise and Resubmit</message>
-	<message key="editor.article.decision.decline">Not Approved</message>
-
+	<message key="editor.article.decision.decline">Not Approved</message>	
 	<message key="editor.article.decision.complete">Complete</message>
 	<message key="editor.article.decision.incomplete">Incomplete</message>
 	<message key="editor.article.decision.exempted">Exempt From Review</message>
@@ -180,17 +179,24 @@
 	<message key="editor.article.decision.assigned">For ERC Review</message>
 	<message key="editor.article.selectInitialReview">Select Initial Review</message>
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
-	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this decision as an initial review?</message>
-	<message key="editor.submissionReview.confirmExemption">Are you sure you wish to record this exemption decision?</message>
+	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
+	<message key="editor.submissionReview.confirmExemption">Are you sure you wish to record this decision?</message>
 	<message key="editor.submissionReview.confirmExempted">Are you sure you wish to exempt this proposal from review?</message>
 	<message key="editor.submissionReview.confirmAssigned">Are you sure you wish to assign this proposal for review?</message>
-	<message key="editor.article.recordInitialReview">Submit Initial Review</message>
-	<message key="editor.article.recordExemptionDecision">Submit</message>
-	<message key="editor.article.decision">Final Decision</message>
+	<message key="editor.article.record">Submit</message>
+	<message key="editor.article.finalDecision">Final Decision</message>
 	<message key="editor.article.proposalResubmitted">(Resubmitted proposal)</message>
 	<message key="editor.article.waitingForResubmission">Waiting for resubmission of proposal</message>
 	<message key="editor.article.submissionStatus">Submission Status</message>
-
+	<message key="editor.article.reasonsForExemption">Reasons for Exemption</message>
+	<message key="editor.article.exemption.instructions">(Please check all that apply)</message>
+	<message key="editor.article.exemption.noHumanParticipants">The research does not involve human participants.</message>	
+	<message key="editor.article.exemption.alreadyExists">The data (including health-care records and specimens) being studied already exist and are either publicly available or are recorded by the investigator in such a manner as to be unidentifiable.</message>
+	<message key="editor.article.exemption.publicOfficials">Public officials are interviewed in their official capacity on issues that are in the public domain.</message>
+	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
+	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
+	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations’s Ethics Review Committee (WHOERC).</message>
+		
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
 	<message key="editor.article.replaceLayoutEditor">Replace Layout Editor</message>
 	<message key="editor.article.reviewSubmission">Review Submission</message>
