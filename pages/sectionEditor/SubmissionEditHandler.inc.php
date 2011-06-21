@@ -182,35 +182,23 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$showPeerReviewOptions = $round == $submission->getCurrentRound() && $submission->getReviewFile() != null ? true : false;
 
-		$editorDecisions = $submission->getDecisions($round);
-
 		/******************************************************
 		 * 
-		 * Set proposal status of submission
-		 * Get last decision and date it was decided
+		 * Get last decision details
 		 * Get reviewAssignments
-		 * Get date when submission was last modified and set flag if article is more recent than decision
+		 * Indicate if article is more recent 
 		 * Added by aglet
 		 * Last Update: /5/8/2011
 		 *
 		*******************************************************/
-		$lastDecisionArray = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
-		$lastDecision = $lastDecisionArray['decision'];
-		$lastDecisionDate = $lastDecisionArray['dateDecided'];
+		$lastDecision = $articleDao->getLastEditorDecision($articleId, $round);
 		$reviewAssignments =& $submission->getReviewAssignments($round);
-		$modifiedDate = $submission->getLastModified();
-		$articleMoreRecent = false;
-
-		if(strtotime($modifiedDate)>strtotime($lastDecisionDate)) {
-			$articleMoreRecent = true;
-		}
-		$submission->setProposalStatus($articleDao->getProposalStatus($articleId, $round));
-		
+		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision['dateDecided']) ? true : false;
 
 		$editAssignments =& $submission->getEditAssignments();
 		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
-		$allowResubmit = $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
-		$allowCopyedit = $lastDecision == SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == null ? true : false;
+		$allowResubmit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
+		$allowCopyedit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == null ? true : false;
 
 		// Prepare an array to store the 'Notify Reviewer' email logs
 		$notifyReviewerLogs = array();
@@ -280,8 +268,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
-		//pass edit_decision_id of lastDecision; this will also be passed from the forms in editorDecision.tpl to SubmissionEditHandler.recordDecision
-		$templateMgr->assign('lastDecisionArray', $lastDecisionArray);
+		$templateMgr->assign('lastDecisionArray', $lastDecision);
 
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
