@@ -645,6 +645,25 @@ class Article extends Submission {
 		$editorDecisionMap =& $this->getEditorDecisionMap();
 		return $editorDecisionMap[$this->getMostRecentDecision()];
 	}
+	
+	/**
+	 * Get array mapping of selected reasons for exemption
+	 * @return array
+	 */
+	function getReasonsForExemptionArray() {
+		$reasonsLocale = $this->getLocalizedReasonsForExemption();
+		$reasons = array();
+		for($i=5; $i>=0; $i--) {
+			$num = pow(2, $i);
+			if($num <= $reasonsLocale) {
+				$reasons[$i] = 1;
+				$reasonsLocale = $reasonsLocale - $num;
+			}
+			else
+				$reasons[$i] = 0;			
+		}
+		return $reasons;
+	}
 }
 
 ?>

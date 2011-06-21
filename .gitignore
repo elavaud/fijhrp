@@ -6,3 +6,4 @@ cache/_db/*
 .buildpath
 .project
 .settings/
+*.orig

@@ -186,7 +186,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * 
 		 * Get last decision details
 		 * Get reviewAssignments
-		 * Indicate if article is more recent 
+		 * Indicate if article is more recent
+		 * Get (localized) array mapping of reasons for exemption 
 		 * Added by aglet
 		 * Last Update: /5/8/2011
 		 *
@@ -194,7 +195,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$lastDecision = $articleDao->getLastEditorDecision($articleId, $round);
 		$reviewAssignments =& $submission->getReviewAssignments($round);
 		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision['dateDecided']) ? true : false;
-
+		$reasons = $submission->getReasonsForExemptionArray();
+		
 		$editAssignments =& $submission->getEditAssignments();
 		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
 		$allowResubmit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
@@ -260,6 +262,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Added initial review options, exemption options 
 		 * Added details of lastDecision
 		 * Added flag if article is more recent than last decision
+		 * Added reasons for exemption array
 		 * Added by aglet
 		 * Last Update: 5/8/2011
 		 * 
@@ -269,18 +272,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		$templateMgr->assign('lastDecisionArray', $lastDecision);
-		$reasonsLocale = $submission->getLocalizedReasonsForExemption();
-		$reasons = array();
-		for($i=5; $i>=0; $i--) {
-			$num = pow(2, $i);
-			if($num <= $reasonsLocale) {
-				$reasons[$i] = 1;
-				$reasonsLocale = $reasonsLocale - $num;
-			}
-			else
-				$reasons[$i] = 0;
-			
-		}
 		$templateMgr->assign('reasonsForExemption', $reasons);
 		
 		import('classes.submission.reviewAssignment.ReviewAssignment');
