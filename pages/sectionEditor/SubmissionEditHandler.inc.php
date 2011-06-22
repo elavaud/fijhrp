@@ -195,7 +195,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$lastDecision = $articleDao->getLastEditorDecision($articleId, $round);
 		$reviewAssignments =& $submission->getReviewAssignments($round);
 		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision['dateDecided']) ? true : false;
-		$reasons = $submission->getReasonsForExemptionArray();
+		$reasons = $submission->getProposalReasonsForExemption();
+		$reasonsMap =& $submission->getReasonsForExemptionMap();
 		
 		$editAssignments =& $submission->getEditAssignments();
 		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
@@ -273,6 +274,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		$templateMgr->assign('lastDecisionArray', $lastDecision);
 		$templateMgr->assign('reasonsForExemption', $reasons);
+		$templateMgr->assign_by_ref('reasonsMap', $reasonsMap);
 		
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());

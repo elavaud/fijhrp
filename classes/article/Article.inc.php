@@ -43,6 +43,17 @@ define ('COMMENTS_SECTION_DEFAULT', 0);
 define ('COMMENTS_DISABLE', 1);
 define ('COMMENTS_ENABLE', 2);
 
+/**
+ * Reasons for exemption constants
+ * Added by aglet 6/22/2011
+ */
+define ('EXEMPTION_NO_HUMAN_PARTICIPANTS', 1);
+define ('EXEMPTION_ALREADY_EXISTS', 2);
+define ('EXEMPTION_PUBLIC_OFFICIALS', 4);
+define ('EXEMPTION_LIMITED_OBSERVATION', 8);
+define ('EXEMPTION_LIMITED_SURVEILLANCE', 16);
+define ('EXEMPTION_REGISTERED', 32);
+
 import('lib.pkp.classes.submission.Submission');
 
 class Article extends Submission {
@@ -650,7 +661,7 @@ class Article extends Submission {
 	 * Get array mapping of selected reasons for exemption
 	 * @return array
 	 */
-	function getReasonsForExemptionArray() {
+	function getProposalReasonsForExemption() {
 		$reasonsLocale = $this->getLocalizedReasonsForExemption();
 		$reasons = array();
 		for($i=5; $i>=0; $i--) {
@@ -664,6 +675,26 @@ class Article extends Submission {
 		}
 		return $reasons;
 	}
+	
+	/*
+	 * Get a map for exemption reasons to locale key
+	 * @return array
+	 * Added by aglet 6/20/2011
+	 */	 
+	function &getReasonsForExemptionMap() {
+		static $reasonsForExemptionMap;
+		if (!isset($reasonsForExemptionMap)) {
+			$reasonsForExemptionMap = array(
+				EXEMPTION_NO_HUMAN_PARTICIPANTS => 'editor.article.exemption.noHumanParticipants',
+				EXEMPTION_ALREADY_EXISTS => 'editor.article.exemption.alreadyExists',
+				EXEMPTION_PUBLIC_OFFICIALS => 'editor.article.exemption.publicOfficials',
+				EXEMPTION_LIMITED_OBSERVATION => 'editor.article.exemption.limitedObservation',
+				EXEMPTION_LIMITED_SURVEILLANCE => 'editor.article.exemption.limitedPublicHealthSurveillance',
+				EXEMPTION_REGISTERED => 'editor.article.exemption.registered'			
+			);
+		}
+		return $reasonsForExemptionMap;
+	}		
 }
 
 ?>

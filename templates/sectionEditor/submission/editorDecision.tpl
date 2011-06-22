@@ -165,7 +165,7 @@
 </tr>
 
 {if $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
-{assign var="reasonsLocale" value=$submission->getLocalizedReasonsForExemption()}
+{assign var="localizedReasons" value=$submission->getLocalizedReasonsForExemption()}
 <form method="post" action="{url op="recordReasonsForExemption"}">
 	<input type="hidden" name="articleId" value="{$submission->getId()}" />
 	<input type="hidden" name="decision" value="{$lastDecisionArray.decision}" />	
@@ -174,55 +174,19 @@
 		<td class="label" align="center">{translate key="editor.article.reasonsForExemption"}</td>
 		<td class="value"><!-- {*translate key="editor.article.exemption.instructions"*} --></td>
 	</tr>
-	<tr valign="top">
-		<td class="label" align="center">
-			<input type="checkbox" name="exemptionReasons[]" id="reason1" value="1" {if $reasonsLocale>0}disabled="true"{/if} {if $reasonsForExemption[0] == 1}checked="checked"{/if}/>
-		</td>
-		<td class="value">
-			<label for="reason1">{translate key="editor.article.exemption.noHumanParticipants"}</label>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" align="center">
-			<input type="checkbox" name="exemptionReasons[]" id="reason2" value="2" {if $reasonsLocale>0}disabled="true"{/if} {if $reasonsForExemption[1] == 1}checked="checked"{/if}/>
-		</td>
-		<td class="value">
-			<label for="reason2">{translate key="editor.article.exemption.alreadyExists"}</label>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" align="center">
-			<input type="checkbox" name="exemptionReasons[]" id="reason3" value="4" {if $reasonsLocale>0}disabled="true"{/if} {if $reasonsForExemption[2] == 1}checked="checked"{/if}/>
-		</td>
-		<td class="value">
-			<label for="reason3">{translate key="editor.article.exemption.publicOfficials"}</label><br/>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" align="center">
-			<input type="checkbox" name="exemptionReasons[]" id="reason4" value="8" {if $reasonsLocale>0}disabled="true"{/if} {if $reasonsForExemption[3] == 1}checked="checked"{/if}/>
-		</td>
-		<td class="value">
-			<label for="reason4">{translate key="editor.article.exemption.limitedObservation"}</label>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" align="center">
-			<input type="checkbox" name="exemptionReasons[]" id="reason5" value="16" {if $reasonsLocale>0}disabled="true"{/if} {if $reasonsForExemption[4] == 1}checked="checked"{/if}/>
-		</td>
-		<td class="value">
-			<label for="reason5">{translate key="editor.article.exemption.limitedPublicHealthSurveillance"}</label>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" align="center">
-			<input type="checkbox" name="exemptionReasons[]" id="reason6" value="32" {if $reasonsLocale>0}disabled="true"{/if} {if $reasonsForExemption[5] == 1}checked="checked"{/if}/>
-		</td>
-		<td class="value">
-			<label for="reason6">{translate key="editor.article.exemption.registered"}</label>
-		</td>
-	</tr>
-	{if !$reasonsLocale}
+	{assign var="reasonIdx" value=0}
+	{foreach from=$reasonsMap item=reasonLocale key=reasonVal}
+		<tr valign="top">
+			<td class="label" align="center">
+				<input type="checkbox" name="exemptionReasons[]" id="reason{$reasonVal}" value={$reasonVal}	 {if $localizedReasons>0}disabled="true"{/if} {if $reasonsForExemption[$reasonIdx] == 1}checked="checked"{/if}/>				
+			</td>
+			<td class="value">
+				<label for="reason{$reasonVal}">{translate key=$reasonLocale}</label>
+			</td>
+		</tr>
+		{assign var="reasonIdx" value=$reasonIdx+1}
+	{/foreach}	
+	{if !$localizedReasons}
 	<tr>
 		<td align="center"><input type="submit"  name="submit" value="{translate key="editor.article.record"}"  class="button" /></td>
 	</tr>			
