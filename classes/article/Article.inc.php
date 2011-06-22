@@ -667,7 +667,7 @@ class Article extends Submission {
 		for($i=5; $i>=0; $i--) {
 			$num = pow(2, $i);
 			if($num <= $reasonsLocale) {
-				$reasons[$i] = 1;
+				$reasons[$num] = 1;
 				$reasonsLocale = $reasonsLocale - $num;
 			}
 			else

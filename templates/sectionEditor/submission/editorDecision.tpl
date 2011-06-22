@@ -174,17 +174,15 @@
 		<td class="label" align="center">{translate key="editor.article.reasonsForExemption"}</td>
 		<td class="value"><!-- {*translate key="editor.article.exemption.instructions"*} --></td>
 	</tr>
-	{assign var="reasonIdx" value=0}
 	{foreach from=$reasonsMap item=reasonLocale key=reasonVal}
 		<tr valign="top">
 			<td class="label" align="center">
-				<input type="checkbox" name="exemptionReasons[]" id="reason{$reasonVal}" value={$reasonVal}	 {if $localizedReasons>0}disabled="true"{/if} {if $reasonsForExemption[$reasonIdx] == 1}checked="checked"{/if}/>				
+				<input type="checkbox" name="exemptionReasons[]" id="reason{$reasonVal}" value={$reasonVal}	 {if $localizedReasons>0}disabled="true"{/if} {if $reasonsForExemption[$reasonVal] == 1}checked="checked"{/if}/>				
 			</td>
 			<td class="value">
 				<label for="reason{$reasonVal}">{translate key=$reasonLocale}</label>
 			</td>
 		</tr>
-		{assign var="reasonIdx" value=$reasonIdx+1}
 	{/foreach}	
 	{if !$localizedReasons}
 	<tr>
