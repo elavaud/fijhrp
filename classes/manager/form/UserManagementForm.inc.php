@@ -52,6 +52,9 @@ class UserManagementForm extends Form {
 		$this->addCheck(new FormValidatorUrl($this, 'userUrl', 'optional', 'user.profile.form.urlInvalid'));
 		$this->addCheck(new FormValidatorEmail($this, 'email', 'required', 'user.profile.form.emailRequired'));
 		$this->addCheck(new FormValidatorCustom($this, 'email', 'required', 'user.register.form.emailExists', array(DAORegistry::getDAO('UserDAO'), 'userExistsByEmail'), array($this->userId, true), true));
+		$this->addCheck(new FormValidatorLocale($this, 'healthAffiliation', 'required', 'user.profile.form.healthAffiliationRequired'));
+		$this->addCheck(new FormValidatorLocale($this, 'wproAffiliation', 'required', 'user.profile.form.wproAffiliationRequired'));
+		
 		$this->addCheck(new FormValidatorPost($this));
 	}
 
@@ -176,6 +179,12 @@ class UserManagementForm extends Form {
 					'existingInterests' => $existingInterests,
 					'interestsKeywords' => $currentInterests,
 					'gossip' => $user->getGossip(null), // Localized
+					/*
+					 * Init data for additional user settings
+					 * Added by aglet 6/20/2011
+					 */
+					'healthAffiliation' => $user->getHealthAffiliation(null),
+					'wproAffiliation' => $user->getWproAffiliation(null),				
 					'userLocales' => $user->getLocales()
 				);
 
@@ -223,7 +232,14 @@ class UserManagementForm extends Form {
 			'userLocales',
 			'generatePassword',
 			'sendNotify',
-			'mustChangePassword'
+			'mustChangePassword',
+			/*
+			 * Read input data of additional user settings
+			 * Added by aglet
+			 * Last Update: 6/20/2011
+			 */
+			'healthAffiliation',
+			'wproAffiliation'
 		));
 		if ($this->userId == null) {
 			$this->readUserVars(array('username'));
@@ -277,6 +293,8 @@ class UserManagementForm extends Form {
 		$user->setGossip($this->getData('gossip'), null); // Localized
 		$user->setMustChangePassword($this->getData('mustChangePassword') ? 1 : 0);
 		$user->setAuthId((int) $this->getData('authId'));
+		$user->setHealthAffiliation($this->getData('healthAffiliation'), null);
+		$user->setWproAffiliation($this->getData('wproAffiliation'), null);
 
 		$site =& Request::getSite();
 		$availableLocales = $site->getSupportedLocales();

@@ -34,6 +34,8 @@ switch ($op) {
 	case 'submissionCitations':
 	case 'changeSection':
 	case 'recordDecision':
+	//if proposal is exempted, record reasons for exemption
+	case 'recordReasonsForExemption':
 	case 'selectReviewer':
 	case 'notifyReviewer':
 	case 'notifyAllReviewers':
@@ -174,7 +176,11 @@ switch ($op) {
 		break;
 	case 'minutes':
 	case 'saveMinutes':
-	case 'uploadMinutes1':
+	case 'submitInitialReview':
+	case 'submitContinuingReview':	
+	case 'submitRereview':
+	case 'submitAmendments':
+	case 'submitAdverseEvent':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;

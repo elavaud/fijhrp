@@ -1,4 +1,5 @@
 {literal}<script type="text/javascript">
+<!--
 	var guestCount = 0;
 	$(document).ready(function() {
 		$( ".absence_div" ).hide();
@@ -27,9 +28,10 @@
 		 	$(".attn_present").click( function () {
 		 		var elemVal = $(this).attr('name').substr(16);
 		 		$("#attn_absence_div_"+elemVal).hide();
-	 		}
-		);
+	 			}
+ 			); 		
 	});
+-->
 </script>{/literal}
 <h4>REVIEW COMMITTEE</h4>
 <table class="data" name="attn_ercMembers">
@@ -47,8 +49,9 @@
 			 		{$committeeMember.name} ({$committeeMember.type})
 			 	</td>
 			 	<td width="50%" id="attn_absence_div_{$committeeMember.value}" class="absence_div">
-			 			<input type="radio" name="attn_absence_reason_{$committeeMember.value}" value="tour"/> Excused, umalis
-				 		<input type="radio" name="attn_absence_reason_{$committeeMember.value}" value="onLeave"/>  Excused, on leave
+			 			<input type="radio" name="attn_absence_reason_{$committeeMember.value}" value="dutyTravel"/> Duty Travel
+				 		<input type="radio" name="attn_absence_reason_{$committeeMember.value}" value="onLeave"/>  On Leave
+				 		<input type="radio" name="attn_absence_reason_{$committeeMember.value}" value="otherCommitment"/>  Other Commitment
 				 		<input type="radio" name="attn_absence_reason_{$committeeMember.value}" value="unexcused"/> Unexcused
 				 	</div>
 			 	</td>

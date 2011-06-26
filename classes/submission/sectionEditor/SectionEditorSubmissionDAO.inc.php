@@ -517,7 +517,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInReviewIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
@@ -542,7 +542,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInEditing($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInEditingIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
@@ -567,7 +567,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsArchivesIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result = $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
@@ -1261,6 +1261,49 @@ class SectionEditorSubmissionDAO extends DAO {
 		unset($result);
 
 		return $sectionEditorSubmissions;
+	}
+	
+	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$sectionEditorSubmissions = array();
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+	}
+	
+
+	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$sectionEditorSubmissions = array();
+		$result = $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'(a.status <> ' . STATUS_QUEUED . ' AND a.submission_progress = 0)',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+		
 	}
 		
 }

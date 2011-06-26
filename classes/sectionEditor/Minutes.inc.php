@@ -26,7 +26,7 @@ class Minutes {
 	
 	var $timeConvened;
 	
-	var $step;
+	var $minutesId;
 
 	var $submittedBy;
 	
@@ -137,12 +137,12 @@ class Minutes {
 		return $this->timeConvened;
 	}
 
-	function setStep($step) {
-		$this->step=$step;
+	function setMinutesId($minutesId) {
+		$this->minutesId=$minutesId;
 	}
 	
-	function getStep() {
-		return $this->step;
+	function getMinutesid() {
+		return $this->minutesId;
 	}
 	
 	function getSubmittedBy() {

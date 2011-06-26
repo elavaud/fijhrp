@@ -2,25 +2,9 @@
 <script type="text/javascript">
 <!--
 	$(document).ready(function() {
+		$(".ir_title_label").hide();
 		$(".ir_pi_label").hide();
-		$(".ir_summary_label").hide();
-		$("#ir_title").change(function (){
-			$("#ir_title option:selected").each( function () {
-				$(".ir_pi_label").hide();
-				$(".ir_summary_label").hide();
-				var selectVal = $(this).val();
-				if(selectVal == 'none') {
-					$("#ir_select_title_pi").show();
-					$("#ir_select_title_summary_file").show();
-				}
-				else {
-					$("#ir_select_title_pi").hide();
-					$("#ir_select_title_summary_file").hide();
-					$("#ir_principalInvestigator_"+selectVal).show();
-					$("#ir_protocolSummary_"+selectVal).show();
-				}
-			});		
-		});		
+		$(".ir_summary_label").hide();				
 	});
 //-->
 </script>
@@ -30,13 +14,11 @@
 	<table class="data" width="100%">
 		<tr>
 			<td class="label" width="10%">Protocol Title</td>
-			<td class="value">			
-				<select name="ir_title" id="ir_title" class="selectMenu protocolTitle">
-					<option value="none">Choose One</option>
-					{foreach from=$submissions item=submission}
-						<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
-					{/foreach}
-				</select>
+			<td class="value">
+				<label id="ir_select_title">Please select a proposal first.</label>
+				{foreach from=$submissions item=submission}
+						<label id="ir_protocolTitle_{$submission->getArticleId()}" class="ir_title_label">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</label>						
+				{/foreach}
 			</td>
 		</tr>
 		<tr>
@@ -178,5 +160,5 @@ or condition.</td>
 		</tr>
 		<tr>
 			<td>* Required fields</td>
-		</tr>					
+		</tr>							
 	</table>

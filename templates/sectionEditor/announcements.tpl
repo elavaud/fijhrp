@@ -1,15 +1,13 @@
 {literal}<script type="text/javascript">
-<!--
 	$(document).ready(function() {
-		$( "#annc_dateHeld" ).datepicker();
+		$( "#annc_dateHeld" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});		
 	});
--->			
 </script>{/literal}
 
  <table class="data" name="annc_timeDate" id="annc_timeDate">
  	<tr>
 	 	<td width="5%" class="label">Date Held</td>
-	 	<td width="50%" class="value"><input type="text" name="annc_dateHeld" id="annc_dateHeld" size="10" value="{$minutesObj->dateHeld}"/></td>
+	 	<td width="50%" class="value"><input type="text" name="annc_dateHeld" id="annc_dateHeld" size="10" class="textField" value="{$minutesObj->dateHeld}"/></td>
 	 </tr>
 	 <tr>
 	 	<td width="5%" class="label">Time Convened</td>
