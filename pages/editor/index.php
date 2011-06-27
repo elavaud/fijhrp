@@ -23,6 +23,7 @@ switch ($op) {
 	//
 	case 'enrollSearch':
 	case 'createReviewer':
+	case 'createExternalReviewer':
 	case 'suggestUsername':
 	case 'enroll':
 	case 'submission':
@@ -33,6 +34,8 @@ switch ($op) {
 	case 'submissionCitations':
 	case 'changeSection':
 	case 'recordDecision':
+	//if proposal is exempted, record reasons for exemption
+	case 'recordReasonsForExemption':
 	case 'selectReviewer':
 	case 'notifyReviewer':
 	case 'notifyAllReviewers':
@@ -199,6 +202,16 @@ switch ($op) {
 	case 'instructions':
 		define('HANDLER_CLASS', 'EditorHandler');
 		import('pages.editor.EditorHandler');
+	case 'minutes':
+	case 'saveMinutes':
+	case 'submitInitialReview':
+	case 'submitContinuingReview':	
+	case 'submitRereview':
+	case 'submitAmendments':
+	case 'submitAdverseEvent':
+		define('HANDLER_CLASS', 'MinutesHandler');
+		import('pages.sectionEditor.MinutesHandler');
+		break;
 }
 
 ?>

@@ -389,7 +389,7 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsInReview($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInReviewIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
@@ -415,7 +415,7 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsInEditing($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInEditingIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
@@ -444,7 +444,7 @@ class EditorSubmissionDAO extends DAO {
 	 * Edited by aglet
 	 * Last Update: 6/4/2011
 	 */
-	function &getEditorSubmissionsArchives($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsArchivesIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
@@ -502,9 +502,9 @@ class EditorSubmissionDAO extends DAO {
 			FROM	articles a
 				LEFT JOIN edit_assignments e ON (a.article_id = e.article_id)
 				LEFT JOIN edit_assignments e2 ON (a.article_id = e2.article_id AND e.edit_id < e2.edit_id)
-			WHERE	a.journal_id = ?
-				AND a.submission_progress = 0
-				AND a.status = " . STATUS_QUEUED . "
+			WHERE	a.journal_id = ? ".
+				//AND a.submission_progress = 0 aglet 6/27/2011
+				"AND a.status = " . STATUS_QUEUED . "
 				AND e2.edit_id IS NULL
 				AND e.edit_id IS NULL",
 			array((int) $journalId)
@@ -528,8 +528,8 @@ class EditorSubmissionDAO extends DAO {
 				AND a.status = ' . STATUS_QUEUED . '
 				AND e2.edit_id IS NULL
 				AND e.edit_id IS NOT NULL
-				AND d2.edit_decision_id IS NULL
-				AND (d.decision IS NULL OR d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
+				AND d2.edit_decision_id IS NULL ',
+				//AND (d.decision IS NULL OR d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')', aglet 6/27/2011
 			array((int) $journalId)
 		);
 		$submissionsCount[1] = $result->Fields('review_count');
@@ -575,17 +575,23 @@ class EditorSubmissionDAO extends DAO {
 
 		if ($round == null) {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+				'SELECT edit_decision_id, editor_id, decision, date_decided,resubmit_count FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
 			);
 		} else {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
 				array($articleId, $round)
 			);
 		}
 
 		while (!$result->EOF) {
-			$decisions[] = array('editDecisionId' => $result->fields[0], 'editorId' => $result->fields[1], 'decision' => $result->fields[2], 'dateDecided' => $this->datetimeFromDB($result->fields[3]));
+			$decisions[] = array(
+				'editDecisionId' => $result->fields['edit_decision_id'],
+				'editorId' => $result->fields['editor_id'],
+				'decision' => $result->fields['decision'],
+				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided']),
+				'resubmitCount' => $result->fields['resubmit_count']
+			);
 			$result->moveNext();
 		}
 		$result->Close();
@@ -703,16 +709,69 @@ class EditorSubmissionDAO extends DAO {
 		}
 	}
 
-	/*******************************************
-	 * Get proposal status method
-	 * Added by Gay Figueroa
-	 * Last Update: 5/3/2011
-	********************************************/
+function &getEditorSubmissionsForErcReview($editorId, $journalId, $Id) {
+		$editorSubmissions = array();
+		$result =& $this->_getUnfilteredEditorSubmissions(
+			$editorId, $journalId, $Id,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
+			$rangeInfo, $sortBy, $sortDirection
+		);
 
-	function getProposalStatusByArticleId($articleId) {
-		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-		return $sectionEditorSubmissionDao->getProposalStatusByArticleId($articleId);
+		while (!$result->EOF) {
+			$editorSubmissions[] =& $this->_returnEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $editorSubmissions;
 	}
+	
+	function &getEditorSubmissionsInReview($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$editorSubmissions = array();
+		$result =& $this->_getUnfilteredEditorSubmissions(
+			$editorId, $journalId, $Id,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		while (!$result->EOF) {
+			$editorSubmissions[] =& $this->_returnEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $editorSubmissions;
+	}
+	
+
+	function &getEditorSubmissionsArchives($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$editorSubmissions = array();
+		$result = $this->_getUnfilteredEditorSubmissions(
+			$editorId, $journalId, $Id,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'(a.status <> ' . STATUS_QUEUED . ')',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		while (!$result->EOF) {
+			$editorSubmissions[] =& $this->_returnEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $editorSubmissions;
+		
+	}	
 }
 
 ?>
