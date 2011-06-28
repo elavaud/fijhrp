@@ -7,3 +7,4 @@ cache/_db/*
 .project
 .settings/
 *.orig
+/cache

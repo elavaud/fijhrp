@@ -44,16 +44,34 @@
 				<span class="instruct">{translate key="editor.article.dueDateFormat"}</span>
 			</td>
 		</tr>
+		{*******************************************************************
+		 * Set meeting date
+		 * Edited by ayvee
+		 * Last Update: 6/29/2011
+		 *******************************************************************}
+		 {literal}
+		 <script type="text/javascript">
+			$(document).ready(function() {
+				$( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
+			});
+		</script>
+		{/literal}
+		
+		<tr valign="top">
+			<td width="20%" class="label">Meeting Date</td>
+			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate[{$formLocale|escape}]" id="meetingDate" value="{$meetingDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
+		</tr>
+		
 		{********************************************************************
 		 * Set due date only by specifying date, not number of weeks
 		 * Edited by aglet
 		 * Last Update: 6/3/2011
 		 *
+		 
 		<tr valign="top">
 			<td>&nbsp;</td>
 			<td class="value"><span class="instruct">{translate key="common.or"}</span></td>
 		</tr>
-
 		<tr valign="top">
 			<td class="label">{translate key="editor.article.numberOfWeeks"}</td>
 			<td class="value"><input type="text" name="numWeeks" value="{if not $dueDate}{$numWeeksPerReview|escape}{/if}" size="3" maxlength="2" class="textField" onfocus="this.form.dueDate.value=''" /></td>
