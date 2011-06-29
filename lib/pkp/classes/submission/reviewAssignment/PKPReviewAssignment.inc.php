@@ -679,7 +679,7 @@ class PKPReviewAssignment extends DataObject {
 	 * Set date of meeting
 	 * @param $dateOfMeeting datetime
 	 */
-	function setMeetingDate($meetingDate){
+	function setDateOfMeeting($meetingDate){
 		return $this->setData('dateOfMeeting', $meetingDate);
 	}
 	

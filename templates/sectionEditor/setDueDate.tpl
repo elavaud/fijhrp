@@ -46,7 +46,7 @@
 		</tr>
 		{*******************************************************************
 		 * Set meeting date
-		 * Edited by ayvee
+		 * Added by ayveemallare
 		 * Last Update: 6/29/2011
 		 *******************************************************************}
 		 {literal}
@@ -54,12 +54,12 @@
 			$(document).ready(function() {
 				$( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
 			});
-		</script>
-		{/literal}
-		
+		 </script>
+		 {/literal}
 		<tr valign="top">
-			<td width="20%" class="label">Meeting Date</td>
-			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate[{$formLocale|escape}]" id="meetingDate" value="{$meetingDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
+			<td width="20%" class="label">{translate key="editor.article.meetingDate"} {$meetingDate}</td>
+			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate[{$formLocale|escape}]" id="meetingDate" value="{$meetingDate|date_format:"%d-%b-%Y"}" size="20" maxlength="255" /></td>
+<!--			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate[{$formLocale|escape}]" id="meetingDate" value="{$meetingDate}" size="20" maxlength="255" /></td>-->
 		</tr>
 		
 		{********************************************************************

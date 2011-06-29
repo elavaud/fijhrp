@@ -239,4 +239,11 @@
 	<message key="editor.article.removeCoverPage">Remove cover image?</message>
 	<message key="editor.article.remove">Remove</message>
 	<message key="editor.issues.invalidAccessDate">Access date is not valid.</message>
+	
+	<!-- *********************************************
+	 * Additional key for review due date
+	 * Added by ayveemallare
+	 * Last Update: 6/29/2011
+	********************************************** -->
+	<message key="editor.article.meetingDate">Meeting Date</message>
 </locale>

@@ -597,7 +597,7 @@ class SectionEditorAction extends Action {
 	 * @param $numWeeks int
 	 * @param $logEntry boolean
 	 */
-	function setDueDate($articleId, $reviewId, $dueDate = null, $numWeeks = null, $logEntry = false) {
+	function setDueDate($articleId, $reviewId, $dueDate = null, $numWeeks = null, $meetingDate = null, $logEntry = false) {
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$user =& Request::getUser();
@@ -606,7 +606,7 @@ class SectionEditorAction extends Action {
 		$reviewer =& $userDao->getUser($reviewAssignment->getReviewerId());
 		if (!isset($reviewer)) return false;
 
-		if ($reviewAssignment->getSubmissionId() == $articleId && !HookRegistry::call('SectionEditorAction::setDueDate', array(&$reviewAssignment, &$reviewer, &$dueDate, &$numWeeks))) {
+		if ($reviewAssignment->getSubmissionId() == $articleId && !HookRegistry::call('SectionEditorAction::setDueDate', array(&$reviewAssignment, &$reviewer, &$dueDate, &$numWeeks, &$meetingDate))) {
 			$today = getDate();
 			$todayTimestamp = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
 			if ($dueDate != null) {
@@ -630,11 +630,24 @@ class SectionEditorAction extends Action {
 			} else {
 				// Add the equivilant of $numWeeks weeks, measured in seconds, to $todaysTimestamp.
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
-
 				$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $newDueDateTimestamp));
 			}
-
+			/*************************************************************
+			 * Change format for jquery date
+			 * Edited by ayveemallare
+			 * Last Update: 6/29/2011
+			 * ***********************************************************/
+				
+			if ($meetingDate != null) {
+				$meetingDateTimestamp = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
+				
+			}
+			
+			/**************************************************************/
+			
 			$reviewAssignment->stampModified();
+			$reviewAssignment->setDateOfMeeting($meetingDate);
+			
 			$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
 
 			if ($logEntry) {
