@@ -863,8 +863,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$dueDate = Request::getUserVar('dueDate');
 		$numWeeks = Request::getUserVar('numWeeks');
 
-		if ($dueDate != null || $numWeeks != null) {
-			SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks);
+		if ($dueDate != null || $numWeeks != null || $meetingDate != null) {
+			SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks, $meetingDate);
 			Request::redirect(null, null, 'submissionReview', $articleId);
 
 		} else {
@@ -882,7 +882,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			if ($reviewAssignment->getDateDue() != null) {
 				$templateMgr->assign('dueDate', $reviewAssignment->getDateDue());
 			}
-
+			/** Added by ayveemallare 6/28/2011 */
+			if ($reviewAssignment->getDateOfMeeting() !=null) {
+				$templateMgr->assign('meetingDate', $reviewAssignment->getDateOfMeeting());
+			}
+			/*************************************/
+			
 			$numWeeksPerReview = $settings['numWeeksPerReview'] == null ? 0 : $settings['numWeeksPerReview'];
 
 			$templateMgr->assign('articleId', $articleId);

@@ -21,6 +21,9 @@
  * Edited by aglet
  * Last Update: 6/3/2011
  *
+ * Add field for date of meeting
+ * Added by Ayvee Mallare
+ * Date Added: 6/29/2011
  ****************************************************/
 
 define('SUBMISSION_REVIEWER_RECOMMENDATION_ACCEPT', 1);
@@ -658,6 +661,28 @@ class PKPReviewAssignment extends DataObject {
 	function setMostRecentPeerReviewComment($peerReviewComment) {
 		return $this->setData('peerReviewComment', $peerReviewComment);
 	}
+	
+	/** Added for new field date_of_meeting
+	 *  Added by Ayvee Mallare
+	 *  Date added: 6/29/2011
+	 */
+	
+	/**
+	 * Get date of meeting 
+	 * @return datetime
+	 */
+	function getDateOfMeeting() {
+		return $this->getData('dateOfMeeting');
+	}
+	
+	/**
+	 * Set date of meeting
+	 * @param $dateOfMeeting datetime
+	 */
+	function setDateOfMeeting($meetingDate){
+		return $this->setData('dateOfMeeting', $meetingDate);
+	}
+	
 }
 
 ?>
