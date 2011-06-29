@@ -610,7 +610,6 @@ class SectionEditorAction extends Action {
 			$today = getDate();
 			$todayTimestamp = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
 			if ($dueDate != null) {
-
 				/*********************************************************
 				 *
 				 * Change format according to jquery date format
@@ -618,19 +617,18 @@ class SectionEditorAction extends Action {
 				 * Last Update: 6/3/2011
 				 *
 				 *********************************************************/
-				$dueDateParts = explode('/', $dueDate);
+				$dueDateParts = explode('-', $dueDate);
 
 				// Ensure that the specified due date is today or after today's date.
 				if ($todayTimestamp <= strtotime($dueDate)) {
-					//$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[1], $dueDateParts[2], $dueDateParts[0])));
-					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[0], $dueDateParts[1], $dueDateParts[2])));
+					$reviewAssignment->setDateDue(mktime(0, 0, 0, $dueDateParts[1], $dueDateParts[2], $dueDateParts[0]));
 				} else {
 					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $todayTimestamp));
 				}
 			} else {
 				// Add the equivilant of $numWeeks weeks, measured in seconds, to $todaysTimestamp.
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
-				$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $newDueDateTimestamp));
+				$reviewAssignment->setDateDue($newDueDateTimestamp);
 			}
 			/*************************************************************
 			 * Change format for jquery date
@@ -639,14 +637,14 @@ class SectionEditorAction extends Action {
 			 * ***********************************************************/
 				
 			if ($meetingDate != null) {
-				$meetingDateTimestamp = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
-				
+				$meetingDateParts = explode('-', $meetingDate);
+				$reviewAssignment->setDateOfMeeting(mktime(0, 0, 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]));
+				//$reviewAssignment->setDateOfMeeting(Core::getCurrentDate());
 			}
 			
 			/**************************************************************/
 			
 			$reviewAssignment->stampModified();
-			$reviewAssignment->setDateOfMeeting($meetingDate);
 			
 			$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
 

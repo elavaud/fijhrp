@@ -862,6 +862,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reviewId = isset($args[1]) ? $args[1] : 0;
 		$dueDate = Request::getUserVar('dueDate');
 		$numWeeks = Request::getUserVar('numWeeks');
+		$meetingDate = Request::getUserVar('meetingDate');
 
 		if ($dueDate != null || $numWeeks != null || $meetingDate != null) {
 			SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks, $meetingDate);
