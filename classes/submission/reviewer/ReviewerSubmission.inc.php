@@ -268,6 +268,26 @@ class ReviewerSubmission extends Article {
 	function setDateDue($dateDue) {
 		return $this->setData('dateDue', $dateDue);
 	}
+	
+	/**
+	 * Get the meeting date
+	 * Edited by ayveemallare
+	 * Last Updated: 6/30/2011
+	 * @return date
+	 */
+	function getDateOfMeeting() {
+		return $this->getData('dateOfMeeting');
+	}
+	
+	/**
+	 * Set the meeting date
+	 * Edited by ayveemallare
+	 * Last Updated: 6/30/2011
+	 * @param $meetingDate datetime
+	 */
+	function setDateOfMeeting($meetingDate) {
+		return $this->setData('dateOfMeeting', $meetingDate);
+	}
 
 	/**
 	 * Get the declined value.
