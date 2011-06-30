@@ -28,8 +28,14 @@ function confirmSubmissionCheck() {
 	}
 	return confirm('{/literal}{translate|escape:"javascript" key="reviewer.article.confirmDecision"}{literal}');
 }
+
+$(document).ready(function() {
+	$( "#proposedDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
+});
 // -->
 {/literal}
+
+
 </script>
 <div id="submissionToBeReviewed">
 <h3>{translate key="reviewer.article.submissionToBeReviewed"}</h3>
@@ -98,6 +104,25 @@ function confirmSubmissionCheck() {
 <tr valign="top">
 	<td class="label">{translate key="reviewer.article.schedule.due"}</td>
 	<td class="value">{if $submission->getDateDue()}{$submission->getDateDue()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
+</tr>
+<tr valign="top">
+	<td class="label">{translate key="reviewer.article.schedule.dateOfMeeting"}</td>
+	<td class="value">{if $submission->getDateOfMeeting()}{$submission->getDateOfMeeting()|date_format:$datetimeFormatLong}{else}&mdash;{/if}</td>
+</tr>
+<tr valign="top">
+	<td>
+	<div id="saveDateOfMeeting">
+		<form method="post" action="{url op="saveDateOfMeeting"}">
+		Accept <input type="radio" name="acceptDateOfMeeting" id="acceptDateOfMeeting" value="acceptDateOfMeeting"></input>
+		Regret <input type="radio" name="regretDateOfMeeting" id="regretDateOfMeeting" value="acceptDateOfMeeting"></input>
+		<br/>
+		Note: 
+		<input type="text" name="noteOnDateOfMeeting" id="noteOnDateOfMeeting" size="20" maxlength="32" class="textField" /><br/>
+		Proposed date:
+		<input type="text" class="textField" name="proposedDate" id="proposedDate"  size="20" maxlength="255" />
+		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="user" escape=false}'" />
+		</form>
+	</td>
 </tr>
 </table>
 </div>
