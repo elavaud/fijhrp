@@ -638,8 +638,17 @@ class SectionEditorAction extends Action {
 				
 			if ($meetingDate != null) {
 				$meetingDateParts = explode('-', $meetingDate);
-				$reviewAssignment->setDateOfMeeting(mktime(0, 0, 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]));
-				//$reviewAssignment->setDateOfMeeting(Core::getCurrentDate());
+				$tmp = explode(' ', $meetingDateParts[2]);
+				$meetingTime = $tmp[1];
+				$meetingTimeMarker = $tmp[2];
+				$meetingTimeParts = explode(':', $meetingTime);
+				
+				if(strcasecmp($meetingTimeMarker, 'pm'))
+					$hour = intval($meetingTimeParts[0]) + 12;
+				else 
+					$hour = intval($meetingTimeParts[0]);
+					 	
+				$reviewAssignment->setDateOfMeeting(mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]));
 			}
 			
 			/**************************************************************/

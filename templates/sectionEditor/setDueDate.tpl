@@ -18,10 +18,13 @@
 {/strip}
 
 {literal}
+<script type="text/javascript" src="http://localhost/whorrp/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
+<style type="text/css" src="http://localhost/whorr/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
+
 <script type="text/javascript">
 	$(document).ready(function() {
-	$( "#dueDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d'});
-	$( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d'});
+	$( "#dueDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+0 d'});
+	$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
 	});
 </script>
 {/literal}
@@ -72,8 +75,9 @@
 		
 		<tr valign="top">
 			<td width="20%" class="label">{translate key="editor.article.meetingDate"}</td>
-			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d"}" size="20" maxlength="255" />
+			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" />
 		</td>
+		
 	</table>
 <p><input type="submit" value="{translate key="common.continue"}" class="button defaultButton" /> <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>
 </form>
