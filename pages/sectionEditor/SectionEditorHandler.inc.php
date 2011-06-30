@@ -77,6 +77,11 @@ class SectionEditorHandler extends Handler {
 		) + $sections;
 
 		switch($page) {
+			case 'minutes':
+				$page = 'minutes';
+				$functionName = 'getSectionEditorSubmissionsInReview';
+				$helpTopicId = 'editorial.sectionEditorsRole.submissions.inReview';
+				break;
 			case 'submissionsInEditing':
 				$functionName = 'getSectionEditorSubmissionsInEditing';
 				$helpTopicId = 'editorial.sectionEditorsRole.submissions.inEditing';

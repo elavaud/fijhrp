@@ -671,7 +671,7 @@ class Article extends Submission {
 				$reasonsLocale = $reasonsLocale - $num;
 			}
 			else
-				$reasons[$i] = 0;			
+				$reasons[$num] = 0;			
 		}
 		return $reasons;
 	}

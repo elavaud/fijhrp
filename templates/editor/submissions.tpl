@@ -19,7 +19,10 @@
 <ul class="menu">
 	<li{if $pageToDisplay == "submissionsUnassigned"} class="current"{/if}><a href="{url op="submissions" path="submissionsUnassigned"}">{translate key="common.queue.short.submissionsUnassigned"}</a></li>
 	<li{if $pageToDisplay == "submissionsInReview"} class="current"{/if}><a href="{url op="submissions" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
+	<li{if ($pageToDisplay == "minutes")} class="current"{/if}><a href="{url op="minutes"}">Upload Minutes</a></li>
+	<!--{** 
 	<li{if $pageToDisplay == "submissionsInEditing"} class="current"{/if}><a href="{url op="submissions" path="submissionsInEditing"}">{translate key="common.queue.short.submissionsInEditing"}</a></li>
+	 **}-->
 	<li{if $pageToDisplay == "submissionsArchives"} class="current"{/if}><a href="{url op="submissions" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 
@@ -27,15 +30,16 @@
 
 {include file="editor/$pageToDisplay.tpl"}
 
+{** <!-- 
 {if ($pageToDisplay == "submissionsInReview")}
-<br />
+
 <div id="notes">
 <h4>{translate key="common.notes"}</h4>
 {translate key="editor.submissionReview.notes"}
 </div>
 {/if}
 <br />
-<a href={url op="minutes"}>Upload minutes of meeting</a>
-
+ -->
+**}
 {include file="common/footer.tpl"}
 

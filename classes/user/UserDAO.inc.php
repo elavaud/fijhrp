@@ -15,7 +15,7 @@
 
 // $Id$
 
-
+import('classes.security.Role');
 import('classes.user.User');
 import('lib.pkp.classes.user.PKPUserDAO');
 
@@ -93,6 +93,32 @@ class UserDAO extends PKPUserDAO {
 
 		$returner = new DAOResultFactory($result, $this, '_returnUserFromRowWithData');
 		return $returner;
+	}
+	
+	/**
+	 * Retrieve an array of users with reviewer role
+	 * @param $allowDisabled boolean
+	 * @param $dbResultRange object The desired range of results to return
+	 * @return array matching Users
+	 * Added by aglet 6/30/2011
+	 */
+	function &getUsersWithReviewerRole() {
+		$reviewers = array();
+		$sql = 'SELECT u.* FROM users u LEFT JOIN roles r ON u.user_id=r.user_id WHERE r.role_id = ' .  ROLE_ID_REVIEWER;
+		$orderSql = ' ORDER BY u.last_name, u.first_name'; // FIXME Add "sort field" parameter?
+
+		//$result =& $this->retrieve($sql . ($allowDisabled?'':' AND u.disabled = 0') . $orderSql, false, $dbResultRange);
+		$result =& $this->retrieve($sql . $orderSql);
+		
+		while (!$result->EOF) {
+			$reviewers[] =& $this->_returnUserFromRowWithData($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $reviewers;		
 	}
 }
 
