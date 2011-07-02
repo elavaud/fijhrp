@@ -134,6 +134,8 @@ class ReviewerSubmissionDAO extends DAO {
 		$reviewerSubmission->setDateAcknowledged($this->datetimeFromDB($row['date_acknowledged']));
 		$reviewerSubmission->setDateDue($this->datetimeFromDB($row['date_due']));
 		$reviewerSubmission->setDateOfMeeting($this->datetimeFromDB($row['date_of_meeting']));
+		$reviewerSubmission->setRemarks($row['remarks']);
+		$reviewerSubmission->setIsAttending($row['attending']);
 		$reviewerSubmission->setDeclined($row['declined']);
 		$reviewerSubmission->setReplaced($row['replaced']);
 		$reviewerSubmission->setCancelled($row['cancelled']==1?1:0);
@@ -173,11 +175,13 @@ class ReviewerSubmissionDAO extends DAO {
 					date_acknowledged = %s,
 					date_due = %s,
 					date_of_meeting = %s,
+					remarks = ?,
+					attending = ?,
 					reviewer_file_id = ?,
 					quality = ?
 				WHERE	review_id = ?',
 				$this->datetimeToDB($reviewerSubmission->getDateAssigned()), $this->datetimeToDB($reviewerSubmission->getDateNotified()), $this->datetimeToDB($reviewerSubmission->getDateConfirmed()), $this->datetimeToDB($reviewerSubmission->getDateCompleted()), $this->datetimeToDB($reviewerSubmission->getDateAcknowledged()), $this->datetimeToDB($reviewerSubmission->getDateDue()), 
-				$this->datetimeDB($reviewerSubmission->getDateOfMeeting())),
+				$this->datetimeToDB($reviewerSubmission->getDateOfMeeting())),
 			array(
 				$reviewerSubmission->getArticleId(),
 				$reviewerSubmission->getReviewerId(),
@@ -187,6 +191,8 @@ class ReviewerSubmissionDAO extends DAO {
 				$reviewerSubmission->getDeclined(),
 				$reviewerSubmission->getReplaced(),
 				$reviewerSubmission->getCancelled(),
+				$reviewerSubmission->getRemarks(),
+				(int) $reviewerSubmission->getIsAttending(),
 				$reviewerSubmission->getReviewerFileId(),
 				$reviewerSubmission->getQuality(),
 				$reviewerSubmission->getReviewId()

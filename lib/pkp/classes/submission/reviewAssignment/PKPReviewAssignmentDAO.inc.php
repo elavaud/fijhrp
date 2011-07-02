@@ -368,6 +368,8 @@ class PKPReviewAssignmentDAO extends DAO {
 				declined, replaced, cancelled,
 				date_assigned, date_notified, date_confirmed,
 				date_completed, date_acknowledged, date_due, date_of_meeting, date_response_due,
+				remarks,
+				attending,
 				reviewer_file_id,
 				quality, date_rated,
 				last_modified,
@@ -389,6 +391,8 @@ class PKPReviewAssignmentDAO extends DAO {
 				(int) $reviewAssignment->getDeclined(),
 				(int) $reviewAssignment->getReplaced(),
 				(int) $reviewAssignment->getCancelled(),
+				$reviewAssignment->getRemarks(),
+				(int) $reviewAssignment->getIsAttending(),
 				$reviewAssignment->getReviewerFileId(),
 				$reviewAssignment->getQuality(),
 				$reviewAssignment->getReminderWasAutomatic(),
@@ -425,6 +429,8 @@ class PKPReviewAssignmentDAO extends DAO {
 					date_acknowledged = %s,
 					date_due = %s,
 					date_of_meeting = %s,
+					attending = ?,
+					remarks = ?,
 					date_response_due = %s,
 					reviewer_file_id = ?,
 					quality = ?,
@@ -447,6 +453,8 @@ class PKPReviewAssignmentDAO extends DAO {
 				(int) $reviewAssignment->getDeclined(),
 				(int) $reviewAssignment->getReplaced(),
 				(int) $reviewAssignment->getCancelled(),
+				$reviewAssignment->getIsAttending(),
+				$reviewAssignment->getRemarks(),
 				$reviewAssignment->getReviewerFileId(),
 				$reviewAssignment->getQuality(),
 				$reviewAssignment->getReminderWasAutomatic(),
@@ -478,6 +486,8 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignment->setDateAcknowledged($this->datetimeFromDB($row['date_acknowledged']));
 		$reviewAssignment->setDateDue($this->datetimeFromDB($row['date_due']));
 		$reviewAssignment->setDateOfMeeting($this->datetimeFromDB($row['date_of_meeting']));
+		$reviewAssignment->setIsAttending($row['attending']);
+		$reviewAssignment->setRemarks($row['remarks']);
 		$reviewAssignment->setDateResponseDue($this->datetimeFromDB($row['date_response_due']));
 		$reviewAssignment->setLastModified($this->datetimeFromDB($row['last_modified']));
 		$reviewAssignment->setDeclined($row['declined']);

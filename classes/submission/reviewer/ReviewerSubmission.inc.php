@@ -542,6 +542,27 @@ class ReviewerSubmission extends Article {
 	function setMostRecentPeerReviewComment($peerReviewComment) {
 		return $this->setData('peerReviewComment', $peerReviewComment);
 	}
+	
+	function getRemarks(){
+		
+		return $this->getData('remarks');
+	}
+	
+	function setRemarks($remarks){
+		
+		return $this->setData('remarks', $remarks);
+	}
+
+	function getIsAttending(){
+		
+		return $this->getData('isAttending');
+	}
+	
+	function setIsAttending($isAttending){
+		
+		return $this->setData('isAttending', $isAttending);
+	}
+
 }
 
 ?>

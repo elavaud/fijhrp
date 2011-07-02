@@ -683,6 +683,43 @@ class PKPReviewAssignment extends DataObject {
 		return $this->setData('dateOfMeeting', $meetingDate);
 	}
 	
+	/** Added for new field is_attending
+	 *  Added by Cere Blanco
+	 *  Date added: 6/29/2011
+	 */
+	
+	/**
+	 * Get reviewer's response to meeting schedule  
+	 * @return tinyint/boolean
+	 */
+	function getIsAttending() {
+		return $this->getData('isAttending');
+	}
+	
+	/**
+	 * Set reviewer's response to meeting schedule
+	 * @param $isAttending tinyint/boolean
+	 */
+	function setIsAttending($isAttending){
+		return $this->setData('isAttending', $isAttending);
+	}
+	
+	/**
+	 * Get reviewer's remarks to meeting schedule  
+	 * @return string
+	 */
+	function getRemarks() {
+		return $this->getData('remarks');
+	}
+	
+	/**
+	 * Set reviewer's remarks to meeting schedule
+	 * @param $remarks string
+	 */
+	function setRemarks($remarks){
+		return $this->setData('remarks', $remarks);
+	}
+	
 }
 
 ?>

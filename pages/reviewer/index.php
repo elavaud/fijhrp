@@ -29,9 +29,17 @@ switch ($op) {
 	case 'viewMetadata':
 	case 'uploadReviewerVersion':
 	case 'deleteReviewerVersion':
+		
+	//	Meeting Scheduler
+	//	
+	//
+	
+	case 'reviewMeetingSchedule':
+	
 	//
 	// Misc.
 	//
+	
 	case 'downloadFile':
 	//
 	// Submission Review Form

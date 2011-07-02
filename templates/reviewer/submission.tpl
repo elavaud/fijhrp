@@ -86,8 +86,10 @@ $(document).ready(function() {
 </table>
 </div>
 <div class="separator"></div>
+
 <div id="reviewSchedule">
 <h3>{translate key="reviewer.article.reviewSchedule"}</h3>
+<form method="post" action="{url op="reviewMeetingSchedule" }" >
 <table width="100%" class="data">
 <tr valign="top">
 	<td class="label" width="20%">{translate key="reviewer.article.schedule.request"}</td>
@@ -109,23 +111,33 @@ $(document).ready(function() {
 	<td class="label">{translate key="reviewer.article.schedule.dateOfMeeting"}</td>
 	<td class="value">{if $submission->getDateOfMeeting()}{$submission->getDateOfMeeting()|date_format:$datetimeFormatLong}{else}&mdash;{/if}</td>
 </tr>
+
 <tr valign="top">
-	<td>
-	<div id="saveDateOfMeeting">
-		<form method="post" action="{url op="saveDateOfMeeting"}">
-		Accept <input type="radio" name="acceptDateOfMeeting" id="acceptDateOfMeeting" value="acceptDateOfMeeting"></input>
-		Regret <input type="radio" name="regretDateOfMeeting" id="regretDateOfMeeting" value="acceptDateOfMeeting"></input>
-		<br/>
-		Note: 
-		<input type="text" name="noteOnDateOfMeeting" id="noteOnDateOfMeeting" size="20" maxlength="32" class="textField" /><br/>
-		Proposed date:
-		<input type="text" class="textField" name="proposedDate" id="proposedDate"  size="20" maxlength="255" />
+	<td class="label">{translate key="reviewer.article.schedule.isAttending"} </td>
+	<td class="value">	
+		
+		<input type="radio" name="isAttending" id="acceptMeetingSchedule" value="1" {if  $submission->getIsAttending() == 1 } checked="checked"{/if} > </input> Yes
+		<input type="radio" name="isAttending" id="regretMeetingSchedule" value="0" {if  $submission->getIsAttending() == 0 } checked="checked"{/if} > </input> No
+	</td>
+</tr> 
+<tr>
+	<td class="label">{translate key="reviewer.article.schedule.remarks"} </td>
+	<td class="value">
+		<textarea class="textArea" name="remarks" id="proposedDate" rows="5" cols="40" />{$submission->getRemarks()|escape}</textarea>
+	</td>
+</tr>
+<tr>
+	<td class="label"></td>
+	<td class="value">
+		<input type="hidden" id="reviewId" name="reviewId" value={$reviewId}> </input>
 		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="user" escape=false}'" />
-		</form>
 	</td>
 </tr>
 </table>
+</form>
 </div>
+
+
 <div class="separator"></div>
 
 <div id="reviewSteps">
