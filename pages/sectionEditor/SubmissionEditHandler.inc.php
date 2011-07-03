@@ -731,18 +731,19 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	}
 
 	function notifyReviewer($args = array()) {
-		$articleId = Request::getUserVar('articleId');
+		$articleId = isset($args[0]) ? $args[0] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
 
-		$reviewId = Request::getUserVar('reviewId');
-
-		$send = Request::getUserVar('send')?true:false;
-		$this->setupTemplate(true, $articleId, 'review');
-
-		if (SectionEditorAction::notifyReviewer($submission, $reviewId, $send)) {
-			Request::redirect(null, null, 'submissionReview', $articleId);
+		$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
+		//send emails by default
+		$send = true;
+		
+		foreach($reviewAssignments as $reviewAssignment) {
+			SectionEditorAction::notifyReviewer($submission, $reviewAssignment->getId(), $send);
 		}
+		
+		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 
 	function clearReview($args) {

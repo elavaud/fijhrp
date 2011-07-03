@@ -15,8 +15,10 @@
 		<td width="22%"><h3>{translate key="submission.peerReview"}</h3></td>
 		<td width="14%"><h4>{translate key="submission.round" round=$round}</h4></td>
 		<td width="64%" class="nowrap">
-			<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="{url op="notifyReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.notifyReviewer"}</a>
+			{**<!-- <a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>&nbsp;&nbsp;&nbsp;&nbsp;
 			<a href="{url op="submissionRegrets" path=$submission->getId()}" class="action">{translate|escape key="sectionEditor.regrets.link"}</a>
+			 -->**}
 		</td>
 	</tr>
 </table>
@@ -79,16 +81,16 @@
 				</tr>
 				<tr valign="top">
 					<td>
-						{url|assign:"reviewUrl" op="notifyReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()}
+						{**<!-- url|assign:"reviewUrl" op="notifyReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()-->**}
 						{if $reviewAssignment->getDateNotified()}
 							{$reviewAssignment->getDateNotified()|date_format:$dateFormatShort}
 							{if !$reviewAssignment->getDateCompleted()}
-								{icon name="mail" url=$reviewUrl}
+								{**<!-- icon name="mail" url=$reviewUrl -->**}
 							{/if}
 						{elseif $reviewAssignment->getReviewFileId()}
-							{icon name="mail" url=$reviewUrl}
+							{**<!-- icon name="mail" url=$reviewUrl -->**}
 						{else}
-							{icon name="mail" disabled="disabled" url=$reviewUrl}
+							{**<!-- icon name="mail" disabled="disabled" url=$reviewUrl -->**}
 							{assign var=needsReviewFileNote value=1}
 						{/if}
 					</td>
