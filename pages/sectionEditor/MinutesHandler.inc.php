@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * class MinutesHandler for SectionEditor and Editor Roles (STO)
+ * page handler class for minutes-related operations
+ * @var unknown_type
+ */
 define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 // Filter section
@@ -69,7 +74,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Display list of uploaded minutes or allow STO to create a new one
 	 * @param $args
 	 * @param $request
@@ -93,7 +98,7 @@ class MinutesHandler extends Handler {
 	}
 	
 		/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Insert new minutes_table row and display meeting/minutes sections accdg. to meeting_id
 	 * @param $args
 	 * @param $request
@@ -112,7 +117,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Display meeting/minutes sections accdg. to meeting_id 
 	 * @param $args
 	 * @param $request
@@ -141,7 +146,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Display form for attendance
 	 * @param $args
 	 * @param $request
@@ -169,7 +174,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Insert attendance info or ERC members in meeting_attendance table
 	 * @param $args
 	 * @param $request
@@ -220,7 +225,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Display form for announcements
 	 * @param $args
 	 * @param $request
@@ -253,7 +258,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Update meetings table
 	 * @param $args
 	 * @param $request
@@ -284,7 +289,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Display dropdown for proposals assigned for (initial) normal ERC review
 	 * @param $args
 	 * @param $request
@@ -310,7 +315,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Display form for initial review given article id
 	 * @param $args
 	 * @param $request
@@ -350,7 +355,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	/**
-	 * Added by aglet 6/29/2011
+	 * Added  6/29/2011
 	 * Generate pdf file for this initial review and update edit_decisions table
 	 * @param $args
 	 * @param $request

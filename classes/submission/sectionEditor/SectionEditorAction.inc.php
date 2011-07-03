@@ -101,7 +101,19 @@ class SectionEditorAction extends Action {
 				'dateDecided' => $startDate,
 				'resubmitCount' => $resubmitCount
 		);
-
+		
+		/*
+		 * If assigned for normal erc review, automatically assign all users with REVIEWER role
+		 */
+		if($decision == SUBMISSION_EDITOR_DECISION_ASSIGNED) {
+			$userDao =& DAORegistry::getDAO('UserDAO');
+			$reviewers =& $userDao->getUsersWithReviewerRole();
+			foreach($reviewers as $reviewer) {
+				$reviewerId = $reviewer->getId();
+				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
+			}				
+		}
+		
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
 			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
 			$sectionEditorSubmission->stampStatusModified();
