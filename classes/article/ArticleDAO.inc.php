@@ -859,7 +859,6 @@ class ArticleDAO extends DAO {
 
             $this->flushCache();
         }
->>>>>>> 84d8dfbff1e44fdeebfafa7607aee4a5523635d8
 }
 
 ?>
