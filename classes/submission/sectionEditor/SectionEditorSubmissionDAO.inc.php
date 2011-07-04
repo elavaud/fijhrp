@@ -180,26 +180,26 @@ class SectionEditorSubmissionDAO extends DAO {
 					if ($editorDecision['editDecisionId'] == null) {
 						$this->update(
 							sprintf('INSERT INTO edit_decisions
-								(article_id, round, editor_id, decision, date_decided)
-								VALUES (?, ?, ?, ?, %s)',
+								(article_id, round, editor_id, decision, date_decided, resubmit_count)
+								VALUES (?, ?, ?, ?, %s, ?)',
 								$this->datetimeToDB($editorDecision['dateDecided'])),
-							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'])
+							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'], $editorDecision['resubmitCount'])
 						);
 					}
 	/********************************************************
 	 *
 	 * If editDecisionId is not null, just update the existing row in the database
-	 * Added by Gay Figueroa
+	 * Added by aglet
 	 * Last Update: 5/4/2011
 	 *
 	*********************************************************/
 					else {
 						$this->update(
 							sprintf('UPDATE edit_decisions SET
-								round = ?, decision = ?, date_decided = %s 
+								round = ?, decision = ?, date_decided = %s, resubmit_count = ? 
 								WHERE edit_decision_id = ?',
 								$this->datetimeToDB($editorDecision['dateDecided'])),
-							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'], $editorDecision['editDecisionId'])
+							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'],  $editorDecision['resubmitCount'], $editorDecision['editDecisionId'])
 						);
 					}
 				}
@@ -486,8 +486,9 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	a.journal_id = ?
-				AND e.editor_id = ?
-				AND a.submission_progress = 0' . (!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'') . '
+				AND e.editor_id = ? '.
+				//AND a.submission_progress = 0' . edited by aglet 6/4/2011 
+				(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'') . '
 				AND edec2.edit_decision_id IS NULL';
 
 		if ($sectionId) {
@@ -516,7 +517,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInReviewIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
@@ -541,7 +542,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInEditing($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInEditingIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
@@ -566,7 +567,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsArchivesIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result = $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
@@ -580,6 +581,9 @@ class SectionEditorSubmissionDAO extends DAO {
 
 	/**
 	 * Function used for counting purposes for right nav bar
+	 * Edited: removed AND a.submission_progress = 0
+	 * Edited by aglet
+	 * Last Update: 6/4/2011
 	 */
 	function &getSectionEditorSubmissionsCount($sectionEditorId, $journalId) {
 		$submissionsCount = array();
@@ -598,7 +602,6 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
 			WHERE	a.journal_id = ?
 				AND e.editor_id = ?
-				AND a.submission_progress = 0
 				AND a.status = ' . STATUS_QUEUED . '
 				AND d2.edit_decision_id IS NULL
 				AND (d.decision IS NULL OR d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
@@ -618,7 +621,6 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
 			WHERE	a.journal_id = ?
 				AND e.editor_id = ?
-				AND a.submission_progress = 0
 				AND a.status = ' . STATUS_QUEUED . '
 				AND d2.edit_decision_id IS NULL
 				AND d.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
@@ -1174,17 +1176,19 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Get the editor decisions for a review round of an article.
 	 * @param $articleId int
 	 * @param $round int
+	 * Edited by aglet
+	 * Last Update: 6/10/2011
 	 */
 	function getEditorDecisions($articleId, $round = null) {
 		$decisions = array();
 
 		if ($round == null) {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+				'SELECT edit_decision_id, editor_id, decision, date_decided,resubmit_count FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
 			);
 		} else {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
 				array($articleId, $round)
 			);
 		}
@@ -1194,7 +1198,8 @@ class SectionEditorSubmissionDAO extends DAO {
 				'editDecisionId' => $result->fields['edit_decision_id'],
 				'editorId' => $result->fields['editor_id'],
 				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
+				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided']),
+				'resubmitCount' => $result->fields['resubmit_count']
 			);
 			$result->moveNext();
 		}
@@ -1204,7 +1209,103 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $decisions;
 	}
 
+	/*
+	 * Get names of review Committe members and external reviewers from reviewcommittee.xml
+	 * Added by aglet
+	 * Last Update: 6/6/2011
+	 */
+	function getErcReviewCommittee() {
+		    $locale = Locale::getLocale();
+            $filename = "lib/pkp/locale/".$locale."/reviewcommittee.xml";
+            
+            $xmlDao = new XMLDAO();
+            $data = $xmlDao->parseStruct($filename, array('committee', 'ercmember'));
+            
+            $committee = array();
+            if (isset($data['committee'])) {
+				foreach ($data['ercmember'] as $ercData) {
+		                        $committeeMember['value'] = $ercData['attributes']['value'];
+		                        $committeeMember['name'] = $ercData['attributes']['name'];
+		                        $committeeMember['type']="ERC Member";
+		                        array_push($committee, $committeeMember);
+				}
+                         }
+            $data = $xmlDao->parseStruct($filename, array('committee', 'externalreviewer'));
+            if (isset($data['committee'])) {
+				foreach ($data['externalreviewer'] as $extData) {
+		                        $committeeMember['value'] = $extData['attributes']['value'];
+		                        $committeeMember['name'] = $extData['attributes']['name'];
+		                        $committeeMember['type']="External Reviewer";
+		                        array_push($committee, $committeeMember);
+				}
+            }
+            return $committee;
+	}
 	
+	function &getSectionEditorSubmissionsForErcReview($sectionEditorId, $journalId, $sectionId) {
+		$sectionEditorSubmissions = array();
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+	}
+	
+	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$sectionEditorSubmissions = array();
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+	}
+	
+
+	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$sectionEditorSubmissions = array();
+		$result = $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'(a.status <> ' . STATUS_QUEUED . ' AND a.submission_progress = 0)',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+		
+	}
+		
 }
 
 ?>

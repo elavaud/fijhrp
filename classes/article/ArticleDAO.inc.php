@@ -48,16 +48,17 @@ class ArticleDAO extends DAO {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
-                /************************************************
-                 * Edited by:  Anne Ivy Mirasol -- added fields
-                 * Last Updated: May 4, 2011
-                 ************************************************/
+		/************************************************
+		 * Edited by:  Anne Ivy Mirasol -- added fields
+		 * Last Updated: May 4, 2011
+		 ************************************************/
 		return array(
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
                         'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
-                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'withdrawReason', 'withdrawComments'
+                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments'
 		);
+
 	}
 
 	/**
@@ -89,14 +90,14 @@ class ArticleDAO extends DAO {
 		$locale = Locale::getLocale();
 		$params = array(
 			'title',
-			$primaryLocale,
+		$primaryLocale,
 			'title',
-			$locale,
+		$locale,
 			'abbrev',
-			$primaryLocale,
+		$primaryLocale,
 			'abbrev',
-			$locale,
-			$articleId
+		$locale,
+		$articleId
 		);
 		$sql = 'SELECT	a.*,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
@@ -159,9 +160,9 @@ class ArticleDAO extends DAO {
 		$article->setLastModified($this->datetimeFromDB($row['last_modified']));
 		$article->setStatus($row['status']);
 
-                //Added by Anne Ivy Mirasol, May 18, 2011
-                $articleDao =& DAORegistry::getDAO('ArticleDAO');
-                $article->setProposalStatus($articleDao->getProposalStatus($article->getId()));
+		//Added by Anne Ivy Mirasol, May 18, 2011
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article->setProposalStatus($articleDao->getProposalStatus($article->getId()));
 
 		$article->setSubmissionProgress($row['submission_progress']);
 		$article->setCurrentRound($row['current_round']);
@@ -189,32 +190,32 @@ class ArticleDAO extends DAO {
 	function insertArticle(&$article) {
 		$article->stampModified();
 		$this->update(
-			sprintf('INSERT INTO articles
+		sprintf('INSERT INTO articles
 				(locale, user_id, journal_id, section_id, language, comments_to_ed, citations, date_submitted, date_status_modified, last_modified, status, submission_progress, current_round, submission_file_id, revised_file_id, review_file_id, editor_file_id, pages, fast_tracked, hide_author, comments_status, doi)
 				VALUES
 				(?, ?, ?, ?, ?, ?, ?, %s, %s, %s, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-				$this->datetimeToDB($article->getDateSubmitted()), $this->datetimeToDB($article->getDateStatusModified()), $this->datetimeToDB($article->getLastModified())),
-			array(
-				$article->getLocale(),
-				$article->getUserId(),
-				$article->getJournalId(),
-				$article->getSectionId(),
-				$article->getLanguage(),
-				$article->getCommentsToEditor(),
-				$article->getCitations(),
-				$article->getStatus() === null ? STATUS_QUEUED : $article->getStatus(),
-				$article->getSubmissionProgress() === null ? 1 : $article->getSubmissionProgress(),
-				$article->getCurrentRound() === null ? 1 : $article->getCurrentRound(),
-				$article->getSubmissionFileId(),
-				$article->getRevisedFileId(),
-				$article->getReviewFileId(),
-				$article->getEditorFileId(),
-				$article->getPages(),
-				$article->getFastTracked()?1:0,
-				$article->getHideAuthor() === null ? 0 : $article->getHideAuthor(),
-				$article->getCommentsStatus() === null ? 0 : $article->getCommentsStatus(),
-				$article->getStoredDOI()
-			)
+		$this->datetimeToDB($article->getDateSubmitted()), $this->datetimeToDB($article->getDateStatusModified()), $this->datetimeToDB($article->getLastModified())),
+		array(
+		$article->getLocale(),
+		$article->getUserId(),
+		$article->getJournalId(),
+		$article->getSectionId(),
+		$article->getLanguage(),
+		$article->getCommentsToEditor(),
+		$article->getCitations(),
+		$article->getStatus() === null ? STATUS_QUEUED : $article->getStatus(),
+		$article->getSubmissionProgress() === null ? 1 : $article->getSubmissionProgress(),
+		$article->getCurrentRound() === null ? 1 : $article->getCurrentRound(),
+		$article->getSubmissionFileId(),
+		$article->getRevisedFileId(),
+		$article->getReviewFileId(),
+		$article->getEditorFileId(),
+		$article->getPages(),
+		$article->getFastTracked()?1:0,
+		$article->getHideAuthor() === null ? 0 : $article->getHideAuthor(),
+		$article->getCommentsStatus() === null ? 0 : $article->getCommentsStatus(),
+		$article->getStoredDOI()
+		)
 		);
 
 		$article->setId($this->getInsertArticleId());
@@ -237,7 +238,7 @@ class ArticleDAO extends DAO {
 	function updateArticle(&$article) {
 		$article->stampModified();
 		$this->update(
-			sprintf('UPDATE articles
+		sprintf('UPDATE articles
 				SET	locale = ?,
 					user_id = ?,
 					section_id = ?,
@@ -260,28 +261,28 @@ class ArticleDAO extends DAO {
 					comments_status = ?,
 					doi = ?
 				WHERE article_id = ?',
-				$this->datetimeToDB($article->getDateSubmitted()), $this->datetimeToDB($article->getDateStatusModified()), $this->datetimeToDB($article->getLastModified())),
-			array(
-				$article->getLocale(),
-				$article->getUserId(),
-				$article->getSectionId(),
-				$article->getLanguage(),
-				$article->getCommentsToEditor(),
-				$article->getCitations(),
-				$article->getStatus(),
-				$article->getSubmissionProgress(),
-				$article->getCurrentRound(),
-				$article->getSubmissionFileId(),
-				$article->getRevisedFileId(),
-				$article->getReviewFileId(),
-				$article->getEditorFileId(),
-				$article->getPages(),
-				$article->getFastTracked(),
-				$article->getHideAuthor(),
-				$article->getCommentsStatus(),
-				$article->getStoredDOI(),
-				$article->getId()
-			)
+		$this->datetimeToDB($article->getDateSubmitted()), $this->datetimeToDB($article->getDateStatusModified()), $this->datetimeToDB($article->getLastModified())),
+		array(
+		$article->getLocale(),
+		$article->getUserId(),
+		$article->getSectionId(),
+		$article->getLanguage(),
+		$article->getCommentsToEditor(),
+		$article->getCitations(),
+		$article->getStatus(),
+		$article->getSubmissionProgress(),
+		$article->getCurrentRound(),
+		$article->getSubmissionFileId(),
+		$article->getRevisedFileId(),
+		$article->getReviewFileId(),
+		$article->getEditorFileId(),
+		$article->getPages(),
+		$article->getFastTracked(),
+		$article->getHideAuthor(),
+		$article->getCommentsStatus(),
+		$article->getStoredDOI(),
+		$article->getId()
+		)
 		);
 
 		$this->updateLocaleFields($article);
@@ -352,7 +353,7 @@ class ArticleDAO extends DAO {
 		$proofreadProofreaderSignoffs = $signoffDao->getBySymbolic('SIGNOFF_PROOFREADING_PROOFREADER', ASSOC_TYPE_ARTICLE, $articleId);
 		$proofreadLayoutSignoffs = $signoffDao->getBySymbolic('SIGNOFF_PROOFREADING_LAYOUT', ASSOC_TYPE_ARTICLE, $articleId);
 		$signoffs = array($copyedInitialSignoffs, $copyedAuthorSignoffs, $copyedFinalSignoffs, $layoutSignoffs,
-						$proofreadAuthorSignoffs, $proofreadProofreaderSignoffs, $proofreadLayoutSignoffs);
+		$proofreadAuthorSignoffs, $proofreadProofreaderSignoffs, $proofreadLayoutSignoffs);
 		foreach ($signoffs as $signoff) {
 			if ( $signoff ) $signoffDao->deleteObject($signoff);
 		}
@@ -413,13 +414,13 @@ class ArticleDAO extends DAO {
 
 		$params = array(
 			'title',
-			$primaryLocale,
+		$primaryLocale,
 			'title',
-			$locale,
+		$locale,
 			'abbrev',
-			$primaryLocale,
+		$primaryLocale,
 			'abbrev',
-			$locale
+		$locale
 		);
 		if ($journalId !== null) $params[] = (int) $journalId;
 
@@ -434,7 +435,7 @@ class ArticleDAO extends DAO {
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 			' . ($journalId !== null ? 'WHERE a.journal_id = ?' : ''),
-			$params
+		$params
 		);
 
 		$returner = new DAOResultFactory($result, $this, '_returnArticleFromRow');
@@ -465,14 +466,14 @@ class ArticleDAO extends DAO {
 		$locale = Locale::getLocale();
 		$params = array(
 			'title',
-			$primaryLocale,
+		$primaryLocale,
 			'title',
-			$locale,
+		$locale,
 			'abbrev',
-			$primaryLocale,
+		$primaryLocale,
 			'abbrev',
-			$locale,
-			$userId
+		$locale,
+		$userId
 		);
 		if ($journalId) $params[] = $journalId;
 		$articles = array();
@@ -488,8 +489,8 @@ class ArticleDAO extends DAO {
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 			WHERE	a.user_id = ?' .
-			(isset($journalId)?' AND a.journal_id = ?':''),
-			$params
+		(isset($journalId)?' AND a.journal_id = ?':''),
+		$params
 		);
 
 		while (!$result->EOF) {
@@ -530,7 +531,7 @@ class ArticleDAO extends DAO {
 	function incompleteSubmissionExists($articleId, $userId, $journalId) {
 		$result =& $this->retrieve(
 			'SELECT submission_progress FROM articles WHERE article_id = ? AND user_id = ? AND journal_id = ? AND date_submitted IS NULL',
-			array($articleId, $userId, $journalId)
+		array($articleId, $userId, $journalId)
 		);
 		$returner = isset($result->fields[0]) ? $result->fields[0] : false;
 
@@ -570,7 +571,7 @@ class ArticleDAO extends DAO {
 		if ($forceReassign) {
 			$this->update(
 				'UPDATE articles SET doi = null' . ($journalId !== null?' WHERE journal_id = ?':''),
-				$journalId !== null?array((int) $journalId):false
+			$journalId !== null?array((int) $journalId):false
 			);
 			$this->flushCache();
 		}
@@ -619,36 +620,36 @@ class ArticleDAO extends DAO {
 		unset($cache);
 	}
 
-        /*******************************************************************************************
-         *  Added by:  Anne Ivy Mirasol
-         *  Last updated: April 25, 2011
-         ******************************************************************************************/
+	/*******************************************************************************************
+	 *  Added by:  Anne Ivy Mirasol
+	 *  Last updated: April 25, 2011
+	 ******************************************************************************************/
 
-        /**
+	/**
 	 * Get all possible proposal types.
 	 * @param none
 	 * @return array proposalTypes
 	 */
 	function getProposalTypes() {
-            $locale = Locale::getLocale();
-            $filename = "lib/pkp/locale/".$locale."/proposaltypes.xml";
+		$locale = Locale::getLocale();
+		$filename = "lib/pkp/locale/".$locale."/proposaltypes.xml";
 
-            $xmlDao = new XMLDAO();
-            $data = $xmlDao->parseStruct($filename, array('proposaltypes', 'proposaltype'));
+		$xmlDao = new XMLDAO();
+		$data = $xmlDao->parseStruct($filename, array('proposaltypes', 'proposaltype'));
 
-            $proposalTypes = array();
-            if (isset($data['proposaltypes'])) {
-                $i=0;
-		foreach ($data['proposaltype'] as $proposalTypeData) {
-                        $proposalType['code'] = $proposalTypeData['attributes']['code'];
-                        $proposalType['name'] = $proposalTypeData['attributes']['name'];
-                        array_push($proposalTypes, $proposalType);
+		$proposalTypes = array();
+		if (isset($data['proposaltypes'])) {
+			$i=0;
+			foreach ($data['proposaltype'] as $proposalTypeData) {
+				$proposalType['code'] = $proposalTypeData['attributes']['code'];
+				$proposalType['name'] = $proposalTypeData['attributes']['name'];
+				array_push($proposalTypes, $proposalType);
+			}
+			$i++;
 		}
-                $i++;
-            }
 
 
-            return $proposalTypes;
+		return $proposalTypes;
 
 	}
 
@@ -669,25 +670,24 @@ class ArticleDAO extends DAO {
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 				$proposalStatus = PROPOSAL_STATUS_CHECKED;
 				break;
-			case SUBMISSION_EDITOR_DECISION_ASSIGNED:			
+			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
 				$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
 				break;
 			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
 				$proposalStatus = PROPOSAL_STATUS_EXPEDITED;
 				break;
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 				$proposalStatus = PROPOSAL_STATUS_REVIEWED;
 				break;
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
 				$proposalStatus = PROPOSAL_STATUS_RETURNED;
-					break;
+				break;
 			default:
 				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
 				break;
-		}					
+		}
 		return $proposalStatus;
 	}
 
@@ -697,22 +697,20 @@ class ArticleDAO extends DAO {
 	 * Added by Gay Figueroa
 	 * Last Update: 5/18/2011
 	 *
-         * Updated: 5/24/2011 - After adding GROUP BY, it always returns first decision instead of last;
-         *                      Removed MAX and GROUP BY since it will always take the last row anyway
+	 * Updated: 5/24/2011 - After adding GROUP BY, it always returns first decision instead of last;
+	 *                      Removed MAX and GROUP BY since it will always take the last row anyway
 	 ***********************************************************************/
 
 	function getLastEditorDecision($articleId, $round = null) {
-		$decisions = array();
-
 		if ($round == null) {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
+				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
 			);
-                        
+
 		} else {
 			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
-				array($articleId, $round)
+				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
+			array($articleId, $round)
 			);
 		}
 
@@ -722,18 +720,19 @@ class ArticleDAO extends DAO {
 		$result->Close();
 		unset($result);
 
-                return 	$resultArray[$last];
+		$decision = array("editDecisionId" => $resultArray[$last]['edit_decision_id'], "editorId" => $resultArray[$last]['editor_id'], "decision" => $resultArray[$last]['decision'], "dateDecided" => $resultArray[$last]['date_decided'], "resubmitCount" => $resultArray[$last]['resubmit_count']);
+		return 	$decision;
 	}
 
 
-        /*******************************************************************************************/
-        /*
-         *  Added by:  Anne Ivy Mirasol
-         *  Last updated: May 4, 2011
-         *
-         ******************************************************************************************/
+	/*******************************************************************************************/
+	/*
+	 *  Added by:  Anne Ivy Mirasol
+	 *  Last updated: May 4, 2011
+	 *
+	 ******************************************************************************************/
 
-        /**
+	/**
 	 * Get the number of submissions for the year.
 	 * @param $year
 	 * @return integer
@@ -742,35 +741,35 @@ class ArticleDAO extends DAO {
 		$result =& $this->retrieve('SELECT * FROM articles where date_submitted is not null and extract(year from date_submitted) = ?', $year);
 		$count = $result->NumRows();
 
-                return $count;
-        }
+		return $count;
+	}
 
 
-        /**
+	/**
 	 * Get the number of submissions for the country for the year.
 	 * @param $year
 	 * @return integer
-         *
+	 *
 	 */
 	function getSubmissionsForYearForCountryCount($year, $country) {
 		$result =& $this->retrieve('SELECT * FROM articles
                                             WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
                                             article_id in (SELECT article_id from article_settings where setting_name = ? and setting_value = ?)',
-                                            array($year, 'proposalCountry', $country));
+		array($year, 'proposalCountry', $country));
 
-                $count = $result->NumRows();
+		$count = $result->NumRows();
 
-                return $count;
-        }
+		return $count;
+	}
 
 
-        /************************************
-         * Added by: Anne Ivy Mirasol
-         * Last Updated: May 18, 2011
-         * Reset an article's progress
-         ************************************/
+	/************************************
+	 * Added by: Anne Ivy Mirasol
+	 * Last Updated: May 18, 2011
+	 * Reset an article's progress
+	 ************************************/
 
-        function changeArticleProgress($articleId, $step) {
+	function changeArticleProgress($articleId, $step) {
 		$this->update(
 			'UPDATE articles SET submission_progress = ? WHERE article_id = ?', array((int) $step, (int) $articleId)
 		);
@@ -779,54 +778,54 @@ class ArticleDAO extends DAO {
 	}
 
 
-        /**
-         *  Added by:  Anne Ivy Mirasol
-         *  Last Updated: May 24, 2011
-         *
-         *  Compare decision date and submission date of proposal to determine if proposal has been resubmitted
-         *  @return boolean
-         */
-        function isProposalResubmitted($articleId) {
-            $result =& $this->retrieve('SELECT date_submitted FROM articles WHERE article_id = ?', $articleId);
-            $row = $result->FetchRow();
-            $date_submitted = $row['date_submitted'];
+	/**
+	 *  Added by:  Anne Ivy Mirasol
+	 *  Last Updated: May 24, 2011
+	 *
+	 *  Compare decision date and submission date of proposal to determine if proposal has been resubmitted
+	 *  @return boolean
+	 */
+	function isProposalResubmitted($articleId) {
+		$result =& $this->retrieve('SELECT date_submitted FROM articles WHERE article_id = ?', $articleId);
+		$row = $result->FetchRow();
+		$date_submitted = $row['date_submitted'];
 
 
-            $result =& $this->retrieve('SELECT date_decided FROM edit_decisions WHERE edit_decision_id =
+		$result =& $this->retrieve('SELECT date_decided FROM edit_decisions WHERE edit_decision_id =
                                              (SELECT MAX(edit_decision_id) FROM edit_decisions WHERE article_id = ? GROUP BY article_id)', $articleId);
-            $row = $result->FetchRow();
-            $date_decided = $row['date_decided'];
+		$row = $result->FetchRow();
+		$date_decided = $row['date_decided'];
 
-            if($date_decided < $date_submitted) return true;
-            else return false;
-        }
+		if($date_decided < $date_submitted) return true;
+		else return false;
+	}
 
-        /**
-         *  Added by:  Anne Ivy Mirasol
-         *  Last Updated: June 15, 2011
-         *
-         *  Set status in articles table to PROPOSAL_STATUS_WITHDRAWN
-         *  @return boolean
-         */
+	/**
+	 *  Added by:  Anne Ivy Mirasol
+	 *  Last Updated: June 15, 2011
+	 *
+	 *  Set status in articles table to PROPOSAL_STATUS_WITHDRAWN
+	 *  @return boolean
+	 */
 
-        function withdrawProposal($articleId) {
-            $this->update(
+	function withdrawProposal($articleId) {
+		$this->update(
 			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_WITHDRAWN, (int) $articleId)
 		);
 
-            $this->flushCache();
-        }
+		$this->flushCache();
+	}
 
-        /**
-         *  Added by:  Anne Ivy Mirasol
-         *  Last Updated: June 15, 2011
-         *
-         *  Set status in articles table to PROPOSAL_STATUS_ARCHIVED
-         *  @return boolean
-         */
-        
-        function sendToArchive($articleId) {
-            $this->update(
+	/**
+	 *  Added by:  Anne Ivy Mirasol
+	 *  Last Updated: June 15, 2011
+	 *
+	 *  Set status in articles table to PROPOSAL_STATUS_ARCHIVED
+	 *  @return boolean
+	 */
+
+	function sendToArchive($articleId) {
+		$this->update(
 			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_ARCHIVED, (int) $articleId)
 		);
 
@@ -849,6 +848,19 @@ class ArticleDAO extends DAO {
 
             $this->flushCache();
         }
+	
+	/**
+	 * Insert reasons for exemption in article_settings
+	 * @return articleId int
+	 * Added by aglet
+	 * Last Update: 6/21/2011
+	 */
+	function insertReasonsForExemption($article, $reasons) {
+		$this->update('INSERT INTO article_settings (article_id, locale, setting_name, setting_value, setting_type) values (?, ?, ?, ?, ?)', array($article->getId(), $article->getLocale(), 'reasonsForExemption', (int) $reasons, 'int')
+		);
+		$this->flushCache();
+		return $article->getId();
+	}
 }
 
 ?>

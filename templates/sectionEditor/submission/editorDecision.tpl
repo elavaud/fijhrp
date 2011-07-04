@@ -8,49 +8,39 @@
  *
  * $Id$
  *}
+ <!-- 
 	{*******************************************************
 	 *
 	 * Get proposal status key and proposal status
-	 * Added by Gay Figueroa
+	 * Added by aglet
 	 * Last Update: 5/3/2011
 	 *
 	 *******************************************************}
-
+ -->
 {assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
-{assign var="proposalStatus" value=$submission->getProposalStatus()}
-
+{assign var="proposalStatus" value=$submission->getSubmissionStatus()}
+ <!-- 
 {** include file="sectionEditor/submission/status.tpl" 
 <div class="separator"></div>
 *}
 
+{*******************************************************
+ *
+ * Assign reviewers if assigned for review
+ * Added by aglet
+ * Last Update: 6/1/2011
+ *
+ *******************************************************}
+ -->
 { if $proposalStatus == PROPOSAL_STATUS_ASSIGNED} 
-	{*******************************************************
-	 *
-	 * Assign reviewers if not exempted, or if reviewed and decision was Resubmit for review
-	 * Added by Gay Figueroa
-	 * Last Update: 5/8/2011
-	 *
-	 *******************************************************}
 
 	<div id="peerReview">
 		{include file="sectionEditor/submission/peerReview.tpl"}
 		<div class="separator"></div>
 	</div>
-{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT }
-	{if $articleMoreRecent}
-		{include file="sectionEditor/submission/peerReview.tpl"}
-		<div class="separator"></div>
-	{else}
-		<h3>{translate key="submission.peerReview"}</h3>
-		<table id="table11" width="100%" class="data">
-			<tr valign="top">
-				<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
-				<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
-			</tr>
-		</table>
-		<div class="separator"></div>
-	{/if}
 {/if}
+
+
 
 <div id="editorDecision">
 <h3>{translate key="submission.editorDecision"}</h3>
@@ -59,195 +49,167 @@
 
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
-	<td width="80%" class="value">{translate key=$proposalStatusKey}{**translate key=$proposalStatus*}</td>
+	<td width="80%" class="value">{translate key=$proposalStatusKey}</td>
 </tr>
-
+ <!-- 
 {*******************************************************
  *
  * Review for completeness
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
+  -->
 <tr valign="top">
-	{if $proposalStatus == PROPOSAL_STATUS_SUBMITTED }
+	{if $proposalStatus == PROPOSAL_STATUS_SUBMITTED || ($proposalStatus == PROPOSAL_STATUS_RETURNED && $articleMoreRecent)}
 		<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
 				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$initialReviewOptions selected=1}
 				</select>
-				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.recordInitialReview"}"  class="button" />
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 			</form>
 		</td>
-
+<!-- 
 {*******************************************************
  *
  * Review for exemption
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
-
+ -->
 	{ elseif $proposalStatus == PROPOSAL_STATUS_CHECKED}
 		<td class="label" width="20%">{translate key="editor.article.selectExemptionDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
 				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$exemptionOptions selected=1}
 				</select>
-				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmExemption"}')" name="submit" value="{translate key="editor.article.recordExemptionDecision"}"  class="button" />
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmExemption"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 			</form>
 		</td>
-
+<!-- 
 {*******************************************************
  *
- * Record final decision when review is done or if exempted
- * Added by Gay Figueroa
- * Last Update: 5/3/2011
+ * Ask for final decision if status is for expedited review or last decision was RESUBMIT
+ * Added by aglet
+ * Last Update: 6/1/2011
  *
  *******************************************************}
-
-	{ elseif $proposalStatus == PROPOSAL_STATUS_ASSIGNED || $proposalStatus == PROPOSAL_STATUS_EXPEDITED}
+ -->
+	{ elseif $proposalStatus == PROPOSAL_STATUS_EXPEDITED || ($articleMoreRecent && $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
 				<input type="hidden" name="articleId" value="{$submission->getId()}" />
 				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
 				<select name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$editorDecisionOptions selected=1}
 				</select>
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
 			</form>
 		</td>
-{*******************************************************
- *
- * Allow review of recently resubmitted proposal if proposal was returned
- * Added by Gay Figueroa
- * Last Update: 5/8/2011
- *
- *******************************************************}
-	
-	{ elseif $proposalStatus == PROPOSAL_STATUS_RETURNED}
-		{if $articleMoreRecent}
-			<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
-			<td width="80%" class="value">
-				<form method="post" action="{url op="recordDecision"}">
-					<input type="hidden" name="articleId" value="{$submission->getId()}" />
-					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
-					<select name="decision" size="1" class="selectMenu">
-						{html_options_translate options=$initialReviewOptions selected=1}
-					</select>
-					<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.recordInitialReview"}"  class="button" />
-				</form>
-			</td>
-		{else}
-			<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
-			<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
-		{/if}
-
-{*******************************************************
- *
- * If proposal status is reviewed and last decision was RESUBMIT and article was recently updated, submit new final decision
- * Added by Gay Figueroa
- * Last Update: 5/8/2011
- *
- *******************************************************}
-	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT}	
-		{if $articleMoreRecent}
-			<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
-			<td width="80%" class="value">
-				<form method="post" action="{url op="recordDecision"}">
-					<input type="hidden" name="articleId" value="{$submission->getId()}" />
-					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
-					<select name="decision" size="1" class="selectMenu">
-						{html_options_translate options=$editorDecisionOptions selected=1}
-					</select>
-					<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
-				</form>
-			</td>
-		{else}
-			<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
-			<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
-		{/if}		
 	{/if}
 </tr>
+<!--
 {*******************************************************
  *
  * Indicate if this submission is a revision or resubmission
- * Added by Gay Figueroa
+ * Added by aglet
  * Last Update: 5/8/2011
  *
  *******************************************************}
-
-{if $articleMoreRecent && (($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)) }
+ -->
+{if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
 	<tr valign="top">
+	{if $articleMoreRecent}
 		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
-		<td width="80%" class="value">{translate key="editor.article.proposalResubmitted"}  {$articleLastModified|date_format:$dateFormatShort}
-</td>
+		<td width="80%" class="value">({$lastDecisionArray.resubmitCount}){translate key="editor.article.proposalResubmitted"}  {$articleLastModified|date_format:$dateFormatShort}
+		</td>
+	{else}	
+		<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
+		<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
+	{/if}
 	</tr>
 {/if}
+<!-- 
 {************************************************
  *
  * Display last decision only and date decided
- * Edited by Gay Figueroa
+ * Edited by aglet
  * Last Update: 5/8/2011
  *
  ************************************************}
-
+ -->
 <tr valign="top">
-	<td class="label">{translate key="editor.article.decision"}</td>
+	<td class="label">{translate key="editor.article.finalDecision"}</td>
 	<td class="value">
-		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED}
-			{assign var="decision" value=$lastDecisionArray.decision}
-			{if $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_ACCEPT}
-				{translate key="editor.article.decision.accept"}
-			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
-				{translate key="editor.article.decision.resubmit"}
-			{elseif $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_DECLINE}
-				{translate key="editor.article.decision.decline"}
-			{/if}
+		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+			{assign var="decision" value=$submission->getEditorDecisionKey()}
+			{translate key=$decision}
 			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
-			{else}
+		{else}
 				{translate key="common.none"}
-		{/if}
-		{************************************************
-		 *
-		 * Display all decisions and date
-		 * Edited by Gay Figueroa
-		 * Last Update: 5/3/2011
-		 *
-		 foreach from=$submission->getDecisions($round) item=editorDecision key=decisionKey}
-			{if $decisionKey neq 0} | {/if}
-			{assign var="decision" value=$editorDecision.decision}
-			{translate key=$editorDecisionOptions.$decision}&nbsp;&nbsp;{$editorDecision.dateDecided|date_format:$dateFormatShort}
-		{foreachelse}
-			{translate key="common.none"}
-		{/foreach 
-		*************************************************}
+		{/if}		
 	</td>
 </tr>
 
+{if $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+{assign var="localizedReasons" value=$submission->getLocalizedReasonsForExemption()}
+<form method="post" action="{url op="recordReasonsForExemption"}">
+	<input type="hidden" name="articleId" value="{$submission->getId()}" />
+	<input type="hidden" name="decision" value="{$lastDecisionArray.decision}" />	
 
+	<tr valign="top">
+		<td class="label" align="center">{translate key="editor.article.reasonsForExemption"}</td>
+		<td class="value"><!-- {*translate key="editor.article.exemption.instructions"*} --></td>
+	</tr>
+	{foreach from=$reasonsMap item=reasonLocale key=reasonVal}
+		<tr valign="top">
+			<td class="label" align="center">
+				<input type="checkbox" name="exemptionReasons[]" id="reason{$reasonVal}" value={$reasonVal}	 {if $localizedReasons>0}disabled="true"{/if} {if $reasonsForExemption[$reasonVal] == 1}checked="checked"{/if}/>				
+			</td>
+			<td class="value">
+				<label for="reason{$reasonVal}">{translate key=$reasonLocale}</label>
+			</td>
+		</tr>
+	{/foreach}	
+	{if !$localizedReasons}
+	<tr>
+		<td align="center"><input type="submit"  name="submit" value="{translate key="editor.article.record"}"  class="button" /></td>
+	</tr>			
+	{/if}
+</form>
+{/if}
 
 <tr valign="top">
 	<td class="label">{translate key="submission.notifyAuthor"}</td>
 	<td class="value">
 		{url|assign:"notifyAuthorUrl" op="emailEditorDecisionComment" articleId=$submission->getId()}
-
-		{if $decision == SUBMISSION_EDITOR_DECISION_DECLINE}
-			{* The last decision was a decline; notify the user that sending this message will archive the submission. *}
-			{translate|escape:"quotes"|assign:"confirmString" key="editor.submissionReview.emailWillArchive"}
-			{icon name="mail" url=$notifyAuthorUrl onclick="return confirm('$confirmString')"}
-		{else}
-			{icon name="mail" url=$notifyAuthorUrl}
-		{/if}
-
+<!-- 
+		{*******************************
+		 *
+		 * Edited by aglet
+		 * Last Update: 6/5/2011
+		 *
+		 The last decision was a decline; notify the user that sending this message will archive the submission. }
+		{translate|escape:"quotes"|assign:"confirmString" key="editor.submissionReview.emailWillArchive"}
+		{icon name="mail" url=$notifyAuthorUrl onclick="return confirm('$confirmString')" 
+		*
+		*******************************}
+ -->
+		{icon name="mail" url=$notifyAuthorUrl}
+	
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		{translate key="submission.editorAuthorRecord"}
 		{if $submission->getMostRecentEditorDecisionComment()}
@@ -277,11 +239,11 @@
 {if $reviewFile}
 	{assign var="reviewVersionExists" value=1}
 {/if}
-
+<!-- 
 {**********************************************************************
  *
  * Disable resubmit file for peer review
- * Edited by Gay Figueroa
+ * Edited by aglet
  * Last Update: 5/8/2011
  *
 
@@ -309,11 +271,12 @@
 	{/if}
 
 *******************************************************************}
-
+ -->
+ <!-- 
 	{************************************************
 	 *
 	 * Do not allow uploading other version of proposal files
-	 * Edited by Gay Figueroa
+	 * Edited by aglet
 	 * Last Update: 5/3/2011
 	 *
 
@@ -387,6 +350,7 @@
 		</td>
 	</tr>
 	************************************************}
+-->
 </table>
 
 </form>

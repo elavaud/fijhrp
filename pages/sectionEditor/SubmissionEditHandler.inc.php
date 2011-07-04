@@ -182,35 +182,26 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$showPeerReviewOptions = $round == $submission->getCurrentRound() && $submission->getReviewFile() != null ? true : false;
 
-		$editorDecisions = $submission->getDecisions($round);
-
 		/******************************************************
 		 * 
-		 * Set proposal status of submission
-		 * Get last decision and date it was decided
+		 * Get last decision details
 		 * Get reviewAssignments
-		 * Get date when submission was last modified and set flag if article is more recent than decision
-		 * Added by Gay Figueroa
+		 * Indicate if article is more recent
+		 * Get (localized) array mapping of reasons for exemption 
+		 * Added by aglet
 		 * Last Update: /5/8/2011
 		 *
 		*******************************************************/
-		$lastDecisionArray = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
-		$lastDecision = $lastDecisionArray['decision'];
-		$lastDecisionDate = $lastDecisionArray['dateDecided'];
+		$lastDecision = $articleDao->getLastEditorDecision($articleId, $round);
 		$reviewAssignments =& $submission->getReviewAssignments($round);
-		$modifiedDate = $submission->getLastModified();
-		$articleMoreRecent = false;
-
-		if(strtotime($modifiedDate)>strtotime($lastDecisionDate)) {
-			$articleMoreRecent = true;
-		}
-		$submission->setProposalStatus($articleDao->getProposalStatus($articleId, $round));
+		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision['dateDecided']) ? true : false;
+		$reasons = $submission->getProposalReasonsForExemption();
+		$reasonsMap =& $submission->getReasonsForExemptionMap();
 		
-
 		$editAssignments =& $submission->getEditAssignments();
 		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
-		$allowResubmit = $lastDecision == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
-		$allowCopyedit = $lastDecision == SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == null ? true : false;
+		$allowResubmit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
+		$allowCopyedit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == null ? true : false;
 
 		// Prepare an array to store the 'Notify Reviewer' email logs
 		$notifyReviewerLogs = array();
@@ -272,7 +263,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Added initial review options, exemption options 
 		 * Added details of lastDecision
 		 * Added flag if article is more recent than last decision
-		 * Added by Gay Figueroa
+		 * Added reasons for exemption array
+		 * Added by aglet
 		 * Last Update: 5/8/2011
 		 * 
 		*************************************************************/
@@ -280,11 +272,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
-		//pass edit_decision_id of lastDecision; this will also be passed from the forms in editorDecision.tpl to SubmissionEditHandler.recordDecision
-		$templateMgr->assign('lastDecisionArray', $lastDecisionArray);
-
-
-
+		$templateMgr->assign('lastDecisionArray', $lastDecision);
+		$templateMgr->assign('reasonsForExemption', $reasons);
+		$templateMgr->assign_by_ref('reasonsMap', $reasonsMap);
+		
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign_by_ref('reviewerRatingOptions', ReviewAssignment::getReviewerRatingOptions());
@@ -423,7 +414,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	/***************************************************************************
 	 *
 	 * Record editor decision (Added additional editor decision cases)
-	 * Edited by Gay Figueroa
+	 * Edited by aglet
 	 * Last Update: 5/5/2011
 	 *
 	 ***************************************************************************/
@@ -434,13 +425,15 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$submission =& $this->submission;
 
 		$decision = Request::getUserVar('decision');
-
+		$resubmitCount = Request::getUserVar('resubmitCount');
 		//pass lastDecisionId of this article to update existing row in edit_decisions
 		$lastDecisionId = Request::getUserVar('lastDecisionId');
 
+		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) {
+			$resubmitCount = $resubmitCount + 1; 
+		}
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
@@ -448,16 +441,54 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId);
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount);
 				break;
 		}
 
-		//if submitted decision is RESUBMIT, start a new round of review
+		/*
+		 * Confirm if this is still necessary
+		 * Edited by aglet 6/8/2011
+		 */
+		/*if submitted decision is RESUBMIT, start a new round of review
 		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
 			SectionEditorAction::initiateNewReviewRound($submission);
-		}
+		}*/
 
+		/*
+		 * Automatically send email to author when decision is recorded
+		 * Added by aglet 6/8/2011
+		 * TODO: FIX @ SectionEditorAction: does not reflect decision in email
+		 */
+		switch ($decision) {
+			case SUBMISSION_EDITOR_DECISION_ACCEPT:
+			case SUBMISSION_EDITOR_DECISION_DECLINE:
+			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+				SectionEditorAction::emailEditorDecisionComment($submission, 'Send');
+				break;
+		}
 		Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+	
+	/*
+	 * If proposal is exempted, record reasons for exemption
+	 */
+	function recordReasonsForExemption($args, $request) {
+		$decision = Request::getUserVar('decision');
+		if($decision == SUBMISSION_EDITOR_DECISION_EXEMPTED) {
+			$articleId = Request::getUserVar('articleId');			
+			$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+			$submission =& $this->submission;
+			$selectedReasons = Request::getUserVar('exemptionReasons');
+			$reasons = 0;
+			foreach($selectedReasons as $reason) {
+				$reasons = $reasons + (int) $reason;
+			}
+			$submission->setReasonsForExemption($reasons, null);			
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			if($articleDao->insertReasonsForExemption($submission, $reasons)) {
+				Request::redirect(null, null, 'submissionReview', $articleId);
+			}
+		}		
 	}
 
 	//
@@ -570,6 +601,42 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}
 
 	}
+	
+	/**
+	 * Create a new user as an external reviewer.
+	 * Added by aglet
+	 * Last Update: 6/4/2011
+	 */
+	function createExternalReviewer($args, &$request) {
+		$articleId = isset($args[0]) ? (int) $args[0] : 0;
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$submission =& $this->submission;
+
+		import('classes.sectionEditor.form.CreateExternalReviewerForm');
+		$createReviewerForm = new CreateExternalReviewerForm($articleId);
+		$this->setupTemplate(true, $articleId);
+
+		if (isset($args[1]) && $args[1] === 'create') {
+			$createReviewerForm->readInputData();
+			if ($createReviewerForm->validate()) {
+				// Create a user and enroll them as a reviewer.
+				$newUserId = $createReviewerForm->execute();
+				Request::redirect(null, null, 'selectReviewer', array($articleId, $newUserId));
+			} else {
+				$createReviewerForm->display($args, $request);
+			}
+		} else {
+			// Display the "create user" form.
+			if ($createReviewerForm->isLocaleResubmit()) {
+				$createReviewerForm->readInputData();
+			} else {
+				$createReviewerForm->initData();
+			}
+			$createReviewerForm->display($args, $request);
+		}
+
+	}
+	
 
 	/**
 	 * Get a suggested username, making sure it's not

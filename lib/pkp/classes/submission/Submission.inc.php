@@ -1324,8 +1324,11 @@ class Submission extends DataObject {
 				PROPOSAL_STATUS_EXEMPTED => 'submissions.proposal.exempted',
 				PROPOSAL_STATUS_ASSIGNED => 'submissions.proposal.assigned',
 				PROPOSAL_STATUS_EXPEDITED => 'submissions.proposal.expedited',
-				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed'
-			);
+				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed',
+				PROPOSAL_STATUS_DRAFT => 'submissions.proposal.draft',
+				PROPOSAL_STATUS_WITHDRAWN => 'submissions.proposal.withdrawn',
+				PROPOSAL_STATUS_ARCHIVED => 'submissions.proposal.archived'
+				);
 		}
 		return $proposalStatusMap;
 	}
@@ -1402,6 +1405,37 @@ class Submission extends DataObject {
 		return $this->setData('withdrawComments', $withdrawComments, $locale);
 	}
 
+	/**
+	 * (For exempted proposals) Getters and setters for reasons for exemption of proposal
+	 * Added by aglet
+	 * Last Update: 6/21/2011
+	 */
+	
+	/**
+	 * Get localized reasons for exemption
+	 * @return int
+	 */
+	function getLocalizedReasonsForExemption() {
+		return $this->getLocalizedData('reasonsForExemption');
+	}
+	
+	/**
+	 * Get reasons for exemption
+	 * @param locale
+	 * @return int
+	 */
+	function getReasonsForExemption($locale) {
+		return $this->getData('reasonsForExemption', $locale);
+	}
+	
+	/**
+	 * Set reasons for exemption
+	 * @param reasons string
+	 * @param locale
+	 */
+	function setReasonsForExemption($reasons, $locale) {
+		return $this->setData('reasonsForExemption', $reasons, $locale);
+	}
 }
 
 ?>

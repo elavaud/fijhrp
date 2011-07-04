@@ -1,4 +1,9 @@
 config.inc.php
+cache/*
 cache/t_cache/*
 cache/t_compile/*
 cache/_db/*
+.buildpath
+.project
+.settings/
+*.orig

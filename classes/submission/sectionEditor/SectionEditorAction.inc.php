@@ -85,10 +85,10 @@ class SectionEditorAction extends Action {
 	 * Edited by Gay Figueroa
 	 * Last Update: 5/4/2011
 	 */
-	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId) {
+	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId, $resubmitCount) {
 		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
 		if (empty($editAssignments)) return;
-
+	
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
 
@@ -98,7 +98,8 @@ class SectionEditorAction extends Action {
 				'editDecisionId' => null,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => date(Core::getCurrentDate())
+				'dateDecided' => date(Core::getCurrentDate()),
+				'resubmitCount' => $resubmitCount
 			);
 		}
 		else {
@@ -106,7 +107,8 @@ class SectionEditorAction extends Action {
 				'editDecisionId' => $lastDecisionId,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => date(Core::getCurrentDate())
+				'dateDecided' => date(Core::getCurrentDate()),
+				'resubmitCount' => $resubmitCount
 			);
 		}
 
@@ -608,11 +610,20 @@ class SectionEditorAction extends Action {
 			$today = getDate();
 			$todayTimestamp = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
 			if ($dueDate != null) {
-				$dueDateParts = explode('-', $dueDate);
+
+				/*********************************************************
+				 *
+				 * Change format according to jquery date format
+				 * Edited by aglet
+				 * Last Update: 6/3/2011
+				 *
+				 *********************************************************/
+				$dueDateParts = explode('/', $dueDate);
 
 				// Ensure that the specified due date is today or after today's date.
 				if ($todayTimestamp <= strtotime($dueDate)) {
-					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[1], $dueDateParts[2], $dueDateParts[0])));
+					//$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[1], $dueDateParts[2], $dueDateParts[0])));
+					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[0], $dueDateParts[1], $dueDateParts[2])));
 				} else {
 					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $todayTimestamp));
 				}
@@ -1966,10 +1977,10 @@ class SectionEditorAction extends Action {
 
 		$user =& Request::getUser();
 		import('classes.mail.ArticleMailTemplate');
-
+		//SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => 'EDITOR_DECISION_REVISIONS',
+			
 		$decisionTemplateMap = array(
 			SUBMISSION_EDITOR_DECISION_ACCEPT => 'EDITOR_DECISION_ACCEPT',
-			SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => 'EDITOR_DECISION_REVISIONS',
 			SUBMISSION_EDITOR_DECISION_RESUBMIT => 'EDITOR_DECISION_RESUBMIT',
 			SUBMISSION_EDITOR_DECISION_DECLINE => 'EDITOR_DECISION_DECLINE'
 		);
@@ -1978,12 +1989,12 @@ class SectionEditorAction extends Action {
 		$decisions = array_pop($decisions); // Rounds
 		$decision = array_pop($decisions);
 		$decisionConst = $decision?$decision['decision']:null;
-
+		
 		$email = new ArticleMailTemplate(
 			$sectionEditorSubmission,
 			isset($decisionTemplateMap[$decisionConst])?$decisionTemplateMap[$decisionConst]:null
-		);
-
+		);		
+		
 		$copyeditor = $sectionEditorSubmission->getUserBySignoffType('SIGNOFF_COPYEDITING_INITIAL');
 
 		if ($send && !$email->hasErrors()) {
@@ -1993,9 +2004,9 @@ class SectionEditorAction extends Action {
 			if ($decisionConst == SUBMISSION_EDITOR_DECISION_DECLINE) {
 				// If the most recent decision was a decline,
 				// sending this email archives the submission.
-				$sectionEditorSubmission->setStatus(STATUS_ARCHIVED);
-				$sectionEditorSubmission->stampStatusModified();
-				$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
+				//$sectionEditorSubmission->setStatus(STATUS_ARCHIVED);
+				//$sectionEditorSubmission->stampStatusModified();
+				//$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
 			}
 
 			$articleComment = new ArticleComment();

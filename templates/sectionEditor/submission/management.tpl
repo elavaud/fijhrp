@@ -101,6 +101,54 @@
 		<td>{$publishedArticle->getViews()}</td>
 	</tr>
 	{/if}
+	<tr>
+		<td class="label">WHO ID</td>
+		<td class="value">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Objectives</td>
+		<td class="value">{$submission->getLocalizedObjectives()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Keywords</td>
+		<td class="value">{$submission->getLocalizedKeywords()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Start Date</td>
+		<td class="value">{$submission->getLocalizedStartDate()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">End Date</td>
+		<td class="value">{$submission->getLocalizedEndDate()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Funds Required</td>
+		<td class="value">{$submission->getLocalizedFundsRequired()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Country</td>
+		<td class="value">{$submission->getLocalizedProposalCountry()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Technical Unit</td>
+		<td class="value">{$submission->getLocalizedTechnicalUnit()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Proposal Type</td>
+		<td class="value">{$submission->getLocalizedProposalType()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Conflict Of Interest</td>
+		<td class="value">{$submission->getLocalizedConflictOfInterest()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Reviewed by Other ERC</td>
+		<td class="value">{$submission->getLocalizedReviewedByOtherErc()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Other Erc Decision</td>
+		<td class="value">{$submission->getLocalizedOtherErcDecision()|strip_unsafe_html}</td>
+	</tr>
 </table>
 </div>
 

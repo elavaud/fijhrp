@@ -266,6 +266,24 @@
 		{/foreach}</td>
 	</tr>
 	{/if}
+	{*******************
+		WPRO-specific user settings
+		Added by aglet 6/20/2011
+	*******************}
+	<tr valign="top">
+		<td class="label">{fieldLabel name="healthAffiliationLabel" key="user.profile.form.healthAffiliation"}</td>
+		<td class="value">
+			<input type="radio" name="healthAffiliation[{$formLocale|escape}]" id="healthAffiliation" value="Yes" {if $healthAffiliation[$formLocale] == "Yes"}checked="checked"{/if}/> Yes
+			<input type="radio" name="healthAffiliation[{$formLocale|escape}]" id="healthAffiliation" value="No" {if $healthAffiliation[$formLocale] == "No"}checked="checked"{/if}/> No
+		</td>
+	</tr>
+	<tr valign="top">
+		<td class="label">{fieldLabel name="wproAffiliationLabel" key="user.profile.form.wproAffiliation"}</td>
+		<td class="value">
+			<input type="radio" name="wproAffiliation[{$formLocale|escape}]" id="wproAffiliation" value="Yes" {if $wproAffiliation[$formLocale] == "Yes"}checked="checked"{/if}/> Yes
+			<input type="radio" name="wproAffiliation[{$formLocale|escape}]" id="wproAffiliation" value="No" {if $wproAffiliation[$formLocale] == "No"}checked="checked"{/if}/> No
+		</td>
+	</tr>
 </table>
 
 <p><input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> {if not $userId}<input type="submit" name="createAnother" value="{translate key="manager.people.saveAndCreateAnotherUser"}" class="button" /> {/if}<input type="button" value="{translate key="common.cancel"}" class="button" onclick="{if $source == ''}history.go(-1);{else}document.location='{$source|escape:"jsparam"}';{/if}" /></p>

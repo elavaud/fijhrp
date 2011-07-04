@@ -122,7 +122,7 @@ class SectionEditorSubmission extends Article {
 	 * indicate a queued submission.
 	 * NOTE that this code is similar to getSubmissionStatus in
 	 * the AuthorSubmission class and changes should be made there as well.
-	 */
+	 
 	function getSubmissionStatus() {
 		$status = $this->getStatus();
 		if ($status == STATUS_ARCHIVED || $status == STATUS_PUBLISHED ||
@@ -145,6 +145,48 @@ class SectionEditorSubmission extends Article {
 			}
 		}
 		return STATUS_QUEUED_REVIEW;
+	}
+	*/
+	/**
+	 * Get the submission status. Returns one of the defined constants
+         * PROPOSAL_STATUS_DRAFT, PROPOSAL_STATUS_WITHDRAWN, PROPOSAL_STATUS_SUBMITTED,
+         * PROPOSAL_STATUS_RETURNED, PROPOSAL_STATUS_REVIEWED, PROPOSAL_STATUS_EXEMPTED
+         * Copied from AuthorSubmission::getSubmissionStatus
+	 */
+	function getSubmissionStatus() {
+
+                /**
+                 * Added by: AIM
+                 * Last Updated: June 1, 2011
+                 * Return status of proposal
+                 **/
+                if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
+
+                //Withdrawn status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+
+                //Archived status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
+
+                $status = $this->getProposalStatus();
+                /*if($status == PROPOSAL_STATUS_RETURNED) {
+                    $articleDao = DAORegistry::getDAO('ArticleDAO');
+                    $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+
+                    if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
+                    else return PROPOSAL_STATUS_RETURNED;
+                }*/
+
+                //For all other statuses
+                return $status;
+	}
+	
+	/*
+	 * Override getProposalStatusKey in Submission.inc.php
+	 */
+	function getProposalStatusKey() {
+		$proposalStatusMap =& $this->getProposalStatusMap();
+		return $proposalStatusMap[$this->getSubmissionStatus()];
 	}
 
 	/**
@@ -507,7 +549,7 @@ class SectionEditorSubmission extends Article {
 		);
 		return $exemptionOptions;
 	}
-
+	
 	/**
 	 * Get the CSS class for highlighting this submission in a list, based on status.
 	 * @return string

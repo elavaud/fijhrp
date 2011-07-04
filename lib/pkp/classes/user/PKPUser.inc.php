@@ -593,6 +593,64 @@ class PKPUser extends DataObject {
 		$signature .= "\n" . $this->getEmail();
 		return $signature;
 	}
+	
+	
+	/*
+	 * Getters and setters for additional user settings: health and wpro affiliation
+	 * Added by aglet
+	 * Last Update: 6/20/2011
+	 */
+	
+	/**
+	 * Get localized health affiliation
+	 */
+	function getLocalizedHealthAffiliation() {
+		return $this->getLocalizedData('healthAffiliation');
+	}
+
+	/**
+	 * Get user health affiliation.
+	 * @param $locale string
+	 * @return string
+	 */
+	function getHealthAffiliation($locale) {
+		return $this->getData('healthAffiliation', $locale);
+	}
+
+	/**
+	 * Set user health affiliation.
+	 * @param $healthAffiliation string
+	 * @param $locale string
+	 */
+	function setHealthAffiliation($healthAffiliation, $locale) {
+		return $this->setData('healthAffiliation', $healthAffiliation, $locale);
+	}
+	
+	/**
+	 * Get localized wpro affiliation
+	 */
+	function getLocalizedWproAffiliation() {
+		return $this->getLocalizedData('wproAffiliation');
+	}
+
+	/**
+	 * Get user wpro affiliation.
+	 * @param $locale string
+	 * @return string
+	 */
+	function getWproAffiliation($locale) {
+		return $this->getData('wproAffiliation', $locale);
+	}
+
+	/**
+	 * Set user wpro affiliation.
+	 * @param $wproAffiliation string
+	 * @param $locale string
+	 */
+	function setWproAffiliation($wproAffiliation, $locale) {
+		return $this->setData('wproAffiliation', $wproAffiliation, $locale);
+	}
+	
 }
 
 ?>

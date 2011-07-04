@@ -193,24 +193,7 @@ class AuthorSubmission extends Article {
 
                 //For all other statuses
                 return $status;
-	}
-
-	/**
-	 * Get the most recent decision.
-	 * @return int 
-	 */
-	function getMostRecentDecision() {
-            /**
-             *  Edited by: AIM
-             *  Last Updated: May 31, 2011
-             **/
-            $articleId = $this->getArticleId();
-
-            $articleDao = DAORegistry::getDAO('ArticleDAO');
-            $decision = $articleDao->getLastEditorDecision($articleId);
-            
-            return $decision['decision'];
-	}
+	}	
 
         function isSubmissionDue() {
             

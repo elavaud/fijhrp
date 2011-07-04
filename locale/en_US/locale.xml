@@ -580,6 +580,9 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="sectionEditor.review.enrollReviewer">Enroll an Existing User As Reviewer</message>
 	<message key="sectionEditor.review.createReviewer">Create New Reviewer</message>
 
+	
+	<message key="sectionEditor.review.createExternalReviewer">Create External Reviewer</message>
+
 	<!-- Layout Editor -->
 	<message key="layoutEditor.activeEditorialAssignments">Active Editorial Assignments</message>
 	<message key="layoutEditor.completedEditorialAssignments">Completed Editorial Assignments</message>
@@ -616,11 +619,21 @@ Active is how many reviews are currently being considered or underway.]]></messa
         <message key="reviewer.article.schedule.response">Your Response</message>
         <message key="reviewer.article.schedule.submitted">Review Submitted</message>
         <message key="reviewer.article.schedule.due">Review Due</message>
-	<message key="reviewer.article.decision.accept">Accept Submission</message>
+
+	<!--****************************************************************************
+		Reviewer recommendation should match editor decisions
+		Edited by aglet
+		Last Update: 6/3/2011
+	    **************************************************************************** -->
+
+	<message key="reviewer.article.decision.accept">Approved</message>
+	<message key="reviewer.article.decision.resubmit">Revise and Resubmit</message>
+	<message key="reviewer.article.decision.decline">Not Approved</message>
+
+
 	<message key="reviewer.article.decision.pendingRevisions">Revisions Required</message>
 	<message key="reviewer.article.decision.resubmitHere">Resubmit for Review</message>
         <message key="reviewer.article.decision.resubmitElsewhere">Resubmit Elsewhere</message>
-	<message key="reviewer.article.decision.decline">Decline Submission</message>
 	<message key="reviewer.article.decision.seeComments">See Comments</message>
 	<message key="reviewer.article.schedule">Schedule</message>
         <message key="reviewer.article.submissionToBeReviewed">Submission To Be Reviewed</message>

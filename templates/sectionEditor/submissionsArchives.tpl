@@ -9,54 +9,48 @@
  * $Id$
  *}
 <div id="submissions">
-<table width="100%" class="listing">
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-	<tr class="heading" valign="bottom">
-		<td width="5%">{sort_search key="common.id" sort="id"}</td>
-		<td width="15%"><span class="disabled"></span><br />{sort_search key="submissions.submitted" sort="submitDate"}</td>
-		<td width="5%">{sort_search key="submissions.sec" sort="section"}</td>
-		<td width="25%">{sort_search key="article.authors" sort="authors"}</td>
-		<td width="30%">{sort_search key="article.title" sort="title"}</td>
-		<td width="20%" align="right">{sort_search key="common.status" sort="status"}</td>
+<table class="listing" width="100%">
+	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
+	<tr valign="bottom" class="heading">
+		<td width="5%">WHO Proposal ID</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
+		<td width="23%">{sort_heading key="article.authors" sort="authors"}</td>
+		<td width="32%">{sort_heading key="article.title" sort="title"}</td>
+		{if $statViews}<td width="5%">{sort_heading key="submission.views" sort="views"}</td>{/if}
+		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
-{iterate from=submissions item=submission}
+{foreach from=$submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
+        {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
-		<td>{$submission->getArticleId()}</td>
-		<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
+		<td>{$whoId|escape}</td>
+		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 		<td>{$submission->getSectionAbbrev()|escape}</td>
 		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
 		<td><a href="{url op="submissionEditing" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
 		<td align="right">
-			{assign var="status" value=$submission->getStatus()}
-			{if $status == STATUS_ARCHIVED}
-				{translate key="submissions.archived"}
-			{elseif $status == STATUS_PUBLISHED}
-				{print_issue_id articleId="$articleId"}
-			{elseif $status == STATUS_DECLINED}
-				{translate key="submissions.declined"}
+			{assign var="status" value=$submission->getSubmissionStatus()}
+			{if $status == PROPOSAL_STATUS_WITHDRAWN}
+				{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
+				{translate key=$proposalStatusKey}
+			{elseif $status == PROPOSAL_STATUS_ARCHIVED}
+				{assign var="editorDecisionKey" value=$submission->getEditorDecisionKey()}
+				{translate key=$editorDecisionKey}
 			{/if}
 		</td>
 	</tr>
 	<tr>
-		<td colspan="6" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="6" class="separator">&nbsp;</td>
 	</tr>
-{/iterate}
-{if $submissions->wasEmpty()}
+{foreachelse}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
-	<tr>
-		<td colspan="6" class="endseparator">&nbsp;</td>
-	</tr>
-{else}
-	<tr>
-		<td colspan="3" align="left">{page_info iterator=$submissions}</td>
-		<td colspan="3" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth dateSearchField=$dateSearchField section=$section sort=$sort sortDirection=$sortDirection}</td>
-	</tr>
-{/if}
+{/foreach}
+		
 </table>
 </div>
 
