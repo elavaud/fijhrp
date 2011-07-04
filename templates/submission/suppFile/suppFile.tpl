@@ -17,6 +17,8 @@
         *}
         {if $type == "Progress Report"}
             {assign var="pageTitle" value="author.submit.addProgressReport"}
+        {elseif $type == "Completion Report"}
+            {assign var="pageTitle" value="author.submit.addCompletionReport"}
         {else}
             {assign var="pageTitle" value="author.submit.addSupplementaryFile"}
         {/if}
@@ -28,6 +30,8 @@
 
 {if $type == "Progress Report"}
     {assign var="pageCrumbTitle" value="submission.progressReports"}
+{elseif $type == "Completion Report"}
+    {assign var="pageCrumbTitle" value="submission.completionReports"}
 {else}
     {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
 {/if}
@@ -130,9 +134,10 @@
 </table>
 </div>
 *}
+<div class="separator"></div>
 -->
 
-<div class="separator"></div>
+
 <div id="supplementaryFileUpload">
 <!--
 <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
@@ -140,6 +145,8 @@
 
 {if $type == "Progress Report"}
 <h3>{translate key="submission.progressReports"}</h3>
+{elseif $type == "Completion Report"}
+<h3>{translate key="submission.completionReports"}</h3>
 {else}
     {$type|escape}
     <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>

@@ -436,6 +436,7 @@ class DAO {
 					// - $isTranslated: true for translated data, false data shared between locales
 					// - $isMetadata: true for metadata fields, false for normal settings
 					// - $fieldName: the field in the data object to be updated
+                                        //echo $fieldName. ', ' . $dataObject->hasData($fieldName) . ', ' .  $dataObject->getData($fieldName) . '<br/>';
 					if ($dataObject->hasData($fieldName)) {
 						if ($isTranslated) {
 							// Translated data comes in as an array

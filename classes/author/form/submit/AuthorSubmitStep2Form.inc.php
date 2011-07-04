@@ -60,6 +60,16 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 		if ($this->article->getSubmissionFileId() != null) {
 			$templateMgr->assign_by_ref('submissionFile', $articleFileDao->getArticleFile($this->article->getSubmissionFileId()));
 		}
+
+                //Get comments, if any, for this article
+                //Updated by: AIM
+                //Last updated: June 21, 2011
+                $articleCommentsDao =& DAORegistry::getDAO('ArticleCommentDAO');
+                $articleComments = $articleCommentsDao->getArticleComments($this->articleId);
+		if (!empty($articleComments)) {
+			$templateMgr->assign_by_ref('articleComments', $articleComments);
+		}
+
 		parent::display();
 	}
 

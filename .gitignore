@@ -1,4 +1,5 @@
 config.inc.php
+config.inc.php.working
 cache/*
 cache/t_cache/*
 cache/t_compile/*

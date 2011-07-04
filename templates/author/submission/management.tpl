@@ -31,7 +31,7 @@
 	</tr>
 	<tr valign="top">
 		<td class="label">{translate key="article.suppFilesAbbrev"}</td>
-		<td width="30%" class="value">
+		<td width="80%" class="value">
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}
                             <!-- Do not allow edit of supp files, Edit by AIM, June 6, 2011
                             {*
@@ -43,14 +43,16 @@
 				{translate key="common.none"}
 			{/foreach}
 		</td>
+                <!-- {*
 		<td width="50%" class="value">
-			{* {if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED} *}
                         {if $submission->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED}
 				<a href="{url op="addSuppFile" path=$submission->getArticleId()}" class="action">{translate key="submission.addSuppFile"}</a>
 			{else}
 				&nbsp;
 			{/if}
 		</td>
+                *}
+                -->
 	</tr>
 	<tr>
 		<td class="label">{translate key="submission.submitter"}</td>
