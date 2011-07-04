@@ -136,6 +136,8 @@
 	<message key="editor.article.reviewersSeeAuthorsVersion">Reviewers to see author version</message>
 	<message key="editor.article.designateDueDate">Designate a Due Date</message>
 	<message key="editor.article.designateDueDateDescription">Enter the date or number of weeks for the new due date.</message>
+	<message key="editor.article.designateMeetingDate">Designate a Meeting Date and Time </message>
+	<message key="editor.article.designateMeetingDateDescription">Pick a date and time for the meeting.</message>
 	<message key="editor.article.todaysDate">Today's Date</message>
 	<message key="editor.article.requestedByDate">Requested By Date</message>
 	<message key="editor.article.dueDateFormat">Format: YYYY-MM-DD</message>
@@ -239,4 +241,11 @@
 	<message key="editor.article.removeCoverPage">Remove cover image?</message>
 	<message key="editor.article.remove">Remove</message>
 	<message key="editor.issues.invalidAccessDate">Access date is not valid.</message>
+	
+	<!-- *********************************************
+	 * Additional key for review due date
+	 * Added by ayveemallare
+	 * Last Update: 6/29/2011
+	********************************************** -->
+	<message key="editor.article.meetingDate">Meeting Date and Time</message>
 </locale>

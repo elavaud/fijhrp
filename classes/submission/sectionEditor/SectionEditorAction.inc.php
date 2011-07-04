@@ -599,7 +599,7 @@ class SectionEditorAction extends Action {
 	 * @param $numWeeks int
 	 * @param $logEntry boolean
 	 */
-	function setDueDate($articleId, $reviewId, $dueDate = null, $numWeeks = null, $logEntry = false) {
+	function setDueDate($articleId, $reviewId, $dueDate = null, $numWeeks = null, $meetingDate = null, $logEntry = false) {
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$user =& Request::getUser();
@@ -608,11 +608,10 @@ class SectionEditorAction extends Action {
 		$reviewer =& $userDao->getUser($reviewAssignment->getReviewerId());
 		if (!isset($reviewer)) return false;
 
-		if ($reviewAssignment->getSubmissionId() == $articleId && !HookRegistry::call('SectionEditorAction::setDueDate', array(&$reviewAssignment, &$reviewer, &$dueDate, &$numWeeks))) {
+		if ($reviewAssignment->getSubmissionId() == $articleId && !HookRegistry::call('SectionEditorAction::setDueDate', array(&$reviewAssignment, &$reviewer, &$dueDate, &$numWeeks, &$meetingDate))) {
 			$today = getDate();
 			$todayTimestamp = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
 			if ($dueDate != null) {
-
 				/*********************************************************
 				 *
 				 * Change format according to jquery date format
@@ -620,23 +619,44 @@ class SectionEditorAction extends Action {
 				 * Last Update: 6/3/2011
 				 *
 				 *********************************************************/
-				$dueDateParts = explode('/', $dueDate);
+				$dueDateParts = explode('-', $dueDate);
 
 				// Ensure that the specified due date is today or after today's date.
 				if ($todayTimestamp <= strtotime($dueDate)) {
-					//$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[1], $dueDateParts[2], $dueDateParts[0])));
-					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', mktime(0, 0, 0, $dueDateParts[0], $dueDateParts[1], $dueDateParts[2])));
+					$reviewAssignment->setDateDue(mktime(0, 0, 0, $dueDateParts[1], $dueDateParts[2], $dueDateParts[0]));
 				} else {
 					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $todayTimestamp));
 				}
 			} else {
 				// Add the equivilant of $numWeeks weeks, measured in seconds, to $todaysTimestamp.
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
-
-				$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $newDueDateTimestamp));
+				$reviewAssignment->setDateDue($newDueDateTimestamp);
 			}
-
+			/*************************************************************
+			 * Change format for jquery date
+			 * Edited by ayveemallare
+			 * Last Update: 6/29/2011
+			 * ***********************************************************/
+				
+			if ($meetingDate != null) {
+				$meetingDateParts = explode('-', $meetingDate);
+				$tmp = explode(' ', $meetingDateParts[2]);
+				$meetingTime = $tmp[1];
+				$meetingTimeMarker = $tmp[2];
+				$meetingTimeParts = explode(':', $meetingTime);
+				
+				if(strcasecmp($meetingTimeMarker, 'pm'))
+					$hour = intval($meetingTimeParts[0]) + 12;
+				else 
+					$hour = intval($meetingTimeParts[0]);
+					 	
+				$reviewAssignment->setDateOfMeeting(mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]));
+			}
+			
+			/**************************************************************/
+			
 			$reviewAssignment->stampModified();
+			
 			$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
 
 			if ($logEntry) {

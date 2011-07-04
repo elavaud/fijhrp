@@ -101,6 +101,25 @@ class SubmissionReviewHandler extends ReviewerHandler {
 			Request::redirect(null, null, 'submission', $reviewId);
 		}
 	}
+	
+	/**
+	 *  Response to Meeting Scheduler
+	 */
+	
+	function reviewMeetingSchedule(){
+		$reviewId = Request::getUserVar('reviewId');
+		$this->validate($reviewId);
+		$reviewerSubmission =& $this->submission;
+		
+		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
+		
+		$reviewerSubmission->setIsAttending(Request::getUserVar('isAttending'));
+		$reviewerSubmission->setRemarks(Request::getUserVar('remarks'));				
+		$reviewerSubmissionDao->updateReviewerSubmission($reviewerSubmission);
+	
+		Request::redirect(null, 'reviewer', 'submission', $reviewId);
+		
+	}
 
 	/**
 	 * Save the competing interests statement, if allowed.
