@@ -193,7 +193,7 @@ class MinutesHandler extends Handler {
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		
 		$meetingAttendance = array();
-		$reviewers =& $userDao->getUsersWithReviewerRole();
+		$reviewers =& $userDao->getUsersWithReviewerRole($journalId);
 		import('lib.pkp.classes.who.MeetingAttendance');
 		foreach($reviewers as $reviewer) {		
 			$temp = new MeetingAttendance();			
