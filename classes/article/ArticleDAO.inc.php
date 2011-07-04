@@ -1,4 +1,4 @@
-<?php
+/<?php
 
 /**
  * @file classes/article/ArticleDAO.inc.php
