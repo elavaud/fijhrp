@@ -91,7 +91,7 @@ class SectionEditorAction extends Action {
 
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
-
+		$journal =& Request::getJournal();		
 		$startDate = (($dateDecided == null) ? date(Core::getCurrentDate()) : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;  
 		$editorDecision = array(
@@ -107,7 +107,7 @@ class SectionEditorAction extends Action {
 		 */
 		if($decision == SUBMISSION_EDITOR_DECISION_ASSIGNED) {
 			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole();
+			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
 			foreach($reviewers as $reviewer) {
 				$reviewerId = $reviewer->getId();
 				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
