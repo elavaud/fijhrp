@@ -156,13 +156,16 @@ class AuthorSubmission extends Article {
 
                 /**
                  * Added by: AIM
-                 * Last Updated: June 1, 2011
+                 * Last Updated: June 22, 2011
                  * Return status of proposal
                  **/
                 if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
 
                 //Withdrawn status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+
+                //Withdrawn status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
 
                 //Archived status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
@@ -174,6 +177,18 @@ class AuthorSubmission extends Article {
 
                     if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
                     else return PROPOSAL_STATUS_RETURNED;
+                }
+
+                if ($status==PROPOSAL_STATUS_REVIEWED) {
+                    $decision = $this->getMostRecentDecision();
+                    if ($decision==SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision==SUBMISSION_EDITOR_DECISION_ACCEPT) {
+
+                        $articleDao = DAORegistry::getDAO('ArticleDAO');
+                        $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+
+                        if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
+                        else return PROPOSAL_STATUS_REVIEWED;
+                    }
                 }
 
                 //For all other statuses
@@ -196,6 +211,14 @@ class AuthorSubmission extends Article {
             
             return $decision['decision'];
 	}
+
+        function isSubmissionDue() {
+            
+            $startdate = strtotime($this->getStartDate($this->getLocale()));
+            $afteroneyear = $newdate = strtotime ('+1 year', $startdate) ;
+            $today = time();
+            return ($today >= $afteroneyear);
+        }
 
 	//
 	// Files

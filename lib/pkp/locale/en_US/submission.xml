@@ -365,7 +365,7 @@
 	 * Added by Gay Figueroa
 	 * Last Update: 5/3/2011
 	****************************************** -->
-	<message key="submissions.proposal.submitted">New</message>
+	<message key="submissions.proposal.submitted">Submitted</message>
 	<message key="submissions.proposal.returned">Incomplete</message>
 	<message key="submissions.proposal.checked">Complete</message>
 	<message key="submissions.proposal.exempted">Exempted From Review</message>
@@ -378,6 +378,7 @@
         <message key="submissions.proposal.withdrawn">Withdrawn</message>
         <message key="submissions.proposal.draft">Draft</message>
         <message key="submissions.proposal.approved">Approved</message>
+        <message key="submissions.proposal.completed">Completed</message>
 
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Submit</message>
@@ -391,6 +392,8 @@
 	<message key="submission.supplementaryFiles">Supplementary Files</message>
 
         <message key="submission.progressReports">Progress Reports</message>
+        <message key="submission.completionReports">Completion Reports</message>
+        <message key="submission.withdrawReports">Reason for Withdrawal</message>
 
 	<message key="submission.supportingAgencies">Supporting Agencies</message>
 	<message key="submission.currentAgencies">Current Agencies</message>

@@ -33,26 +33,38 @@ class SubmitHandler extends AuthorHandler {
          *  Resubmit a proposal
          ************************************/
         function resubmit($args, $request) {
+            $articleDAO = DAORegistry::getDAO('ArticleDAO');
             $articleId = isset($args[0]) ? (int) $args[0] : 0;
 
-            //If article is not incomplete, do not allow re-submit
-            $articleDAO = DAORegistry::getDAO('ArticleDAO');
-            if($articleDAO->getProposalStatus($articleId) != PROPOSAL_STATUS_RETURNED) {
-                Request::redirect(null, 'author', '');
-            }
+            $lastDecision = $articleDAO->getLastEditorDecision($articleId);
 
-            $step = 2;
-            $articleDAO->changeArticleProgress($articleId, $step);
-
-            //Delete previous version in submission/review folder (Step 5 copies submission/original into submission/review)
             $authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
             $authorSubmission = $authorSubmissionDao->getAuthorSubmission($articleId);
-            $submissionFile =& $authorSubmission->getSubmissionFile();
-            $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
-            $articleFileDao->deleteArticleFileBySourceFileId($submissionFile->getFileId());
 
+            if($articleDAO->getProposalStatus($articleId) == PROPOSAL_STATUS_RETURNED ||
+                    ($lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && !($articleDAO->isProposalResubmitted($articleId))) ||
+                    ($lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT && $authorSubmission->isSubmissionDue())
+              )
+                    
+            {
+                $step = 2;
+                $articleDAO->changeArticleProgress($articleId, $step);
 
-            Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
+                //Delete previous version in submission/review folder (Step 5 copies submission/original into submission/review)
+                $submissionFile =& $authorSubmission->getSubmissionFile();
+                if(!empty($submissionFile)) {
+                    $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
+                    $articleFileDao->deleteArticleFileBySourceFileId($submissionFile->getFileId());
+                }
+
+                
+                
+                Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
+            }
+            else
+            {
+                Request::redirect(null, 'author', '');
+            }
         }
 
 	/**
@@ -65,7 +77,6 @@ class SubmitHandler extends AuthorHandler {
 		$step = isset($args[0]) ? (int) $args[0] : 0;
 		$articleId = $request->getUserVar('articleId');
                 $journal =& $request->getJournal();
-
 
                 $this->validate($articleId, $step, 'author.submit.authorSubmitLoginMessage');
 		$article =& $this->article;

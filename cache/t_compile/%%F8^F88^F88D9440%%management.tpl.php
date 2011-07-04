@@ -1,7 +1,7 @@
-<?php /* Smarty version 2.6.26, created on 2011-06-15 01:22:11
+<?php /* Smarty version 2.6.26, created on 2011-07-04 11:21:11
          compiled from author/submission/management.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
-smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 61, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 59, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 60, false),array('modifier', 'assign', 'author/submission/management.tpl', 60, false),array('modifier', 'date_format', 'author/submission/management.tpl', 66, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 96, false),)), $this); ?>
+smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/submission/management.tpl', 12, false),array('function', 'url', 'author/submission/management.tpl', 26, false),array('function', 'icon', 'author/submission/management.tpl', 63, false),array('modifier', 'escape', 'author/submission/management.tpl', 16, false),array('modifier', 'strip_unsafe_html', 'author/submission/management.tpl', 20, false),array('modifier', 'to_array', 'author/submission/management.tpl', 26, false),array('modifier', 'concat', 'author/submission/management.tpl', 61, false),array('modifier', 'strip_tags', 'author/submission/management.tpl', 62, false),array('modifier', 'assign', 'author/submission/management.tpl', 62, false),array('modifier', 'date_format', 'author/submission/management.tpl', 68, false),array('modifier', 'nl2br', 'author/submission/management.tpl', 98, false),)), $this); ?>
 <div id="submission">
 <h3><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "article.submission"), $this);?>
 </h3>
@@ -35,7 +35,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 	<tr valign="top">
 		<td class="label"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "article.suppFilesAbbrev"), $this);?>
 </td>
-		<td width="30%" class="value">
+		<td width="80%" class="value">
 			<?php $_from = $this->_tpl_vars['suppFiles']; if (!is_array($_from) && !is_object($_from)) { settype($_from, 'array'); }$this->_foreach['suppFiles'] = array('total' => count($_from), 'iteration' => 0);
 if ($this->_foreach['suppFiles']['total'] > 0):
     foreach ($_from as $this->_tpl_vars['suppFile']):
@@ -52,15 +52,7 @@ if ($this->_foreach['suppFiles']['total'] > 0):
 
 			<?php endif; unset($_from); ?>
 		</td>
-		<td width="50%" class="value">
-			                        <?php if ($this->_tpl_vars['submission']->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED): ?>
-				<a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addSuppFile','path' => $this->_tpl_vars['submission']->getArticleId()), $this);?>
-" class="action"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submission.addSuppFile"), $this);?>
-</a>
-			<?php else: ?>
-				&nbsp;
-			<?php endif; ?>
-		</td>
+                <!--                 -->
 	</tr>
 	<tr>
 		<td class="label"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submission.submitter"), $this);?>

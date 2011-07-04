@@ -25,6 +25,18 @@
 
 <p>{translate key=$howToKeyName supportName=$journalSettings.supportName supportEmail=$journalSettings.supportEmail supportPhone=$journalSettings.supportPhone}</p>
 
+{if $articleComments}
+    <div class="separator"></div>
+    <div id="articleComments">
+        <h3>Article Comments</h3>
+        <li>
+        {foreach from=$articleComments item=comment}
+            <ul>{$comment->getComments()} ({$comment->getAuthorName()}, {$comment->getDatePosted()})</ul>
+        {/foreach}
+        </li>
+    </div>
+{/if}
+
 <div class="separator"></div>
 
 <div id="submissionFile">

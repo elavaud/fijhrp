@@ -27,6 +27,7 @@ define('PROPOSAL_STATUS_EXPEDITED',7);	//ASSIGNED FOR EXPEDITED REVIEW
 define('PROPOSAL_STATUS_DRAFT',8); //Replaces STATUS_INCOMPLETE
 define('PROPOSAL_STATUS_WITHDRAWN',9);  //Special tag, not part of lifecycle
 define('PROPOSAL_STATUS_ARCHIVED',10);  //To archive Not Approved and Exempt From Review
+define('PROPOSAL_STATUS_COMPLETED',11);  
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
@@ -1363,6 +1364,42 @@ class Submission extends DataObject {
 	 */
 	function setWhoId($whoId, $locale) {
 		return $this->setData('whoId', $whoId, $locale);
+	}
+
+        /**
+	 * Get withdraw reason.
+	 * @param $locale
+	 * @return string
+	 */
+	function getWithdrawReason($locale) {
+		return $this->getData('withdrawReason', $locale);
+	}
+
+	/**
+	 * Set withdraw reason.
+	 * @param $whoId string
+	 * @param $locale
+	 */
+	function setWithdrawReason($withdrawReason, $locale) {
+		return $this->setData('withdrawReason', $withdrawReason, $locale);
+	}
+
+        /**
+	 * Get withdraw comments.
+	 * @param $locale
+	 * @return string
+	 */
+	function getWithdrawComments($locale) {
+		return $this->getData('withdrawComments', $locale);
+	}
+
+	/**
+	 * Set withdraw comments.
+	 * @param $whoId string
+	 * @param $locale
+	 */
+	function setWithdrawComments($withdrawComments, $locale) {
+		return $this->setData('withdrawComments', $withdrawComments, $locale);
 	}
 
 }

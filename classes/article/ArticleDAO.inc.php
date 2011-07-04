@@ -56,7 +56,7 @@ class ArticleDAO extends DAO {
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
                         'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
-                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId'
+                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'withdrawReason', 'withdrawComments'
 		);
 	}
 
@@ -828,6 +828,23 @@ class ArticleDAO extends DAO {
         function sendToArchive($articleId) {
             $this->update(
 			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_ARCHIVED, (int) $articleId)
+		);
+
+            $this->flushCache();
+        }
+
+
+        /**
+         *  Added by:  Anne Ivy Mirasol
+         *  Last Updated: June 22, 2011
+         *
+         *  Set status in articles table to PROPOSAL_STATUS_COMPLETED
+         *  @return boolean
+         */
+
+        function setAsCompleted($articleId) {
+            $this->update(
+			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_COMPLETED, (int) $articleId)
 		);
 
             $this->flushCache();
