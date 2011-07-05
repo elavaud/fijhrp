@@ -248,4 +248,12 @@
 	 * Last Update: 6/29/2011
 	********************************************** -->
 	<message key="editor.article.meetingDate">Meeting Date and Time</message>
+	
+	<!-- *********************************************
+	 * Additional keys for meetings
+	 * Added by ayveemallare
+	 * Last Update: 7/5/2011
+	********************************************** -->
+	<message key="editor.meetings">Meetings</message>
+	<message key="editor.meetings.uploadMinutes">Upload Minutes</message>
 </locale>
