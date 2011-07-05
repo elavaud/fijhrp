@@ -216,6 +216,12 @@ switch ($op) {
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;
+	case 'meetings':
+	case 'setMeeting':
+		define('HANDLER_CLASS', 'MeetingsHandler');
+		import('pages.sectionEditor.MeetingsHandler');
+		break;	
+	
 }
 
 ?>
