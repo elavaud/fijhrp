@@ -111,7 +111,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$this->validate($reviewId);
 		$reviewerSubmission =& $this->submission;
 		
-		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
+		$meetingDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
 		
 		$reviewerSubmission->setIsAttending(Request::getUserVar('isAttending'));
 		$reviewerSubmission->setRemarks(Request::getUserVar('remarks'));				

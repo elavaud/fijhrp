@@ -619,6 +619,16 @@ Active is how many reviews are currently being considered or underway.]]></messa
         <message key="reviewer.article.schedule.response">Your Response</message>
         <message key="reviewer.article.schedule.submitted">Review Submitted</message>
         <message key="reviewer.article.schedule.due">Review Due</message>
+   
+   	<!-- *************************************** -->
+   	<!-- Keys added for reviewer submission page -->
+	<!-- Added by: ayveemallare 7/5/2011         -->
+   	<!-- *************************************** -->
+	
+	<message key="reviewer.article.schedule.dateOfMeeting">Proposed Date of Meeting</message>
+	<message key="reviewer.article.schedule.isAttending">Are you going to attend the meeting?</message>
+	<message key="reviewer.article.schedule.remarks">Remarks</message>
+	
 
 	<!--****************************************************************************
 		Reviewer recommendation should match editor decisions

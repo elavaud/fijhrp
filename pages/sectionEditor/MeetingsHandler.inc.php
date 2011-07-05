@@ -91,19 +91,6 @@ class MeetingsHandler extends Handler {
 		$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 	}
 	
-	function createMeeting($args) {
-		$this->validate();
-		$this->setupTemplate();
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();
-		$userId = $user->getId();
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meetingId =& $meetingDao->createMeeting($userId);
-		Request::redirect(null, null, 'setMeeting', $meetingId);
-	}
-	
 	function setMeeting($args, $request) {
 		$this->validate();
 		$this->setupTemplate();
@@ -111,17 +98,8 @@ class MeetingsHandler extends Handler {
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
 		$userId = $user->getId();
-		$meetingId = isset($args[0]) ? $args[0]: 0;
-		
-		if($meetingId == null) {
-			Request::redirect(null, null, 'meetings', null);
-		}
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId); 
 		
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());	
 		$templateMgr->display('sectionEditor/meeting/setMeeting.tpl');

@@ -190,7 +190,6 @@ switch ($op) {
 		break;
 	case 'meetings':
 	case 'setMeeting':
-	case 'createMeeting':
 		define('HANDLER_CLASS', 'MeetingsHandler');
 		import('pages.sectionEditor.MeetingsHandler');
 		break;

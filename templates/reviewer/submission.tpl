@@ -115,7 +115,6 @@ $(document).ready(function() {
 <tr valign="top">
 	<td class="label">{translate key="reviewer.article.schedule.isAttending"} </td>
 	<td class="value">	
-		
 		<input type="radio" name="isAttending" id="acceptMeetingSchedule" value="1" {if  $submission->getIsAttending() == 1 } checked="checked"{/if} > </input> Yes
 		<input type="radio" name="isAttending" id="regretMeetingSchedule" value="0" {if  $submission->getIsAttending() == 0 } checked="checked"{/if} > </input> No
 	</td>
