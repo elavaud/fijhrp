@@ -35,6 +35,7 @@
 <div id="meetings">
 <h3>{translate key="editor.meetings"}</h3>
 <ul class="plain">
+	<li>&#187; <a href="{url op="meetings"}">{translate key="editor.meetings}</a></li>
 	<li>&#187; <a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 </div>
