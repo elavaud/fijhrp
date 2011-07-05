@@ -310,6 +310,8 @@ class PKPApplication {
 			'InterestDAO' => 'lib.pkp.classes.user.InterestDAO',
 			'InterestEntryDAO' => 'lib.pkp.classes.user.InterestEntryDAO',
 			'LanguageDAO' => 'lib.pkp.classes.language.LanguageDAO',
+				'MeetingDAO' => 'lib.pkp.classes.who.MeetingDAO', //Added by aglet 6/30/2011
+				'MeetingAttendanceDAO' => 'lib.pkp.classes.who.MeetingAttendanceDAO', //Added by aglet 6/30/2011
 			'NotificationDAO' => 'lib.pkp.classes.notification.NotificationDAO',
 			'NotificationSettingsDAO' => 'lib.pkp.classes.notification.NotificationSettingsDAO',
 			'ProcessDAO' => 'lib.pkp.classes.process.ProcessDAO',

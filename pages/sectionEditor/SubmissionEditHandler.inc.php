@@ -429,9 +429,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		//pass lastDecisionId of this article to update existing row in edit_decisions
 		$lastDecisionId = Request::getUserVar('lastDecisionId');
 
-		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) {
-			$resubmitCount = $resubmitCount + 1; 
-		}
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
@@ -734,18 +731,19 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	}
 
 	function notifyReviewer($args = array()) {
-		$articleId = Request::getUserVar('articleId');
+		$articleId = isset($args[0]) ? $args[0] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
 
-		$reviewId = Request::getUserVar('reviewId');
-
-		$send = Request::getUserVar('send')?true:false;
-		$this->setupTemplate(true, $articleId, 'review');
-
-		if (SectionEditorAction::notifyReviewer($submission, $reviewId, $send)) {
-			Request::redirect(null, null, 'submissionReview', $articleId);
+		$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
+		//send emails by default
+		$send = true;
+		
+		foreach($reviewAssignments as $reviewAssignment) {
+			SectionEditorAction::notifyReviewer($submission, $reviewAssignment->getId(), $send);
 		}
+		
+		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 
 	function clearReview($args) {

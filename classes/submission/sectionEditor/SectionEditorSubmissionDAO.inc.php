@@ -603,8 +603,8 @@ class SectionEditorSubmissionDAO extends DAO {
 			WHERE	a.journal_id = ?
 				AND e.editor_id = ?
 				AND a.status = ' . STATUS_QUEUED . '
-				AND d2.edit_decision_id IS NULL
-				AND (d.decision IS NULL OR d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
+				AND d2.edit_decision_id IS NULL ',
+				//AND (d.decision IS NULL OR d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')', aglet 6/27/2011
 			array((int) $journalId, (int) $sectionEditorId)
 		);
 		$submissionsCount[0] = $result->Fields('review_count');
@@ -1291,7 +1291,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo,
-			'(a.status <> ' . STATUS_QUEUED . ' AND a.submission_progress = 0)',
+			'(a.status <> ' . STATUS_QUEUED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		while (!$result->EOF) {

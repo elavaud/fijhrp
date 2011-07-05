@@ -16,11 +16,19 @@
 
 <ul class="menu">
 	<li{if ($pageToDisplay == "submissionsInReview")} class="current"{/if}><a href="{url path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
+	<li{if ($pageToDisplay == "minutes")} class="current"{/if}><a href="{url op="minutes"}">Upload Minutes</a></li>
+	<!--{** 
 	<li{if ($pageToDisplay == "submissionsInEditing")} class="current"{/if}><a href="{url path="submissionsInEditing"}">{translate key="common.queue.short.submissionsInEditing}</a></li>
+	 **}-->
 	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 
-{include file="sectionEditor/$pageToDisplay.tpl"}
+{if $pageToDisplay == "minutes"}
+	{include file="sectionEditor/minutes/$pageToDisplay.tpl"}	
+{else}
+	{include file="sectionEditor/$pageToDisplay.tpl"}
+{/if}
+
 
 {if ($pageToDisplay == "submissionsInReview")}
 <br />
@@ -32,9 +40,8 @@
 *}
 {/if}
 
-<div class="separator"></div>
 
-<a href={url op="minutes" path="1"}>Upload minutes of meeting</a>
+
 
 {include file="common/footer.tpl"}
 

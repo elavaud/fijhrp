@@ -169,6 +169,20 @@ class SectionEditorSubmission extends Article {
                 if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
 
                 $status = $this->getProposalStatus();
+                $articleDao = DAORegistry::getDAO('ArticleDAO');
+                $decision = $articleDao->getLastEditorDecision($this->getId());
+                if($status == PROPOSAL_STATUS_REVIEWED && $decision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT) {
+                	$dateDecidedStr = explode("-", substr($decision['dateDecided'], 0, 10));
+					if(checkdate($dateDecidedStr[1], $dateDecidedStr[2], $dateDecidedStr[0]+1)) {		
+						$due = mktime(0, 0, 0, $dateDecidedStr[1], $dateDecidedStr[2], $dateDecidedStr[0]+1);
+						$today = getDate();
+						$today = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
+						if($today >= $due) {
+							return PROPOSAL_STATUS_EXPIRED;
+						}
+					}							
+                }
+                
                 /*if($status == PROPOSAL_STATUS_RETURNED) {
                     $articleDao = DAORegistry::getDAO('ArticleDAO');
                     $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());

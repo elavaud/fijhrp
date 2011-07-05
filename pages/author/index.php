@@ -39,12 +39,16 @@ switch ($op) {
 	case 'deleteSubmission':
         case 'withdrawSubmission':   //Added by AIM, May 25, 2011
         case 'sendToArchive':       //Added by AIM, June 15, 2011
+        case 'setAsCompleted':       //Added by AIM, June 21, 2011
+        case 'setAsWithdrawn':      //Added by AIM, June 21, 2011
 	case 'submission':
 	case 'editSuppFile':
 	case 'setSuppFileVisibility':
 	case 'saveSuppFile':
+        case 'saveWithdrawal':    //Added by AIM, July 3, 2011
 	case 'addSuppFile':
         case 'addProgressReport':   //Added by AIM, June 15, 2011
+        case 'addCompletionReport': //Added by AIM, June 21, 2011
 	case 'submissionReview':
 	case 'submissionEditing':
 	case 'uploadRevisedVersion':

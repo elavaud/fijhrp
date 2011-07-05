@@ -47,35 +47,35 @@ class SectionEditorAction extends Action {
 	 * Records an editor's submission decision.
 	 * @param $sectionEditorSubmission object
 	 * @param $decision int
-	 
-	function recordDecision($sectionEditorSubmission, $decision) {
+
+	 function recordDecision($sectionEditorSubmission, $decision) {
 		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
 		if (empty($editAssignments)) return;
 
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
 		$editorDecision = array(
-			'editDecisionId' => null,
-			'editorId' => $user->getId(),
-			'decision' => $decision,
-			'dateDecided' => date(Core::getCurrentDate())
+		'editDecisionId' => null,
+		'editorId' => $user->getId(),
+		'decision' => $decision,
+		'dateDecided' => date(Core::getCurrentDate())
 		);
 
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
-			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
-			$sectionEditorSubmission->stampStatusModified();
-			$sectionEditorSubmission->addDecision($editorDecision, $sectionEditorSubmission->getCurrentRound());
-			$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
+		$sectionEditorSubmission->setStatus(STATUS_QUEUED);
+		$sectionEditorSubmission->stampStatusModified();
+		$sectionEditorSubmission->addDecision($editorDecision, $sectionEditorSubmission->getCurrentRound());
+		$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
 
-			$decisions = SectionEditorSubmission::getEditorDecisionOptions();
-			// Add log
-			import('classes.article.log.ArticleLog');
-			import('classes.article.log.ArticleEventLogEntry');
-			Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON, LOCALE_COMPONENT_OJS_EDITOR));
-			ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_EDITOR_DECISION, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.decision', array('editorName' => $user->getFullName(), 'articleId' => $sectionEditorSubmission->getArticleId(), 'decision' => Locale::translate($decisions[$decision])));
+		$decisions = SectionEditorSubmission::getEditorDecisionOptions();
+		// Add log
+		import('classes.article.log.ArticleLog');
+		import('classes.article.log.ArticleEventLogEntry');
+		Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON, LOCALE_COMPONENT_OJS_EDITOR));
+		ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_EDITOR_DECISION, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.decision', array('editorName' => $user->getFullName(), 'articleId' => $sectionEditorSubmission->getArticleId(), 'decision' => Locale::translate($decisions[$decision])));
 		}
-	}
-	*/
+		}
+		*/
 
 	/**
 	 * Records an editor's submission decision. (Modified: Update if there is already an existing decision.)
@@ -85,33 +85,35 @@ class SectionEditorAction extends Action {
 	 * Edited by Gay Figueroa
 	 * Last Update: 5/4/2011
 	 */
-	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId, $resubmitCount) {
+	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId = null, $resubmitCount, $dateDecided = null) {
 		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
 		if (empty($editAssignments)) return;
-	
+
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
 
-		//check if there is already a decisionId
-		if($lastDecisionId == null ) {
-			$editorDecision = array(
-				'editDecisionId' => null,
-				'editorId' => $user->getId(),
-				'decision' => $decision,
-				'dateDecided' => date(Core::getCurrentDate()),
-				'resubmitCount' => $resubmitCount
-			);
-		}
-		else {
-			$editorDecision = array(
+		$startDate = (($dateDecided == null) ? date(Core::getCurrentDate()) : date($dateDecided));
+		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;  
+		$editorDecision = array(
 				'editDecisionId' => $lastDecisionId,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => date(Core::getCurrentDate()),
+				'dateDecided' => $startDate,
 				'resubmitCount' => $resubmitCount
-			);
+		);
+		
+		/*
+		 * If assigned for normal erc review, automatically assign all users with REVIEWER role
+		 */
+		if($decision == SUBMISSION_EDITOR_DECISION_ASSIGNED) {
+			$userDao =& DAORegistry::getDAO('UserDAO');
+			$reviewers =& $userDao->getUsersWithReviewerRole();
+			foreach($reviewers as $reviewer) {
+				$reviewerId = $reviewer->getId();
+				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
+			}				
 		}
-
+		
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
 			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
 			$sectionEditorSubmission->stampStatusModified();
@@ -474,12 +476,12 @@ class SectionEditorAction extends Action {
 
 			}
 			$email->displayEditForm(
-				Request::url(null, null, 'remindReviewer', 'send'),
-				array(
+			Request::url(null, null, 'remindReviewer', 'send'),
+			array(
 					'reviewerId' => $reviewer->getId(),
 					'articleId' => $sectionEditorSubmission->getArticleId(),
 					'reviewId' => $reviewId
-				)
+			)
 			);
 			return false;
 		}
@@ -662,18 +664,18 @@ class SectionEditorAction extends Action {
 				import('classes.article.log.ArticleLog');
 				import('classes.article.log.ArticleEventLogEntry');
 				ArticleLog::logEvent(
-					$articleId,
-					ARTICLE_LOG_REVIEW_SET_DUE_DATE,
-					ARTICLE_LOG_TYPE_REVIEW,
-					$reviewAssignment->getId(),
+				$articleId,
+				ARTICLE_LOG_REVIEW_SET_DUE_DATE,
+				ARTICLE_LOG_TYPE_REVIEW,
+				$reviewAssignment->getId(),
 					'log.review.reviewDueDateSet',
-					array(
+				array(
 						'reviewerName' => $reviewer->getFullName(),
 						'dueDate' => strftime(Config::getVar('general', 'date_format_short'),
-						strtotime($reviewAssignment->getDateDue())),
+				strtotime($reviewAssignment->getDateDue())),
 						'articleId' => $articleId,
 						'round' => $reviewAssignment->getRound()
-					)
+				)
 				);
 			}
 		}
@@ -1910,13 +1912,13 @@ class SectionEditorAction extends Action {
 
 			// Send a notification to associated users
 			import('lib.pkp.classes.notification.NotificationManager');
-				$notificationManager = new NotificationManager();
+			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds();
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
 				$notificationManager->createNotification(
-					$userRole['id'], 'notification.type.reviewerComment',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
+				$userRole['id'], 'notification.type.reviewerComment',
+				$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
 				);
 			}
 
@@ -1963,13 +1965,13 @@ class SectionEditorAction extends Action {
 
 			// Send a notification to associated users
 			import('lib.pkp.classes.notification.NotificationManager');
-				$notificationManager = new NotificationManager();
+			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(true, false);
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'editorDecision');
 				$notificationManager->createNotification(
-					$userRole['id'], 'notification.type.editorDecisionComment',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT
+				$userRole['id'], 'notification.type.editorDecisionComment',
+				$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT
 				);
 			}
 
@@ -2000,21 +2002,21 @@ class SectionEditorAction extends Action {
 		//SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => 'EDITOR_DECISION_REVISIONS',
 			
 		$decisionTemplateMap = array(
-			SUBMISSION_EDITOR_DECISION_ACCEPT => 'EDITOR_DECISION_ACCEPT',
-			SUBMISSION_EDITOR_DECISION_RESUBMIT => 'EDITOR_DECISION_RESUBMIT',
-			SUBMISSION_EDITOR_DECISION_DECLINE => 'EDITOR_DECISION_DECLINE'
+		SUBMISSION_EDITOR_DECISION_ACCEPT => 'EDITOR_DECISION_ACCEPT',
+		SUBMISSION_EDITOR_DECISION_RESUBMIT => 'EDITOR_DECISION_RESUBMIT',
+		SUBMISSION_EDITOR_DECISION_DECLINE => 'EDITOR_DECISION_DECLINE'
 		);
 
 		$decisions = $sectionEditorSubmission->getDecisions();
 		$decisions = array_pop($decisions); // Rounds
 		$decision = array_pop($decisions);
 		$decisionConst = $decision?$decision['decision']:null;
-		
+
 		$email = new ArticleMailTemplate(
-			$sectionEditorSubmission,
-			isset($decisionTemplateMap[$decisionConst])?$decisionTemplateMap[$decisionConst]:null
-		);		
-		
+		$sectionEditorSubmission,
+		isset($decisionTemplateMap[$decisionConst])?$decisionTemplateMap[$decisionConst]:null
+		);
+
 		$copyeditor = $sectionEditorSubmission->getUserBySignoffType('SIGNOFF_COPYEDITING_INITIAL');
 
 		if ($send && !$email->hasErrors()) {
@@ -2207,13 +2209,13 @@ class SectionEditorAction extends Action {
 
 			// Send a notification to associated users
 			import('lib.pkp.classes.notification.NotificationManager');
-				$notificationManager = new NotificationManager();
+			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(true, false);
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'copyedit');
 				$notificationManager->createNotification(
-					$userRole['id'], 'notification.type.copyeditComment',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_COPYEDIT_COMMENT
+				$userRole['id'], 'notification.type.copyeditComment',
+				$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_COPYEDIT_COMMENT
 				);
 			}
 
@@ -2265,8 +2267,8 @@ class SectionEditorAction extends Action {
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'layout');
 				$notificationManager->createNotification(
-					$userRole['id'], 'notification.type.layoutComment',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_LAYOUT_COMMENT
+				$userRole['id'], 'notification.type.layoutComment',
+				$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_LAYOUT_COMMENT
 				);
 			}
 
@@ -2318,8 +2320,8 @@ class SectionEditorAction extends Action {
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'proofread');
 				$notificationManager->createNotification(
-					$userRole['id'], 'notification.type.proofreadComment',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_PROOFREAD_COMMENT
+				$userRole['id'], 'notification.type.proofreadComment',
+				$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_PROOFREAD_COMMENT
 				);
 			}
 
