@@ -125,7 +125,8 @@ class Application extends PKPApplication {
 			'SubscriptionTypeDAO' => 'classes.subscription.SubscriptionTypeDAO',
 			'SuppFileDAO' => 'classes.article.SuppFileDAO',
 			'UserDAO' => 'classes.user.UserDAO',
-			'UserSettingsDAO' => 'classes.user.UserSettingsDAO'
+			'UserSettingsDAO' => 'classes.user.UserSettingsDAO',
+			'MeetingSubmissionDAO' => 'lib.pkp.classes.who.MeetingSubmissionDAO'
 		));
 	}
 
