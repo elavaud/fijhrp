@@ -6,8 +6,10 @@ class MeetingDAO extends DAO {
 	/**
 	 * Constructor
 	 */
+	var $userDao;
 	function MeetingDAO() {
 		parent::DAO();
+		$this->userDao &= DAORegistry::getDAO('UserDAO');
 	}
 
 	/**
@@ -52,6 +54,28 @@ class MeetingDAO extends DAO {
 
 		return $meeting;
 	}
+	
+	/********************************** 
+	 * Get all meetings by reviewer
+	 *  Added by ayveemallare 7/6/2011
+	 **********************************/
+	function &getMeetingsByReviewerId($reviewerId) {
+		$meetingReviewers = array();
+		$result =& $this->retrieve(
+			'SELECT meetings.meeting_id, reviewer_id, meeting_date, attending, remarks
+			FROM meeting_reviewer, meetings
+			WHERE reviewer_id = ?',
+			(int) $reviewerId );
+		while (!$result->EOF) {
+			$meetingReviewers[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $meetingReviewers;
+	}
 
 	/**
 	 * Internal function to return an meeting object from a row. Simplified
@@ -64,8 +88,14 @@ class MeetingDAO extends DAO {
 		$meeting->setId($row['meeting_id']);
 		$meeting->setDate($row['meeting_date']);
 		$meeting->setUploader($row['user_id']);
-		$meeting->setStatus($row['status']);		
-
+		$meeting->setStatus($row['status']);
+				
+		//Edited by ayveemallare 7/6/2011
+		//Added additional fields
+		$meeting->setReviewerId($row['reviewer_id']);
+		$meeting->setIsAttending($row['attending']);
+		$meeting->setRemarks($row['remarks']);
+		
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
 	}

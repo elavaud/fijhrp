@@ -107,7 +107,7 @@ $(document).ready(function() {
 	<td class="label">{translate key="reviewer.article.schedule.due"}</td>
 	<td class="value">{if $submission->getDateDue()}{$submission->getDateDue()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
 </tr>
-<tr valign="top">
+{**<tr valign="top">
 	<td class="label">{translate key="reviewer.article.schedule.dateOfMeeting"}</td>
 	<td class="value">{if $submission->getDateOfMeeting()}{$submission->getDateOfMeeting()|date_format:$datetimeFormatLong}{else}&mdash;{/if}</td>
 </tr>
@@ -131,7 +131,7 @@ $(document).ready(function() {
 		<input type="hidden" id="reviewId" name="reviewId" value={$reviewId}> </input>
 		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="user" escape=false}'" />
 	</td>
-</tr>
+</tr>**}
 </table>
 </form>
 </div>

@@ -61,9 +61,14 @@ switch ($op) {
 		import('pages.reviewer.SubmissionCommentsHandler');
 		break;
 	case 'index':
+	case 'submissions':
+	case 'meetings':
 		define('HANDLER_CLASS', 'ReviewerHandler');
 		import('pages.reviewer.ReviewerHandler');
 		break;
+	case 'viewMeeting':
+		define('HANDLER_CLASS', 'MeetingReviewerHandler');
+		import('pages.reviewer.MeetingReviewerHandler');
 }
 
 ?>

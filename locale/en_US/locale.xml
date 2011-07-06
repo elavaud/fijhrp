@@ -594,6 +594,9 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="submission.layout.imageInvalid">Invalid image format. Accepted formats are .gif, .jpg, and .png.</message>
 	
 	<!-- Reviewer -->
+	<message key="reviewer.home">Reviewer Home</message>
+	<message key="reviewer.submissions">Submissions</message>
+	<message key="reviewer.meetings">Meetings</message>
 	<message key="reviewer.pendingReviews">Articles Pending Review</message>
 	<message key="reviewer.completedReviews">Done</message>
 	<message key="reviewer.averageQuality">Rating</message>

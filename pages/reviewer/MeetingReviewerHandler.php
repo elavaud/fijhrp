@@ -1,28 +1,27 @@
 <?php
 
 /**
- * @file ReviewerHandler.inc.php
+ * @file MeetingReviewerHandler.inc.php
  *
- * Copyright (c) 2003-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @class ReviewerHandler
+ * @class MeetingReviewerHandler
  * @ingroup pages_reviewer
  *
- * @brief Handle requests for reviewer functions. 
+ * @brief Handle requests for meeting reviewer functions.
+ * 
+ * Added by ayveemallare
+ * Last Updated: 7/6/2011
  */
 
 
 
-import('classes.submission.reviewer.ReviewerAction');
 import('classes.handler.Handler');
-import('lib.pkp.classes.who.MeetingReviewer');
 
-class ReviewerHandler extends Handler {
+class MeetingReviewerHandler extends Handler {
 	/**
 	 * Constructor
 	 **/
-	function ReviewerHandler() {
+	function MeetingReviewerHandler() {
 		parent::Handler();
 
 		$this->addCheck(new HandlerValidatorJournal($this));
@@ -111,29 +110,7 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->display('reviewer/submissionsIndex.tpl');
 	}
-	
-	/****************************************
-	 * Display meetings index page
-	 * Added by ayveemallare
-	 * Last Updated 7/5/2011
-	 */
-	
-	function meetings($args) {
-		$this->validate();
-		$this->setupTemplate();
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();
-		$userId = $user->getId();
-		
-		$meetingDao = DAORegistry::getDAO('MeetingDAO');
-		$meetings =& $meetingDao->getMeetingsByReviewerId($userId);
-				
-		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign_by_ref('meetings', $meetings); 
-		$templateMgr->display('reviewer/meetings.tpl');
-	}
-	
+
 	/**
 	 * Used by subclasses to validate access keys when they are allowed.
 	 * @param $userId int The user this key refers to

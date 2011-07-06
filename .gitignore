@@ -4,6 +4,7 @@ cache/*
 cache/t_cache/*
 cache/t_compile/*
 cache/_db/*
+cache/t_config/*
 .buildpath
 .project
 .settings/

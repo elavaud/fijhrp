@@ -52,6 +52,35 @@ class Meeting extends DataObject {
 		return $this->getData('status');
 	}
 	
+	/********************************** 
+	 * Additional fields for meeting
+	 *  Added by ayveemallare 7/6/2011
+	 **********************************/
+	
+	function setReviewerId($reviewerId) {
+		$this->setData('reviewerId', $reviewerId);
+	}
+	
+	function getReviewerId() {
+		return $this->getData('reviewerId');
+	}
+	
+	function setIsAttending($isAttending) {
+		$this->setData('isAttending', $isAttending);
+	}
+	
+	function getIsAttending() {
+		return $this->getData('isAttending');
+	}
+	
+	function setRemarks($remarks) {
+		$this->setData('remarks', $remarks);
+	}
+	
+	function getRemarks() {
+		return $this->getData('remarks');
+	}
+	
 	/**
 	 * Get array mapping of completed sections of the meeting minutes
 	 * @return array

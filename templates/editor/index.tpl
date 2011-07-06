@@ -28,7 +28,7 @@
 
 {**
  * Added section for meetings in editor home page
- * Last Updated: 7/5/2011
+ * Last Updated: ayveemallare 7/5/2011
  *}
  
 <div class="separator">&nbsp;</div>
