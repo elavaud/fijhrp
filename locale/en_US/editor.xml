@@ -265,4 +265,5 @@
 	<message key="editor.meetings.clickHere">CLICK HERE</message>
 	<message key="editor.meetings.toSetNewMeeting"> to set a new meeting.</message>
 	<message key="editor.meetings.uploadMinutes">Upload Minutes</message>
+	<message key="editor.meetings.addProposalsToDiscuss">Add proposals to discuss</message>
 </locale>
