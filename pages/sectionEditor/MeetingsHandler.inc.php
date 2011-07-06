@@ -19,15 +19,15 @@ class MeetingsHandler extends Handler {
 * Constructor
 **/
 function MeetingsHandler() {
-parent::Handler();
-
-$this->addCheck(new HandlerValidatorJournal($this));
-// FIXME This is kind of evil
-$page = Request::getRequestedPage();
-if ( $page == 'sectionEditor' )
-$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_SECTION_EDITOR)));
-elseif ( $page == 'editor' )
-$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_EDITOR)));
+	parent::Handler();
+	
+	$this->addCheck(new HandlerValidatorJournal($this));
+	// FIXME This is kind of evil
+	$page = Request::getRequestedPage();
+	if ( $page == 'sectionEditor' )
+	$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_SECTION_EDITOR)));
+	elseif ( $page == 'editor' )
+	$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_EDITOR)));
 
 }
 
@@ -36,29 +36,29 @@ $this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID
 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 */
 function setupTemplate($subclass = false, $articleId = 0, $parentPage = null, $showSidebar = true) {
-parent::setupTemplate();
-Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
-$templateMgr =& TemplateManager::getManager();
-$isEditor = Validation::isEditor();
-
-if (Request::getRequestedPage() == 'editor') {
-$templateMgr->assign('helpTopicId', 'editorial.editorsRole');
-
-} else {
-$templateMgr->assign('helpTopicId', 'editorial.sectionEditorsRole');
-}
-
-$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
-$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
-$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic), 'article.submissions'))
-: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
-
-import('classes.submission.sectionEditor.SectionEditorAction');
-$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, $roleSymbolic);
-if (isset($submissionCrumb)) {
-$pageHierarchy = array_merge($pageHierarchy, $submissionCrumb);
-}
-$templateMgr->assign('pageHierarchy', $pageHierarchy);
+	parent::setupTemplate();
+	Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
+	$templateMgr =& TemplateManager::getManager();
+	$isEditor = Validation::isEditor();
+	
+	if (Request::getRequestedPage() == 'editor') {
+		$templateMgr->assign('helpTopicId', 'editorial.editorsRole');
+	
+	} else {
+		$templateMgr->assign('helpTopicId', 'editorial.sectionEditorsRole');
+	}
+	
+	$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
+	$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
+	$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic), 'article.submissions'))
+	: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
+	
+	import('classes.submission.sectionEditor.SectionEditorAction');
+	$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, $roleSymbolic);
+	if (isset($submissionCrumb)) {
+		$pageHierarchy = array_merge($pageHierarchy, $submissionCrumb);
+	}
+	$templateMgr->assign('pageHierarchy', $pageHierarchy);
 }
 
 /**
@@ -66,29 +66,29 @@ $templateMgr->assign('pageHierarchy', $pageHierarchy);
 * @param $args (type)
 */
 function instructions($args) {
-$this->setupTemplate();
-import('classes.submission.proofreader.ProofreaderAction');
-if (!isset($args[0]) || !ProofreaderAction::instructions($args[0], array('copy', 'proof', 'referenceLinking'))) {
-Request::redirect(null, null, 'index');
-}
+	$this->setupTemplate();
+	import('classes.submission.proofreader.ProofreaderAction');
+	if (!isset($args[0]) || !ProofreaderAction::instructions($args[0], array('copy', 'proof', 'referenceLinking'))) {
+		Request::redirect(null, null, 'index');
+	}
 }
 
 function meetings($args) {
-$this->validate();
-//$this->setupTemplate();
-$journal =& Request::getJournal();
-$journalId = $journal->getId();
-$user =& Request::getUser();
-$userId = $user->getId();
-
-$meetingDao = DAORegistry::getDAO('MeetingDAO');
-$meetings =& $meetingDao->getMeetingsOfUser($userId);
-
-$templateMgr =& TemplateManager::getManager();
-$templateMgr->assign_by_ref('meetings', $meetings);
-$templateMgr->assign('pageToDisplay', $page);
-$templateMgr->assign('sectionEditor', $user->getFullName());
-$templateMgr->display('sectionEditor/meetings/meetings.tpl');
+	$this->validate();
+	//$this->setupTemplate();
+	$journal =& Request::getJournal();
+	$journalId = $journal->getId();
+	$user =& Request::getUser();
+	$userId = $user->getId();
+	
+	$meetingDao = DAORegistry::getDAO('MeetingDAO');
+	$meetings =& $meetingDao->getMeetingsOfUser($userId);
+	
+	$templateMgr =& TemplateManager::getManager();
+	$templateMgr->assign_by_ref('meetings', $meetings);
+	$templateMgr->assign('pageToDisplay', $page);
+	$templateMgr->assign('sectionEditor', $user->getFullName());
+	$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 }
 
 /**
@@ -99,107 +99,107 @@ $templateMgr->display('sectionEditor/meetings/meetings.tpl');
 
 function setMeeting($args) {
 
-$this->validate();
-$this->setupTemplate();
-$journal =& Request::getJournal();
-$journalId = $journal->getId();
-$user =& Request::getUser();
+	$this->validate();
+	$this->setupTemplate();
+	$journal =& Request::getJournal();
+	$journalId = $journal->getId();
+	$user =& Request::getUser();
+	
+	$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
+	$sectionDao =& DAORegistry::getDAO('SectionDAO');
+	
+	$sections =& $sectionDao->getSectionTitles($journalId);
+	
+	$sort = Request::getUserVar('sort');
+	$sort = isset($sort) ? $sort : 'id';
+	$sortDirection = Request::getUserVar('sortDirection');
+	$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
+	
+	$filterEditorOptions = array(
+		FILTER_EDITOR_ALL => Locale::Translate('editor.allEditors'),
+		FILTER_EDITOR_ME => Locale::Translate('editor.me')
+		);
+	
+	$filterSectionOptions = array(
+		FILTER_SECTION_ALL => Locale::Translate('editor.allSections')
+		) + $sections;
+	
+	// Get the user's search conditions, if any
+	$searchField = Request::getUserVar('searchField');
+	$dateSearchField = Request::getUserVar('dateSearchField');
+	$searchMatch = Request::getUserVar('searchMatch');
+	$search = Request::getUserVar('search');
+	
+	$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+	if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+	$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+	if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+	
+	$rangeInfo = Handler::getRangeInfo('submissions');
+	
+	$filterEditor = Request::getUserVar('filterEditor');
+	if ($filterEditor != '' && array_key_exists($filterEditor, $filterEditorOptions)) {
+		$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
+	} else {
+		$filterEditor = $user->getSetting('filterEditor', $journalId);
+		if ($filterEditor == null) {
+			$filterEditor = FILTER_EDITOR_ALL;
+			$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
+		}
+	}
+	
+	if ($filterEditor == FILTER_EDITOR_ME) {
+		$editorId = $user->getId();
+	} else {
+		$editorId = FILTER_EDITOR_ALL;
+	}
+	
+	$editorId = 0;
+	
+	
+	$filterSection = Request::getUserVar('filterSection');
+	if ($filterSection != '' && array_key_exists($filterSection, $filterSectionOptions)) {
+		$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
+	} else {
+		$filterSection = $user->getSetting('filterSection', $journalId);
+		if ($filterSection == null) {
+			$filterSection = FILTER_SECTION_ALL;
+			$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
+		}
+	}
 
-$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-$sectionDao =& DAORegistry::getDAO('SectionDAO');
 
-$sections =& $sectionDao->getSectionTitles($journalId);
+	$submissions =& $editorSubmissionDao->getEditorSubmissionsForERCReview(
+	$journalId,
+	$filterSection,
+	$editorId,
+	$searchField,
+	$searchMatch,
+	$search,
+	$dateSearchField,
+	$fromDate,
+	$toDate,
+	$rangeInfo,
+	$sort,
+	$sortDirection
+	);
 
-$sort = Request::getUserVar('sort');
-$sort = isset($sort) ? $sort : 'id';
-$sortDirection = Request::getUserVar('sortDirection');
-$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
+	$meetingId = isset($args) ? $args: 0;
+	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 
-$filterEditorOptions = array(
-FILTER_EDITOR_ALL => Locale::Translate('editor.allEditors'),
-FILTER_EDITOR_ME => Locale::Translate('editor.me')
-);
-
-$filterSectionOptions = array(
-FILTER_SECTION_ALL => Locale::Translate('editor.allSections')
-) + $sections;
-
-// Get the user's search conditions, if any
-$searchField = Request::getUserVar('searchField');
-$dateSearchField = Request::getUserVar('dateSearchField');
-$searchMatch = Request::getUserVar('searchMatch');
-$search = Request::getUserVar('search');
-
-$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
-
-$rangeInfo = Handler::getRangeInfo('submissions');
-
-$filterEditor = Request::getUserVar('filterEditor');
-if ($filterEditor != '' && array_key_exists($filterEditor, $filterEditorOptions)) {
-$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
-} else {
-$filterEditor = $user->getSetting('filterEditor', $journalId);
-if ($filterEditor == null) {
-$filterEditor = FILTER_EDITOR_ALL;
-$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
-}
-}
-
-if ($filterEditor == FILTER_EDITOR_ME) {
-$editorId = $user->getId();
-} else {
-$editorId = FILTER_EDITOR_ALL;
-}
-
-$editorId = 0;
-
-
-$filterSection = Request::getUserVar('filterSection');
-if ($filterSection != '' && array_key_exists($filterSection, $filterSectionOptions)) {
-$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-} else {
-$filterSection = $user->getSetting('filterSection', $journalId);
-if ($filterSection == null) {
-$filterSection = FILTER_SECTION_ALL;
-$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-}
-}
-
-
-$submissions =& $editorSubmissionDao->getEditorSubmissionsForERCReview(
-$journalId,
-$filterSection,
-$editorId,
-$searchField,
-$searchMatch,
-$search,
-$dateSearchField,
-$fromDate,
-$toDate,
-$rangeInfo,
-$sort,
-$sortDirection
-);
-
-$meetingId = isset($args) ? $args: 0;
-$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-
-$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-$meeting =$meetingDao->getMeetingById($meetingId);
-
-$templateMgr =& TemplateManager::getManager();
-$templateMgr->assign('helpTopicId', $helpTopicId);
-$templateMgr->assign('sectionOptions', $filterSectionOptions);
-$templateMgr->assign_by_ref('submissions', $submissions);
-$templateMgr->assign('filterSection', $filterSection);
-$templateMgr->assign('pageToDisplay', $page);
-$templateMgr->assign('sectionEditor', $user->getFullName());
-$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
-$templateMgr->assign('meeting', $meeting);
+	$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+	$meeting =$meetingDao->getMeetingById($meetingId);
+	
+	$templateMgr =& TemplateManager::getManager();
+	$templateMgr->assign('helpTopicId', $helpTopicId);
+	$templateMgr->assign('sectionOptions', $filterSectionOptions);
+	$templateMgr->assign_by_ref('submissions', $submissions);
+	$templateMgr->assign('filterSection', $filterSection);
+	$templateMgr->assign('pageToDisplay', $page);
+	$templateMgr->assign('sectionEditor', $user->getFullName());
+	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
+	$templateMgr->assign('meeting', $meeting);
 
 // Set search parameters
 $duplicateParameters = array(

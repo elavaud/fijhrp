@@ -1,5 +1,5 @@
 {**
- * Meetings page template
+ * Meetings page templated
  * Added by ayveemallare7/5/2011
  **}
 
@@ -15,59 +15,40 @@
 	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
-<br/><br/>
 <div id="meetings">
-{assign var="status" value=0}
-{section name="section" loop=4}
-	<table class="listing" width="50%">
-		{if $status==0} 
-			<tr><td colspan="6">PROPOSED</td></tr>
-		{/if}
-		{if $status==1} 
-			<tr><td colspan="6">FINALIZED</td></tr>
-		{/if}
-		{if $status==2} 
-			<tr><td colspan="6">DONE</td></tr>
-		{/if}
-		{if $status==3} 
-			<tr><td colspan="6">CANCELLED</td></tr>
-		{/if}
-		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-		<tr class="heading" valign="bottom">
-			<td width="5%">{translate key="editor.meetings.meetingId"}</td>
-			<td width="25%" align="right">{translate key="editor.meetings.meetingDate"}</td>
-		</tr>
-		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-	<p></p>
-	{assign var="count" value=0}
-	{foreach from=$meetings item=meeting}
-		<tr class="heading" valign="bottom">
-			<td width="5%">{$meeting->getId()}</td>
-			<td width="25%" align="right">{$meeting->getDate()|date_format:$dateFormatShort}</td>
-			{assign var="count" value=$count+1}
-		</tr>	
-	{/foreach}
-	{if $count==0}
-		<tr>
-			<td colspan="6" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
-		</tr>
-		<tr>
-			<td colspan="6" class="endseparator">&nbsp;</td>
-		</tr>
-	{else}
-		<tr>
-			<td colspan="6" class="endseparator">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="6" align="left">{$count} {translate key="editor.meetings.meetingsCount"}</td>
-		</tr>
-	{/if}
-		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-	</table>
-	
-<br/><br/>
-	{assign var="status" value=$status+1}
-{/section}
+<table class="listing" width="100%">
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr class="heading" valign="bottom">
+		<td width="5%">{translate key="editor.meetings.meetingId"}</td>
+		<td width="25%" align="right">{translate key="editor.meetings.meetingDate"}</td>
+		<td width="35%" align="right">{translate key="editor.meetings.status"}</td>
+	</tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+<p></p>
+{assign var="count" value=0}
+{foreach from=$meetings item=meeting}
+	<tr class="heading" valign="bottom">
+		<td width="5%">{$meeting->getId()}</td>
+		<td width="25%" align="right">{$meeting->getDate()|date_format:$dateFormatShort}</td>
+		{assign var="count" value=$count+1}
+	</tr>	
+{/foreach}
+{if $count==0}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+	<tr>
+		<td colspan="6" align="left">{$count} {translate key="editor.meetings.meetingsCount"}</td>
+	</tr>
+{/if}
+</table>
 </div>
 
 <h2>{translate key="editor.meetings.setNewMeeting"}</h2>
