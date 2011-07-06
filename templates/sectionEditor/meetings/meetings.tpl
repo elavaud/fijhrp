@@ -29,7 +29,7 @@
 {foreach from=$meetings item=meeting}
 	<tr class="heading" valign="bottom">
 		<td width="5%">{$meeting->getId()}</td>
-		<td width="25%" align="right"><a href="{url op="setMeeting" path=$meeting->getId()|}" class="action" > {$meeting->getDate()|date_format:$dateFormatShort}</a></td>
+		<td width="25%" align="right"><a href="{url op="setMeeting" path=$meeting->getId()}" class="action" > {$meeting->getDate()|date_format:$dateFormatShort}</a></td>
 		{assign var="count" value=$count+1}
 	</tr>	
 {/foreach}

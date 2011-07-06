@@ -184,9 +184,8 @@ function setMeeting($args) {
 	$sortDirection
 	);
 	
-	echo "<br>setMeeting args:".$args;
 	
-	echo "<br> issetArgs: ". $meetingId = isset($args) ? $args: 0;
+	$meetingId = isset($args[0]) ? $args[0]: 0;
 	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 
@@ -241,13 +240,12 @@ function setMeeting($args) {
 	* @ param $args (type)
 	*/
 	
-	function reviewMeeting($args){
+	function saveMeeting($args){
 		$this->validate();
 		$selectedProposals = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
-		echo "<br>reviewmeeting: ".$meetingId = Request::getUserVar('meetingId');
-			echo "<br> issetArgs: ". $meetingId = isset($args[0]) ? $args[0]: 0;
-		echo "<br>setMeeting args:".$args;
+		$meetingId = Request::getUserVar('meetingId');
+		$meetingId = isset($args[0]) ? $args[0]: 0;
 		
 		$user =& Request::getUser();
 		$userId = $user->getId();
@@ -268,8 +266,8 @@ function setMeeting($args) {
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
-
-			$this->setMeeting($meetingId);
+			Request::redirect(null, null, 'setMeeting', array($meetingId));
+			//$this->setMeeting(array($meetingId));
 		}
 	}
 
