@@ -10,10 +10,10 @@ class MeetingSubmissionDAO extends DAO {
 	}
 	
 	/**
-	 * Get meeting Submission object
+	 * Get MeetingSubmission object
 	 * @param $meetingId int
-	 * @param $SubmissionId int
-	 * @return MeetingSubmission
+	 * @param $submissionId int
+	 * @return array
 	 */
 	function &getMeetingSubmissionsByMeetingId($meetingId) {
 
@@ -34,13 +34,25 @@ class MeetingSubmissionDAO extends DAO {
 
 		return $meetingSubmissions;
 	}
+	
+	/* Added by MSB
+	 * Last updated: 07/06/11
+	 * Delete all submissions in a meeting
+	 */
 
+	function deleteMeetingSubmissionsByMeetingId($meetingId){
+		return $this->update(
+			'DELETE FROM meeting_submissions WHERE meeting_id = ?',
+			(int) $meetingId
+		);
+	}
 
 	/**
+	 * Return the submission_id
 	 * Internal function to return an meeting object from a row. Simplified
 	 * not to include object settings.
 	 * @param $row array
-	 * @return MeetingSubmission
+	 * @return submission_id
 	 */
 	function &_returnMeetingSubmissionFromRow(&$row) {
 		//$meetingSubmission = new MeetingSubmission();
@@ -59,6 +71,7 @@ class MeetingSubmissionDAO extends DAO {
 	}
 	
 	/** 
+	 * Insert new submission for the meeting discussion
 	 * Insert a new data object
 	 * @param int $meetingId
 	 * @param int $SubmissionId
@@ -73,18 +86,20 @@ class MeetingSubmissionDAO extends DAO {
 	}
 	
 	/**
-	 * Update data object
-	 * @param MeetingSubmission $meetingSubmission
+	 * Remove submission from meeting discussion
+	 * Update a data object
+	 * @param int $meetingId 
+	 * @param int $submissionId
 	 */
 	function deleteMeetingSubmission($meetingId, $submissionId) {
 		return $this->update(
-			'DELETE FROM meeting_submissions WHERE meeting_id = ? AND submissions_id = ?', 
+			'DELETE FROM meeting_submissions WHERE meeting_id = ? AND submission_id = ?',
 			array(
 			$meetingSubmission->getMeetingId(),
-			$meetingSubmission->getSubmissionId()
-			)
+			$meetingSubmission->getSubmissionId())
 		);
 	}
+	
 	
 
 }
