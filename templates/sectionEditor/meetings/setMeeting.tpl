@@ -11,22 +11,22 @@
 {/strip}
 
 {literal}
-<script type="text/javascript" src="whorrp-release1/whorrp/lib/pkp/js/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="whorrp-release1/whorrp/lib/pkp/js/lib/jquery/plugins/jqueryUi.min.js"></script>
 
-<script type="text/javascript" src="lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
-<style type="text/css" src="lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
+<script type="text/javascript" src="http://localhost/projects/whorrp/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
+<style type="text/css" src="http://localhost/projects/whorr/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-	$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
-	});
+//	$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
+		$( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+0 d'});
+
+		});
 </script>
 {/literal}
 
 
-<div id="setMeeting">
-<form method="post" action="{url op="addProposalsToMeeting" }" >
+<div id="setMeeting"> 
+<form method="post" action="{url op="reviewMeeting" path=$meetingId }" >
 <table class="listing" width="100%">
 	<tr valign="top">
 	<td colspan="7"><h3>{translate key="editor.meetings.addProposalsToDiscuss"}</h3></td>
@@ -44,6 +44,7 @@
 	</tr>
 	<tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <p></p>
+
 {assign var="count" value=0}
 {foreach from=$submissions item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
@@ -55,7 +56,11 @@
             {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 			{assign var="count" value=$count+1}
 			<tr valign="top">
-				<td><input type="checkbox" name="proposals[]" id="proposals[]" value={$submission->getId()} checked="checked"></td>
+				<!-- <td><input type="checkbox" name="proposals[]" id="proposals[]" value="{$submission->getId()}" ></td> 
+				-->
+				aaa<b>{translate $selectedProposals->getSubmissionId()}
+				</b>
+				<td>{html_checkboxes id="selectedProposals" name='selectedProposals' values=$submission->getId() checked=$selectedProposals'} </td> 
 				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 				<td>{$submission->getSectionAbbrev()|escape}</td>
@@ -104,7 +109,7 @@
 		
 		<tr valign="top">
 			<td width="20%" colspan="2" class="label">{translate key="editor.article.meetingDate"}</td>
-			<td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
+			<td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
 		</tr>
 {/if}
 </table>

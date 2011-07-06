@@ -14,11 +14,11 @@ class MeetingSubmission extends DataObject {
 		return $this->getData('meetingId');
 	}
 	
-	function setReviewerId($reviewerId) {
-		$this->setData('reviewerId', $reviewerId);
+	function setSubmissionId($submissionId) {
+		$this->setData('submissionId', $submissionId);
 	}
 	
-	function getReviewerId() {
-		return $this->getData('reviewerId');
+	function getSubmissionId() {
+		return $this->getData('submissionId');
 	}
 }

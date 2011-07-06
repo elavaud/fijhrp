@@ -98,6 +98,7 @@ class MeetingsHandler extends Handler {
 	 */
 	
 	function setMeeting($args) {
+		
 		$this->validate();
 		$this->setupTemplate();
 		$journal =& Request::getJournal();
@@ -183,7 +184,13 @@ class MeetingsHandler extends Handler {
 			$sortDirection
 		);
 		
-
+		$meetingId = isset($args) ? $args: 0;
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('helpTopicId', $helpTopicId);
 		$templateMgr->assign('sectionOptions', $filterSectionOptions);
@@ -191,7 +198,9 @@ class MeetingsHandler extends Handler {
 		$templateMgr->assign('filterSection', $filterSection);
 		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
-
+		$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
+		$templateMgr->assign('meeting', $meeting);
+		
 		// Set search parameters
 		$duplicateParameters = array(
 			'searchField', 'searchMatch', 'search',
@@ -230,21 +239,32 @@ class MeetingsHandler extends Handler {
 	 * @ param $args (type)
 	 */
 	
-	function addProposalsToMeeting($args){
+	function reviewMeeting($args){
 		$this->validate();
-		$proposals = Request::getUserVar('proposals');
 		
-		if (count($proposals) > 0) {
-			for ($i=0;$i<count($proposals);$i++) {
-				echo "Proposal' IDs";
-				echo "<li>$proposals[$i] \n";
-				
+		$selectedProposals = Request::getUserVar('selectedProposals');
+		$meetingDate = Request::getUserVar('meetingDate');
+		$meetingId = Request::getUserVar('meetingId');
+		
+		$user =& Request::getUser();
+		$userId = $user->getId();
+		
+		if($meetingId == null) {
+			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
+		}
+
+		
+		if (count($selectedProposals) > 0) {
+			for ($i=0;$i<count($selectedProposals);$i++) {
+				//echo "Proposal' IDs";
 				//should insert into database
+				echo $selectedProposals[$i];
+				$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			} 
 		}
-		
-		
-		
+		$this->setMeeting($meetingId);
 	}
 }
 
