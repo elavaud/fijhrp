@@ -75,7 +75,7 @@ function instructions($args) {
 
 function meetings($args) {
 	$this->validate();
-	//$this->setupTemplate();
+	$this->setupTemplate();
 	$journal =& Request::getJournal();
 	$journalId = $journal->getId();
 	$user =& Request::getUser();
@@ -201,71 +201,71 @@ function setMeeting($args) {
 	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
 	$templateMgr->assign('meeting', $meeting);
 
-// Set search parameters
-$duplicateParameters = array(
-'searchField', 'searchMatch', 'search',
-'dateFromMonth', 'dateFromDay', 'dateFromYear',
-'dateToMonth', 'dateToDay', 'dateToYear',
-'dateSearchField'
-);
-foreach ($duplicateParameters as $param)
-$templateMgr->assign($param, Request::getUserVar($param));
-
-$templateMgr->assign('dateFrom', $fromDate);
-$templateMgr->assign('dateTo', $toDate);
-$templateMgr->assign('fieldOptions', Array(
-SUBMISSION_FIELD_TITLE => 'article.title',
-SUBMISSION_FIELD_AUTHOR => 'user.role.author',
-SUBMISSION_FIELD_EDITOR => 'user.role.editor'
-));
-$templateMgr->assign('dateFieldOptions', Array(
-SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
-SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE => 'submissions.copyeditComplete',
-SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
-SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
-));
-
-import('classes.issue.IssueAction');
-$issueAction = new IssueAction();
-$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
-$templateMgr->assign('sort', $sort);
-$templateMgr->assign('sortDirection', $sortDirection);
-$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
-}
-
-/**
-* Added by MSB 07/06/11
-* Store meeting details such as proposals to discuss and meeting date
-* @ param $args (type)
-*/
-
-function reviewMeeting($args){
-$this->validate();
-
-$selectedProposals = Request::getUserVar('selectedProposals');
-$meetingDate = Request::getUserVar('meetingDate');
-$meetingId = Request::getUserVar('meetingId');
-
-$user =& Request::getUser();
-$userId = $user->getId();
-
-if($meetingId == null) {
-$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
-}
-
-
-if (count($selectedProposals) > 0) {
-for ($i=0;$i<count($selectedProposals);$i++) {
-//echo "Proposal' IDs";
-//should insert into database
-echo $selectedProposals[$i];
-$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
-}
-}
-$this->setMeeting($meetingId);
-}
-}
+	// Set search parameters
+	$duplicateParameters = array(
+		'searchField', 'searchMatch', 'search',
+		'dateFromMonth', 'dateFromDay', 'dateFromYear',
+		'dateToMonth', 'dateToDay', 'dateToYear',
+		'dateSearchField'
+		);
+	foreach ($duplicateParameters as $param)
+		$templateMgr->assign($param, Request::getUserVar($param));
+	
+	$templateMgr->assign('dateFrom', $fromDate);
+	$templateMgr->assign('dateTo', $toDate);
+	$templateMgr->assign('fieldOptions', Array(
+		SUBMISSION_FIELD_TITLE => 'article.title',
+		SUBMISSION_FIELD_AUTHOR => 'user.role.author',
+		SUBMISSION_FIELD_EDITOR => 'user.role.editor'
+		));
+	$templateMgr->assign('dateFieldOptions', Array(
+		SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
+		SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE => 'submissions.copyeditComplete',
+		SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
+		SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
+		));
+	
+	import('classes.issue.IssueAction');
+	$issueAction = new IssueAction();
+	$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
+	$templateMgr->assign('sort', $sort);
+	$templateMgr->assign('sortDirection', $sortDirection);
+	$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
+	}
+	
+	/**
+	* Added by MSB 07/06/11
+	* Store meeting details such as proposals to discuss and meeting date
+	* @ param $args (type)
+	*/
+	
+	function reviewMeeting($args){
+		$this->validate();
+		
+		$selectedProposals = Request::getUserVar('selectedProposals');
+		$meetingDate = Request::getUserVar('meetingDate');
+		$meetingId = Request::getUserVar('meetingId');
+		
+		$user =& Request::getUser();
+		$userId = $user->getId();
+		
+		if($meetingId == null) {
+			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
+		}
+		
+		
+		if (count($selectedProposals) > 0) {
+			for ($i=0;$i<count($selectedProposals);$i++) {
+				//echo "Proposal' IDs";
+				//should insert into database
+				echo $selectedProposals[$i];
+				$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
+			}
+		}
+		$this->setMeeting($meetingId);
+		}
+	}
 
 ?>

@@ -9,6 +9,8 @@ define ('MEETING_STATUS_CONTINUING_REVIEWS', 16);
 define ('MEETING_STATUS_AMENDMENTS', 32);
 define ('MEETING_STATUS_ADVERSE_EVENTS', 64);
 define ('MEETING_STATUS_INFORMATION_ITEMS', 128);
+define ('MEETING_REPLY_ATTENDING', 1);
+define ('MEETING_REPLY_NOT_ATTENDING', 2);
 
 class Meeting extends DataObject {
 	
@@ -81,6 +83,14 @@ class Meeting extends DataObject {
 		return $this->getData('remarks');
 	}
 	
+	function setIsFinal() {
+		$this->setData('isFinal', $isFinal);
+	}
+	
+	function getIsFinal() {
+		return $this->getData('isFinal');
+	}
+	
 	/**
 	 * Get array mapping of completed sections of the meeting minutes
 	 * @return array
@@ -116,6 +126,17 @@ class Meeting extends DataObject {
 			return "COMPLETE";
 		}
 		return "INCOMPLETE";
+	}
+	
+	function getReplyStatus() {
+		switch ($this->getIsAttending()) {
+			case MEETING_REPLY_ATTENDING:
+				return 'Attending';
+			case MEETING_REPLY_NOT_ATTENDING:
+				return 'Not Attending';
+			default:
+				return 'Awaiting Reply';
+		}
 	}
 	
 	function updateStatus($addToStatus) {

@@ -126,10 +126,23 @@ class ReviewerHandler extends Handler {
 		$userId = $user->getId();
 		
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
+		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
+		$articleDao = DAORegistry::getDAO('ArticleDAO');
 		$meetings =& $meetingDao->getMeetingsByReviewerId($userId);
+		
+		$submissions = array();
+		
+		foreach($meetings as $meeting) {
+			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
+			foreach($submissionIds as $submissionId) {
+				$submission = $articleDao->getArticle($submissionId, $journalId, false);
+			}
+			array_push($submissions, $submission);
+		}
 				
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings); 
+		$templateMgr->assign_by_ref('submissions', $submissions); 
 		$templateMgr->display('reviewer/meetings.tpl');
 	}
 	

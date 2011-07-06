@@ -597,6 +597,8 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.home">Reviewer Home</message>
 	<message key="reviewer.submissions">Submissions</message>
 	<message key="reviewer.meetings">Meetings</message>
+	<message key="reviewer.meetings.submissions">Submissions to be Discussed</message>
+	<message key="reviewer.meetings.replyStatus">Reply Status</message>
 	<message key="reviewer.pendingReviews">Articles Pending Review</message>
 	<message key="reviewer.completedReviews">Done</message>
 	<message key="reviewer.averageQuality">Rating</message>

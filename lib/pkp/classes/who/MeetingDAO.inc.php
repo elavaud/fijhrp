@@ -20,7 +20,7 @@ class MeetingDAO extends DAO {
 	function &getMeetingsOfUser($userId) {
 		$meetings = array();
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status FROM meetings WHERE user_id = ?',
+			'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings WHERE user_id = ?',
 			(int) $userId
 		);
 
@@ -43,7 +43,7 @@ class MeetingDAO extends DAO {
 	function &getMeetingById($meetingId) {
 		$meeting = null;
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status FROM meetings WHERE meeting_id = ?',
+			'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -62,7 +62,7 @@ class MeetingDAO extends DAO {
 	function &getMeetingsByReviewerId($reviewerId) {
 		$meetingReviewers = array();
 		$result =& $this->retrieve(
-			'SELECT meetings.meeting_id, reviewer_id, meeting_date, attending, remarks
+			'SELECT meetings.meeting_id, reviewer_id, meeting_date, attending, remarks, final
 			FROM meeting_reviewer, meetings
 			WHERE reviewer_id = ?',
 			(int) $reviewerId );
@@ -95,6 +95,7 @@ class MeetingDAO extends DAO {
 		$meeting->setReviewerId($row['reviewer_id']);
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
+		$meeting->setIsFinal($row['final']);
 		
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
