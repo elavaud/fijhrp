@@ -14,7 +14,6 @@
 </ul>
 
 <div id="meetings">
-{assign var="status" value=0}
 	<table class="listing" width="100%">
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 		<tr class="heading" valign="bottom">
@@ -30,7 +29,7 @@
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
 			<td>
-				<a href="{url op="submission" path=$reviewId}" class="action">
+				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 				{foreach from=$submissions item=submission name=submissions}
 					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
 					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}

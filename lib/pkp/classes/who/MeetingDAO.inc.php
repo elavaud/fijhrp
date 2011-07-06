@@ -43,7 +43,7 @@ class MeetingDAO extends DAO {
 	function &getMeetingById($meetingId) {
 		$meeting = null;
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings WHERE meeting_id = ?',
+			'SELECT meeting_id, user_id, meeting_date, status, final FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -131,6 +131,16 @@ class MeetingDAO extends DAO {
 		unset($result);
 
 		return $meetingId;
+	}
+	
+	function updateReplyOfReviewer($meeting, $reviewer, $isAttending, $remarks) {
+		$this->update(
+			sprintf('UPDATE meeting_reviewer
+			SET attending = ?,
+			remarks = ?
+			WHERE meeting_id = ? AND reviewer_id = ?',
+			array($isAttending, $remarks, $meeting->getId(), $reviewer->getId()))
+		);
 	}
 	
 	function updateMeetingDate($meeting) {
