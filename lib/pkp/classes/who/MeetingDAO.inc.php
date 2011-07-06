@@ -60,21 +60,41 @@ class MeetingDAO extends DAO {
 	 *  Added by ayveemallare 7/6/2011
 	 **********************************/
 	function &getMeetingsByReviewerId($reviewerId) {
-		$meetingReviewers = array();
+		$meetings = array();
 		$result =& $this->retrieve(
-			'SELECT meetings.meeting_id, reviewer_id, meeting_date, attending, remarks, final
-			FROM meeting_reviewer, meetings
-			WHERE reviewer_id = ?',
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewer b
+			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?',
 			(int) $reviewerId );
 		while (!$result->EOF) {
-			$meetingReviewers[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+			$meetings[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
 			$result->MoveNext();
 		}
 
 		$result->Close();
 		unset($result);
 
-		return $meetingReviewers;
+		return $meetings;
+	}
+	
+	/********************************** 
+	 * Get meeting by meeting id and reviewer
+	 *  Added by ayveemallare 7/6/2011
+	 **********************************/
+	function &getMeetingByMeetingAndReviewerId($meetingId, $reviewerId) {
+		$meeting = null;
+		$result =& $this->retrieve(
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewer b
+			ON a.meeting_id = b.meeting_id WHERE a.meeting_id = ? AND b.reviewer_id= ?',
+			array((int) $meetingId, (int) $reviewerId));
+		
+		$meeting =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+		
+		$result->Close();
+		unset($result);
+
+		return $meeting;
 	}
 
 	/**
@@ -133,13 +153,14 @@ class MeetingDAO extends DAO {
 		return $meetingId;
 	}
 	
-	function updateReplyOfReviewer($meeting, $reviewer, $isAttending, $remarks) {
+	function updateReplyOfReviewer($meeting) {
 		$this->update(
-			sprintf('UPDATE meeting_reviewer
-			SET attending = ?,
-			remarks = ?
+			'UPDATE meeting_reviewer SET attending = ?, remarks = ?
 			WHERE meeting_id = ? AND reviewer_id = ?',
-			array($isAttending, $remarks, $meeting->getId(), $reviewer->getId()))
+			array($meeting->getIsAttending(),
+			$meeting->getRemarks(), 
+			$meeting->getId(), 
+			$meeting->getReviewerId())
 		);
 	}
 	

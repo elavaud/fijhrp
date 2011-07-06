@@ -41,7 +41,7 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$userDao =& DAORegistry::getDao('UserDAO');
-		$meeting = $meetingDao->getMeetingById($meetingId);
+		$meeting = $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $userId);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
@@ -55,16 +55,17 @@ class MeetingReviewerHandler extends ReviewerHandler {
 	
 	function replyMeeting(){
 		$user =& Request::getUser();
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		
+		$userId = $user->getId();
 		$meetingId = Request::getUserVar('meetingId');
-		$isAttending = Request::getUserVar('isAttending');
-		$remarks = Request::getUserVar('remarks');	
 		
-		$meeting = $meetingDao->getMeetingById($meetingId);			
-		echo $meeting->getId();
-		$meetingDao->updateReplyOfReviewer($meeting, $user, $isAttending, $remarks);
-		//Request::redirect(null, 'reviewer', 'submission', $reviewId);
+		$meetingDao =& DAORegistry::getDao('MeetingDAO');
+		$meeting = $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $userId);
+		
+		$meeting->setIsAttending(Request::getUserVar('isAttending'));
+		$meeting->setRemarks(Request::getUserVar('remarks'));	
+		
+		$meetingDao->updateReplyOfReviewer($meeting);
+		Request::redirect(null, 'reviewer', 'viewMeeting', $meetingId);
 		
 	}
 	

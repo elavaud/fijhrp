@@ -136,8 +136,8 @@ class ReviewerHandler extends Handler {
 			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
 			foreach($submissionIds as $submissionId) {
 				$submission = $articleDao->getArticle($submissionId, $journalId, false);
+				array_push($submissions, $submission);
 			}
-			array_push($submissions, $submission);
 		}
 				
 		$templateMgr =& TemplateManager::getManager();
