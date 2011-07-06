@@ -16,7 +16,6 @@
 
 import('classes.submission.reviewer.ReviewerAction');
 import('classes.handler.Handler');
-import('lib.pkp.classes.who.MeetingReviewer');
 
 class ReviewerHandler extends Handler {
 	/**
