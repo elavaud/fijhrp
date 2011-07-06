@@ -218,6 +218,7 @@ switch ($op) {
 		break;
 	case 'meetings':
 	case 'setMeeting':
+	case 'addProposalsToMeeting':
 		define('HANDLER_CLASS', 'MeetingsHandler');
 		import('pages.sectionEditor.MeetingsHandler');
 		break;	
