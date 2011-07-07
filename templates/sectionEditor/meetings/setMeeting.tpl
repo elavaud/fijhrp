@@ -23,6 +23,26 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 });
 </script>
 {/literal}
+<!-- 
+<div id="reviewersResponse">
+<table>
+<tr><td>
+Reviewers</td>
+</tr>
+<tr>
+	<td>
+	{assign var="count" value=0}
+	{foreach from=$reviewers item=reviewers}
+		
+	{/foreach}
+	</td>
+</tr>
+</table>
+</div>
+-->
+
+
+
 <div id="setMeeting">
 <form method="post" action="{url op="saveMeeting" path=$meeting->getId() }" >
 <table class="listing" width="100%">
@@ -39,7 +59,6 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 </tr>
 <tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <p></p>
-
 {assign var="count" value=0}
 {foreach from=$submissions item=submission}
 {assign var="status" value=$submission->getSubmissionStatus()}

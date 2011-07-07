@@ -22,3 +22,5 @@ class MeetingSubmission extends DataObject {
 		return $this->getData('submissionId');
 	}
 }
+
+?>
