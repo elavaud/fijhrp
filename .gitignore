@@ -1,5 +1,6 @@
 config.inc.php
 config.inc.php.working
+config.inc.php.ivy
 cache/*
 cache/t_cache/*
 cache/t_compile/*
