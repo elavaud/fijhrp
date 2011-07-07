@@ -266,6 +266,19 @@ function setMeeting($args) {
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
+		
+		$userDao =& DAORegistry::getDAO('UserDAO');
+
+		$reviewers =& $userDao->getUsersWithReviewerRole();
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
+		
+		foreach($reviewers as $reviewer) {
+				$reviewerId = $reviewer->getId();
+				$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+		}				
+		
+		
+		
 			Request::redirect(null, null, 'setMeeting', array($meetingId));
 			//$this->setMeeting(array($meetingId));
 		}
