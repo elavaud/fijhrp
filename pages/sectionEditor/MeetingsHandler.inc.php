@@ -244,8 +244,7 @@ function setMeeting($args) {
 		$this->validate();
 		$selectedProposals = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
-		$meetingId = Request::getUserVar('meetingId');
-		$meetingId = isset($args[0]) ? $args[0]: 0;
+		 $meetingId = isset($args[0]) ? $args[0]: 0;
 		
 		$user =& Request::getUser();
 		$userId = $user->getId();
@@ -253,19 +252,32 @@ function setMeeting($args) {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 			
 		if($meetingId == null) {
+			
 			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
+			
+			$userDao =& DAORegistry::getDAO('UserDAO');
+
+			$reviewers =& $userDao->getUsersWithReviewerRole();
+			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
+			
+			foreach($reviewers as $reviewer) {
+					$reviewerId = $reviewer->getId();
+					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+			}		
+			
 		}else{
-			$meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
+			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 		}
-		
 		if (count($selectedProposals) > 0) {
 			for ($i=0;$i<count($selectedProposals);$i++) {
 				//echo "Proposal' IDs";
 				//should insert into database
+				//echo $selectedProposals[$i];
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
+		
 			Request::redirect(null, null, 'setMeeting', array($meetingId));
 			//$this->setMeeting(array($meetingId));
 		}
