@@ -27,7 +27,6 @@ class MeetingReviewerDAO extends DAO {
 	 * @param int $reviewerId
 	 */
 	function insertMeetingReviewer($meetingId, $reviewerId) {
-		echo $meetingId;
 		$this->update(
 			'INSERT INTO meeting_reviewers
 			(meeting_id, reviewer_id)
