@@ -23,28 +23,42 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 });
 </script>
 {/literal}
+<!-- 
+<div id="reviewersResponse">
+<table>
+<tr><td>
+Reviewers</td>
+</tr>
+<tr>
+	<td>
+	{assign var="count" value=0}
+	{foreach from=$reviewers item=reviewers}
+		
+	{/foreach}
+	</td>
+</tr>
+</table>
+</div>
+-->
+
 
 
 <div id="setMeeting">
-<form method="post" action="{url op="reviewMeeting" path=$meetingId }" >
+<form method="post" action="{url op="saveMeeting" path=$meeting->getId() }" >
 <table class="listing" width="100%">
-<tr valign="top">
-<td colspan="7"><h3>{translate key="editor.meetings.addProposalsToDiscuss"}</h3></td>
-</tr>
 <tr><td colspan="7">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
 <tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <tr class="heading" valign="bottom">
 <td width="5%">Select</input></td>
-<td width="10%">WHO Proposal ID</td>
+<td width="15%">WHO Proposal ID</td>
 <td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
-<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
-<td width="35%">{sort_heading key="article.title" sort="title"}</td>
+<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
+<td width="25%">{sort_heading key="article.title" sort="title"}</td>
 <td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
 </tr>
 <tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <p></p>
-
 {assign var="count" value=0}
 {foreach from=$submissions item=submission}
 {assign var="status" value=$submission->getSubmissionStatus()}
@@ -55,9 +69,7 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 {assign var="count" value=$count+1}
 <tr valign="top">
-<!-- <td><input type="checkbox" name="proposals[]" id="proposals[]" value="{$submission->getId()}" ></td>
--->
-<b>{translate $selectedProposals->getSubmissionId()}
+	<!-- <td><input type="checkbox" name="proposals[]" id="proposals[]" value="{$submission->getId()}" ></td>-->
 </b>
 <td>{html_checkboxes id="selectedProposals" name='selectedProposals' values=$submission->getId() checked=$selectedProposals'} </td>
 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
