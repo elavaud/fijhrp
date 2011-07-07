@@ -23,23 +23,24 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 });
 </script>
 {/literal}
-<!-- 
+
 <div id="reviewersResponse">
 <table>
 <tr><td>
 Reviewers</td>
 </tr>
+	{assign var="count" value=0}
+	{foreach from=$reviewers item=reviewer}
+
 <tr>
 	<td>
-	{assign var="count" value=0}
-	{foreach from=$reviewers item=reviewers}
-		
-	{/foreach}
+	{$reviewer}		
 	</td>
 </tr>
+	{/foreach}
+
 </table>
 </div>
--->
 
 
 

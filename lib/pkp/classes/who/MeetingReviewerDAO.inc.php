@@ -1,7 +1,7 @@
 <?php
 
 
-
+import('lib.pkp.classes.who.MeetingReviewer');
 class MeetingReviewerDAO extends DAO {
 	/**
 	 * Constructor
@@ -33,6 +33,50 @@ class MeetingReviewerDAO extends DAO {
 			VALUES (?, ?)',
 			array($meetingId, $reviewerId)
 		); 
+	}
+	
+	function &getMeetingReviewersByMeetingId($meetingId) {
+		$meetingReviewers = array();
+		$result =& $this->retrieve(
+			'SELECT a.meeting_id, a.reviewer_id, a.remarks, a.attending,
+			 		b.first_name, b.last_name, b.salutation 
+			 FROM meeting_reviewers a LEFT JOIN users b ON (a.reviewer_id = b.user_id )
+			 WHERE meeting_id = ?',
+			(int) $meetingId
+		);
+		
+		while (!$result->EOF) {
+			$meetingReviewers[] =& $this->_returnMeetingReviewerFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+		
+		
+		$result->Close();
+		unset($result);
+
+		return $meetingReviewers;
+	}
+
+	/**
+	 * Return the submission_id
+	 * Internal function to return an meeting object from a row. Simplified
+	 * not to include object settings.
+	 * @param $row array
+	 * @return submission_id
+	 */
+	function &_returnMeetingReviewerFromRow(&$row) {
+		/*$meetingReviewer = new MeetingReviewer();
+		$meetingReviewer->setMeetingId($row['meeting_id']);
+		$meetingReviewer->setReviewerId($row['reviewer_id']);
+		$meetingReviewer->setAttending($row['attending']);
+		$meetingReviewer->setRemarks($row['remarks']);
+		$meetingReviewer->setFirstName($row['first_name']);
+		$meetingReviewer->setLastName($row['last_name']);
+		$meetingReviewer->setSalutation($row['salutation']);
+		HookRegistry::call('MeetingReviewerDAO::_returnMeetingReviewerFromRow', array(&$meetingReviewer, &$row));
+		return $meetingReviewer;
+		*/
+		return $row['last_name'];
 	}
 	
 }

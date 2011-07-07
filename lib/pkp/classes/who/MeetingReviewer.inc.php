@@ -14,8 +14,35 @@ class MeetingReviewer extends DataObject {
 		return $this->getData('meetingId');
 	}
 	
-	function setReviewerId($submissionId) {
-		$this->setData('reviewerId', $submissionId);
+	function setReviewerId($reviewerId) {
+		$this->setData('reviewerId', $reviewerId);
+	}
+	
+	function getReviewerId() {
+		return $this->getData('reviewerId');
+	}
+}
+
+?>
+
+/*
+
+class MeetingReviewer extends DataObject {
+
+	function MeetingReviewer() {
+		parent::DataObject();
+	}
+	
+	function setMeetingId($meetingId){
+			$this->setData('meetingId', $meetingId);
+	}
+	
+	function getMeetingId() {
+		return $this->getData('meetingId');
+	}
+	
+	function setReviewerId($reviewerId) {
+		$this->setData('reviewerId', $reviewerId);
 	}
 	
 	function getReviewerId() {
@@ -31,7 +58,7 @@ class MeetingReviewer extends DataObject {
 	}
 	
 	function setLastName($lastName){
-		return $this->setData('lastName', $lasttName);
+		return $this->setData('lastName', $lastName);
 	}
 	
 	function getLastName(){
@@ -46,5 +73,7 @@ class MeetingReviewer extends DataObject {
 		return $this->getData('salutation');
 	}
 }
+
+*/
 
 ?>

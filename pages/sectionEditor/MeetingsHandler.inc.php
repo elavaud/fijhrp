@@ -186,11 +186,19 @@ function setMeeting($args) {
 	
 	
 	$meetingId = isset($args[0]) ? $args[0]: 0;
+	/*LIST THE SUBMISSIONS*/
 	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-
+	
+	/*MEETING DETAILS*/
 	$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 	$meeting =$meetingDao->getMeetingById($meetingId);
+	
+	/*RESPONSES FROM REVIEWERS*/
+//	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+//	$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+
+	
 	
 	$templateMgr =& TemplateManager::getManager();
 	$templateMgr->assign('helpTopicId', $helpTopicId);
@@ -200,7 +208,8 @@ function setMeeting($args) {
 	$templateMgr->assign('pageToDisplay', $page);
 	$templateMgr->assign('sectionEditor', $user->getFullName());
 	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
-	$templateMgr->assign('meeting', $meeting);
+	$templateMgr->assign_by_ref('meeting', $meeting);
+	$templateMgr->assign_by_ref('reviewers', $reviewers);
 
 	// Set search parameters
 	$duplicateParameters = array(
@@ -244,36 +253,39 @@ function setMeeting($args) {
 		$this->validate();
 		$selectedProposals = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
-		 $meetingId = isset($args[0]) ? $args[0]: 0;
+		$meetingId = isset($args[0]) ? $args[0]: 0;
 		
 		$user =& Request::getUser();
 		$userId = $user->getId();
 		
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-			
-		if($meetingId == null) {
-			
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
+		if($meetingId == 0) {
+		
 			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
 			
 			$userDao =& DAORegistry::getDAO('UserDAO');
-
 			$reviewers =& $userDao->getUsersWithReviewerRole();
 			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-			
+
+
+			$count = 0;
 			foreach($reviewers as $reviewer) {
-					$reviewerId = $reviewer->getId();
-					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-			}		
-			
+				$reviewerId = $reviewer->getId();
+				$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+			}
+
 		}else{
-			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
+
+			$meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 		}
+
+
 		if (count($selectedProposals) > 0) {
 			for ($i=0;$i<count($selectedProposals);$i++) {
 				//echo "Proposal' IDs";
 				//should insert into database
-				//echo $selectedProposals[$i];
+				$selectedProposals[$i];
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
