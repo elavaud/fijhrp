@@ -10,19 +10,17 @@
 {include file="common/header.tpl"}
 {/strip}
 
+<script type="text/javascript" src="{$baseUrl|cat:"/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"}"></script>
+<style type="text/css" src="{$baseUrl|cat:"/lib/pkp/styles/jquery-ui-timepicker-addon.css"}"></style>
+
 {literal}
-
-<script type="text/javascript" src="http://localhost/projects/whorrp/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
-<style type="text/css" src="http://localhost/projects/whorr/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
-
 <script type="text/javascript">
 $(document).ready(function() {
-// $( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
-$( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+0 d'});
-
+	$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
 });
 </script>
 {/literal}
+{$baseUrl}
 <!-- 
 <div id="reviewersResponse">
 <table>

@@ -144,8 +144,9 @@ class MeetingDAO extends DAO {
 
 	function insertMeeting($userId, $meetingDate = null, $status = 0) {
 		$this->update(
-			'INSERT INTO meetings (meeting_date, user_id, status) VALUES (?, ?, ?)',
-			array($meetingDate, $userId, $status)
+			sprintf('INSERT INTO meetings (meeting_date, user_id, status) VALUES (%s, ?, ?)',
+			$this->datetimeToDB($meetingDate)),
+			array($userId, $status)
 		);		
 	}
 	

@@ -226,11 +226,15 @@ function setMeeting($args) {
 		SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		));
 	
+	$protocol = (strstr('https',$_SERVER['SERVER_PROTOCOL']) === false)?'http':'https'; 
+	$url = $protocol.'://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']);
+	
 	import('classes.issue.IssueAction');
 	$issueAction = new IssueAction();
 	$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
 	$templateMgr->assign('sort', $sort);
 	$templateMgr->assign('sortDirection', $sortDirection);
+	$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 	$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
 	}
 	
@@ -244,18 +248,36 @@ function setMeeting($args) {
 		$this->validate();
 		$selectedProposals = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
-		 $meetingId = isset($args[0]) ? $args[0]: 0;
+		$meetingId = isset($args[0]) ? $args[0]: 0;
 		
 		$user =& Request::getUser();
 		$userId = $user->getId();
 		
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-			
+		
+		/**
+		 * Parse $meetingDate
+		 * TODO: Mas ok ata ilagay 'to sa isang Action class. Pero dito muna for the mean time.XD
+		 * Last Updated 7/7/2011 by ayveemallare
+		 */
+		if ($meetingDate != null) {
+			$meetingDateParts = explode('-', $meetingDate);
+			$tmp = explode(' ', $meetingDateParts[2]);
+			$meetingTime = $tmp[1];
+			$meetingTimeMarker = $tmp[2];
+			$meetingTimeParts = explode(':', $meetingTime);
+				
+			if(strcasecmp($meetingTimeMarker, 'pm'))
+				$hour = intval($meetingTimeParts[0]) + 12;
+			else 
+				$hour = intval($meetingTimeParts[0]);
+			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
+		}
+		/************************************************************/
+		
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		if($meetingId == null) {
-			
-			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
-			
 			$userDao =& DAORegistry::getDAO('UserDAO');
 
 			$reviewers =& $userDao->getUsersWithReviewerRole();
@@ -265,9 +287,14 @@ function setMeeting($args) {
 					$reviewerId = $reviewer->getId();
 					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
 			}		
-			
 		}else{
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
+			 //Update meeting date
+			 //Edited by ayveemallare 7/7/2011
+			 $meeting = $meetingDao->getMeetingById($meetingId);
+			 $meeting->setDate($meetingDate);
+			 $meetingDao->updateMeetingDate($meeting);
+			 
 		}
 		if (count($selectedProposals) > 0) {
 			for ($i=0;$i<count($selectedProposals);$i++) {
