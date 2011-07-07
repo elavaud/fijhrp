@@ -69,7 +69,7 @@ class MeetingDAO extends DAO {
 		$meetings = array();
 		$sql = 
 			'SELECT * 
-			FROM meetings a INNER JOIN meeting_reviewer b
+			FROM meetings a INNER JOIN meeting_reviewers b
 			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
 		if ($sortBy) {
 			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
@@ -98,7 +98,7 @@ class MeetingDAO extends DAO {
 		$meeting = null;
 		$result =& $this->retrieve(
 			'SELECT * 
-			FROM meetings a INNER JOIN meeting_reviewer b
+			FROM meetings a INNER JOIN meeting_reviewers b
 			ON a.meeting_id = b.meeting_id WHERE a.meeting_id = ? AND b.reviewer_id= ?',
 			array((int) $meetingId, (int) $reviewerId));
 		
@@ -167,13 +167,13 @@ class MeetingDAO extends DAO {
 	}
 	
 	/**
-	 * Update meeting_reviewer table to save reviewer response 
+	 * Update meeting_reviewers table to save reviewer response 
 	 * Added by ayveemallare 7/6/2011
 	 * @param Meeting $meeting
 	 */
 	function updateReplyOfReviewer($meeting) {
 		$this->update(
-			'UPDATE meeting_reviewer SET attending = ?, remarks = ?
+			'UPDATE meeting_reviewers SET attending = ?, remarks = ?
 			WHERE meeting_id = ? AND reviewer_id = ?',
 			array($meeting->getIsAttending(),
 			$meeting->getRemarks(), 

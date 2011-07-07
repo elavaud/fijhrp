@@ -111,7 +111,7 @@ Reviewers</td>
 *******************************************************************}
 
 <tr valign="top">
-<td colspan="7"><h3>{translate key="editor.article.designateMeetingDate"}</h3></td>
+<td colspan="7"><h2>{translate key="editor.article.designateMeetingDate"}</h3></td>
 </tr>
 <tr valign="top">
 <td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
