@@ -195,10 +195,9 @@ function setMeeting($args) {
 	$meeting =$meetingDao->getMeetingById($meetingId);
 	
 	/*RESPONSES FROM REVIEWERS*/
-//	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-//	$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+	$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
 
-	
 	
 	$templateMgr =& TemplateManager::getManager();
 	$templateMgr->assign('helpTopicId', $helpTopicId);

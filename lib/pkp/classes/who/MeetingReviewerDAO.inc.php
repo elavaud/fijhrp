@@ -65,18 +65,18 @@ class MeetingReviewerDAO extends DAO {
 	 * @return submission_id
 	 */
 	function &_returnMeetingReviewerFromRow(&$row) {
-		/*$meetingReviewer = new MeetingReviewer();
+		$meetingReviewer = new MeetingReviewer();
 		$meetingReviewer->setMeetingId($row['meeting_id']);
 		$meetingReviewer->setReviewerId($row['reviewer_id']);
-		$meetingReviewer->setAttending($row['attending']);
+		$meetingReviewer->setIsAttending($row['attending']);
 		$meetingReviewer->setRemarks($row['remarks']);
 		$meetingReviewer->setFirstName($row['first_name']);
 		$meetingReviewer->setLastName($row['last_name']);
 		$meetingReviewer->setSalutation($row['salutation']);
 		HookRegistry::call('MeetingReviewerDAO::_returnMeetingReviewerFromRow', array(&$meetingReviewer, &$row));
 		return $meetingReviewer;
-		*/
-		return $row['last_name'];
+		//*/
+		//return $row['last_name'];
 	}
 	
 }

@@ -25,17 +25,21 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 {/literal}
 
 <div id="reviewersResponse">
-<table>
-<tr><td>
-Reviewers</td>
+<table class="listing" width="100%">
+<tr class="heading" valign="bottom">
+	<td width="5%">ReviewerID</td>
+	<td colspan="3" width="45%">Name</td>
+	<td width="25%"> Remarks </td>
+	<td width="25%"> Is Attending? </td>
 </tr>
 	{assign var="count" value=0}
 	{foreach from=$reviewers item=reviewer}
 
 <tr>
-	<td>
-	{$reviewer}		
-	</td>
+	<td width="5%">{$reviewer->getReviewerId()}</td>
+	<td colspan="3" width="45%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
+	<td width="25%">{$reviewer->getIsAttending()}</td>
+	<td width="25%">{$reviewer->getRemarks()}</td>
 </tr>
 	{/foreach}
 
