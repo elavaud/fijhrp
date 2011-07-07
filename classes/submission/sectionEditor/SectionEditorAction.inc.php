@@ -92,7 +92,7 @@ class SectionEditorAction extends Action {
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
 		$journal =& Request::getJournal();
-		
+
 		$startDate = (($dateDecided == null) ? date(Core::getCurrentDate()) : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;  
 		$editorDecision = array(

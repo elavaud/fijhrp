@@ -104,7 +104,7 @@ class UserDAO extends PKPUserDAO {
 	 */
 	function &getUsersWithReviewerRole($journalId) {
 		$reviewers = array();
-		$sql = 'SELECT u.* FROM users u LEFT JOIN roles r ON u.user_id=r.user_id AND r.journal_id = '. $journalId.' WHERE r.role_id = ' .  ROLE_ID_REVIEWER;
+		$sql = 'SELECT u.* FROM users u LEFT JOIN roles r ON u.user_id=r.user_id AND r.journal_id = '. $journalId .  ' WHERE r.role_id = ' .  ROLE_ID_REVIEWER;
 		$orderSql = ' ORDER BY u.last_name, u.first_name'; // FIXME Add "sort field" parameter?
 
 		//$result =& $this->retrieve($sql . ($allowDisabled?'':' AND u.disabled = 0') . $orderSql, false, $dbResultRange);
