@@ -42,8 +42,12 @@ class MeetingDAO extends DAO {
 	 */
 	function &getMeetingById($meetingId) {
 		$meeting = null;
+		
+		//Added field 'final'
+		//Edited by ayveemallare 7/6/2011
+		
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings WHERE meeting_id = ?',
+			'SELECT meeting_id, user_id, meeting_date, status, final FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -55,26 +59,55 @@ class MeetingDAO extends DAO {
 		return $meeting;
 	}
 	
-	/********************************** 
-	 * Get all meetings by reviewer
-	 *  Added by ayveemallare 7/6/2011
-	 **********************************/
-	function &getMeetingsByReviewerId($reviewerId) {
-		$meetingReviewers = array();
+	/**
+	 * Get all meetings to be attended by reviewer
+	 * Added by ayveemallare 7/6/2011
+	 * 
+	 * @param unknown_type $reviewerId
+	 */
+	function &getMeetingsByReviewerId($reviewerId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$meetings = array();
+		$sql = 
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewer b
+			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
+		if ($sortBy) {
+			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
+		}
 		$result =& $this->retrieve(
-			'SELECT meetings.meeting_id, reviewer_id, meeting_date, attending, remarks, final
-			FROM meeting_reviewer, meetings
-			WHERE reviewer_id = ?',
-			(int) $reviewerId );
+			$sql,(int) $reviewerId );
 		while (!$result->EOF) {
-			$meetingReviewers[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+			$meetings[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
 			$result->MoveNext();
 		}
 
 		$result->Close();
 		unset($result);
 
-		return $meetingReviewers;
+		return $meetings;
+	}
+	
+	/**
+	 * Get meeting by meetingId and reviewerId
+	 * Added by ayveemallare 7/6/2011
+	 * 
+	 * @param int $meetingId
+	 * @param int $reviewerId
+	 */
+	function &getMeetingByMeetingAndReviewerId($meetingId, $reviewerId) {
+		$meeting = null;
+		$result =& $this->retrieve(
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewer b
+			ON a.meeting_id = b.meeting_id WHERE a.meeting_id = ? AND b.reviewer_id= ?',
+			array((int) $meetingId, (int) $reviewerId));
+		
+		$meeting =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+		
+		$result->Close();
+		unset($result);
+
+		return $meeting;
 	}
 
 	/**
@@ -90,8 +123,8 @@ class MeetingDAO extends DAO {
 		$meeting->setUploader($row['user_id']);
 		$meeting->setStatus($row['status']);
 				
-		//Edited by ayveemallare 7/6/2011
 		//Added additional fields
+		//Edited by ayveemallare 7/6/2011
 		$meeting->setReviewerId($row['reviewer_id']);
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
@@ -133,6 +166,22 @@ class MeetingDAO extends DAO {
 		return $meetingId;
 	}
 	
+	/**
+	 * Update meeting_reviewer table to save reviewer response 
+	 * Added by ayveemallare 7/6/2011
+	 * @param Meeting $meeting
+	 */
+	function updateReplyOfReviewer($meeting) {
+		$this->update(
+			'UPDATE meeting_reviewer SET attending = ?, remarks = ?
+			WHERE meeting_id = ? AND reviewer_id = ?',
+			array($meeting->getIsAttending(),
+			$meeting->getRemarks(), 
+			$meeting->getId(), 
+			$meeting->getReviewerId())
+		);
+	}
+	
 	function updateMeetingDate($meeting) {
 		$this->update(
 			sprintf('UPDATE meetings SET meeting_date = %s where meeting_id = ?',$this->datetimeToDB($meeting->getDate())),
@@ -145,6 +194,15 @@ class MeetingDAO extends DAO {
 			'UPDATE meetings SET status = ? where meeting_id = ?',
 			array($meeting->getStatus(), $meeting->getId())
 		);
+	}
+	
+	function getSortMapping($heading) {
+		switch ($heading) {
+			case 'id': return 'a.meeting_id';
+			case 'meetingDate': return 'meeting_date';
+			case 'replyStatus': return 'attending';
+			default: return null;
+		}
 	}
 		
 }

@@ -11,6 +11,8 @@ define ('MEETING_STATUS_ADVERSE_EVENTS', 64);
 define ('MEETING_STATUS_INFORMATION_ITEMS', 128);
 define ('MEETING_REPLY_ATTENDING', 1);
 define ('MEETING_REPLY_NOT_ATTENDING', 2);
+define ('MEETING_SCHEDULE_FINAL', 1);
+define ('MEETING_SCHEDULE_PROPOSED', 0);
 
 class Meeting extends DataObject {
 	
@@ -131,11 +133,20 @@ class Meeting extends DataObject {
 	function getReplyStatus() {
 		switch ($this->getIsAttending()) {
 			case MEETING_REPLY_ATTENDING:
-				return 'Attending';
+				return Locale::Translate('reviewer.meetings.replyStatus.attending');
 			case MEETING_REPLY_NOT_ATTENDING:
-				return 'Not Attending';
+				return Locale::Translate('reviewer.meetings.replyStatus.notAttending');
 			default:
-				return 'Awaiting Reply';
+				return Locale::Translate('reviewer.meetings.replyStatus.awaitingReply');
+		}
+	}
+	
+	function getScheduleStatus() {
+		switch ($this->getIsFinal()) {
+			case MEETING_SCHEDULE_FINAL:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.final');
+			default:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.proposed');
 		}
 	}
 	

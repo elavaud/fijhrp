@@ -128,21 +128,31 @@ class ReviewerHandler extends Handler {
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
 		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
 		$articleDao = DAORegistry::getDAO('ArticleDAO');
-		$meetings =& $meetingDao->getMeetingsByReviewerId($userId);
 		
-		$submissions = array();
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'id';
+		$sortDirection = Request::getUserVar('sortDirection');
+		
+		$meetings =& $meetingDao->getMeetingsByReviewerId($userId, $sort, $sortDirection);
+		
+		$map = array();
 		
 		foreach($meetings as $meeting) {
 			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
+			$submissions = array();
 			foreach($submissionIds as $submissionId) {
 				$submission = $articleDao->getArticle($submissionId, $journalId, false);
+				array_push($submissions, $submission);
 			}
-			array_push($submissions, $submission);
+			$map[$meeting->getId()] = $submissions;
 		}
-				
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings); 
 		$templateMgr->assign_by_ref('submissions', $submissions); 
+		$templateMgr->assign_by_ref('map', $map); 
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->display('reviewer/meetings.tpl');
 	}
 	
@@ -199,7 +209,7 @@ class ReviewerHandler extends Handler {
 	 * Setup common template variables.
 	 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 	 */
-	function setupTemplate($subclass = false, $articleId = 0, $reviewId = 0) {
+	function setupTemplate($subclass = false, $meetingId=0, $articleId = 0, $reviewId = 0) {
 		parent::setupTemplate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR));
 		$templateMgr =& TemplateManager::getManager();
@@ -208,6 +218,9 @@ class ReviewerHandler extends Handler {
 
 		if ($articleId && $reviewId) {
 			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'submission', $reviewId), "#$articleId", true);
+		}
+		if ($meetingId) {
+			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'viewMeeting', $meetingId), "#$meetingId", true);
 		}
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}

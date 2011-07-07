@@ -1,7 +1,7 @@
 <?php
 
 /**
-* class MinutesHandler for SectionEditor and Editor Roles (STO)
+* class MeetingsHandler for SectionEditor and Editor Roles (STO)
 * page handler class for minutes-related operations
 * @var unknown_type
 */

@@ -258,7 +258,7 @@
 	<message key="editor.meetings.setMeeting">Set a Meeting</message>
 	<message key="editor.meetings.meetingId">Meeting ID</message>
 	<message key="editor.meetings.status">status</message>
-	<message key="editor.meetings.meetingDate">Meeting Date</message>
+	<message key="editor.meetings.meetingDate">Schedule</message>
 	<message key="editor.meetings.noMeetings">No scheduled meetings</message>
 	<message key="editor.meetings.meetingsCount">meeting(s) scheduled</message>
 	<message key="editor.meetings.setNewMeeting">SET A NEW MEETING</message>
