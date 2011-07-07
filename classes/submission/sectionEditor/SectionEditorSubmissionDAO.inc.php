@@ -721,7 +721,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo RangeInfo optional
 	 * @return DAOResultFactory containing matching Users
 	 */
-	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getReviewersForArticleIterator($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
 		$searchSql = '';
 
@@ -1304,6 +1304,95 @@ class SectionEditorSubmissionDAO extends DAO {
 
 		return $sectionEditorSubmissions;
 		
+	}
+	
+/**
+	 * Retrieve a list of all reviewers along with information about their current status with respect to an article's current round.
+	 * @param $journalId int
+	 * @param $articleId int
+	 * @param $round int
+	 * @param $searchType int USER_FIELD_...
+	 * @param $search string
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $rangeInfo RangeInfo optional
+	 * @return DAOResultFactory containing matching Users
+	 */
+	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$reviewers = array();
+		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
+		$searchSql = '';
+
+		$searchTypeMap = array(
+			USER_FIELD_FIRSTNAME => 'u.first_name',
+			USER_FIELD_LASTNAME => 'u.last_name',
+			USER_FIELD_USERNAME => 'u.username',
+			USER_FIELD_EMAIL => 'u.email',
+			USER_FIELD_INTERESTS => 'cves.setting_value'
+			);
+
+		if (isset($search) && isset($searchTypeMap[$searchType])) {
+			$fieldName = $searchTypeMap[$searchType];
+			switch ($searchMatch) {
+				case 'is':
+					$searchSql = "AND LOWER($fieldName) = LOWER(?)";
+					$paramArray[] = $search;
+					break;
+				case 'contains':
+					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
+					$paramArray[] = '%' . $search . '%';
+					break;
+				case 'startsWith':
+					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
+					$paramArray[] = $search . '%';
+					break;
+			}
+		} elseif (isset($search)) switch ($searchType) {
+			case USER_FIELD_USERID:
+				$searchSql = 'AND user_id=?';
+				$paramArray[] = $search;
+				break;
+			case USER_FIELD_INITIAL:
+				$searchSql = 'AND (LOWER(last_name) LIKE LOWER(?) OR LOWER(username) LIKE LOWER(?))';
+				$paramArray[] = $search . '%';
+				$paramArray[] = $search . '%';
+				break;
+		}
+
+		$result =& $this->retrieveRange(
+			'SELECT DISTINCT
+				u.user_id,
+				u.last_name,
+				ar.review_id,
+				AVG(ra.quality) AS average_quality,
+				COUNT(ac.review_id) AS completed,
+				COUNT(ai.review_id) AS incomplete,
+				MAX(ac.date_notified) AS latest,
+				AVG(ac.date_completed-ac.date_notified) AS average
+			FROM	users u
+			  LEFT JOIN review_assignments ra ON (ra.reviewer_id = u.user_id)
+				LEFT JOIN review_assignments ac ON (ac.reviewer_id = u.user_id AND ac.date_completed IS NOT NULL)
+				LEFT JOIN review_assignments ai ON (ai.reviewer_id = u.user_id AND ai.date_completed IS NULL)
+				LEFT JOIN review_assignments ar ON (ar.reviewer_id = u.user_id AND ar.cancelled = 0 AND ar.submission_id = ? AND ar.round = ?)
+				LEFT JOIN roles r ON (r.user_id = u.user_id)
+				LEFT JOIN articles a ON (ra.submission_id = a.article_id)
+				LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
+				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
+				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id)
+			WHERE u.user_id = r.user_id AND
+				r.journal_id = ? AND
+				r.role_id = ? ' . $searchSql . 'GROUP BY u.user_id, u.last_name, ar.review_id' .
+			($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+			$paramArray, $rangeInfo
+		);
+		
+		while (!$result->EOF) {
+			$reviewers[] =& $this->_returnReviewerUserFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+		return $reviewers;				
 	}
 		
 }
