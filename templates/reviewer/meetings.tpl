@@ -17,28 +17,29 @@
 	<table class="listing" width="100%">
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 		<tr class="heading" valign="bottom">
-			<td width="5%">{translate key="editor.meetings.meetingId"}</td>
+			<td width="5%">{sort_heading key="editor.meetings.meetingId" sort="id"}</td>
 			<td>{translate key="reviewer.meetings.submissions"}</td>
-			<td width="25%" align="right">{translate key="editor.meetings.meetingDate"}</td>
-			<td width="30%" align="right">{translate key="reviewer.meetings.replyStatus"}</td>
+			<td width="25%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
+			<td width="30%" align="right">{sort_heading key="reviewer.meetings.replyStatus" sort="replyStatus"}</td>
 		</tr>
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<p></p>
 	{assign var="count" value=0}
 	{foreach from=$meetings item=meeting}
+	{assign var="key" value=$meeting->getId()}
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
-			<td {if empty($submissions)} class="nodata"{/if}>
-				{foreach from=$submissions item=submission name=submissions}
+			<td {if empty($map.$key)} class="nodata"{/if}>
+				{foreach from=$map.$key item=submission name=submissions}
 					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
 					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
 				{/foreach}
-				{if empty($submissions)}
-					None
+				{if empty($map.$key)}
+					{translate key="reviewer.meetings.noSubmissions"}
 				{/if}
 				
 			</td>
-			<td width="25%" align="right">{$meeting->getDate()|date_format:$dateFormatShort}</td>
+			<td width="25%" align="right">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getReplyStatus()}

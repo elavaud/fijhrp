@@ -19,6 +19,10 @@ import('classes.handler.Handler');
 import('pages.reviewer.ReviewerHandler');
 
 class MeetingReviewerHandler extends ReviewerHandler {
+	var $meeting;
+	var $submissions;
+	var $user;
+	var $submissionReviewMap;
 	/**
 	 * Constructor
 	 **/
@@ -33,19 +37,28 @@ class MeetingReviewerHandler extends ReviewerHandler {
 	 * Display view meeting page.
 	 */
 	function viewMeeting($args) {
-		$this->validate();
-		$this->setupTemplate();
+		$meetingId = $args[0];
+		$this->validate($meetingId);
 		$user =& Request::getUser();
 		$userId = $user->getId();
-		$meetingId = $args[0];
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$userDao =& DAORegistry::getDao('UserDAO');
-		$meeting = $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $userId);
 		
+		$meeting =& $this->meeting;
+		$submissions =& $this->submissions;
+		
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'id';
+		$sortDirection = Request::getUserVar('sortDirection');
+		$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
+		$submissionReviewMap =& $this->submissionReviewMap;
+		$this->setupTemplate(true, $meetingId, 0, 0);
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
+		$templateMgr->assign_by_ref('submissions', $submissions);
+		$templateMgr->assign_by_ref('map', $submissionReviewMap);
 		$templateMgr->assign('editor', $userDao->getUser($meeting->getUploader())); 
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->display('reviewer/viewMeeting.tpl');
 	}
 	
@@ -54,9 +67,10 @@ class MeetingReviewerHandler extends ReviewerHandler {
 	 */
 	
 	function replyMeeting(){
+		$meetingId = Request::getUserVar('meetingId');
+		$this->validate($meetingId);
 		$user =& Request::getUser();
 		$userId = $user->getId();
-		$meetingId = Request::getUserVar('meetingId');
 		
 		$meetingDao =& DAORegistry::getDao('MeetingDAO');
 		$meeting = $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $userId);
@@ -74,7 +88,51 @@ class MeetingReviewerHandler extends ReviewerHandler {
 	 * @see PKPHandler::validate()
 	 */
 	function validate($meetingId) {
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$journal =& Request::getJournal();
+		$user =& Request::getUser();
+
+		$isValid = true;
+		$newKey = Request::getUserVar('key');
+
+		$meeting =& $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $user->getId());
+
+		if (!$meeting) {
+			$isValid = false;
+		} else if ($user && empty($newKey)) {
+			if ($meeting->getReviewerId() != $user->getId()) {
+				$isValid = false;
+			}
+		} 
+		else {
+			//$user =& MeetingReviewerHandler::validateAccessKey($meeting->getReviewerId(), $meetingId, $newKey);
+			if (!$user) $isValid = false;
+		}
+
+		if (!$isValid) {
+			Request::redirect(null, Request::getRequestedPage());
+		}
+		$submissionIds = array();
+		$submissions = array();
+		$reviewIds = array();
+		$map = array();
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
 		
+		foreach($submissionIds as $submissionId) {
+			$submission = $articleDao->getArticle($submissionId, $journalId, false);
+			$review = $reviewerSubmissionDao->getReviewerSubmissionByReviewerAndSubmissionId($user->getId(), $submissionId, $journal->getId());
+			$map[$submissionId] = $review->getReviewId();
+			array_push($submissions, $submission);
+		}
+		$this->submissionReviewMap =& $map;
+		$this->submissions =& $submissions;
+		$this->meeting =& $meeting;
+		$this->user =& $user;
+		
+		return true;
 	}
 }
 

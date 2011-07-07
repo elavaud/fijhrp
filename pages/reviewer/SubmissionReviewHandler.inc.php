@@ -53,7 +53,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 			$confirmedStatus = 1;
 		}
 
-		$this->setupTemplate(true, $reviewAssignment->getSubmissionId(), $reviewId);
+		$this->setupTemplate(true, 0, $reviewAssignment->getSubmissionId(), $reviewId);
 
 		$templateMgr =& TemplateManager::getManager();
 
@@ -171,7 +171,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$this->validate($reviewId);
 		$reviewerSubmission =& $this->submission;
 
-		$this->setupTemplate(true, $articleId, $reviewId);
+		$this->setupTemplate(true, 0, $articleId, $reviewId);
 
 		ReviewerAction::viewMetadata($reviewerSubmission, $journal);
 	}

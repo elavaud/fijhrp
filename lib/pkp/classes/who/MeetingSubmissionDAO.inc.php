@@ -16,7 +16,6 @@ class MeetingSubmissionDAO extends DAO {
 	 * @return MeetingSubmission
 	 */
 	function &getMeetingSubmissionsByMeetingId($meetingId) {
-
 		$meetingSubmissions = array();
 		$result =& $this->retrieve(
 			'SELECT meeting_id, submission_id FROM meeting_submissions WHERE meeting_id = ?',

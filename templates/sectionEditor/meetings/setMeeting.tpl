@@ -57,7 +57,7 @@ $( "#meetingDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+
 <tr valign="top">
 <!-- <td><input type="checkbox" name="proposals[]" id="proposals[]" value="{$submission->getId()}" ></td>
 -->
-aaa<b>{translate $selectedProposals->getSubmissionId()}
+<b>{translate $selectedProposals->getSubmissionId()}
 </b>
 <td>{html_checkboxes id="selectedProposals" name='selectedProposals' values=$submission->getId() checked=$selectedProposals'} </td>
 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
