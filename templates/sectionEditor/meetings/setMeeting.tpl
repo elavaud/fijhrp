@@ -26,23 +26,28 @@ $(document).ready(function() {
 });
 </script>
 {/literal}
-<!-- 
+
 <div id="reviewersResponse">
-<table>
-<tr><td>
-Reviewers</td>
+<table class="listing" width="100%">
+<tr class="heading" valign="bottom">
+	<td width="5%">ReviewerID</td>
+	<td colspan="3" width="45%">Name</td>
+	<td width="25%"> Remarks </td>
+	<td width="25%"> Is Attending? </td>
 </tr>
-<tr>
-	<td>
 	{assign var="count" value=0}
-	{foreach from=$reviewers item=reviewers}
-		
-	{/foreach}
-	</td>
+	{foreach from=$reviewers item=reviewer}
+
+<tr>
+	<td width="5%">{$reviewer->getReviewerId()}</td>
+	<td colspan="3" width="45%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
+	<td width="25%">{$reviewer->getIsAttending()}</td>
+	<td width="25%">{$reviewer->getRemarks()}</td>
 </tr>
+	{/foreach}
+
 </table>
 </div>
--->
 
 
 
@@ -114,7 +119,7 @@ Reviewers</td>
 *******************************************************************}
 
 <tr valign="top">
-<td colspan="7"><h2>{translate key="editor.article.designateMeetingDate"}</h3></td>
+<td colspan="7"><h2>{translate key="editor.article.designateMeetingDate"}</h2></td>
 </tr>
 <tr valign="top">
 <td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>

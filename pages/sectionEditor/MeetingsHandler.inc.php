@@ -35,10 +35,6 @@ function MeetingsHandler() {
 * Setup common template variables.
 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 */
-/**
-* Setup common template variables.
-* @param $subclass boolean set to true if caller is below this handler in the hierarchy
-*/
 function setupTemplate($subclass = false, $meetingId = 0, $parentPage = null, $showSidebar = true) {
 	parent::setupTemplate();
 	Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
@@ -187,11 +183,23 @@ function setMeeting($args) {
 	$sortDirection
 	);
 	
+<<<<<<< HEAD
+=======
+	
+	$meetingId = isset($args[0]) ? $args[0]: 0;
+	/*LIST THE SUBMISSIONS*/
+>>>>>>> refs/remotes/gay/master
 	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-
+	
+	/*MEETING DETAILS*/
 	$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 	$meeting =$meetingDao->getMeetingById($meetingId);
+	
+	/*RESPONSES FROM REVIEWERS*/
+	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+	$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+
 	
 	$templateMgr =& TemplateManager::getManager();
 	$templateMgr->assign('helpTopicId', $helpTopicId);
@@ -201,7 +209,8 @@ function setMeeting($args) {
 	$templateMgr->assign('pageToDisplay', $page);
 	$templateMgr->assign('sectionEditor', $user->getFullName());
 	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
-	$templateMgr->assign('meeting', $meeting);
+	$templateMgr->assign_by_ref('meeting', $meeting);
+	$templateMgr->assign_by_ref('reviewers', $reviewers);
 
 	// Set search parameters
 	$duplicateParameters = array(
@@ -251,6 +260,7 @@ function setMeeting($args) {
 		$user =& Request::getUser();
 		$userId = $user->getId();
 		
+<<<<<<< HEAD
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		
 		/**
@@ -275,17 +285,32 @@ function setMeeting($args) {
 		
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		if($meetingId == null) {
+=======
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
+		if($meetingId == 0) {
+		
+			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+>>>>>>> refs/remotes/gay/master
 			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
 			$userDao =& DAORegistry::getDAO('UserDAO');
-
 			$reviewers =& $userDao->getUsersWithReviewerRole();
 			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-			
+
+
+			$count = 0;
 			foreach($reviewers as $reviewer) {
+<<<<<<< HEAD
 					$reviewerId = $reviewer->getId();
 					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
 			}		
+=======
+				$reviewerId = $reviewer->getId();
+				$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+			}
+
+>>>>>>> refs/remotes/gay/master
 		}else{
+<<<<<<< HEAD
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 			 //Update meeting date
 			 //Edited by ayveemallare 7/7/2011
@@ -293,12 +318,18 @@ function setMeeting($args) {
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
 			 
+=======
+
+			$meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
+>>>>>>> refs/remotes/gay/master
 		}
+
+
 		if (count($selectedProposals) > 0) {
 			for ($i=0;$i<count($selectedProposals);$i++) {
 				//echo "Proposal' IDs";
 				//should insert into database
-				//echo $selectedProposals[$i];
+				$selectedProposals[$i];
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
