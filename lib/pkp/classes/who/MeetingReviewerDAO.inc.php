@@ -38,7 +38,7 @@ class MeetingReviewerDAO extends DAO {
 	function &getMeetingReviewersByMeetingId($meetingId) {
 		$meetingReviewers = array();
 		$result =& $this->retrieve(
-			'SELECT a.meeting_id, a.reviewer_id, a.remarks, a.attending,
+			'SELECT a.meeting_id, a.reviewer_id, a.remarks, a.is_attending,
 			 		b.first_name, b.last_name, b.salutation 
 			 FROM meeting_reviewers a LEFT JOIN users b ON (a.reviewer_id = b.user_id )
 			 WHERE meeting_id = ?',

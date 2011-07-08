@@ -109,79 +109,11 @@ function setMeeting($args) {
 	$sectionDao =& DAORegistry::getDAO('SectionDAO');
 	
 	$sections =& $sectionDao->getSectionTitles($journalId);
-	
-	$sort = Request::getUserVar('sort');
-	$sort = isset($sort) ? $sort : 'id';
-	$sortDirection = Request::getUserVar('sortDirection');
-	$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
-	
-	$filterEditorOptions = array(
-		FILTER_EDITOR_ALL => Locale::Translate('editor.allEditors'),
-		FILTER_EDITOR_ME => Locale::Translate('editor.me')
-		);
-	
-	$filterSectionOptions = array(
-		FILTER_SECTION_ALL => Locale::Translate('editor.allSections')
-		) + $sections;
-	
-	// Get the user's search conditions, if any
-	$searchField = Request::getUserVar('searchField');
-	$dateSearchField = Request::getUserVar('dateSearchField');
-	$searchMatch = Request::getUserVar('searchMatch');
-	$search = Request::getUserVar('search');
-	
-	$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-	if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-	$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-	if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
-	
-	$rangeInfo = Handler::getRangeInfo('submissions');
-	
-	$filterEditor = Request::getUserVar('filterEditor');
-	if ($filterEditor != '' && array_key_exists($filterEditor, $filterEditorOptions)) {
-		$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
-	} else {
-		$filterEditor = $user->getSetting('filterEditor', $journalId);
-		if ($filterEditor == null) {
-			$filterEditor = FILTER_EDITOR_ALL;
-			$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
-		}
-	}
-	
-	if ($filterEditor == FILTER_EDITOR_ME) {
-		$editorId = $user->getId();
-	} else {
-		$editorId = FILTER_EDITOR_ALL;
-	}
-	
-	$editorId = 0;
-	
-	
-	$filterSection = Request::getUserVar('filterSection');
-	if ($filterSection != '' && array_key_exists($filterSection, $filterSectionOptions)) {
-		$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-	} else {
-		$filterSection = $user->getSetting('filterSection', $journalId);
-		if ($filterSection == null) {
-			$filterSection = FILTER_SECTION_ALL;
-			$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-		}
-	}
-
 
 	$submissions =& $editorSubmissionDao->getEditorSubmissionsForERCReview(
-	$journalId,
-	$filterSection,
-	$editorId,
-	$searchField,
-	$searchMatch,
-	$search,
-	$dateSearchField,
-	$fromDate,
-	$toDate,
-	$rangeInfo,
-	$sort,
-	$sortDirection
+		$journalId,
+		FILTER_SECTION_ALL,
+		$user->getId()
 	);
 	
 	
@@ -193,7 +125,7 @@ function setMeeting($args) {
 	/*MEETING DETAILS*/
 	$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 	$meeting =$meetingDao->getMeetingById($meetingId);
-	
+			
 	/*RESPONSES FROM REVIEWERS*/
 	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 	$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
