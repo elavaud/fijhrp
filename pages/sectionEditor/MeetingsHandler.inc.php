@@ -183,12 +183,9 @@ function setMeeting($args) {
 	$sortDirection
 	);
 	
-<<<<<<< HEAD
-=======
 	
 	$meetingId = isset($args[0]) ? $args[0]: 0;
 	/*LIST THE SUBMISSIONS*/
->>>>>>> refs/remotes/gay/master
 	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 	
@@ -260,7 +257,6 @@ function setMeeting($args) {
 		$user =& Request::getUser();
 		$userId = $user->getId();
 		
-<<<<<<< HEAD
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		
 		/**
@@ -285,12 +281,10 @@ function setMeeting($args) {
 		
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		if($meetingId == null) {
-=======
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
 		if($meetingId == 0) {
 		
 			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
->>>>>>> refs/remotes/gay/master
 			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
 			$userDao =& DAORegistry::getDAO('UserDAO');
 			$reviewers =& $userDao->getUsersWithReviewerRole();
@@ -299,18 +293,14 @@ function setMeeting($args) {
 
 			$count = 0;
 			foreach($reviewers as $reviewer) {
-<<<<<<< HEAD
 					$reviewerId = $reviewer->getId();
 					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
 			}		
-=======
 				$reviewerId = $reviewer->getId();
 				$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
 			}
 
->>>>>>> refs/remotes/gay/master
 		}else{
-<<<<<<< HEAD
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 			 //Update meeting date
 			 //Edited by ayveemallare 7/7/2011
@@ -318,10 +308,8 @@ function setMeeting($args) {
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
 			 
-=======
 
 			$meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
->>>>>>> refs/remotes/gay/master
 		}
 
 
