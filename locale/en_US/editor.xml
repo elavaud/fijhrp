@@ -260,6 +260,7 @@
 	<message key="editor.meetings.meetingId">Meeting ID</message>
 	<message key="editor.meetings.reviewers">Reviewers</message>
 	<message key="editor.meetings.status">Status</message>
+	<message key="editor.meetings.isFinal">Is Final</message>
 	<message key="editor.meetings.scheduleStatus">Schedule Status</message>
 	<message key="editor.meetings.meetingDate">Schedule</message>
 	<message key="editor.meetings.noMeetings">No scheduled meetings</message>

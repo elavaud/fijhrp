@@ -90,6 +90,7 @@ function meetings($args) {
 	$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 }
 
+
 /**
 * Added by MSB
 * Display the setMeeting page
@@ -295,9 +296,7 @@ function setMeeting($args) {
 					$reviewerId = $reviewer->getId();
 					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
 			}		
-		//		$reviewerId = $reviewer->getId();
-		//		$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-		}
+	}
 
 		}else{
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
@@ -314,8 +313,7 @@ function setMeeting($args) {
 
 		if (count($selectedProposals) > 0) {
 			for ($i=0;$i<count($selectedProposals);$i++) {
-				//echo "Proposal' IDs";
-				//should insert into database
+				/*Set submissions to be discussed in the meeting*/
 				$selectedProposals[$i];
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
@@ -323,12 +321,21 @@ function setMeeting($args) {
 		
 			Request::redirect(null, null, 'setMeeting', array($meetingId));
 		}
-	}
+		
 
+	/**
+	 * Added by MSB July 07 2011
+	 * Set the meeting final
+	 * @param $args (type)
+	 */	
 	function setMeetingFinal($args){
-	 	$meetingId = isset($args[0]) ? $args[0]: 0;
+		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meetingDao->setMeetingFinal($meetingId);
 		Request::redirect(null, null, 'meetings', null);
 	} 
+
+
+}
+
 ?>
