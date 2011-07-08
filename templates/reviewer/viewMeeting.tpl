@@ -19,7 +19,7 @@
 
 <div class="separator"></div>
 <div id="details">
-<h2>{translate key="reviewer.meetings.details}</h3>
+<h2>{translate key="reviewer.meetings.details}</h2>
 <table width="100%" class="data">
 <tr valign="top">
 	<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
@@ -41,7 +41,7 @@
 </div>
 <div class="separator"></div>
 <div id="submissions">
-<h2>{translate key="reviewer.meetings.submissions"}</h3>
+<h2>{translate key="reviewer.meetings.submissions"}</h2>
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<td width="10%">WHO Proposal ID</td>
@@ -84,7 +84,7 @@
 <br/>
 <div class="separator"></div>
 <div id="reply">
-<h2>{translate key="reviewer.meetings.reply"}</h3>
+<h2>{translate key="reviewer.meetings.reply"}</h2>
 <form method="post" action="{url op="replyMeeting"}" >
 <table width="100%" class="data">
 <tr valign="top">

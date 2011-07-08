@@ -75,8 +75,6 @@ class MeetingReviewerDAO extends DAO {
 		$meetingReviewer->setSalutation($row['salutation']);
 		HookRegistry::call('MeetingReviewerDAO::_returnMeetingReviewerFromRow', array(&$meetingReviewer, &$row));
 		return $meetingReviewer;
-		//*/
-		//return $row['last_name'];
 	}
 	
 }

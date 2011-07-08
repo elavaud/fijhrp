@@ -22,7 +22,6 @@ $(document).ready(function() {
 </script>
 {/literal}
 
-
 <ul class="menu">
 	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li class="current"><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
@@ -30,81 +29,8 @@ $(document).ready(function() {
 </ul>
 
 <div class="separator"></div>
+<br>
 
-<div id="details">
-<h2>{translate key="reviewer.meetings.details}</h2>
-<table width="100%" class="data">
-	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
-		<td class="value" width="80%">{$meeting->getId()}</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.meetings.meetingDate"}</td>
-		<td class="value" width="80%">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
-	</tr>
-	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.meetings.scheduleStatus"}</td>
-		<td class="value" width="80%">{$meeting->getScheduleStatus()}</td>
-	</tr>
-	<tr valign="top">
-		<td colspan="2">
-		<!-- LIST ATTENDING REVIEWERS
-		<table width="50%" class="data">
-				<tr valign="top">
-					<td>
-					{assign var="count" value=0}
-					{foreach from=$reviewers item=reviewer}
-						{if $reviewer->getIsAttending() == 1}
-						{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}
-						{/if}
-						{assign var="count" value=$count+1}
-					{/foreach}
-					</td>
-				</tr>
-			</table>  -->
-		</td>
-	</tr>
-</table>
-</div>
-<div class="separator"></div>
-<br>
-<div id="reviewers">
-	<h2>{translate key="editor.meetings.reviewers"}</h2>
-	<table class="listing" width="100%">
-		<tr><td colspan="3" class="headseparator" ></td></tr>
-		<tr class="heading" valign="bottom">
-			<td width="20%"> {translate key="editor.meetings.reviewer.name"}</td>
-			<td width="60%"> {translate key="editor.meetings.reviewer.reply"} </td>
-			<td width="20%" align="right"> {translate key="editor.meetings.reviewer.replyStatus"} </td>
-		</tr>
-		<tr><td colspan="3" class="headseparator" ></td></tr>
-		{assign var="count" value=0}
-		{foreach from=$reviewers item=reviewer}
-		<tr>
-			<td width="20%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
-			<td width="60%">{$reviewer->getRemarks()}</td>
-			<td width="20%">{$reviewer->getIsAttending()}</td>
-		</tr>
-		<tr>
-		<td colspan="3" class="separator">&nbsp;</td>
-		</tr>
-		{assign var="count" value=$count+1}
-		{/foreach}
-		{if empty($reviewers)}
-		<tr>
-			<td colspan="3" class="nodata">{translate key="editor.meetings.reviewer.noReviewers"}</td>
-		</tr>
-		{/if}
-		<tr>
-			<td colspan="3" class="endseparator">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="3" align="left">{$reviwers|@count} reviewers(s)</td>
-		</tr>
-	</table>
-</div>
-<div class="separator"></div>
-<br>
 <div id="submissions">
 <h2>{translate key="editor.meetings.submissions"}</h2>
 <form method="post" action="{url op="saveMeeting" path=$meeting->getId() }" >
@@ -184,9 +110,7 @@ $(document).ready(function() {
 {/if}
 </table>
 
-<p><input type="submit" value="{translate key="common.update"}" class="button defaultButton" /> 
-   <input type="button" value="{translate key="common.setFinal"}" class="button defaultbutton"
-    onclick="document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
+<p><input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> 
    <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>
 </form>
 

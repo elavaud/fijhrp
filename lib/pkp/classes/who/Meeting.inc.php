@@ -85,7 +85,7 @@ class Meeting extends DataObject {
 		return $this->getData('remarks');
 	}
 	
-	function setIsFinal() {
+	function setIsFinal($isFinal) {
 		$this->setData('isFinal', $isFinal);
 	}
 	
