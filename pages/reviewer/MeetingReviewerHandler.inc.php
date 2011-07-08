@@ -51,7 +51,7 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$sortDirection = Request::getUserVar('sortDirection');
 		$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
 		$submissionReviewMap =& $this->submissionReviewMap;
-		$this->setupTemplate(true, $meetingId, 0, 0);
+		$this->setupTemplate(true, $meetingId);
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('submissions', $submissions);

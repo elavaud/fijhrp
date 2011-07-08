@@ -632,28 +632,6 @@ class SectionEditorAction extends Action {
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
 				$reviewAssignment->setDateDue($newDueDateTimestamp);
 			}
-//			/*************************************************************
-//			 * Change format for jquery date
-//			 * Edited by ayveemallare
-//			 * Last Update: 6/29/2011
-//			 * ***********************************************************/
-//				
-//			if ($meetingDate != null) {
-//				$meetingDateParts = explode('-', $meetingDate);
-//				$tmp = explode(' ', $meetingDateParts[2]);
-//				$meetingTime = $tmp[1];
-//				$meetingTimeMarker = $tmp[2];
-//				$meetingTimeParts = explode(':', $meetingTime);
-//				
-//				if(strcasecmp($meetingTimeMarker, 'pm'))
-//					$hour = intval($meetingTimeParts[0]) + 12;
-//				else 
-//					$hour = intval($meetingTimeParts[0]);
-//					 	
-//				$reviewAssignment->setDateOfMeeting(mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]));
-//			}
-			
-			/**************************************************************/
 			
 			$reviewAssignment->stampModified();
 			

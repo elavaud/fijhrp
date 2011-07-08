@@ -10,6 +10,12 @@
 {include file="common/header.tpl"}
 {/strip}
 
+<ul class="menu">
+	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
+	<li class="current"><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
+	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
+</ul>
+
 <script type="text/javascript" src="{$baseUrl|cat:"/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"}"></script>
 <style type="text/css" src="{$baseUrl|cat:"/lib/pkp/styles/jquery-ui-timepicker-addon.css"}"></style>
 
@@ -20,7 +26,6 @@ $(document).ready(function() {
 });
 </script>
 {/literal}
-{$baseUrl}
 <!-- 
 <div id="reviewersResponse">
 <table>

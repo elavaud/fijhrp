@@ -35,7 +35,11 @@ function MeetingsHandler() {
 * Setup common template variables.
 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 */
-function setupTemplate($subclass = false, $articleId = 0, $parentPage = null, $showSidebar = true) {
+/**
+* Setup common template variables.
+* @param $subclass boolean set to true if caller is below this handler in the hierarchy
+*/
+function setupTemplate($subclass = false, $meetingId = 0, $parentPage = null, $showSidebar = true) {
 	parent::setupTemplate();
 	Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
 	$templateMgr =& TemplateManager::getManager();
@@ -50,16 +54,15 @@ function setupTemplate($subclass = false, $articleId = 0, $parentPage = null, $s
 	
 	$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
 	$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
-	$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic), 'article.submissions'))
+	$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, 'meetings'), 'editor.meetings'))
 	: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
 	
-	import('classes.submission.sectionEditor.SectionEditorAction');
-	$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, $roleSymbolic);
-	if (isset($submissionCrumb)) {
-		$pageHierarchy = array_merge($pageHierarchy, $submissionCrumb);
-	}
+	if($meetingId!=0)
+		$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'setMeeting', $meetingId), "#$meetingId", true);
+	
 	$templateMgr->assign('pageHierarchy', $pageHierarchy);
 }
+
 
 /**
 * Display submission management instructions.
@@ -75,7 +78,7 @@ function instructions($args) {
 
 function meetings($args) {
 	$this->validate();
-	$this->setupTemplate();
+	$this->setupTemplate(false);
 	$journal =& Request::getJournal();
 	$journalId = $journal->getId();
 	$user =& Request::getUser();
@@ -98,9 +101,9 @@ function meetings($args) {
 */
 
 function setMeeting($args) {
-
 	$this->validate();
-	$this->setupTemplate();
+	$meetingId = isset($args[0]) ? $args[0]: 0;
+	$this->setupTemplate(true, $meetingId);
 	$journal =& Request::getJournal();
 	$journalId = $journal->getId();
 	$user =& Request::getUser();
@@ -184,8 +187,6 @@ function setMeeting($args) {
 	$sortDirection
 	);
 	
-	
-	$meetingId = isset($args[0]) ? $args[0]: 0;
 	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 
@@ -225,9 +226,6 @@ function setMeeting($args) {
 		SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
 		SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		));
-	
-	$protocol = (strstr('https',$_SERVER['SERVER_PROTOCOL']) === false)?'http':'https'; 
-	$url = $protocol.'://'.$_SERVER['SERVER_NAME'].dirname($_SERVER['REQUEST_URI']);
 	
 	import('classes.issue.IssueAction');
 	$issueAction = new IssueAction();

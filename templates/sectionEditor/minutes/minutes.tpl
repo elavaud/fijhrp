@@ -5,9 +5,9 @@
 {/strip}
 
 <ul class="menu">
-	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
+	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
+	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
 	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
  
 <div id="submissions">

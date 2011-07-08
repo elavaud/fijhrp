@@ -33,7 +33,7 @@ class ReviewerHandler extends Handler {
 	 */
 	function index($args) {
 		$this->validate();
-		$this->setupTemplate();
+		$this->setupTemplate(false);
 
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
@@ -119,7 +119,7 @@ class ReviewerHandler extends Handler {
 	
 	function meetings($args) {
 		$this->validate();
-		$this->setupTemplate();
+		$this->setupTemplate(false);
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();

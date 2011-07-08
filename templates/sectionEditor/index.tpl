@@ -16,7 +16,7 @@
 
 <ul class="menu">
 	<li{if ($pageToDisplay == "submissionsInReview")} class="current"{/if}><a href="{url path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
-	<li{if ($pageToDisplay == "minutes")} class="current"{/if}><a href="{url op="minutes"}">Upload Minutes</a></li>
+	<!-- <li{if ($pageToDisplay == "minutes")} class="current"{/if}><a href="{url op="minutes"}">Upload Minutes</a></li> -->
 	<!--{** 
 	<li{if ($pageToDisplay == "submissionsInEditing")} class="current"{/if}><a href="{url path="submissionsInEditing"}">{translate key="common.queue.short.submissionsInEditing}</a></li>
 	 **}-->
