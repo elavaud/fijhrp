@@ -253,7 +253,7 @@ function setMeeting($args) {
 		$selectedProposals = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		
+		$journal =& Request::getJournal();
 		$user =& Request::getUser();
 		$userId = $user->getId();
 		
@@ -287,18 +287,17 @@ function setMeeting($args) {
 			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
 			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole();
+			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
 			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-
 
 			$count = 0;
 			foreach($reviewers as $reviewer) {
 					$reviewerId = $reviewer->getId();
 					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
 			}		
-				$reviewerId = $reviewer->getId();
-				$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-			}
+		//		$reviewerId = $reviewer->getId();
+		//		$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+		}
 
 		}else{
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);

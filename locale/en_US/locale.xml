@@ -599,7 +599,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.meeting">Meeting</message>
 	<message key="reviewer.meetings">Meetings</message>
 	<message key="reviewer.meetings.submissions">Submissions to be Discussed</message>
-	<message key="reviewer.meetings.noSubmissions">No Submissions to be Discussed</message>
+	<message key="reviewer.meetings.noSubmissions">No Submissions</message>
 	<message key="reviewer.meetings.replyStatus">Reply Status</message>
 	<message key="reviewer.meetings.editor">Editor/Moderator</message>
 	<message key="reviewer.meetings.scheduleStatus">Schedule Status</message>
