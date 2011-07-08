@@ -96,11 +96,7 @@
 				<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
 				<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 				<td align="right">
-					{if ($status == PROPOSAL_STATUS_EXPIRED)}
-						{assign var="displayStatus" value=$submission->getProposalStatusKey()}
-					{else}						
-						{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
-					{/if}
+					{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
 					{translate key=$displayStatus}
 				</td>		
 			</tr>

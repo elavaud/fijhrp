@@ -163,7 +163,7 @@ class MinutesHandler extends Handler {
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =& $meetingDao->getMeetingById($meetingId);
 		$userDao =& DAORegistry::getDAO('UserDAO');
-		$reviewers =& $userDao->getUsersWithReviewerRole();
+		$reviewers =& $userDao->getUsersWithReviewerRole($journalId);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
@@ -193,7 +193,7 @@ class MinutesHandler extends Handler {
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		
 		$meetingAttendance = array();
-		$reviewers =& $userDao->getUsersWithReviewerRole();
+		$reviewers =& $userDao->getUsersWithReviewerRole($journalId);
 		import('lib.pkp.classes.who.MeetingAttendance');
 		foreach($reviewers as $reviewer) {		
 			$temp = new MeetingAttendance();			

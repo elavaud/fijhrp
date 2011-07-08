@@ -157,6 +157,7 @@
 		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
 			{assign var="decision" value=$submission->getEditorDecisionKey()}
 			{translate key=$decision}
+			{if $submission->isSubmissionDue()}&nbsp; (Due){/if}
 			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
 		{else}
 				{translate key="common.none"}
