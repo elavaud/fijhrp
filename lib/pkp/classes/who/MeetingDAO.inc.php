@@ -17,11 +17,14 @@ class MeetingDAO extends DAO {
 	 * @param $meeting int
 	 * @return Meeting
 	 */
-	function &getMeetingsOfUser($userId) {
+	function &getMeetingsOfUser($userId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$meetings = array();
+		$sql = 'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings as a WHERE user_id = ?';
+		if ($sortBy) {
+			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
+		}
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings WHERE user_id = ?',
-			(int) $userId
+			$sql, (int) $userId
 		);
 
 		while (!$result->EOF) {
@@ -110,6 +113,7 @@ class MeetingDAO extends DAO {
 		return $meeting;
 	}
 
+	
 	/**
 	 * Internal function to return an meeting object from a row. Simplified
 	 * not to include object settings.
@@ -167,22 +171,6 @@ class MeetingDAO extends DAO {
 		return $meetingId;
 	}
 	
-	/**
-	 * Update meeting_reviewers table to save reviewer response 
-	 * Added by ayveemallare 7/6/2011
-	 * @param Meeting $meeting
-	 */
-	function updateReplyOfReviewer($meeting) {
-		$this->update(
-			'UPDATE meeting_reviewers SET attending = ?, remarks = ?
-			WHERE meeting_id = ? AND reviewer_id = ?',
-			array($meeting->getIsAttending(),
-			$meeting->getRemarks(), 
-			$meeting->getId(), 
-			$meeting->getReviewerId())
-		);
-	}
-	
 	function updateMeetingDate($meeting) {
 		$this->update(
 			sprintf('UPDATE meetings SET meeting_date = %s where meeting_id = ?',$this->datetimeToDB($meeting->getDate())),
@@ -202,6 +190,7 @@ class MeetingDAO extends DAO {
 			case 'id': return 'a.meeting_id';
 			case 'meetingDate': return 'meeting_date';
 			case 'replyStatus': return 'attending';
+			case 'scheduleStatus': return 'final';
 			default: return null;
 		}
 	}

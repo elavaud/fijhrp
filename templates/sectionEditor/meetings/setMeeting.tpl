@@ -37,7 +37,6 @@ $(document).ready(function() {
 </tr>
 	{assign var="count" value=0}
 	{foreach from=$reviewers item=reviewer}
-
 <tr>
 	<td width="5%">{$reviewer->getReviewerId()}</td>
 	<td colspan="3" width="45%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
@@ -45,11 +44,8 @@ $(document).ready(function() {
 	<td width="25%">{$reviewer->getRemarks()}</td>
 </tr>
 	{/foreach}
-
 </table>
 </div>
-
-
 
 <div id="setMeeting">
 <form method="post" action="{url op="saveMeeting" path=$meeting->getId() }" >
@@ -57,13 +53,13 @@ $(document).ready(function() {
 <tr><td colspan="7">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
 <tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <tr class="heading" valign="bottom">
-<td width="5%">Select</input></td>
-<td width="15%">WHO Proposal ID</td>
-<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
-<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
-<td width="25%">{sort_heading key="article.title" sort="title"}</td>
-<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+	<td width="5%">Select</input></td>
+	<td width="15%">WHO Proposal ID</td>
+	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+	<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
+	<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
+	<td width="25%">{sort_heading key="article.title" sort="title"}</td>
+	<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
 </tr>
 <tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <p></p>
@@ -79,60 +75,73 @@ $(document).ready(function() {
 <tr valign="top">
 	<!-- <td><input type="checkbox" name="proposals[]" id="proposals[]" value="{$submission->getId()}" ></td>-->
 </b>
-<td>{html_checkboxes id="selectedProposals" name='selectedProposals' values=$submission->getId() checked=$selectedProposals'} </td>
-<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
-<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
-<td>{$submission->getSectionAbbrev()|escape}</td>
-<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
-<td align="right">
-{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
-{translate key=$proposalStatusKey}
-</td>
+	<td>{html_checkboxes id="selectedProposals" name='selectedProposals' values=$submission->getId() checked=$selectedProposals'} </td>
+	<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+	<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
+	<td>{$submission->getSectionAbbrev()|escape}</td>
+	<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
+	<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+	<td align="right">
+		{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
+		{translate key=$proposalStatusKey}
+	</td>
 </tr>
 <tr>
-<td colspan="7" class="separator">&nbsp;</td>
+	<td colspan="7" class="separator">&nbsp;</td>
 </tr>
 {/if}
 {/foreach}
 {if $count==0}
 <tr>
-<td colspan="7" class="nodata">{translate key="submissions.noSubmissions"}</td>
+	<td colspan="7" class="nodata">{translate key="submissions.noSubmissions"}</td>
 </tr>
 <tr>
-<td colspan="7" class="endseparator">&nbsp;</td>
-</tr>
-{else}
-<tr>
-<td colspan="7" class="endseparator">&nbsp;</td>
-</tr>
-<tr>
-<td colspan="7" align="left">{$count} submission(s)</td>
-</tr>
-<tr>
-<td colspan="7"> &nbsp;</td>
-</tr>
-{*******************************************************************
-* Set meeting date
-* Added by ayveemallare
-* Last Update: 6/29/2011
-*******************************************************************}
-
-<tr valign="top">
-<td colspan="7"><h2>{translate key="editor.article.designateMeetingDate"}</h2></td>
-</tr>
-<tr valign="top">
-<td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
-</tr>
-<tr valign="top">
-<td width="20%" colspan="2" class="label">{translate key="editor.article.meetingDate"}</td>
-<td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
+	<td colspan="7" class="endseparator">&nbsp;</td>
 </tr>
 {/if}
+<tr>
+	<td colspan="7" class="endseparator">&nbsp;</td>
+</tr>
+<tr>
+	<td colspan="7" align="left">{$count} submission(s)</td>
+</tr>
+<tr>
+	<td colspan="7"> &nbsp;</td>
+</tr>
+
+{**
+ * Set meeting date
+ * Added by ayveemallare
+ * Last Update: 6/29/2011
+ **}
+
+<tr valign="top">
+	<td colspan="7"><h2>{translate key="editor.article.designateMeetingDate"}</h2></td>
+</tr>
+<tr valign="top">
+	<td colspan="7"></td>
+</tr>
+<tr valign="top">
+	<td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
+</tr>
+<tr valign="top">
+	<td width="20%" colspan="2" class="label">{translate key="editor.article.meetingDate"}</td>
+	<td width="80%" colspan="5" class="value">
+	{if $meeting->getIsFinal()==0}
+		<input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" />
+	{/if}
+	{if $meeting->getIsFinal()==1}
+		{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}
+	{/if}
+	</td>
+</tr>
+<tr valign="top">'
+	<td width="20%" colspan="2" class="label">{translate key="reviewer.meetings.scheduleStatus"}</td>
+	<td width="20%" colspan="2" class="value">{$meeting->getScheduleStatus()}</td>
 </table>
 
-<p><input type="submit" value="{translate key="common.continue"}" class="button defaultButton" /> <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>
-</form>
+<p><input type="submit" value="{translate key="common.continue"}" class="button defaultButton" /> <input type="button" class="button" onclick="document.location.href='{url op="meetings" escape=false}'" value="{translate key="common.cancel"}" /></p>
 
+</form>
 </div>
 {include file="common/footer.tpl"}

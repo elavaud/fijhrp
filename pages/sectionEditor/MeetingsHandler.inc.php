@@ -81,10 +81,33 @@ function meetings($args) {
 	$userId = $user->getId();
 	
 	$meetingDao = DAORegistry::getDAO('MeetingDAO');
-	$meetings =& $meetingDao->getMeetingsOfUser($userId);
+	$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
+	$articleDao = DAORegistry::getDAO('ArticleDAO');
 	
+	$sort = Request::getUserVar('sort');
+	$sort = isset($sort) ? $sort : 'id';
+	$sortDirection = Request::getUserVar('sortDirection');
+		
+	$meetings =& $meetingDao->getMeetingsOfUser($userId, $sort, $sortDirection);
+	
+	$map = array();
+		
+	foreach($meetings as $meeting) {
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
+		$submissions = array();
+		foreach($submissionIds as $submissionId) {
+			$submission = $articleDao->getArticle($submissionId, $journalId, false);
+			array_push($submissions, $submission);
+		}
+		$map[$meeting->getId()] = $submissions;
+	}
+		
 	$templateMgr =& TemplateManager::getManager();
 	$templateMgr->assign_by_ref('meetings', $meetings);
+	$templateMgr->assign_by_ref('submissions', $submissions); 
+	$templateMgr->assign_by_ref('map', $map); 
+	$templateMgr->assign('sort', $sort);
+	$templateMgr->assign('sortDirection', $sortDirection);
 	$templateMgr->assign('pageToDisplay', $page);
 	$templateMgr->assign('sectionEditor', $user->getFullName());
 	$templateMgr->display('sectionEditor/meetings/meetings.tpl');
@@ -277,40 +300,34 @@ function setMeeting($args) {
 				$hour = intval($meetingTimeParts[0]);
 			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
 		}
+		else {
+			$meetingDate = Core::getCurrentDate();
+		}
 		/************************************************************/
 		
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		if($meetingId == null) {
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
-		if($meetingId == 0) {
-		
-			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
-			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
-			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-
-			$count = 0;
-			foreach($reviewers as $reviewer) {
-					$reviewerId = $reviewer->getId();
-					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-			}		
-		//		$reviewerId = $reviewer->getId();
-		//		$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-		}
-
+			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
+			if($meetingId == 0) {
+				$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+				$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
+				$userDao =& DAORegistry::getDAO('UserDAO');
+				$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
+				$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
+	
+				$count = 0;
+				foreach($reviewers as $reviewer) {
+						$reviewerId = $reviewer->getId();
+						$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+				}		
+			}
 		}else{
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
-			 //Update meeting date
-			 //Edited by ayveemallare 7/7/2011
 			 $meeting = $meetingDao->getMeetingById($meetingId);
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
-			 
-
-			$meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
+			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 		}
-
 
 		if (count($selectedProposals) > 0) {
 			for ($i=0;$i<count($selectedProposals);$i++) {
@@ -320,10 +337,10 @@ function setMeeting($args) {
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
-		
 			Request::redirect(null, null, 'setMeeting', array($meetingId));
 			//$this->setMeeting(array($meetingId));
 		}
-	}
+
+}
 
 ?>
