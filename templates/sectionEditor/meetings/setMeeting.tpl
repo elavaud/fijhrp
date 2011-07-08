@@ -185,7 +185,8 @@ $(document).ready(function() {
 </table>
 
 <p><input type="submit" value="{translate key="common.update"}" class="button defaultButton" /> 
-   <input type="submit" value="{translate key="common.setFinal"}" class="button defaultbutton" />
+   <input type="button" value="{translate key="common.setFinal"}" class="button defaultbutton"
+    onclick="document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
    <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>
 </form>
 

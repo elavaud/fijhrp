@@ -205,6 +205,18 @@ class MeetingDAO extends DAO {
 			default: return null;
 		}
 	}
+	
+	/**
+	 * Set meeting final
+	 * Added by MSB July 7, 2011
+	 */
+	
+	function setMeetingFinal($meetingId){
+		$this->update(
+			'UPDATE meetings SET final = ? where meeting_id = ?',
+			array(1,$meetingId)
+		);
+	} 
 		
 }
 

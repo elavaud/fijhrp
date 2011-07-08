@@ -322,8 +322,13 @@ function setMeeting($args) {
 		}
 		
 			Request::redirect(null, null, 'setMeeting', array($meetingId));
-			//$this->setMeeting(array($meetingId));
 		}
 	}
 
+	function setMeetingFinal($args){
+	 	$meetingId = isset($args[0]) ? $args[0]: 0;
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meetingDao->setMeetingFinal($meetingId);
+		Request::redirect(null, null, 'meetings', null);
+	} 
 ?>
