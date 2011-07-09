@@ -21,10 +21,7 @@
 <br/>
 <div id="details">
 <h2>{translate key="reviewer.meetings.details}</h2>
-<<<<<<< HEAD
 <div class="separator"></div>
-=======
->>>>>>> refs/remotes/cere/master
 <table width="100%" class="data">
 <tr valign="top">
 	<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
@@ -48,10 +45,7 @@
 
 <div id="submissions">
 <h2>{translate key="reviewer.meetings.submissions"}</h2>
-<<<<<<< HEAD
 <div class="separator"></div>
-=======
->>>>>>> refs/remotes/cere/master
 <table width="100%" class="listing">
 	<td width="10%">WHO Proposal ID</td>
 	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{translate key="submissions.submit"}</td>
@@ -96,10 +90,7 @@
 
 <div id="reply">
 <h2>{translate key="reviewer.meetings.reply"}</h2>
-<<<<<<< HEAD
 <div class="separator"></div>
-=======
->>>>>>> refs/remotes/cere/master
 <form method="post" action="{url op="replyMeeting"}" >
 <table width="100%" class="data">
 <tr><td colspan="2" class="headseparator">&nbsp;</td></tr>
