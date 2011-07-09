@@ -31,6 +31,7 @@
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
 			<td>
+				<a href="{url op="viewMeeting" path=$meeting->getId()}">
 				{foreach from=$map.$key item=submission name=submissions}
 					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
 					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
@@ -38,10 +39,11 @@
 				{if empty($map.$key)}
 					<i>{translate key="reviewer.meetings.noSubmissions"}</i>
 				{/if}
+				</a>
 			</td>
 			<td width="25%" align="right">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 			<td width="30%" align="right">
-				<a href="{url op="setMeeting" path=$meeting->getId()}" class="action">
+				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getScheduleStatus()}
 				</a>
 			</td>
