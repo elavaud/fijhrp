@@ -1,15 +1,4 @@
-{strip}
-{assign var="pageTitle" value="common.queue.long.minutes"}
-{url|assign:"currentUrl" page="sectionEditor"}
-{include file="common/header.tpl"}
-{/strip}
-
-<ul class="menu">
-	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
-	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
-</ul>
-<br/>
+{include file="sectionEditor/minutes/menu.tpl"}
 <div id="announcements">
 {literal}<script type="text/javascript">
 <!--
@@ -29,13 +18,13 @@
 	 <tr>
 	 	<td width="5%" class="label">Time Convened</td>
 	 	<td width="50%" class="value">
-	 		<select name="hour" id="hourConvened" class="selectMenu">
+	 		<select name="hourConvened" id="hourConvened" class="selectMenu">
 	 			{html_options options=$hour selected="2"}
 	 		</select>:
-	 		<select name="minute" id="minuteConvened" class="selectMenu">
+	 		<select name="minuteConvened" id="minuteConvened" class="selectMenu">
 	 			{html_options options=$minute selected="00"}
 	 		</select>
-	 		<select name="amPm" id="amPmConvened" class="selectMenu">
+	 		<select name="amPmConvened" id="amPmConvened" class="selectMenu">
 	 			<option value="am">a.m.</option>
 	 			<option value="pm" selected="selected">p.m.</option>
 	 		</select>
@@ -44,13 +33,13 @@
 	 <tr>
 	 	<td width="5%" class="label">Time Adjourned</td>
 	 	<td width="50%" class="value">
-	 		<select name="hour" id="hourAdjourned" class="selectMenu">
+	 		<select name="hourAdjourned" id="hourAdjourned" class="selectMenu">
 	 			{html_options options=$hour selected="2"}
 	 		</select>:
-	 		<select name="minute" id="minuteAdjourned" class="selectMenu">
+	 		<select name="minuteAdjourned" id="minuteAdjourned" class="selectMenu">
 	 			{html_options options=$minute selected="00"}
 	 		</select>
-	 		<select name="amPm" id="amPmAdjourned" class="selectMenu">
+	 		<select name="amPmAdjourned" id="amPmAdjourned" class="selectMenu">
 	 			<option value="am">a.m.</option>
 	 			<option value="pm" selected="selected">p.m.</option>
 	 		</select>

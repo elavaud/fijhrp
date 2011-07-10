@@ -45,6 +45,9 @@
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getScheduleStatus()}
+				</a><br/>
+				<a href="{url op="minutes"}" class="action">
+					Upload Minutes
 				</a>
 			</td>
 		</tr>	
