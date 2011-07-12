@@ -137,29 +137,29 @@ function meetings($args) {
 		$editorId
 	);
 	
-	$this->submissions =& $submissions;
+		$this->submissions =& $submissions;
+		
+		/*LIST THE SUBMISSIONS*/
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		
+		/*MEETING DETAILS*/
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		/*RESPONSES FROM REVIEWERS*/
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+		$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
 	
-	/*LIST THE SUBMISSIONS*/
-	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		
+		$templateMgr =& TemplateManager::getManager();
+		$templateMgr->assign_by_ref('meeting', $meeting);
+		$templateMgr->assign_by_ref('reviewers', $reviewers);
+		$templateMgr->assign_by_ref('submissions', $submissions);
+		$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
 	
-	/*MEETING DETAILS*/
-	$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-	$meeting =$meetingDao->getMeetingById($meetingId);
-	
-	/*RESPONSES FROM REVIEWERS*/
-	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-	$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
-
-	
-	$templateMgr =& TemplateManager::getManager();
-	$templateMgr->assign_by_ref('meeting', $meeting);
-	$templateMgr->assign_by_ref('reviewers', $reviewers);
-	$templateMgr->assign_by_ref('submissions', $submissions);
-	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
-
-	$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
-	$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
+		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
+		$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
 	
 	}
 	
@@ -189,8 +189,8 @@ function meetings($args) {
 		$this->validate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		if(MeetingAction::setMeetingFinal($meetingId, null)){
-			Request::redirect(null, null, 'meetings', null);
-		}//else redirect to 404 page
+			Request::redirect(null, null, 'viewMeeting', array($meetingId));
+		}
 	}
 
 	/**
@@ -206,32 +206,40 @@ function meetings($args) {
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
 		
-		
-		/*LIST THE SUBMISSIONS*/
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		$submissions = array();
-		foreach($selectedProposals as $submission) {
-			$submissions[$submission] = $articleDao->getArticle($submission, $journalId, false);
-		}
-		
 		/*MEETING DETAILS*/
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =$meetingDao->getMeetingById($meetingId);
 		
-		/*RESPONSES FROM REVIEWERS*/
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-		$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
-	
+		if(isset($meeting) && $meeting->getUploader()==$user->getId()){
 		
-		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign('sectionEditor', $user->getFullName());
-		$templateMgr->assign_by_ref('meeting', $meeting);
-		$templateMgr->assign_by_ref('reviewers', $reviewers);
-		$templateMgr->assign_by_ref('submissions', $submissions);
-		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
-		$templateMgr->display('sectionEditor/meetings/viewMeeting.tpl');
+			/*LIST THE SUBMISSIONS*/
+			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+			$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			$submissions = array();
+			foreach($selectedProposals as $submission) {
+				$submissions[$submission] = $articleDao->getArticle($submission, $journalId, false);
+			}
+			
+			
+			/*RESPONSES FROM REVIEWERS*/
+			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+			$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+		
+			
+			$templateMgr =& TemplateManager::getManager();
+			$templateMgr->assign('sectionEditor', $user->getFullName());
+			$templateMgr->assign_by_ref('meeting', $meeting);
+			$templateMgr->assign_by_ref('reviewers', $reviewers);
+			$templateMgr->assign_by_ref('submissions', $submissions);
+			$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
+			$templateMgr->display('sectionEditor/meetings/viewMeeting.tpl');
+		
+		}else{
+			
+			Request::redirect(null, null, 'meetings', null);
+		}
+		
 
 	}
 	
@@ -247,7 +255,7 @@ function meetings($args) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		if(MeetingAction::cancelMeeting($meetingId, null)){
 			Request::redirect(null, null, 'meetings', null);
-		}//else redirect to 404 page
+		}
 		
 	}
 
