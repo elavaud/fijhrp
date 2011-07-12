@@ -52,13 +52,12 @@
 	
 	{foreach from=$submissions item=submission}
 	{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
-	{assign var="key" value=$submission->getId()}
 	<tr valign="top">
 		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 		<td>{$submission->getSectionAbbrev()|escape}</td>
 		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submission" path=$map.$key}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 		<td align="right">
 			{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 			{translate key=$proposalStatusKey}
@@ -92,7 +91,7 @@
 		<tr><td colspan="3" class="headseparator" ></td></tr>
 		{assign var=attendingReviewers value=0}
 		{assign var=notAttendingReviewers value=0}
-		{counter start=0 skip=1 assign="undecidedReviewers"}
+		{assign var=undecidedReviewers value=0}
 		{foreach from=$reviewers item=reviewer}
 		<tr>
 			<td width="20%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>

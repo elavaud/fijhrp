@@ -297,37 +297,48 @@ function setMeeting($args) {
 			$meetingTime = $tmp[1];
 			$meetingTimeMarker = $tmp[2];
 			$meetingTimeParts = explode(':', $meetingTime);
-				
-			if(strcasecmp($meetingTimeMarker, 'pm'))
-				$hour = intval($meetingTimeParts[0]) + 12;
-			else 
-				$hour = intval($meetingTimeParts[0]);
+			$hour = intval($meetingTimeParts[0]);
+			
+			if(strcasecmp($meetingTimeMarker, 'pm') == 0) {
+				if($hour != 12) $hour += 12;
+			}
+			else {
+				if($hour == 12) $hour = 0;
+			}
+			
 			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
 		}
 		else {
 			$meetingDate = Core::getCurrentDate();
 		}
 		/************************************************************/
-		
+		$isNew = true;
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		if($meetingId == null) {
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
-		if($meetingId == 0) {
-			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
-			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
-			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-
-			$count = 0;
-			foreach($reviewers as $reviewer) {
-					$reviewerId = $reviewer->getId();
-					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-			}		
-		}
+			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
+			if($meetingId == 0) {
+				$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+				$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
+				$userDao =& DAORegistry::getDAO('UserDAO');
+				$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
+				$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
+	
+				$count = 0;
+				foreach($reviewers as $reviewer) {
+						$reviewerId = $reviewer->getId();
+						$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
+				}		
+			}
 		}else{
+			 $isNew = false;
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 			 $meeting = $meetingDao->getMeetingById($meetingId);
+			 $oldDate = 0;
+			// echo $meetingDate - strtotime($meeting->getDate());
+			//FIXME
+			 if($meetingDate != strtotime($meeting->getDate()))
+			 	$oldDate = $meeting->getDate();
+			 	
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
@@ -341,7 +352,12 @@ function setMeeting($args) {
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
-		
+		echo $meetingId;
+		if($isNew) {
+			Request::redirect(null, null, 'notifyReviewersNewMeeting', $meetingId);
+		} else if($oldDate!=0){
+			Request::redirect(null, null, 'notifyReviewersChangeMeeting', $meetingId, $oldDate);
+		}
 			Request::redirect(null, null, 'viewMeeting', array($meetingId));
 	}
 		
@@ -398,6 +414,54 @@ function setMeeting($args) {
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('sectionEditor/meetings/viewMeeting.tpl');
 
+	}
+	
+	function notifyReviewersNewMeeting($args) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate();
+		//$this->validate($meetinGId, SECTION)
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+	
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		if (SectionEditorAction::notifyReviewersNewMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
+			Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}
+	}
+	
+	function notifyReviewersChangeMeeting() {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate();
+		//$this->validate($meetinGId, SECTION)
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+	
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$this->setupTemplate(true, $meetingId);
+//		if (SectionEditorAction::notifyReviewersChangeMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
+//			Request::redirect(null, null, 'viewMeeting', $meetingId);
+//		}
+	}
+	
+	function notifyReviewersFinalMeeting() {
+		
+	}
+	
+	function notifyReviewersCancelMeeting() {
+		
+	}
+	
+	function remindReviewersMeeting() {
+		
 	}
 
 

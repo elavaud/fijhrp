@@ -2447,6 +2447,158 @@ class SectionEditorAction extends Action {
 		}
 		return $breadcrumb;
 	}
+	
+	/**
+	 * Notify reviewers of new meeting set by section editor
+	 * Added by ayveemallare 7/12/2011
+	 */
+	
+	function notifyReviewersNewMeeting($meeting, $reviewerIds, $submissionIds, $send = false) {
+		$journal =& Request::getJournal();
+		$user = & Request::getUser();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$num=1;
+		foreach($submissionIds as $submissionId) {
+			$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
+			$submissions = $submissions.$num.". '".$submission->getLocalizedTitle()."' by ".$submission->getAuthorString(true)."\n";
+			$num++;
+		}
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		$reviewers = array();
+		foreach($reviewerIds as $reviewerId) {
+			$reviewer = $userDao->getUser($reviewerId->getReviewerId());
+			array_push($reviewers, $reviewer);
+		}
+		
+		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
+		
+		$preventAddressChanges = $reviewerAccessKeysEnabled;
+		
+		import('classes.mail.MailTemplate');
+		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_NEW':'MEETING_NEW');
+		
+		if($preventAddressChanges) {
+			$email->setAddressFieldsEnabled(false);
+		}
+		
+		if($send && !$email->hasErrors()) {
+			HookRegistry::call('SectionEditorAction::notifyReviewersNewMeeting', array(&$meeting, &$reviewers, &$submissions, &$email));
+			
+			if($reviewerAccessKyesEnabled) {
+				import('lib.pkp.classes.security.AccessKeyManager');
+				import('pages.reviewer.ReviewerHandler');
+				$accessKeyManager = new AccessKeyManager();
+			}
+			
+			if($preventAddressChanges) {
+				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
+				$email->clearAllRecipients();
+				foreach($reviewers as $reviewer) {
+					$email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
+				}
+			}
+			$email->send();
+			return true;
+		} else {
+			if(!Request::getUserVar('continued') || $preventAddressChanges) {
+				foreach($reviewers as $reviewer) {
+					$email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
+				}
+			}
+			if(!Request::getUserVar('continued')) {
+				if($meeting->getDate() != null) {	
+					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
+				}
+				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());
+				$paramArray = array(
+					'submissions' => $submissions,
+					'meetingDate' => $meetingDate,
+					'replyUrl' => $replyUrl,
+					'editorialContactSignature' => $user->getContactSignature()
+				);
+				$email->assignParams($paramArray);
+			}
+			$email->displayEditForm(Request::url(null, null, 'notifyReviewersNewMeeting', $meeting->getId()), array('meetingId' =>$meeting->getId(), 'reviewerIds'=>$reviewerIds, 'submissionsIds'=>$submissionsIds));
+			return false;
+		}
+		return true;
+	}
+	
+/**
+	 * Notify reviewers of new meeting set by section editor
+	 * Added by ayveemallare 7/12/2011
+	 */
+	
+	function notifyReviewersChangeMeeting($meeting, $reviewerIds, $submissionIds, $send = false) {
+		$journal =& Request::getJournal();
+		$user = & Request::getUser();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$num=1;
+		foreach($submissionIds as $submissionId) {
+			$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
+			$submissions = $submissions.$num.". '".$submission->getLocalizedTitle()."' by ".$submission->getAuthorString(true)."\n";
+			$num++;
+		}
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		$reviewers = array();
+		foreach($reviewerIds as $reviewerId) {
+			$reviewer = $userDao->getUser($reviewerId->getReviewerId());
+			array_push($reviewers, $reviewer);
+		}
+		
+		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
+		
+		$preventAddressChanges = $reviewerAccessKeysEnabled;
+		
+		import('classes.mail.MailTemplate');
+		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_CHANGE':'MEETING_CHANGE');
+		
+		if($preventAddressChanges) {
+			$email->setAddressFieldsEnabled(false);
+		}
+		
+		if($send && !$email->hasErrors()) {
+			HookRegistry::call('SectionEditorAction::notifyReviewersChangeMeeting', array(&$meeting, &$reviewers, &$submissions, &$email));
+			
+			if($reviewerAccessKyesEnabled) {
+				import('lib.pkp.classes.security.AccessKeyManager');
+				import('pages.reviewer.ReviewerHandler');
+				$accessKeyManager = new AccessKeyManager();
+			}
+			
+			if($preventAddressChanges) {
+				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
+				$email->clearAllRecipients();
+				foreach($reviewers as $reviewer) {
+					$email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
+				}
+			}
+			$email->send();
+			return true;
+		} else {
+			if(!Request::getUserVar('continued') || $preventAddressChanges) {
+				foreach($reviewers as $reviewer) {
+					$email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
+				}
+			}
+			if(!Request::getUserVar('continued')) {
+				if($meeting->getDate() != null) {	
+					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
+				}
+				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());
+				$paramArray = array(
+					'submissions' => $submissions,
+					'meetingDate' => $meetingDate,
+					'replyUrl' => $replyUrl,
+					'editorialContactSignature' => $user->getContactSignature()
+				);
+				$email->assignParams($paramArray);
+			}
+			$email->displayEditForm(Request::url(null, null, 'notifyReviewersChangeMeeting', $meeting->getId()), array('meetingId' =>$meeting->getId(), 'reviewerIds'=>$reviewerIds, 'submissionsIds'=>$submissionsIds));
+			return false;
+		}
+		return true;
+	}
 }
 
 ?>
