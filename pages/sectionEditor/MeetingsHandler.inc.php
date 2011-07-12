@@ -13,6 +13,7 @@ define('FILTER_SECTION_ALL', 0);
 import('classes.submission.sectionEditor.SectionEditorAction');
 import('classes.handler.Handler');
 import('lib.pkp.classes.who.Meeting');
+import('lib.pkp.classes.who.MeetingAction');
 
 class MeetingsHandler extends Handler {
 /**
@@ -413,6 +414,16 @@ function setMeeting($args) {
 
 	}
 	
+	function cancelMeeting($args){
+		
+		$this->validate();
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		if(MeetingAction::cancelMeeting($meetingId, null)){
+			Request::redirect(null, null, 'meetings', null);
+		}
+		
+	}
+	
 	/** 
 	 * Notify reviewers if new meeting is set
 	 * Added by ayveemallare 7/12/2011
@@ -503,7 +514,7 @@ function setMeeting($args) {
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$this->setupTemplate(true, $meetingId);
 		if (SectionEditorAction::notifyReviewersCancelMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
-			Request::redirect(null, null, 'viewMeeting', $meetingId);
+			Request::redirect(null, null, 'cancelMeeting', $meetingId);
 		}
 	}
 	

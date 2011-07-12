@@ -30,7 +30,6 @@ $(document).ready(function() {
 
 <div class="separator"></div>
 <br>
-
 <div id="submissions">
 <h2>{translate key="editor.meetings.submissions"}</h2>
 <form method="post" action="{url op="saveMeeting" path=$meeting->getId() }" >
@@ -104,15 +103,20 @@ $(document).ready(function() {
 <td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
 </tr>
 <tr valign="top">
-<td width="20%" colspan="2" class="label">{translate key="editor.article.meetingDate"}</td>
+<td width="20%" colspan="2" class="label">{fieldLabel name="meetingDate" required="true" key="editor.articel.meetingDate"}</td>
 <td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
 </tr>
 {/if}
 </table>
 
-<p><input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> 
-   <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>
+<p> {if $meeting->getId() == 0}<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
+	
+	{else}
+		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meeting->getId() }'" />
+	{/if} 
+ 	  <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" />
+ 	  </p>
 </form>
-
+<p><span class="formRequired">{translate key="common.requiredField"}</span></p>
 </div>
 {include file="common/footer.tpl"}

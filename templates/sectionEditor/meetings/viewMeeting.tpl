@@ -83,13 +83,13 @@
 <div id="reviewers">
 	<h2>{translate key="editor.meetings.reviewers"}</h2>
 	<table class="listing" width="100%">
-		<tr><td colspan="4" class="headseparator" ></td></tr>
+		<tr><td colspan="3" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
 			<td width="30%"> {translate key="editor.meetings.reviewer.name"}</td>
 			<td width="50%"> {translate key="editor.meetings.reviewer.reply"} </td>
 			<td width="20%" align="right"> {translate key="editor.meetings.reviewer.replyStatus"} </td>
 		</tr>
-		<tr><td colspan="4" class="headseparator" ></td></tr>
+		<tr><td colspan="3" class="headseparator" ></td></tr>
 		{assign var=attendingReviewers value=0}
 		{assign var=notAttendingReviewers value=0}
 		{assign var=undecidedReviewers value=0}
@@ -113,20 +113,20 @@
 			{/if}
 		</tr>
 		<tr>
-		<td colspan="4" class="separator"></td>
+		<td colspan="3" class="separator"></td>
 		</tr>
 		{/foreach}
 		{if empty($reviewers)}
 		<tr>
-			<td colspan="4" class="nodata">{translate key="editor.meetings.reviewer.noReviewers"}</td>
+			<td colspan="3" class="nodata">{translate key="editor.meetings.reviewer.noReviewers"}</td>
 		</tr>
 		{/if}
 		<tr>
-			<td colspan="4" class="endseparator">&nbsp;</td>
+			<td colspan="3" class="endseparator">&nbsp;</td>
 		</tr>
 		{if !empty($reviewers)}
 		<tr>
-			<td colspan="4" align="left">{$reviewers|@count} reviewers(s)</td>
+			<td colspan="3" align="left">{$reviewers|@count} reviewers(s)</td>
 		</tr>
 		{/if}
 	</table>
@@ -154,8 +154,7 @@
 <p> {if $meeting->getIsFinal() != 1}
 	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
     <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
-    {/if}
-    <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
-
-
+   	{else}
+    <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
+	{/if}
 {include file="common/footer.tpl"}
