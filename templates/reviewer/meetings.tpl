@@ -45,6 +45,7 @@
 				</a>
 			</td>
 		</tr>	
+		<tr><td colspan="6" class="separator"></td></tr>
 	{/foreach}
 	{if empty($meetings)}
 		<tr>

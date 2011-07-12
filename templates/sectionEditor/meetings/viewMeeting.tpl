@@ -63,6 +63,7 @@
 			{translate key=$proposalStatusKey}
 		</td>
 	</tr>
+	<tr><td colspan="6" class="separator"></td></tr>
 	{/foreach}
 	
 	{if empty($submissions)}
@@ -82,22 +83,26 @@
 <div id="reviewers">
 	<h2>{translate key="editor.meetings.reviewers"}</h2>
 	<table class="listing" width="100%">
-		<tr><td colspan="3" class="headseparator" ></td></tr>
+		<tr><td colspan="4" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
-			<td width="20%"> {translate key="editor.meetings.reviewer.name"}</td>
-			<td width="60%"> {translate key="editor.meetings.reviewer.reply"} </td>
+			<td width="30%"> {translate key="editor.meetings.reviewer.name"}</td>
+			<td width="50%"> {translate key="editor.meetings.reviewer.reply"} </td>
 			<td width="20%" align="right"> {translate key="editor.meetings.reviewer.replyStatus"} </td>
 		</tr>
-		<tr><td colspan="3" class="headseparator" ></td></tr>
+		<tr><td colspan="4" class="headseparator" ></td></tr>
 		{assign var=attendingReviewers value=0}
 		{assign var=notAttendingReviewers value=0}
 		{assign var=undecidedReviewers value=0}
 		{foreach from=$reviewers item=reviewer}
 		<tr>
-			<td width="20%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
-			<td width="60%">{$reviewer->getRemarks()}</td>
+			<td width="30%">
+				{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}
+				<br/>
+				<a href="{url op="remindReviewersMeeting" meetingId=$meeting->getId() reviewerId=$reviewer->getReviewerId()}" class="action">Send Reminder</a>
+				{$reviewer->getDateReminded()|date_format:$dateFormatShort}
+			</td>
+			<td width="50%">{$reviewer->getRemarks()}</td>
 			<td width="20%" align="right">{$reviewer->getReplyStatus()}</td>
-
 
 			{if $reviewer->getIsAttending() == 1 }
 				<span style="display:none">{$attendingReviewers++}</span> 
@@ -106,23 +111,24 @@
 			{else}
 				<span style="display:none">{$undecidedReviewers++}</span> 
 			{/if}
-			
 		</tr>
 		<tr>
-		<td colspan="3" class="separator"></td>
+		<td colspan="4" class="separator"></td>
 		</tr>
 		{/foreach}
 		{if empty($reviewers)}
 		<tr>
-			<td colspan="3" class="nodata">{translate key="editor.meetings.reviewer.noReviewers"}</td>
+			<td colspan="4" class="nodata">{translate key="editor.meetings.reviewer.noReviewers"}</td>
 		</tr>
 		{/if}
 		<tr>
-			<td colspan="3" class="endseparator">&nbsp;</td>
+			<td colspan="4" class="endseparator">&nbsp;</td>
 		</tr>
+		{if !empty($reviewers)}
 		<tr>
-			<td colspan="3" align="left">{$reviewers|@count} reviewers(s)</td>
+			<td colspan="4" align="left">{$reviewers|@count} reviewers(s)</td>
 		</tr>
+		{/if}
 	</table>
 </div>
 <br>
