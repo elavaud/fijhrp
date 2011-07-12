@@ -191,6 +191,7 @@
 	<message key="editor.article.waitingForResubmission">Waiting for resubmission of proposal</message>
 	<message key="editor.article.submissionStatus">Submission Status</message>
 	<message key="editor.article.reasonsForExemption">Reasons for Exemption</message>
+	<message key="editor.article.selectContinuingReview">Select Type of Continuing Review</message>
 	<message key="editor.article.exemption.instructions">(Please check all that apply)</message>
 	<message key="editor.article.exemption.noHumanParticipants">The research does not involve human participants.</message>	
 	<message key="editor.article.exemption.alreadyExists">The data (including health-care records and specimens) being studied already exist and are either publicly available or are recorded by the investigator in such a manner as to be unidentifiable.</message>

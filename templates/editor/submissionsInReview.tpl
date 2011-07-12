@@ -84,7 +84,7 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision() }
 
-        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}		
+        {if $status == PROPOSAL_STATUS_COMPLETED || ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}		
 			
             {assign var="articleId" value=$submission->getArticleId()}
             {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
@@ -96,7 +96,11 @@
 				<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
 				<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 				<td align="right">
-					{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
+					{if $status == PROPOSAL_STATUS_COMPLETED}
+						{assign var="displayStatus" value=$submission->getProposalStatusKey()}						
+					{else}
+						{assign var="displayStatus" value=$submission->getEditorDecisionKey()}						
+					{/if}
 					{translate key=$displayStatus}
 				</td>		
 			</tr>

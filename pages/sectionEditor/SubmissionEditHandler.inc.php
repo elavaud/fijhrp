@@ -271,6 +271,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
+		$templateMgr->assign('continuingReviewOptions',SectionEditorSubmission::getContinuingReviewOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		$templateMgr->assign('lastDecisionArray', $lastDecision);
 		$templateMgr->assign('reasonsForExemption', $reasons);
