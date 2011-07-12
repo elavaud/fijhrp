@@ -23,8 +23,8 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-	$( "#dueDate" ).datepicker({changeMonth: true, changeYear: true, minDate: '+0 d'});
-	$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
+	$( "#dueDate" ).datepicker({changeMonth: true, dateFormat: 'yy-mm-dd', changeYear: true, minDate: '+0 d'});
+	//$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
 	});
 </script>
 {/literal}
@@ -61,22 +61,22 @@
 			<td class="value"><input type="text" name="numWeeks" value="{if not $dueDate}{$numWeeksPerReview|escape}{/if}" size="3" maxlength="2" class="textField" onfocus="this.form.dueDate.value=''" /></td>
 		</tr>
 		 
-		{*******************************************************************
-		 * Set meeting date
-		 * Added by ayveemallare
-		 * Last Update: 6/29/2011
-		 *******************************************************************}
-		<tr valign="top">
-		<td colspan="2"><h3>{translate key="editor.article.designateMeetingDate"}</h3></td>
-		</tr>
-		<tr valign="top">
-		<td colspan="2">{translate key="editor.article.designateMeetingDateDescription"}</td>
-		</tr>
-		
-		<tr valign="top">
-			<td width="20%" class="label">{translate key="editor.article.meetingDate"}</td>
-			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" />
-		</td>
+<!--		{*******************************************************************-->
+<!--		 * Set meeting date-->
+<!--		 * Added by ayveemallare-->
+<!--		 * Last Update: 6/29/2011-->
+<!--		 *******************************************************************}-->
+<!--		<tr valign="top">-->
+<!--		<td colspan="2"><h3>{translate key="editor.article.designateMeetingDate"}</h3></td>-->
+<!--		</tr>-->
+<!--		<tr valign="top">-->
+<!--		<td colspan="2">{translate key="editor.article.designateMeetingDateDescription"}</td>-->
+<!--		</tr>-->
+<!--		-->
+<!--		<tr valign="top">-->
+<!--			<td width="20%" class="label">{translate key="editor.article.meetingDate"}</td>-->
+<!--			<td width="80%" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" />-->
+<!--		</td>-->
 		
 	</table>
 <p><input type="submit" value="{translate key="common.continue"}" class="button defaultButton" /> <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" /></p>

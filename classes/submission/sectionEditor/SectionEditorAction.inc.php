@@ -91,6 +91,7 @@ class SectionEditorAction extends Action {
 
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
+		$journal =& Request::getJournal();
 
 		$startDate = (($dateDecided == null) ? date(Core::getCurrentDate()) : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;  
@@ -107,7 +108,7 @@ class SectionEditorAction extends Action {
 		 */
 		if($decision == SUBMISSION_EDITOR_DECISION_ASSIGNED) {
 			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole();
+			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
 			foreach($reviewers as $reviewer) {
 				$reviewerId = $reviewer->getId();
 				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
@@ -599,7 +600,7 @@ class SectionEditorAction extends Action {
 	 * @param $numWeeks int
 	 * @param $logEntry boolean
 	 */
-	function setDueDate($articleId, $reviewId, $dueDate = null, $numWeeks = null, $meetingDate = null, $logEntry = false) {
+	function setDueDate($articleId, $reviewId, $dueDate = null, $numWeeks = null, $logEntry = false) {
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$user =& Request::getUser();
@@ -632,28 +633,6 @@ class SectionEditorAction extends Action {
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
 				$reviewAssignment->setDateDue($newDueDateTimestamp);
 			}
-			/*************************************************************
-			 * Change format for jquery date
-			 * Edited by ayveemallare
-			 * Last Update: 6/29/2011
-			 * ***********************************************************/
-				
-			if ($meetingDate != null) {
-				$meetingDateParts = explode('-', $meetingDate);
-				$tmp = explode(' ', $meetingDateParts[2]);
-				$meetingTime = $tmp[1];
-				$meetingTimeMarker = $tmp[2];
-				$meetingTimeParts = explode(':', $meetingTime);
-				
-				if(strcasecmp($meetingTimeMarker, 'pm'))
-					$hour = intval($meetingTimeParts[0]) + 12;
-				else 
-					$hour = intval($meetingTimeParts[0]);
-					 	
-				$reviewAssignment->setDateOfMeeting(mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]));
-			}
-			
-			/**************************************************************/
 			
 			$reviewAssignment->stampModified();
 			

@@ -12,7 +12,6 @@
  * @brief Handle requests for reviewer functions. 
  */
 
-// $Id$
 
 
 import('classes.submission.reviewer.ReviewerAction');
@@ -33,6 +32,29 @@ class ReviewerHandler extends Handler {
 	 * Display reviewer index page.
 	 */
 	function index($args) {
+		$this->validate();
+		$this->setupTemplate(false);
+
+		$journal =& Request::getJournal();
+		$user =& Request::getUser();
+		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingDAO');
+		$rangeInfo = Handler::getRangeInfo('submissions');
+
+		$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo);
+		$meetings = $meetingReviewerDao->getMeetingsByReviewerId($user->getId());
+		//$meetings = $meetingReviewerDao->getMeetingsOfUser($user->getId());
+		$templateMgr =& TemplateManager::getManager();
+		$templateMgr->assign('rangeInfo', count($submissions));
+		$templateMgr->assign('meetingsCount', count($meetings));
+
+		$templateMgr->display('reviewer/index.tpl');
+	}
+	
+	/**
+	 * Display submissions index page.
+	 */
+	function submissions($args) {
 		$this->validate();
 		$this->setupTemplate();
 
@@ -86,9 +108,54 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('helpTopicId', 'editorial.reviewersRole.submissions');
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
-		$templateMgr->display('reviewer/index.tpl');
+		$templateMgr->display('reviewer/submissionsIndex.tpl');
 	}
-
+	
+	/****************************************
+	 * Display meetings index page
+	 * Added by ayveemallare
+	 * Last Updated 7/5/2011
+	 */
+	
+	function meetings($args) {
+		$this->validate();
+		$this->setupTemplate(false);
+		$journal =& Request::getJournal();
+		$journalId = $journal->getId();
+		$user =& Request::getUser();
+		$userId = $user->getId();
+		
+		$meetingDao = DAORegistry::getDAO('MeetingDAO');
+		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
+		$articleDao = DAORegistry::getDAO('ArticleDAO');
+		
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'id';
+		$sortDirection = Request::getUserVar('sortDirection');
+		
+		$meetings =& $meetingDao->getMeetingsByReviewerId($userId, $sort, $sortDirection);
+		
+		$map = array();
+		
+		foreach($meetings as $meeting) {
+			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
+			$submissions = array();
+			foreach($submissionIds as $submissionId) {
+				$submission = $articleDao->getArticle($submissionId, $journalId, false);
+				array_push($submissions, $submission);
+			}
+			$map[$meeting->getId()] = $submissions;
+		}
+		
+		$templateMgr =& TemplateManager::getManager();
+		$templateMgr->assign_by_ref('meetings', $meetings); 
+		$templateMgr->assign_by_ref('submissions', $submissions); 
+		$templateMgr->assign_by_ref('map', $map); 
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
+		$templateMgr->display('reviewer/meetings.tpl');
+	}
+	
 	/**
 	 * Used by subclasses to validate access keys when they are allowed.
 	 * @param $userId int The user this key refers to
@@ -142,7 +209,7 @@ class ReviewerHandler extends Handler {
 	 * Setup common template variables.
 	 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 	 */
-	function setupTemplate($subclass = false, $articleId = 0, $reviewId = 0) {
+	function setupTemplate($subclass = false, $meetingId=0, $articleId = 0, $reviewId = 0) {
 		parent::setupTemplate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR));
 		$templateMgr =& TemplateManager::getManager();
@@ -151,6 +218,9 @@ class ReviewerHandler extends Handler {
 
 		if ($articleId && $reviewId) {
 			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'submission', $reviewId), "#$articleId", true);
+		}
+		if ($meetingId) {
+			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'viewMeeting', $meetingId), "#$meetingId", true);
 		}
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}

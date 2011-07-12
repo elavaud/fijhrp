@@ -312,6 +312,8 @@ class PKPApplication {
 			'LanguageDAO' => 'lib.pkp.classes.language.LanguageDAO',
 				'MeetingDAO' => 'lib.pkp.classes.who.MeetingDAO', //Added by aglet 6/30/2011
 				'MeetingAttendanceDAO' => 'lib.pkp.classes.who.MeetingAttendanceDAO', //Added by aglet 6/30/2011
+				'MeetingReviewerDAO' => 'lib.pkp.classes.who.MeetingReviewerDAO', //Added by cereblanco /07/07/11
+				'MeetingSubmissionDAO' => 'lib.pkp.classes.who.MeetingSubmissionDAO', //Added by cereblanco /07/07/11
 			'NotificationDAO' => 'lib.pkp.classes.notification.NotificationDAO',
 			'NotificationSettingsDAO' => 'lib.pkp.classes.notification.NotificationSettingsDAO',
 			'ProcessDAO' => 'lib.pkp.classes.process.ProcessDAO',

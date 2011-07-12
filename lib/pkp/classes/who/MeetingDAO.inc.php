@@ -6,8 +6,10 @@ class MeetingDAO extends DAO {
 	/**
 	 * Constructor
 	 */
+	var $userDao;
 	function MeetingDAO() {
 		parent::DAO();
+		$this->userDao &= DAORegistry::getDAO('UserDAO');
 	}
 
 	/**
@@ -15,11 +17,14 @@ class MeetingDAO extends DAO {
 	 * @param $meeting int
 	 * @return Meeting
 	 */
-	function &getMeetingsOfUser($userId) {
+	function &getMeetingsOfUser($userId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$meetings = array();
+		$sql = 'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings as a WHERE user_id = ?';
+		if ($sortBy) {
+			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
+		}
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status FROM meetings WHERE user_id = ?',
-			(int) $userId
+			$sql, (int) $userId
 		);
 
 		while (!$result->EOF) {
@@ -40,8 +45,12 @@ class MeetingDAO extends DAO {
 	 */
 	function &getMeetingById($meetingId) {
 		$meeting = null;
+		
+		//Added field 'final'
+		//Edited by ayveemallare 7/6/2011
+		
 		$result =& $this->retrieve(
-			'SELECT meeting_id, meeting_date, user_id, status FROM meetings WHERE meeting_id = ?',
+			'SELECT meeting_id, user_id, meeting_date, status, final FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -52,7 +61,59 @@ class MeetingDAO extends DAO {
 
 		return $meeting;
 	}
+	
+	/**
+	 * Get all meetings to be attended by reviewer
+	 * Added by ayveemallare 7/6/2011
+	 * 
+	 * @param unknown_type $reviewerId
+	 */
+	function &getMeetingsByReviewerId($reviewerId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$meetings = array();
+		$sql = 
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewers b
+			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
+		if ($sortBy) {
+			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
+		}
+		$result =& $this->retrieve(
+			$sql,(int) $reviewerId );
+		while (!$result->EOF) {
+			$meetings[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
 
+		$result->Close();
+		unset($result);
+
+		return $meetings;
+	}
+	
+	/**
+	 * Get meeting by meetingId and reviewerId
+	 * Added by ayveemallare 7/6/2011
+	 * 
+	 * @param int $meetingId
+	 * @param int $reviewerId
+	 */
+	function &getMeetingByMeetingAndReviewerId($meetingId, $reviewerId) {
+		$meeting = null;
+		$result =& $this->retrieve(
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewers b
+			ON a.meeting_id = b.meeting_id WHERE a.meeting_id = ? AND b.reviewer_id= ?',
+			array((int) $meetingId, (int) $reviewerId));
+		
+		$meeting =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
+		
+		$result->Close();
+		unset($result);
+
+		return $meeting;
+	}
+
+	
 	/**
 	 * Internal function to return an meeting object from a row. Simplified
 	 * not to include object settings.
@@ -64,8 +125,15 @@ class MeetingDAO extends DAO {
 		$meeting->setId($row['meeting_id']);
 		$meeting->setDate($row['meeting_date']);
 		$meeting->setUploader($row['user_id']);
-		$meeting->setStatus($row['status']);		
-
+		$meeting->setStatus($row['status']);
+				
+		//Added additional fields
+		//Edited by ayveemallare 7/6/2011
+		$meeting->setReviewerId($row['reviewer_id']);
+		$meeting->setIsAttending($row['attending']);
+		$meeting->setRemarks($row['remarks']);
+		$meeting->setIsFinal($row['final']);
+		
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
 	}
@@ -80,8 +148,9 @@ class MeetingDAO extends DAO {
 
 	function insertMeeting($userId, $meetingDate = null, $status = 0) {
 		$this->update(
-			'INSERT INTO meetings (meeting_date, user_id, status) VALUES (?, ?, ?)',
-			array($meetingDate, $userId, $status)
+			sprintf('INSERT INTO meetings (meeting_date, user_id, status) VALUES (%s, ?, ?)',
+			$this->datetimeToDB($meetingDate)),
+			array($userId, $status)
 		);		
 	}
 	
@@ -115,6 +184,28 @@ class MeetingDAO extends DAO {
 			array($meeting->getStatus(), $meeting->getId())
 		);
 	}
+	
+	function getSortMapping($heading) {
+		switch ($heading) {
+			case 'id': return 'a.meeting_id';
+			case 'meetingDate': return 'meeting_date';
+			case 'replyStatus': return 'attending';
+			case 'scheduleStatus': return 'final';
+			default: return null;
+		}
+	}
+	
+	/**
+	 * Set meeting final
+	 * Added by MSB July 7, 2011
+	 */
+	
+	function setMeetingFinal($meetingId){
+		$this->update(
+			'UPDATE meetings SET final = ? where meeting_id = ?',
+			array(1,$meetingId)
+		);
+	} 
 		
 }
 

@@ -133,9 +133,6 @@ class ReviewerSubmissionDAO extends DAO {
 		$reviewerSubmission->setDateCompleted($this->datetimeFromDB($row['date_completed']));
 		$reviewerSubmission->setDateAcknowledged($this->datetimeFromDB($row['date_acknowledged']));
 		$reviewerSubmission->setDateDue($this->datetimeFromDB($row['date_due']));
-		$reviewerSubmission->setDateOfMeeting($this->datetimeFromDB($row['date_of_meeting']));
-		$reviewerSubmission->setRemarks($row['remarks']);
-		$reviewerSubmission->setIsAttending($row['attending']);
 		$reviewerSubmission->setDeclined($row['declined']);
 		$reviewerSubmission->setReplaced($row['replaced']);
 		$reviewerSubmission->setCancelled($row['cancelled']==1?1:0);
@@ -174,14 +171,10 @@ class ReviewerSubmissionDAO extends DAO {
 					date_completed = %s,
 					date_acknowledged = %s,
 					date_due = %s,
-					date_of_meeting = %s,
-					remarks = ?,
-					attending = ?,
 					reviewer_file_id = ?,
 					quality = ?
 				WHERE	review_id = ?',
-				$this->datetimeToDB($reviewerSubmission->getDateAssigned()), $this->datetimeToDB($reviewerSubmission->getDateNotified()), $this->datetimeToDB($reviewerSubmission->getDateConfirmed()), $this->datetimeToDB($reviewerSubmission->getDateCompleted()), $this->datetimeToDB($reviewerSubmission->getDateAcknowledged()), $this->datetimeToDB($reviewerSubmission->getDateDue()), 
-				$this->datetimeToDB($reviewerSubmission->getDateOfMeeting())),
+				$this->datetimeToDB($reviewerSubmission->getDateAssigned()), $this->datetimeToDB($reviewerSubmission->getDateNotified()), $this->datetimeToDB($reviewerSubmission->getDateConfirmed()), $this->datetimeToDB($reviewerSubmission->getDateCompleted()), $this->datetimeToDB($reviewerSubmission->getDateAcknowledged()), $this->datetimeToDB($reviewerSubmission->getDateDue())),
 			array(
 				$reviewerSubmission->getArticleId(),
 				$reviewerSubmission->getReviewerId(),
@@ -191,8 +184,6 @@ class ReviewerSubmissionDAO extends DAO {
 				$reviewerSubmission->getDeclined(),
 				$reviewerSubmission->getReplaced(),
 				$reviewerSubmission->getCancelled(),
-				$reviewerSubmission->getRemarks(),
-				(int) $reviewerSubmission->getIsAttending(),
 				$reviewerSubmission->getReviewerFileId(),
 				$reviewerSubmission->getQuality(),
 				$reviewerSubmission->getReviewId()
@@ -200,6 +191,64 @@ class ReviewerSubmissionDAO extends DAO {
 		);
 	}
 
+	function &getReviewerSubmissionByReviewerAndSubmissionId($reviewerId, $submissionId, $journalId, $active = true) {
+	$primaryLocale = Locale::getPrimaryLocale();
+		$locale = Locale::getLocale();
+		$sql = 'SELECT	a.*,
+				r.*,
+				r2.review_revision,
+				u.first_name, u.last_name,
+				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+			FROM	articles a
+				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
+				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
+				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN sections s ON (s.section_id = a.section_id)
+				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
+				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
+				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
+				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
+				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+			WHERE	a.journal_id = ? AND
+				r.reviewer_id = ? AND
+				r.submission_id = ? AND
+				r.date_notified IS NOT NULL';
+
+		if ($active) {
+			$sql .=  ' AND r.date_completed IS NULL AND r.declined <> 1 AND (r.cancelled = 0 OR r.cancelled IS NULL)';
+		} else {
+			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1)';
+		}
+		$result =& $this->retrieve(
+			$sql,
+			array(
+				'cleanTitle', // Article title
+				'cleanTitle',
+				$locale,
+				'title', // Section title
+				$primaryLocale,
+				'title',
+				$locale,
+				'abbrev', // Section abbreviation
+				$primaryLocale,
+				'abbrev',
+				$locale,
+				$journalId,
+				$reviewerId,
+				$submissionId
+			)
+		);
+		$review = null;
+		$review =& $this->_returnReviewerSubmissionFromRow($result->GetRowAssoc(false));
+		
+		$result->Close();
+		unset($result);
+
+		return $review;
+	}
 	/**
 	 * Get all submissions for a reviewer of a journal.
 	 * @param $reviewerId int

@@ -216,6 +216,15 @@ switch ($op) {
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;
+	case 'meetings':
+	case 'notifyReviewers':
+	case 'setMeeting':
+	case 'saveMeeting':
+	case 'viewMeeting':
+	case 'setMeetingFinal':
+		define('HANDLER_CLASS', 'MeetingsHandler');
+		import('pages.sectionEditor.MeetingsHandler');
+		break;	
 }
 
 ?>

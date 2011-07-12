@@ -15,16 +15,28 @@
 {/strip}
 <div id="articleSubmissions">
 <h3>{translate key="article.submissions"}</h3>
-
 <ul class="plain">
 	<li>&#187; <a href="{url op="submissions" path="submissionsUnassigned"}">{translate key="common.queue.short.submissionsUnassigned"}</a>&nbsp;({if $submissionsCount[0]}{$submissionsCount[0]}{else}0{/if})</li>
 	<li>&#187; <a href="{url op="submissions" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a>&nbsp;({if $submissionsCount[1]}{$submissionsCount[1]}{else}0{/if})</li>
-	<li>&#187; <a href="{url op="minutes"}">Upload Minutes</a></li>
 	<!--{*	 *
 	<li>&#187; <a href="{url op="submissions" path="submissionsInEditing"}">{translate key="common.queue.short.submissionsInEditing"}</a>&nbsp;({if $submissionsCount[2]}{$submissionsCount[2]}{else}0{/if})</li>
 	 **}-->
 	<li>&#187; <a href="{url op="submissions" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 	{call_hook name="Templates::Editor::Index::Submissions"}
+</ul>
+</div>
+
+{**
+ * Added section for meetings in editor home page
+ * Last Updated: ayveemallare 7/5/2011
+ *}
+ 
+<div class="separator">&nbsp;</div>
+<div id="meetings">
+<h3>{translate key="editor.meetings"}</h3>
+<ul class="plain">
+	<li>&#187; <a href="{url op="meetings"}">{translate key="editor.meetings}</a></li>
+	<li>&#187; <a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 </div>
 

@@ -9,6 +9,10 @@ define ('MEETING_STATUS_CONTINUING_REVIEWS', 16);
 define ('MEETING_STATUS_AMENDMENTS', 32);
 define ('MEETING_STATUS_ADVERSE_EVENTS', 64);
 define ('MEETING_STATUS_INFORMATION_ITEMS', 128);
+define ('MEETING_SCHEDULE_FINAL', 1);
+define ('MEETING_SCHEDULE_PROPOSED', 0);
+define ('MEETING_REPLY_ATTENDING', 1);
+define ('MEETING_REPLY_NOT_ATTENDING', 2);
 
 class Meeting extends DataObject {
 	
@@ -52,6 +56,43 @@ class Meeting extends DataObject {
 		return $this->getData('status');
 	}
 	
+	/********************************** 
+	 * Additional fields for meeting
+	 *  Added by ayveemallare 7/6/2011
+	 **********************************/
+	
+	function setReviewerId($reviewerId) {
+		$this->setData('reviewerId', $reviewerId);
+	}
+	
+	function getReviewerId() {
+		return $this->getData('reviewerId');
+	}
+	
+	function setIsAttending($isAttending) {
+		$this->setData('isAttending', $isAttending);
+	}
+	
+	function getIsAttending() {
+		return $this->getData('isAttending');
+	}
+	
+	function setRemarks($remarks) {
+		$this->setData('remarks', $remarks);
+	}
+	
+	function getRemarks() {
+		return $this->getData('remarks');
+	}
+	
+	function setIsFinal($isFinal) {
+		$this->setData('isFinal', $isFinal);
+	}
+	
+	function getIsFinal() {
+		return $this->getData('isFinal');
+	}
+	
 	/**
 	 * Get array mapping of completed sections of the meeting minutes
 	 * @return array
@@ -87,6 +128,26 @@ class Meeting extends DataObject {
 			return "COMPLETE";
 		}
 		return "INCOMPLETE";
+	}
+	
+	function getReplyStatus() {
+		switch ($this->getIsAttending()) {
+			case MEETING_REPLY_ATTENDING:
+				return Locale::Translate('reviewer.meetings.replyStatus.attending');
+			case MEETING_REPLY_NOT_ATTENDING:
+				return Locale::Translate('reviewer.meetings.replyStatus.notAttending');
+			default:
+				return Locale::Translate('reviewer.meetings.replyStatus.awaitingReply');
+		}
+	}
+	
+	function getScheduleStatus() {
+		switch ($this->getIsFinal()) {
+			case MEETING_SCHEDULE_FINAL:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.final');
+			default:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.proposed');
+		}
 	}
 	
 	function updateStatus($addToStatus) {
