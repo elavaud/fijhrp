@@ -13,6 +13,8 @@ define('FILTER_SECTION_ALL', 0);
 import('classes.submission.sectionEditor.SectionEditorAction');
 import('classes.handler.Handler');
 import('lib.pkp.classes.who.Meeting');
+import('lib.pkp.classes.who.MeetingAction');
+
 
 class MeetingsHandler extends Handler {
 /**
@@ -86,11 +88,7 @@ function meetings($args) {
 	$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
 	$articleDao = DAORegistry::getDAO('ArticleDAO');
 	
-	$sort = Request::getUserVar('sort');
-	$sort = isset($sort) ? $sort : 'id';
-	$sortDirection = Request::getUserVar('sortDirection');
-		
-	$meetings =& $meetingDao->getMeetingsOfUser($userId, $sort, $sortDirection);
+	$meetings =& $meetingDao->getMeetingsOfUser($userId);
 	
 	$map = array();
 		
@@ -108,21 +106,19 @@ function meetings($args) {
 	$templateMgr->assign_by_ref('meetings', $meetings);
 	$templateMgr->assign_by_ref('submissions', $submissions); 
 	$templateMgr->assign_by_ref('map', $map); 
-	$templateMgr->assign('sort', $sort);
-	$templateMgr->assign('sortDirection', $sortDirection);
-	$templateMgr->assign('pageToDisplay', $page);
 	$templateMgr->assign('sectionEditor', $user->getFullName());
 	$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 }
 
 
-/**
-* Added by MSB
-* Display the setMeeting page
-* @param $args (type)
-*/
+	/**
+	* Added by MSB
+	* Display the setMeeting page
+	* @param $args (type)
+	*/
 
-function setMeeting($args) {
+	function setMeeting($args) {
+	
 	$this->validate();
 	$meetingId = isset($args[0]) ? $args[0]: 0;
 	$this->setupTemplate(true, $meetingId);
@@ -133,85 +129,16 @@ function setMeeting($args) {
 	$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
 	$sectionDao =& DAORegistry::getDAO('SectionDAO');
 	
-	$sections =& $sectionDao->getSectionTitles($journalId);
-	
-	$sort = Request::getUserVar('sort');
-	$sort = isset($sort) ? $sort : 'id';
-	$sortDirection = Request::getUserVar('sortDirection');
-	$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
-	
-	$filterEditorOptions = array(
-		FILTER_EDITOR_ALL => Locale::Translate('editor.allEditors'),
-		FILTER_EDITOR_ME => Locale::Translate('editor.me')
-		);
-	
-	$filterSectionOptions = array(
-		FILTER_SECTION_ALL => Locale::Translate('editor.allSections')
-		) + $sections;
-	
-	// Get the user's search conditions, if any
-	$searchField = Request::getUserVar('searchField');
-	$dateSearchField = Request::getUserVar('dateSearchField');
-	$searchMatch = Request::getUserVar('searchMatch');
-	$search = Request::getUserVar('search');
-	
-	$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-	if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-	$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-	if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
-	
-	$rangeInfo = Handler::getRangeInfo('submissions');
-	
-	$filterEditor = Request::getUserVar('filterEditor');
-	if ($filterEditor != '' && array_key_exists($filterEditor, $filterEditorOptions)) {
-		$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
-	} else {
-		$filterEditor = $user->getSetting('filterEditor', $journalId);
-		if ($filterEditor == null) {
-			$filterEditor = FILTER_EDITOR_ALL;
-			$user->updateSetting('filterEditor', $filterEditor, 'int', $journalId);
-		}
-	}
-	
-	if ($filterEditor == FILTER_EDITOR_ME) {
-		$editorId = $user->getId();
-	} else {
-		$editorId = FILTER_EDITOR_ALL;
-	}
-	
-	$editorId = 0;
-	
-	
-	$filterSection = Request::getUserVar('filterSection');
-	if ($filterSection != '' && array_key_exists($filterSection, $filterSectionOptions)) {
-		$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-	} else {
-		$filterSection = $user->getSetting('filterSection', $journalId);
-		if ($filterSection == null) {
-			$filterSection = FILTER_SECTION_ALL;
-			$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-		}
-	}
-
+	$editor = $user->getId();
 
 	$submissions =& $editorSubmissionDao->getEditorSubmissionsForERCReview(
-	$journalId,
-	$filterSection,
-	$editorId,
-	$searchField,
-	$searchMatch,
-	$search,
-	$dateSearchField,
-	$fromDate,
-	$toDate,
-	$rangeInfo,
-	$sort,
-	$sortDirection
+		$journalId,
+		$filterSection,
+		$editorId
 	);
 	
 	$this->submissions =& $submissions;
 	
-	$meetingId = isset($args[0]) ? $args[0]: 0;
 	/*LIST THE SUBMISSIONS*/
 	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -226,47 +153,14 @@ function setMeeting($args) {
 
 	
 	$templateMgr =& TemplateManager::getManager();
-	$templateMgr->assign('helpTopicId', $helpTopicId);
-	$templateMgr->assign('sectionOptions', $filterSectionOptions);
-	$templateMgr->assign_by_ref('submissions', $submissions);
-	$templateMgr->assign('filterSection', $filterSection);
-	$templateMgr->assign('pageToDisplay', $page);
-	$templateMgr->assign('sectionEditor', $user->getFullName());
-	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
 	$templateMgr->assign_by_ref('meeting', $meeting);
 	$templateMgr->assign_by_ref('reviewers', $reviewers);
+	$templateMgr->assign_by_ref('submissions', $submissions);
+	$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
 
-	// Set search parameters
-	$duplicateParameters = array(
-		'searchField', 'searchMatch', 'search',
-		'dateFromMonth', 'dateFromDay', 'dateFromYear',
-		'dateToMonth', 'dateToDay', 'dateToYear',
-		'dateSearchField'
-		);
-	foreach ($duplicateParameters as $param)
-		$templateMgr->assign($param, Request::getUserVar($param));
-	
-	$templateMgr->assign('dateFrom', $fromDate);
-	$templateMgr->assign('dateTo', $toDate);
-	$templateMgr->assign('fieldOptions', Array(
-		SUBMISSION_FIELD_TITLE => 'article.title',
-		SUBMISSION_FIELD_AUTHOR => 'user.role.author',
-		SUBMISSION_FIELD_EDITOR => 'user.role.editor'
-		));
-	$templateMgr->assign('dateFieldOptions', Array(
-		SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
-		SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE => 'submissions.copyeditComplete',
-		SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
-		SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
-		));
-	
-	import('classes.issue.IssueAction');
-	$issueAction = new IssueAction();
-	$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
-	$templateMgr->assign('sort', $sort);
-	$templateMgr->assign('sortDirection', $sortDirection);
 	$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 	$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
+	
 	}
 	
 	/**
@@ -277,72 +171,11 @@ function setMeeting($args) {
 	
 	function saveMeeting($args){
 		$this->validate();
-		$selectedProposals = Request::getUserVar('selectedProposals');
+		$selectedSubmissions = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$journal =& Request::getJournal();
-		$user =& Request::getUser();
-		$userId = $user->getId();
-		
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-		
-		/**
-		 * Parse $meetingDate
-		 * TODO: Mas ok ata ilagay 'to sa isang Action class. Pero dito muna for the mean time.XD
-		 * Last Updated 7/7/2011 by ayveemallare
-		 */
-		if ($meetingDate != null) {
-			$meetingDateParts = explode('-', $meetingDate);
-			$tmp = explode(' ', $meetingDateParts[2]);
-			$meetingTime = $tmp[1];
-			$meetingTimeMarker = $tmp[2];
-			$meetingTimeParts = explode(':', $meetingTime);
-				
-			if(strcasecmp($meetingTimeMarker, 'pm'))
-				$hour = intval($meetingTimeParts[0]) + 12;
-			else 
-				$hour = intval($meetingTimeParts[0]);
-			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
-		}
-		else {
-			$meetingDate = Core::getCurrentDate();
-		}
-		/************************************************************/
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		if($meetingId == null) {
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
-		if($meetingId == 0) {
-			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
-			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
-			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-
-			$count = 0;
-			foreach($reviewers as $reviewer) {
-					$reviewerId = $reviewer->getId();
-					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-			}		
-		}
-		}else{
-			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
-			 $meeting = $meetingDao->getMeetingById($meetingId);
-			 $meeting->setDate($meetingDate);
-			 $meetingDao->updateMeetingDate($meeting);
-			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
-		}
-
-
-		if (count($selectedProposals) > 0) {
-			for ($i=0;$i<count($selectedProposals);$i++) {
-				/*Set submissions to be discussed in the meeting*/
-				$selectedProposals[$i];
-				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
-			}
-		}
-		
-			Request::redirect(null, null, 'viewMeeting', array($meetingId));
+		$meetingId = MeetingAction::saveMeeting($meetingId,$selectedSubmissions,$meetingDate, null);
+		Request::redirect(null, null, 'viewMeeting', array($meetingId));
 	}
 		
 
@@ -352,31 +185,33 @@ function setMeeting($args) {
 	 * @param $args (type)
 	 */	
 	function setMeetingFinal($args){
+
+		$this->validate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meetingDao->setMeetingFinal($meetingId);
-		Request::redirect(null, null, 'meetings', null);
+		if(MeetingAction::setMeetingFinal($meetingId, null)){
+			Request::redirect(null, null, 'meetings', null);
+		}//else redirect to 404 page
 	}
 
+	/**
+	 * Added by MSB July 07 2011
+	 * View the details of the meeting...
+	 * @param $args (type)
+	 */
 	function viewMeeting($args){
-	
-
+		$this->validate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->setupTemplate(true, $meetingId);
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
 		
-	//	$submissionsForERC =& $this->submissions;
 		
 		/*LIST THE SUBMISSIONS*/
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-		
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		/*mapping*/
 		$submissions = array();
-		
 		foreach($selectedProposals as $submission) {
 			$submissions[$submission] = $articleDao->getArticle($submission, $journalId, false);
 		}
@@ -398,6 +233,22 @@ function setMeeting($args) {
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('sectionEditor/meetings/viewMeeting.tpl');
 
+	}
+	
+	/**
+	 * Added by MSB July 12 2011
+	 * Cancel the meeting
+	 * @param $args (type)
+	 */	
+	
+	function cancelMeeting($args){
+		
+		$this->validate();
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		if(MeetingAction::cancelMeeting($meetingId, null)){
+			Request::redirect(null, null, 'meetings', null);
+		}//else redirect to 404 page
+		
 	}
 
 

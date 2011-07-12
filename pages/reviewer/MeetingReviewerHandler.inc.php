@@ -46,10 +46,6 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$meeting =& $this->meeting;
 		$submissions =& $this->submissions;
 		
-		$sort = Request::getUserVar('sort');
-		$sort = isset($sort) ? $sort : 'id';
-		$sortDirection = Request::getUserVar('sortDirection');
-		$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
 		$submissionReviewMap =& $this->submissionReviewMap;
 		$this->setupTemplate(true, $meetingId);
 		$templateMgr =& TemplateManager::getManager();
@@ -78,7 +74,8 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$meeting->setIsAttending(Request::getUserVar('isAttending'));
 		$meeting->setRemarks(Request::getUserVar('remarks'));	
 		
-		$meetingDao->updateReplyOfReviewer($meeting);
+		$meetingReviewerDao =& DAORegistry::getDao('MeetingReviewerDAO');
+		$meetingReviewerDao->updateReplyOfReviewer($meeting);
 		Request::redirect(null, 'reviewer', 'viewMeeting', $meetingId);
 		
 	}

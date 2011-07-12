@@ -222,7 +222,6 @@ class ReviewerSubmissionDAO extends DAO {
 		} else {
 			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1)';
 		}
-		
 		$result =& $this->retrieve(
 			$sql,
 			array(

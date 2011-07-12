@@ -13,14 +13,15 @@
 
 <ul class="menu">
 	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
-	<li class="current"><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
+	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
 	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
 <div class="separator"></div>
-
+<br/>
 <div id="details">
 <h2>{translate key="reviewer.meetings.details}</h2>
+<div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
@@ -36,7 +37,6 @@
 	</tr>
 </table>
 </div>
-<div class="separator"></div>
 <br>
 <div id="submissions">
 <h2>{translate key="editor.meetings.submissions"}</h2>
@@ -44,10 +44,10 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<td width="10%">WHO Proposal ID</td>
 	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-	<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
-	<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
-	<td width="35%">{sort_heading key="article.title" sort="title"}</td>
-	<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+	<td width="5%">{translate key="submissions.sec"}</td>
+	<td width="25%">{translate key="article.authors"}</td>
+	<td width="35%">{translate key="article.title"}</td>
+	<td width="25%" align="right">{translate key="common.status"}</td>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	
 	{foreach from=$submissions item=submission}
@@ -79,7 +79,6 @@
 	</tr>
 </table>
 </div>
-<div class="separator"></div>
 <br>
 <div id="reviewers">
 	<h2>{translate key="editor.meetings.reviewers"}</h2>
@@ -98,13 +97,12 @@
 		<tr>
 			<td width="20%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
 			<td width="60%">{$reviewer->getRemarks()}</td>
-			<td width="20%">{$reviewer->getIsAttending()}</td>
+			<td width="20%" align="right">{$reviewer->getReplyStatus()}</td>
 
 
-			
-			{if $reviewer->getIsAttending == 1 }
+			{if $reviewer->getIsAttending() == 1 }
 				<span style="display:none">{$attendingReviewers++}</span> 
-			{elseif $reviewer->getIsAttending == 2}
+			{elseif $reviewer->getIsAttending() == 2}
 				<span style="display:none">{$notAttendingReviewers++}</span> 
 			{else}
 				<span style="display:none">{$undecidedReviewers++}</span> 
@@ -129,9 +127,9 @@
 	</table>
 </div>
 <br>
-<div class="separator"></div>
 <div>
 <h2>{translate key="editor.meetings.tentativeAttendance}</h2>
+<div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
 		<td class="label" width="40%">{translate key="editor.meetings.numberOfAttendingReviewers"}</td>
@@ -149,10 +147,9 @@
 </div>
 	
 <p> {if $meeting->getIsFinal() != 1}
-	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
+	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
     <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
-    {/if}
-    <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
-
-
+   	{else}
+    <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
+	{/if}
 {include file="common/footer.tpl"}

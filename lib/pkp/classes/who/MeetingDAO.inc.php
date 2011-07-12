@@ -206,6 +206,13 @@ class MeetingDAO extends DAO {
 			array(1,$meetingId)
 		);
 	} 
+	
+	function cancelMeeting($meetingId){
+		$this->update(
+			'DELETE FROM meetings WHERE meeting_id = ?',
+			(int) $meetingId
+		);
+	}
 		
 }
 

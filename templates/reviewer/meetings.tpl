@@ -24,18 +24,17 @@
 		</tr>
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<p></p>
-	{assign var="count" value=0}
 	{foreach from=$meetings item=meeting}
 	{assign var="key" value=$meeting->getId()}
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
-			<td {if empty($map.$key)} class="nodata"{/if}>
+			<td>
 				{foreach from=$map.$key item=submission name=submissions}
 					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
 					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
 				{/foreach}
 				{if empty($map.$key)}
-					{translate key="reviewer.meetings.noSubmissions"}
+					<i>{translate key="reviewer.meetings.noSubmissions"}</i>
 				{/if}
 				
 			</td>
@@ -45,26 +44,22 @@
 					{$meeting->getReplyStatus()}
 				</a>
 			</td>
-			{assign var="count" value=$count+1}
 		</tr>	
 	{/foreach}
-	{if $count==0}
+	{if empty($meetings)}
 		<tr>
 			<td colspan="6" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
 		</tr>
+	{/if}
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+	{if !empty($meetings)}
 		<tr>
-			<td colspan="6" class="endseparator">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="6" class="endseparator">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="6" align="left">{$count} {translate key="editor.meetings.meetingsCount"}</td>
+			<td colspan="6" align="left">{$meetings|@count} {translate key="editor.meetings.meetingsCount"}</td>
 		</tr>
 	{/if}
-		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	</table>
-	
 <br/><br/>
 </div>
 

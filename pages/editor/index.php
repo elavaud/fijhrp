@@ -221,6 +221,7 @@ switch ($op) {
 	case 'setMeeting':
 	case 'saveMeeting':
 	case 'viewMeeting':
+	case 'cancelMeeting':
 	case 'setMeetingFinal':
 		define('HANDLER_CLASS', 'MeetingsHandler');
 		import('pages.sectionEditor.MeetingsHandler');

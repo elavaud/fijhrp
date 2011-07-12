@@ -50,7 +50,6 @@ class MeetingReviewerDAO extends DAO {
 			$result->MoveNext();
 		}
 		
-		
 		$result->Close();
 		unset($result);
 
@@ -75,6 +74,22 @@ class MeetingReviewerDAO extends DAO {
 		$meetingReviewer->setSalutation($row['salutation']);
 		HookRegistry::call('MeetingReviewerDAO::_returnMeetingReviewerFromRow', array(&$meetingReviewer, &$row));
 		return $meetingReviewer;
+	}
+	
+	/**
+	 * Update meeting_reviewers table to save reviewer response 
+	 * Added by ayveemallare 7/6/2011
+	 * @param Meeting $meeting
+	 */
+	function updateReplyOfReviewer($meeting) {
+		$this->update(
+			'UPDATE meeting_reviewers SET attending = ?, remarks = ?
+			WHERE meeting_id = ? AND reviewer_id = ?',
+			array($meeting->getIsAttending(),
+			$meeting->getRemarks(), 
+			$meeting->getId(), 
+			$meeting->getReviewerId())
+		);
 	}
 	
 }

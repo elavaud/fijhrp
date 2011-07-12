@@ -18,8 +18,10 @@
 </ul>
 
 <div class="separator"></div>
+<br/>
 <div id="details">
 <h2>{translate key="reviewer.meetings.details}</h2>
+<div class="separator"></div>
 <table width="100%" class="data">
 <tr valign="top">
 	<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
@@ -39,17 +41,18 @@
 </tr>
 </table>
 </div>
-<div class="separator"></div>
+<br/>
+
 <div id="submissions">
 <h2>{translate key="reviewer.meetings.submissions"}</h2>
+<div class="separator"></div>
 <table width="100%" class="listing">
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<td width="10%">WHO Proposal ID</td>
-	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-	<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
-	<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
-	<td width="35%">{sort_heading key="article.title" sort="title"}</td>
-	<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{translate key="submissions.submit"}</td>
+	<td width="5%">{translate key="submissions.sec"}</td>
+	<td width="25%">{translate key="article.authors"}</td>
+	<td width="35%">{translate key="article.title"}</td>
+	<td width="25%" align="right">{translate key="common.status"}</td>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	
 	{foreach from=$submissions item=submission}
@@ -76,17 +79,21 @@
 	<tr>
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
+	{if !empty($submissions)}
 	<tr>
 		<td colspan="6" align="left">{$submissions|@count} submission(s)</td>
 	</tr>
+	{/if}
 </table>
 </div>
 <br/>
-<div class="separator"></div>
+
 <div id="reply">
 <h2>{translate key="reviewer.meetings.reply"}</h2>
+<div class="separator"></div>
 <form method="post" action="{url op="replyMeeting"}" >
 <table width="100%" class="data">
+<tr><td colspan="2" class="headseparator">&nbsp;</td></tr>
 <tr valign="top">
 	<td class="label" width="20%">{translate key="reviewer.article.schedule.isAttending"} </td>
 	<td class="value" width="80%">	
@@ -105,7 +112,7 @@
 	<td class="label"></td>
 	<td class="value">
 		<input type="hidden" id="meetingId" name="meetingId" value={$meetingId}> </input>
-		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="user" escape=false}'" />
+		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url op="meetings" escape=false}'" />
 	</td>
 </tr>
 </table>
