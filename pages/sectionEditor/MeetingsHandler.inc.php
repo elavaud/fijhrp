@@ -298,7 +298,7 @@ function setMeeting($args) {
 			$meetingTimeMarker = $tmp[2];
 			$meetingTimeParts = explode(':', $meetingTime);
 				
-			if(strcasecmp($meetingTimeMarker, 'pm'))
+			if(strcasecmp($meetingTimeMarker, 'pm') == 0)
 				$hour = intval($meetingTimeParts[0]) + 12;
 			else 
 				$hour = intval($meetingTimeParts[0]);
@@ -341,7 +341,7 @@ function setMeeting($args) {
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
 			}
 		}
-		
+			Request::redirect(null, null, 'notifyReviewersNewMeeting', $meetingId);
 			Request::redirect(null, null, 'viewMeeting', array($meetingId));
 	}
 		
@@ -398,6 +398,40 @@ function setMeeting($args) {
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('sectionEditor/meetings/viewMeeting.tpl');
 
+	}
+	
+	function notifyReviewersNewMeeting($args) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate();
+		//$this->validate($meetinGId, SECTION)
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+	
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		if (SectionEditorAction::notifyReviewersNewMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
+			Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}
+	}
+	
+	function notifyReviewersChangeMeeting() {
+		
+	}
+	
+	function notifyReviewersFinalMeeting() {
+		
+	}
+	
+	function notifyReviewersCancelMeeting() {
+		
+	}
+	
+	function remindReviewersMeeting() {
+		
 	}
 
 
