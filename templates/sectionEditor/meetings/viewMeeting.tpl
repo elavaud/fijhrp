@@ -156,5 +156,6 @@
     <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
    	{else}
     <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
+	<input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
 	{/if}
 {include file="common/footer.tpl"}
