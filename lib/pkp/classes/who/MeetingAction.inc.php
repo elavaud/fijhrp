@@ -119,7 +119,6 @@ class MeetingAction extends Action {
 			Request::redirect(null, null, 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
 		}
 		
-		
 		return $meetingId;
 	}
 	

@@ -103,7 +103,7 @@ $(document).ready(function() {
 <td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
 </tr>
 <tr valign="top">
-<td width="20%" colspan="2" class="label">{fieldLabel name="meetingDate" required="true" key="editor.articel.meetingDate"}</td>
+<td width="20%" colspan="2" class="label">{fieldLabel name="meetingDate" required="true" key="editor.article.meetingDate"}</td>
 <td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
 </tr>
 {/if}
