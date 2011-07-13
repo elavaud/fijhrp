@@ -1306,6 +1306,27 @@ class SectionEditorSubmissionDAO extends DAO {
 		
 	}
 	
+	function &getSectionEditorSubmissionsApproved($sectionEditorId, $journalId, $sectionId) {
+		$sectionEditorSubmissions = array();
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+	}
+	
 /**
 	 * Retrieve a list of all reviewers along with information about their current status with respect to an article's current round.
 	 * @param $journalId int

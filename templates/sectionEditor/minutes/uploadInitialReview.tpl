@@ -53,6 +53,10 @@
 			<td class="value">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</td>
 		</tr>
 		<tr>
+			<td class="label" width="10%">WHO ID</td>
+			<td class="value">{$submission->getLocalizedWhoId()}</td>
+		</tr>
+		<tr>
 			<td class="label" width="10%">Principal Investigator</td>
 			<td class="value">{$submission->getAuthorString()|strip_unsafe_html|truncate:40:"..."}</td>
 		</tr>
@@ -83,75 +87,77 @@
 			<td width="10%">Scientific design (discuss and note that institute pre-scientific review has been done)</td>
 			<td class="value"><textarea name="scientificDesign" id="scientificDesign" class="textArea" rows="5" cols="40" ></textarea></td>
 		</tr>
-		<tr>
-			<td width="10%">Subject selection (discuss populations to be studied & recruitment)
-			<td class="value"><textarea name="subjectSelection" id="subjectSelection" class="textArea" rows="5" cols="40" ></textarea><br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr class="heading">
-			<td colspan="6"><br/>LEVEL OF RISK</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="1" align="right"/></td>
-			<td class="value" colspan="30">The research involves no more than minimal risk to subject.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="2"/></td>
-			<td class="value" colspan="30">The research involves more than minimal risk to subjects. The risk(s) represents more than a minor increase over
-minimal risk.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="3"/><br/><br/></td>
-			<td class="value" colspan="30">The research involves more than minimal risk to subjects. The risk(s) represents a minor increase over minimal risk.<br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr class="heading">
-			<td class="value" colspan="6"><br/>BENEFIT CATEGORY</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/></td>
-			<td class="value" colspan="30">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge about the participants’ disorder
-or condition.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/></td>
-			<td class="value" colspan="30">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge to further society’s understanding or the disorder or condition under study.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/><br/><br/></td>
-			<td class="value" colspan="30">The research involves the prospect of direct benefit to individual participants.<br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr>
-			<td width="10%"><br/>Additional Safeguards for Vulnerable Subjects</td>
-			<td class="value"><br/><textarea name="additionalSafeguards" id="additionalSafeguards" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Minimization of Risks to Subjects</td>
-			<td class="value"><textarea name="minimization" id="minimization" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Privacy and Confidentiality</td>
-			<td class="value"><textarea name="confidentiality" id="confidentiality" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Consent Document (document that all required elements are present)</td>
-			<td><textarea name="consentDocument" id="consentDocument" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Additional Considerations (e.g. multi-center research; collaborative research; nested study. State if these considerations do not apply)<br/><br/></td>
-			<td class="value"><textarea name="additionalConsiderations" id="additionalConsiderations" class="textArea" rows="5" cols="40"></textarea>
-				<input type="checkbox" name="additionalConsiderationsNA" id="additionalConsiderationsNA" value="1" /><label for="additionalConsiderationsNA">Does not apply</label>
-				<br/><br/>
-			</td>
-		</tr>
+		{if $submission->getLocalizedProposalType() == "CWHS" || $submission->getLocalizedProposalType() == "PWHS"}
+			<tr>
+				<td width="10%">Subject selection (discuss populations to be studied & recruitment)
+				<td class="value"><textarea name="subjectSelection" id="subjectSelection" class="textArea" rows="5" cols="40" ></textarea><br/><br/></td>
+			</tr>
+			<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
+			<tr class="heading">
+				<td colspan="6"><br/>LEVEL OF RISK</td>
+			</tr>
+			<tr>
+				<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="1" align="right"/></td>
+				<td class="value" colspan="30">The research involves no more than minimal risk to subject.</td>
+			</tr>
+			<tr>
+				<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="2"/></td>
+				<td class="value" colspan="30">The research involves more than minimal risk to subjects. The risk(s) represents more than a minor increase over
+	minimal risk.</td>
+			</tr>
+			<tr>
+				<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="3"/><br/><br/></td>
+				<td class="value" colspan="30">The research involves more than minimal risk to subjects. The risk(s) represents a minor increase over minimal risk.<br/><br/></td>
+			</tr>
+			<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
+			<tr class="heading">
+				<td class="value" colspan="6"><br/>BENEFIT CATEGORY</td>
+			</tr>
+			<tr>
+				<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/></td>
+				<td class="value" colspan="30">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge about the participants’ disorder
+	or condition.</td>
+			</tr>
+			<tr>
+				<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/></td>
+				<td class="value" colspan="30">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge to further society’s understanding or the disorder or condition under study.</td>
+			</tr>
+			<tr>
+				<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/><br/><br/></td>
+				<td class="value" colspan="30">The research involves the prospect of direct benefit to individual participants.<br/><br/></td>
+			</tr>
+			<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
+			<tr>
+				<td width="10%"><br/>Additional Safeguards for Vulnerable Subjects</td>
+				<td class="value"><br/><textarea name="additionalSafeguards" id="additionalSafeguards" class="textArea" rows="5" cols="40"></textarea></td>
+			</tr>
+			<tr>
+				<td width="10%">Minimization of Risks to Subjects</td>
+				<td class="value"><textarea name="minimization" id="minimization" class="textArea" rows="5" cols="40"></textarea></td>
+			</tr>
+			<tr>
+				<td width="10%">Privacy and Confidentiality</td>
+				<td class="value"><textarea name="confidentiality" id="confidentiality" class="textArea" rows="5" cols="40"></textarea></td>
+			</tr>
+			<tr>
+				<td width="10%">Consent Document (document that all required elements are present)</td>
+				<td><textarea name="consentDocument" id="consentDocument" class="textArea" rows="5" cols="40"></textarea></td>
+			</tr>
+			<tr>
+				<td width="10%">Additional Considerations (e.g. multi-center research; collaborative research; nested study. State if these considerations do not apply)<br/><br/></td>
+				<td class="value"><textarea name="additionalConsiderations" id="additionalConsiderations" class="textArea" rows="5" cols="40"></textarea>
+					<input type="checkbox" name="additionalConsiderationsNA" id="additionalConsiderationsNA" value="1" /><label for="additionalConsiderationsNA">Does not apply</label>
+					<br/><br/>
+				</td>
+			</tr>
+		{/if}
 		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
 		<tr class="heading">
 			<td colspan="6">(b) STIPULATIONS</td>
 		</tr>
 		<tr>
 			<td class="label" width="10%" align="right">No. of stipulations<br/><br/></td>
-			<td class="value"><input type="text" name="stipulations" id="stipulations" size="5" class="textField"/><br/><br/></td>
+			<td><textarea name="stipulations" id="stipulations" class="textArea" rows="5" cols="40"></textarea></td>
 		</tr>
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 		<tr class="heading">
@@ -159,7 +165,7 @@ or condition.</td>
 		</tr>
 		<tr>
 			<td class="label" width="10%" align="right">No. of Recommendations<br/><br/></td>
-			<td class="value"><input type="text" name="recommendations" id="recommendations" size="5" class="textField"/><br/><br/></td>
+			<td><textarea name="recommendations" id="recommendations" class="textArea" rows="5" cols="40"></textarea></td>
 		</tr>
 		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
 		<tr class="heading">
