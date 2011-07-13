@@ -1,5 +1,5 @@
 {include file="sectionEditor/minutes/menu.tpl"}
-<h4>MINUTES OF MEETING #{$meeting->getId()}</h4>
+<h4>MINUTES OF MEETING <a href="{url op="viewMeeting" path=$meeting->getId()}">#{$meeting->getId()}</a></h4>
 <div id="submissions">
 
 {assign var="statusMap" value=$meeting->getStatusMap()}
@@ -8,9 +8,9 @@
 		<td width="10%">(1)</td>
 		<td width="80%" >
 			{if $statusMap.2 == 0}
-				<a href="{url op="uploadAnnouncements" path=$meeting->getId()}">Announcements</a>
+				<a href="{url op="uploadAnnouncements" path=$meeting->getId()}">{translate key="editor.minutes.announcements"}</a>
 			{else}
-				Announcements
+				{translate key="editor.minutes.announcements"}
 			{/if}					
 		</td>
 	</tr>
@@ -19,9 +19,9 @@
     	<td width="10%">(2)</td>
 		<td width="80%" >		
 			{if $statusMap.2 == 0 || $statusMap.1 == 1}
-				Attendance
+				{translate key="editor.minutes.attendance"}
 			{elseif $statusMap.1 == 0}
-				<a href="{url op="uploadAttendance" path=$meeting->getId()}">Attendance</a>
+				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
 			{/if}
 		</td>
 	</tr>
@@ -30,9 +30,9 @@
 		<td width="10%">(3)</td>
 		<td width="80%" >
 			{if $statusMap.1 == 0 || $statusMap.4 == 1}
-				Initial Reviews
+				{translate key="editor.minutes.initialReviews"}
 			{elseif $statusMap.4 == 0}
-				<a href="{url op="selectInitialReview" path=$meeting->getId()}">Initial Reviews</a>
+				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
 			{/if}			
 		</td>
 	</tr>
@@ -41,9 +41,9 @@
 		<td width="10%">(4)</td>
 		<td width="80%" >
 			{if $statusMap.4 == 0 || $statusMap.8 == 1}
-				Continuing Reviews or Re-reviews
+				{translate key="editor.minutes.rereviews"}
 			{elseif $statusMap.8 == 0}
-				<a href="{url op="selectRereview" path=$meeting->getId()}">Continuing Reviews or Re-reviews</a>
+				<a href="{url op="selectRereview" path=$meeting->getId()}">{translate key="editor.minutes.rereviews"}</a>
 			{/if}			
 		</td>
 	</tr>
@@ -52,9 +52,9 @@
 		<td width="10%">(5)</td>
 		<td width="80%" >
 			{if $statusMap.8 == 0 || $statusMap.16 == 1}
-				Continuing Reviews
+				{translate key="editor.minutes.continuingReviews"}
 			{elseif $statusMap.16 == 0}
-				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">Continuing Reviews</a>
+				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">{translate key="editor.minutes.continuingReviews"}</a>
 			{/if}			
 		</td>
 	</tr>
@@ -63,9 +63,9 @@
 		<td width="10%">(6)</td>
 		<td width="80%" >
 			{if $statusMap.16 == 0 || $statusMap.32 == 1}
-				Amendments
+				{translate key="editor.minutes.amendments"}
 			{elseif $statusMap.32 == 0}
-				<a href="{url op="selectAmendment" path=$meeting->getId()}">Amendments</a>
+				<a href="{url op="selectAmendment" path=$meeting->getId()}">{translate key="editor.minutes.amendments"}</a>
 			{/if}			
 		</td>
 	</tr>
@@ -74,9 +74,9 @@
 		<td width="10%">(7)</td>
 		<td width="80%" >
 			{if $statusMap.32 == 0 || $statusMap.64 == 1}
-				Adverse Events
+				{translate key="editor.minutes.adverseEvents"}
 			{elseif $statusMap.64 == 0}
-				<a href="{url op="selectAdverseEvent" path=$meeting->getId()}">Report of Adverse Events</a>
+				<a href="{url op="selectAdverseEvent" path=$meeting->getId()}">{translate key="editor.minutes.adverseEvents"}</a>
 			{/if}			
 		</td>
 	</tr>
@@ -85,16 +85,12 @@
 		<td width="10%">(8)</td>
 		<td width="80%" >
 			{if $statusMap.64 == 0 || $statusMap.128 == 1}
-				Information Items
+				{translate key="editor.minutes.informationItems"}
 			{elseif $statusMap.128 == 0}
-				<a href="{url op="informationItems" path=$meeting->getId()}">Information Items</a>
+				<a href="{url op="informationItems" path=$meeting->getId()}">{translate key="editor.minutes.informationItems"}</a>
 			{/if}			
 		</td>		 
-	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr class="heading" valign="bottom">
-		<td width="10%" ><a href="{url op="minutes"}">Back to list of minutes</a></td>		 
-	</tr>
+	</tr>		
 </table>
 </div>
 

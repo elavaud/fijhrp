@@ -40,7 +40,7 @@
 	 </tr>	 	 
  </table>
  <br/>
- <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAnnouncements"}')" name="submit" value="Submit Date and Announcements"  class="button" />
+ <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAnnouncements"}')" name="submit" value="Submit Date and Announcements"  class="button" />
  &nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="minutes"}">Back to list of minutes</a>
  </form>
 </div>
