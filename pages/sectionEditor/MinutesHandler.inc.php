@@ -35,29 +35,27 @@ class MinutesHandler extends Handler {
 	 * Setup common template variables.
 	 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 	 */
-	function setupTemplate($subclass = false, $articleId = 0, $parentPage = null, $showSidebar = true) {
+	function setupTemplate($subclass = false, $meetingId = 0, $parentPage = null, $showSidebar = true) {
 		parent::setupTemplate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
 		$templateMgr =& TemplateManager::getManager();
 		$isEditor = Validation::isEditor();
-
+		
 		if (Request::getRequestedPage() == 'editor') {
 			$templateMgr->assign('helpTopicId', 'editorial.editorsRole');
-
+		
 		} else {
 			$templateMgr->assign('helpTopicId', 'editorial.sectionEditorsRole');
 		}
-
+		
 		$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
 		$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
-		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic), 'article.submissions'))
-			: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
-
-		import('classes.submission.sectionEditor.SectionEditorAction');
-		$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, $roleSymbolic);
-		if (isset($submissionCrumb)) {
-			$pageHierarchy = array_merge($pageHierarchy, $submissionCrumb);
-		}
+		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, 'meetings'), 'editor.meetings'))
+		: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
+		
+		if($meetingId!=0)
+			$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'viewMeeting', $meetingId), "#$meetingId", true);
+		
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
 
@@ -105,17 +103,17 @@ class MinutesHandler extends Handler {
 	 */
 	function uploadMinutes($args, $request) {
 		$this->validate();
-		$this->setupTemplate();
+		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
 		$userId = $user->getId();
-		$meetingId = isset($args[0]) ? $args[0]: 0;
 		
 		if($meetingId == null) {
 			Request::redirect(null, null, 'minutes', null);
 		}
 		
+		$this->setupTemplate(true, $meetingId);
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =& $meetingDao->getMeetingById($meetingId);
 		
@@ -143,6 +141,7 @@ class MinutesHandler extends Handler {
 			Request::redirect(null, null, 'minutes', null);
 		}
 		
+		$this->setupTemplate(true, $meetingId);
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =& $meetingDao->getMeetingById($meetingId);
 		$statusMap = $meeting->getStatusMap();
@@ -175,6 +174,7 @@ class MinutesHandler extends Handler {
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->setupTemplate(true, $meetingId);
 		
 		import('classes.sectionEditor.form.AttendanceForm');
 		$attendanceForm = new AttendanceForm($meetingId, $journalId);
@@ -197,13 +197,13 @@ class MinutesHandler extends Handler {
 	 */
 	function uploadAnnouncements($args, $request) {
 		$this->validate();
-		$this->setupTemplate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		
 		if($meetingId == 0) {
 			Request::redirect(null, null, 'minutes', null);
 		}
 		
+		$this->setupTemplate(true, $meetingId);
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =& $meetingDao->getMeetingById($meetingId);
 		$statusMap = $meeting->getStatusMap();

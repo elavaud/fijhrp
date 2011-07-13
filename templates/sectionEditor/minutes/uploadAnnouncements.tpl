@@ -9,6 +9,8 @@
 </script>{/literal}
 
 <h4>Date and Announcements for Meeting #{$meeting->getId()}</h4>
+<div class="separator"></div>
+<br/>
 <form method="POST" action="{url op="submitAnnouncements" path=$meeting->getId()}">
  <table class="data" name="timeDate" id="timeDate">
  	<tr>
@@ -40,7 +42,8 @@
 	 </tr>	 	 
  </table>
  <br/>
- <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAnnouncements"}')" name="submit" value="Submit Date and Announcements"  class="button" />
- &nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="minutes"}">Back to list of minutes</a>
+ <input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+ <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAnnouncements"}')" name="submit" value="Submit Date and Announcements"  class="button defaultButton" />
+ 	
  </form>
 </div>

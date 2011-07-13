@@ -57,7 +57,7 @@ class MeetingsHandler extends Handler {
 		: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
 		
 		if($meetingId!=0)
-			$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'setMeeting', $meetingId), "#$meetingId", true);
+			$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'viewMeeting', $meetingId), "#$meetingId", true);
 		
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}

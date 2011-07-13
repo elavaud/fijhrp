@@ -14,7 +14,6 @@
 <ul class="menu">
 	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
-	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
 <div class="separator"></div>

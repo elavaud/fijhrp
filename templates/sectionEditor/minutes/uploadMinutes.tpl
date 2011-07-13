@@ -1,8 +1,8 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 <h4>MINUTES OF MEETING <a href="{url op="viewMeeting" path=$meeting->getId()}">#{$meeting->getId()}</a></h4>
 <div id="submissions">
-
 {assign var="statusMap" value=$meeting->getStatusMap()}
+{translate key="common.status"}: {$meeting->getStatusKey()}
 <table class="listing" width="100%">
     <tr {if $statusMap.2 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
 		<td width="10%">(1)</td>
