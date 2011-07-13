@@ -198,6 +198,21 @@
 	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
 	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations’s Ethics Review Committee (WHOERC).</message>
+	<message key="editor.minutes.minutes">Minutes</message>
+	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
+	<message key="editor.minutes.attendance">Attendance</message>
+	<message key="editor.minutes.announcements">Announcements</message>
+	<message key="editor.minutes.initialReview">Initial Review</message>
+	<message key="editor.minutes.initialReviews">Initial Reviews</message>
+	<message key="editor.minutes.continuinglReview">Continuing Review</message>
+	<message key="editor.minutes.continuinglReviews">Continuing Reviews</message>
+	<message key="editor.minutes.rereview">Continuing Review or Re-review</message>
+	<message key="editor.minutes.rereviews">Continuing Review or Re-reviews</message>
+	<message key="editor.minutes.amendment">Amendment</message>
+	<message key="editor.minutes.amendments">Amendments</message>
+	<message key="editor.minutes.adverseEvent">Adverse Event</message>
+	<message key="editor.minutes.adverseEvents">Adverse Events</message>
+	<message key="editor.minutes.informationItems">Information Items</message>
 		
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
 	<message key="editor.article.replaceLayoutEditor">Replace Layout Editor</message>

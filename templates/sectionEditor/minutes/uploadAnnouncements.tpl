@@ -12,23 +12,8 @@
 <form method="POST" action="{url op="submitAnnouncements" path=$meeting->getId()}">
  <table class="data" name="timeDate" id="timeDate">
  	<tr>
-	 	<td width="5%" class="label">Date Held</td>
-	 	<td width="50%" class="value"><input type="text" name="dateHeld" id="dateHeld" size="10" class="textField" value="{$minutesObj->dateHeld}"/>&nbsp;&nbsp;(dd-mm-yyy)</td>
-	 </tr>
-	 <tr>
-	 	<td width="5%" class="label">Time Convened</td>
-	 	<td width="50%" class="value">
-	 		<select name="hourConvened" id="hourConvened" class="selectMenu">
-	 			{html_options options=$hour selected="2"}
-	 		</select>:
-	 		<select name="minuteConvened" id="minuteConvened" class="selectMenu">
-	 			{html_options options=$minute selected="00"}
-	 		</select>
-	 		<select name="amPmConvened" id="amPmConvened" class="selectMenu">
-	 			<option value="am">a.m.</option>
-	 			<option value="pm" selected="selected">p.m.</option>
-	 		</select>
-	 	</td>
+	 	<td width="5%" class="label">Date and Time Convened</td>
+	 	<td width="50%" class="value">{$meeting->getDate()}</td>
 	 </tr>
 	 <tr>
 	 	<td width="5%" class="label">Time Adjourned</td>
