@@ -183,8 +183,7 @@
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
 	<message key="editor.submissionReview.confirmExemption">Are you sure you wish to record this decision?</message>
-	<message key="editor.submissionReview.confirmExempted">Are you sure you wish to exempt this proposal from review?</message>
-	<message key="editor.submissionReview.confirmAssigned">Are you sure you wish to assign this proposal for review?</message>
+	<message key="editor.submissionReview.confirmReviewSelection">Are you sure you wish to record this decision?</message>
 	<message key="editor.article.record">Submit</message>
 	<message key="editor.article.finalDecision">Final Decision</message>
 	<message key="editor.article.proposalResubmitted">(Resubmitted proposal)</message>
