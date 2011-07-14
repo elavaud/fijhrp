@@ -1,13 +1,24 @@
-{include file="sectionEditor/minutes/menu.tpl"}
-<div id="selectInitialReview">
+{strip}
+{assign var="pageTitle" value="common.queue.long.minutes"}
+{url|assign:"currentUrl" page="sectionEditor"}
+{include file="common/header.tpl"}
+{/strip}
+
+<ul class="menu">
+	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
+	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
+	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
+</ul>
+<br/>
+<div id="selectContinuingReview">
 <h4>Select Proposal for Initial Review</h4>
 <br/>
 {if $submissions == null }
-	No proposals are assigned for initial ERC Review.
+	No proposals are assigned for continuing review.
 {else}
 	
 	<table class="data">
-		<form method="POST" action="{url op="uploadInitialReview" path=$meetingId}">			
+		<form method="POST" action="{url op="uploadContinuingReview" path=$meetingId}">			
 		<tr>
 			<td class="label">
 				<select name="articleId" id="articleId" class="selectMenu">
@@ -27,7 +38,7 @@
 		</tr>
 	</table>
 {/if}	
-	<form method="POST" action="{url op="completeInitialReview"}">
+	<form method="POST" action="{url op="completeContinuingReview"}">
 		<input type="hidden" name="meetingId" value="{$meetingId}"/>
 		<br/><input type="submit" class="button" id="complete" name="complete" value="Complete Initial Reviews"/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="uploadMinutes" path=$meetingId}">Back to sections of minutes</a>
 	</form>

@@ -30,16 +30,15 @@
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 		<td>{$submission->getSectionAbbrev()|escape}</td>
 		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submissionEditing" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+		<td><a href="{url op="submissionReview" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
 		<td align="right">
 			{assign var="status" value=$submission->getSubmissionStatus()}
-			{if $status == PROPOSAL_STATUS_WITHDRAWN}
-				{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
-				{translate key=$proposalStatusKey}
-			{elseif $status == PROPOSAL_STATUS_ARCHIVED}
-				{assign var="editorDecisionKey" value=$submission->getEditorDecisionKey()}
-				{translate key=$editorDecisionKey}
+			{if $status == PROPOSAL_STATUS_ARCHIVED}
+				{assign var="statusKey" value=$submission->getEditorDecisionKey()}				
+			{else}
+				{assign var="statusKey" value=$submission->getProposalStatusKey()}			
 			{/if}
+			{translate key=$statusKey}
 		</td>
 	</tr>
 	<tr>

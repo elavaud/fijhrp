@@ -183,14 +183,14 @@
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
 	<message key="editor.submissionReview.confirmExemption">Are you sure you wish to record this decision?</message>
-	<message key="editor.submissionReview.confirmExempted">Are you sure you wish to exempt this proposal from review?</message>
-	<message key="editor.submissionReview.confirmAssigned">Are you sure you wish to assign this proposal for review?</message>
+	<message key="editor.submissionReview.confirmReviewSelection">Are you sure you wish to record this decision?</message>
 	<message key="editor.article.record">Submit</message>
 	<message key="editor.article.finalDecision">Final Decision</message>
 	<message key="editor.article.proposalResubmitted">(Resubmitted proposal)</message>
 	<message key="editor.article.waitingForResubmission">Waiting for resubmission of proposal</message>
 	<message key="editor.article.submissionStatus">Submission Status</message>
 	<message key="editor.article.reasonsForExemption">Reasons for Exemption</message>
+	<message key="editor.article.selectContinuingReview">Select Type of Continuing Review</message>
 	<message key="editor.article.exemption.instructions">(Please check all that apply)</message>
 	<message key="editor.article.exemption.noHumanParticipants">The research does not involve human participants.</message>	
 	<message key="editor.article.exemption.alreadyExists">The data (including health-care records and specimens) being studied already exist and are either publicly available or are recorded by the investigator in such a manner as to be unidentifiable.</message>
@@ -198,7 +198,23 @@
 	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
 	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations’s Ethics Review Committee (WHOERC).</message>
-		
+	<message key="editor.minutes.minutes">Minutes</message>
+	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
+	<message key="editor.minutes.attendance">Attendance</message>
+	<message key="editor.minutes.announcements">Announcements</message>
+	<message key="editor.minutes.initialReview">Initial Review</message>
+	<message key="editor.minutes.initialReviews">Initial Reviews</message>
+	<message key="editor.minutes.continuingReview">Continuing Review</message>
+	<message key="editor.minutes.continuingReviews">Continuing Reviews</message>
+	<message key="editor.minutes.rereview">Continuing Review or Re-review</message>
+	<message key="editor.minutes.rereviews">Continuing Review or Re-reviews</message>
+	<message key="editor.minutes.amendment">Amendment</message>
+	<message key="editor.minutes.amendments">Amendments</message>
+	<message key="editor.minutes.adverseEvent">Adverse Event</message>
+	<message key="editor.minutes.adverseEvents">Adverse Events</message>
+	<message key="editor.minutes.informationItems">Information Items</message>
+	<message key="editor.minutes.announcementsRequired">Please enter announcements.</message>
+			
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
 	<message key="editor.article.replaceLayoutEditor">Replace Layout Editor</message>
 	<message key="editor.article.reviewSubmission">Review Submission</message>
@@ -280,6 +296,12 @@
 	<message key="editor.meetings.numberOfAttendingReviewers">Total Number of Attending Reviewers</message>
 	<message key="editor.meetings.numberOfNotAttendingReviewers">Total Number of NOT Attending Reviewers</message>
 	<message key="editor.meetings.numberOfUndecidedReviewers">Total Number of Undecided Reviewers</message>
+	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>
+	<message key="editor.meetings.form.selectAtleastOneProposal">Select at least one (1) proposal to discuss</message>
+	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
+	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</messge>
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
-	
+
+
+	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</messge>
 </locale>

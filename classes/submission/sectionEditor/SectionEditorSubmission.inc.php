@@ -147,6 +147,7 @@ class SectionEditorSubmission extends Article {
 		return STATUS_QUEUED_REVIEW;
 	}
 	*/
+	
 	/**
 	 * Get the submission status. Returns one of the defined constants
          * PROPOSAL_STATUS_DRAFT, PROPOSAL_STATUS_WITHDRAWN, PROPOSAL_STATUS_SUBMITTED,
@@ -169,6 +170,8 @@ class SectionEditorSubmission extends Article {
                 
                 //Archived status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
+                
+                if($this->getStatus() == PROPOSAL_STATUS_DUE_FOR_REVIEW) return PROPOSAL_STATUS_DUE_FOR_REVIEW;
 
                 $status = $this->getProposalStatus();
                 $articleDao = DAORegistry::getDAO('ArticleDAO');
@@ -548,7 +551,7 @@ class SectionEditorSubmission extends Article {
 	}
 
 	/********************************************
-	 * Return array mapping exemption options to their locale strings
+	 * Return array mapping of exemption options to their locale strings
 	 * Added by aglet
 	 * Last Update: 5/28/2011
 	********************************************/
@@ -561,6 +564,21 @@ class SectionEditorSubmission extends Article {
 			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
 		);
 		return $exemptionOptions;
+	}
+	
+	/********************************************
+	 * Return array mapping of continuing review options to their locale strings
+	 * Added by aglet
+	 * Last Update: 5/28/2011
+	********************************************/
+	
+	function &getContinuingReviewOptions() {
+		static $continuingReviewOptions = array(
+			'' => 'common.chooseOne',
+			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
+			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
+		);
+		return $continuingReviewOptions;
 	}
 	
 	/**

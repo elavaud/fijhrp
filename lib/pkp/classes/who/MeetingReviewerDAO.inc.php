@@ -39,7 +39,7 @@ class MeetingReviewerDAO extends DAO {
 		$meetingReviewers = array();
 		$result =& $this->retrieve(
 			'SELECT a.meeting_id, a.reviewer_id, a.remarks, a.attending,
-			 		b.first_name, b.last_name, b.salutation 
+			 		b.first_name, b.last_name, b.salutation, a.date_reminded
 			 FROM meeting_reviewers a LEFT JOIN users b ON (a.reviewer_id = b.user_id )
 			 WHERE meeting_id = ?',
 			(int) $meetingId
@@ -69,6 +69,7 @@ class MeetingReviewerDAO extends DAO {
 		$meetingReviewer->setReviewerId($row['reviewer_id']);
 		$meetingReviewer->setIsAttending($row['attending']);
 		$meetingReviewer->setRemarks($row['remarks']);
+		$meetingReviewer->setDateReminded($row['date_reminded']);
 		$meetingReviewer->setFirstName($row['first_name']);
 		$meetingReviewer->setLastName($row['last_name']);
 		$meetingReviewer->setSalutation($row['salutation']);
@@ -90,6 +91,13 @@ class MeetingReviewerDAO extends DAO {
 			$meeting->getId(), 
 			$meeting->getReviewerId())
 		);
+	}
+	
+	function updateDateReminded($dateReminded, $reviewerId, $meeting) {
+		$this->update(
+			sprintf('UPDATE meeting_reviewers SET date_reminded = %s
+			WHERE meeting_id = ? AND reviewer_id = ?',
+			$this->datetimeToDB($dateReminded)), array($meeting->getId(), $reviewerId));
 	}
 	
 }

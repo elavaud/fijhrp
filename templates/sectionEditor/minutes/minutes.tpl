@@ -1,22 +1,8 @@
-{strip}
-{assign var="pageTitle" value="common.queue.long.minutes"}
-{url|assign:"currentUrl" page="sectionEditor"}
-{include file="common/header.tpl"}
-{/strip}
-
-<ul class="menu">
-	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
-	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
-	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-</ul>
- 
+{include file="sectionEditor/minutes/menu.tpl"}
 <div id="submissions">
 <table class="listing" width="100%">
-        <tr><td colspan="6"> 
-        	<form method="post" action="{url op="createMinutes"}">
-        		UPLOADED MINUTES OF MEETING &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-        		<input type="submit" name="createMinutesSubmit" class="button" value="Create New Minutes" /><br/>        		
-        	</form>
+        <tr><td colspan="6">         	
+        	UPLOADED MINUTES OF MEETING &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;         		
         </td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">

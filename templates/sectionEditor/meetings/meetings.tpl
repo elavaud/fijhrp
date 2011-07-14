@@ -12,7 +12,6 @@
 <ul class="menu">
 	<li class="current"><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
-	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
 <div id="meetings">
@@ -45,9 +44,15 @@
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getScheduleStatus()}
+				</a><br/>
+				{if $meeting->getIsFinal() == 1}
+				<a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
+					Upload Minutes
 				</a>
+				{/if}
 			</td>
 		</tr>	
+		<tr><td colspan="6" class="separator"></td></tr>
 	{/foreach}
 	{if empty($meetings)}
 		<tr>

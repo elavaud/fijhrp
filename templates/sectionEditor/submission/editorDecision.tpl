@@ -99,6 +99,30 @@
 <!-- 
 {*******************************************************
  *
+ * Continuing Review
+ * Added by aglet
+ * Last Update: 7/12/2011
+ *
+ *******************************************************}
+ -->
+		
+
+	{elseif $proposalStatus == PROPOSAL_STATUS_DUE_FOR_REVIEW}
+		<td class="label" width="20%">{translate key="editor.article.selectContinuingReview"}</td>
+		<td width="80%" class="value">
+			<form method="post" action="{url op="recordDecision"}">
+				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
+				<select name="decision" size="1" class="selectMenu">
+					{html_options_translate options=$continuingReviewOptions selected=1}
+				</select>
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmReviewSelection"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
+			</form>
+		</td>
+<!-- 
+{*******************************************************
+ *
  * Ask for final decision if status is for expedited review or last decision was RESUBMIT
  * Added by aglet
  * Last Update: 6/1/2011

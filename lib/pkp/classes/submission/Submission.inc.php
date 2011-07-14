@@ -27,6 +27,7 @@ define('PROPOSAL_STATUS_DRAFT',8); //Replaces STATUS_INCOMPLETE
 define('PROPOSAL_STATUS_WITHDRAWN',9);  //Special tag, not part of lifecycle
 define('PROPOSAL_STATUS_ARCHIVED',10);  //To archive Not Approved and Exempt From Review
 define('PROPOSAL_STATUS_COMPLETED',11);  
+define('PROPOSAL_STATUS_DUE_FOR_REVIEW',12);
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
@@ -1326,7 +1327,9 @@ class Submission extends DataObject {
 				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed',
 				PROPOSAL_STATUS_DRAFT => 'submissions.proposal.draft',
 				PROPOSAL_STATUS_WITHDRAWN => 'submissions.proposal.withdrawn',
-				PROPOSAL_STATUS_ARCHIVED => 'submissions.proposal.archived'				
+				PROPOSAL_STATUS_ARCHIVED => 'submissions.proposal.archived',
+				PROPOSAL_STATUS_COMPLETED => 'submissions.proposal.completed',
+				PROPOSAL_STATUS_DUE_FOR_REVIEW => 'submissions.proposal.dueForReview'
 				);
 		}
 		return $proposalStatusMap;

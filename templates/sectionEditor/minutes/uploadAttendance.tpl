@@ -1,15 +1,4 @@
-{strip}
-{assign var="pageTitle" value="common.queue.long.minutes"}
-{url|assign:"currentUrl" page="sectionEditor"}
-{include file="common/header.tpl"}
-{/strip}
-
-<ul class="menu">
-	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
-	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
-</ul>
-<br/>
+{include file="sectionEditor/minutes/menu.tpl"}
 {literal}<script type="text/javascript">
 <!--
 	var guestCount = 0;
@@ -45,19 +34,23 @@
 -->
 </script>{/literal}
 <h4>Attendance for Meeting #{$meeting->getId()}</h4>
+<div class="separator"></div>
 <br/>
 <form method="POST" action="{url op="submitAttendance" path=$meeting->getId()}">
-<table class="data" name="ercMembers">
-	<tr class="heading" valign="bottom"><td colspan="6">REVIEW COMMITTEE</td></tr>
+<h5>REVIEW COMMITTEE</h5>
+<table width="100%" class="listing" name="ercMembers">
+<!--	<tr class="heading" valign="bottom"><td colspan="4">REVIEW COMMITTEE</td></tr>-->
+	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
  	<tr>
  		<td width="10%">Present</td>
  		<td width="10%">Absent</td>
  		<td width="30%">Name of Committee Member</td>
  		<td width="50%">(Reason if absent)</td>
  	</tr>
+ 	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
  	{foreach from=$reviewers item=user}
 		<tr>
-	 	 		<td width="5%"><input type="radio" class="present" name="attendance_{$user->getId()}" id="present_{$user->getId()}" value="present" /></td>
+	 	 		<td width="5%"><input type="radio" class="present" name="attendance_{$user->getId()}" id="present_{$user->getId()}" value="present"/></td>
 		 		<td width="5%"><input type="radio" class="absent" name="attendance_{$user->getId()}" id="absent_{$user->getId()}" value="absent" /></td>
 			 	<td width="35%">
 			 		{$user->getFullName()}
@@ -70,21 +63,21 @@
 				 		<input type="radio" name="absence_reason_{$user->getId()}" id="on_leave_{$user->getId()}" value="On Leave"/><label for="on_leave_{$user->getId()}">On Leave</label>
 				 		<input type="radio" name="absence_reason_{$user->getId()}" id="others_{$user->getId()}" value="Other Commitment"/><label for="others_{$user->getId()}">Other Commitment</label>
 				 		<input type="radio" name="absence_reason_{$user->getId()}" id="unexcused_{$user->getId()}" value="Unexcused"/><label for="unexcused_{$user->getId()}">Unexcused</label>
-				 	</div>
 			 	</td>
-		</tr>		
+		</tr>	
+		<tr><td colspan="4" class="separator"></td></tr>	
 	{/foreach}	 	
-		
+	<td colspan="4" class="endseparator">&nbsp;</td>	
 </table> 
-<p><div class="separator"></div></p>
 <br/>
- <table class="data" name="guests" id="guests" width="100%">
+<h5>Guests 
+ 	<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h5>
  	<input type="hidden" name="guestCount" id="guestCount" value={$guestCount} />
- 	<tr class="heading" valign="bottom"><td colspan="6">GUESTS &nbsp;&nbsp;&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="Add Guest" /></td></tr>
+ <div class="separator"></div>
+ <table class="listing" name="guests" id="guests" width="100%">
 	<tr></tr> 	
  </table>
- <p><div class="separator"></div></p><br/>
-  
- <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" name="submit" value="Submit Attendance"  class="button" />
- &nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="minutes"}">Back to list of minutes</a>
+<br/><br/>
+ <input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+ <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" name="submit" value="Submit Attendance"  class="button defaultButton" />
  </form>

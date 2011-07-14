@@ -380,6 +380,7 @@
         <message key="submissions.proposal.draft">Draft</message>
         <message key="submissions.proposal.approved">Approved</message>
         <message key="submissions.proposal.completed">Completed</message>
+        <message key="submissions.proposal.dueForReview">Due For Review</message>
 
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Submit</message>

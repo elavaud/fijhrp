@@ -206,6 +206,16 @@ class MeetingDAO extends DAO {
 			array(1,$meetingId)
 		);
 	} 
+	
+	function cancelMeeting($meetingId){
+		$this->update(
+			'DELETE a,b,c FROM meetings AS a
+			 LEFT JOIN meeting_submissions AS b ON (b.meeting_id = a.meeting_id)
+			 LEFT JOIN meeting_reviewers AS c ON (c.meeting_id = b.meeting_id)
+			 WHERE c.meeting_id = ?',
+			(int) $meetingId
+		);
+	}
 		
 }
 
