@@ -95,6 +95,7 @@ class MeetingAction extends Action {
 			 $diff = $meetingDate - strtotime($meeting->getDate());
 			 if($diff != 0)
 				$oldDate = $meeting->getDate();
+			 
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);

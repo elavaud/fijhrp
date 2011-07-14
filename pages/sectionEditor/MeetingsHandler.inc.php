@@ -118,53 +118,33 @@ class MeetingsHandler extends Handler {
 
 
 	/**
-	* Added by MSB
+	* Added by MSB, Updated Last: July 14, 2011
 	* Display the setMeeting page
 	* @param $args (type)
 	*/
-	
-	function setMeeting($args) {
+	function setMeeting($args, &$request){
+		import ('lib.pkp.classes.who.form.SetMeetingForm');
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId, false, true);
-		$this->setupTemplate(true, $meetingId);
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();
+		$this->validate($meetingId,false, true);
+		$this->setupTemplate();
+		$setMeetingForm= new SetMeetingForm($args,$request);
+		$saveMeetingSubmit = Request::getUserVar('saveMeeting') != null ? true : false;
 		
-		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		if ($saveMeetingSubmit) {
+			$setMeetingForm->readInputData();
+
+			if($setMeetingForm->validate()){	
+					$this->saveMeeting($args);
+			}else{
+				if ($setMeetingForm->isLocaleResubmit()) {
+					$profileForm->readInputData();
+				}
+				$setMeetingForm->display($args);
+			}
 		
-		$editor = $user->getId();
-		
-		$submissions =& $editorSubmissionDao->getEditorSubmissionsForERCReview(
-			$journalId,
-			$filterSection,
-			$editorId
-		);
-	
-		$this->submissions =& $submissions;
-		
-		/*LIST THE SUBMISSIONS*/
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-		
-		/*MEETING DETAILS*/
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
-		
-		/*RESPONSES FROM REVIEWERS*/
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-		$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
-	
-		
-		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign_by_ref('meeting', $meeting);
-		$templateMgr->assign_by_ref('reviewers', $reviewers);
-		$templateMgr->assign_by_ref('submissions', $submissions);
-		$templateMgr->assign_by_ref('selectedProposals', $selectedProposals);
-	
-		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
-		$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
+		}else {
+			$setMeetingForm->display($args);
+		}
 	}
 	
 	/**
