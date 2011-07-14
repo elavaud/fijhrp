@@ -5,27 +5,20 @@
  */
 
 /**
- * @file classes/sectionEditor/form/CreateExternalReviewerForm.inc.php
+ * @file lib/pkp/classes/who/SetMeetingForm.inc.php
  *
- * Copyright (c) 2003-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
- *
- * @class CreateExternalReviewerForm
+ * Added by MSB. Last Updated: July 14, 2011
+ * @class SetMeetingForm
  * @ingroup sectionEditor_form
  *
- * @brief Form for section editors to create reviewers.
+ * @brief Form for section editors to create meeting.
  */
-
-// $Id$
 
 
 import('lib.pkp.classes.form.Form');
 
 class SetMeetingForm extends Form {
 
-	/** @var int The article this form is for */
-
-	var $userId;
 	/**
 	 * Constructor.
 	 */
@@ -52,15 +45,18 @@ class SetMeetingForm extends Form {
 	
 	}
 
+	/**
+	 * Initialize form
+	 * */
 	function initData($args){
 
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		
-		/*LIST THE SUBMISSIONS*/
+		/*Get the selected submissions to be reviewed*/
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$selectedSubmissions =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		
-		/*MEETING DETAILS*/
+		/*Get the meeting details*/
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =$meetingDao->getMeetingById($meetingId);
 		
@@ -106,10 +102,11 @@ class SetMeetingForm extends Form {
 			$editorId
 		);
 	
+		/*Get the selected submissions to be reviewed*/
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =$meetingDao->getMeetingById($meetingId);
-
-		/*LIST THE SUBMISSIONS*/
+		
+		/*Get the selected submissions to be reviewed*/
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$selectedSubmissions =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		

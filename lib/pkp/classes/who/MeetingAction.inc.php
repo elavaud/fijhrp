@@ -116,7 +116,9 @@ class MeetingAction extends Action {
 		if($isNew) {
 			Request::redirect(null, null, 'notifyReviewersNewMeeting', $meetingId);
 		} else if($oldDate!=0){
-			Request::redirect(null, null, 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
+
+			//Hi ayvee, di ko mapagana to? 404 page error ako. Pacheck nalang, baka may nabura ako habang nagmerge 
+			//Request::redirect(null, null, 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
 		}
 		
 		return $meetingId;
