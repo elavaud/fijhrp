@@ -298,7 +298,7 @@ function setMeeting($args) {
 			$meetingTimeMarker = $tmp[2];
 			$meetingTimeParts = explode(':', $meetingTime);
 				
-			if(strcasecmp($meetingTimeMarker, 'pm'))
+			if(strcasecmp($meetingTimeMarker, 'pm') == 0)
 				$hour = intval($meetingTimeParts[0]) + 12;
 			else 
 				$hour = intval($meetingTimeParts[0]);
