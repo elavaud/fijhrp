@@ -241,7 +241,9 @@ class MeetingsHandler extends Handler {
 	
 	function cancelMeeting($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate(meetingId);
+			
+		$this->validate($meetingId);
+		
 		if(MeetingAction::cancelMeeting($meetingId, null)){
 			Request::redirect(null, null, 'meetings', null);
 		}
@@ -280,8 +282,7 @@ class MeetingsHandler extends Handler {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
 		$oldDate = isset($args[1]) ? $args[1]: 0;
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
@@ -302,8 +303,7 @@ class MeetingsHandler extends Handler {
 	function notifyReviewersFinalMeeting($args) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
@@ -322,12 +322,10 @@ class MeetingsHandler extends Handler {
 	 * @param int $meetingId
 	 */
 	function notifyReviewersCancelMeeting($args) {
-		$this->validate($meetingId);
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		//$this->validate($meetinGId, SECTION)
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
-		
+		$this->validate($meetingId);
+		$meeting =& $this->meeting;
+
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
 	
@@ -348,8 +346,7 @@ class MeetingsHandler extends Handler {
 		$meetingId = Request::getUserVar('meetingId');
 		$reviewerId = Request::getUserVar('reviewerId');
 		$this->validate($meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -373,13 +370,15 @@ class MeetingsHandler extends Handler {
 				$isValid = false;
 			if($isValid)
 				$this->meeting =& $meeting;
+				
 		} else {
 			if(!$isList && !$isSetMeeting)
 				$isValid = false;	
 		}
 		
-		if(!$isValid) 
+		if(!$isValid) {
 			Request::redirect(null, Request::getRequestedPage());
+		}
 		
 		return true;
 	}
