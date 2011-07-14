@@ -30,9 +30,14 @@ $(document).ready(function() {
 
 <div class="separator"></div>
 <br>
+{include file="common/formErrors.tpl"}
+<div class="separator"></div>
+<br>
 <div id="submissions">
 <h2>{translate key="editor.meetings.submissions"}</h2>
-<form method="post" action="{url op="saveMeeting" path=$meeting->getId() }" >
+
+<form method="post" action="{url op="setMeeting" path=$meetingId }" >
+<p>{fieldLabel name="selectedProposals" required="true" key="editor.meetings.addProposalsToDiscuss"}</p>
 <table class="listing" width="100%">
 	<tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
@@ -103,16 +108,16 @@ $(document).ready(function() {
 <td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
 </tr>
 <tr valign="top">
-<td width="20%" colspan="2" class="label">{fieldLabel name="meetingDate" required="true" key="editor.articel.meetingDate"}</td>
-<td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
+<td width="20%" colspan="2" class="label">{fieldLabel name="meetingDate" required="true" key="editor.article.meetingDate"}</td>
+<td width="80%" colspan="5" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
 </tr>
 {/if}
 </table>
 
-<p> {if $meeting->getId() == 0}<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
+<p> {if $meetingId == 0}<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
 	
 	{else}
-		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meeting->getId() }'" />
+		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meetingId }'" />
 	{/if} 
  	  <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" />
  	  </p>

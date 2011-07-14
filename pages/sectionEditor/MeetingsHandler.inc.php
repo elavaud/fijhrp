@@ -14,6 +14,7 @@ import('classes.submission.sectionEditor.SectionEditorAction');
 import('classes.handler.Handler');
 import('lib.pkp.classes.who.Meeting');
 import('lib.pkp.classes.who.MeetingAction');
+//import ('lib.pkp.classes.who.form.SetMeetingForm');
 
 
 class MeetingsHandler extends Handler {
@@ -34,6 +35,7 @@ function MeetingsHandler() {
 	$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_EDITOR)));
 
 }
+
 
 /**
 * Setup common template variables.
@@ -87,7 +89,7 @@ function meetings($args) {
 	$meetingDao = DAORegistry::getDAO('MeetingDAO');
 	$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
 	$articleDao = DAORegistry::getDAO('ArticleDAO');
-	
+
 	$meetings =& $meetingDao->getMeetingsOfUser($userId);
 	
 	$map = array();
@@ -116,9 +118,9 @@ function meetings($args) {
 	* Display the setMeeting page
 	* @param $args (type)
 	*/
-
+	/*
 	function setMeeting($args) {
-	
+
 	$this->validate();
 	$meetingId = isset($args[0]) ? $args[0]: 0;
 	$this->setupTemplate(true, $meetingId);
@@ -140,15 +142,15 @@ function meetings($args) {
 		$this->submissions =& $submissions;
 		
 		/*LIST THE SUBMISSIONS*/
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+	//	$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+	//	$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		
 		/*MEETING DETAILS*/
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+	//	$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+	//	$meeting =$meetingDao->getMeetingById($meetingId);
 		
 		/*RESPONSES FROM REVIEWERS*/
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+	/*	$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
 	
 		
@@ -161,6 +163,29 @@ function meetings($args) {
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('sectionEditor/meetings/setMeeting.tpl');
 	
+	}*/
+	
+	function setMeeting($args, &$request){
+	
+		import ('lib.pkp.classes.who.form.SetMeetingForm');
+		$this->setupTemplate();
+		$setMeetingForm= new SetMeetingForm($args,$request);
+		// If the user pressed the "Save and email" button, then email the comment.
+		$saveMeetingSubmit = Request::getUserVar('saveMeeting') != null ? true : false;
+		
+		if ($saveMeetingSubmit) {
+			$setMeetingForm->readInputData();
+			if($setMeetingForm->validate()){	
+					$this->saveMeeting($args);
+			}else{
+				if ($setMeetingForm->isLocaleResubmit()) {
+					$profileForm->readInputData();
+				}
+				$setMeetingForm->display($args);
+			}
+		}else {
+			$setMeetingForm->display($args);
+		}
 	}
 	
 	/**
@@ -188,9 +213,9 @@ function meetings($args) {
 
 		$this->validate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		if(MeetingAction::setMeetingFinal($meetingId, null)){
-			Request::redirect(null, null, 'viewMeeting', array($meetingId));
-		}
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meetingDao->setMeetingFinal($meetingId);
+		Request::redirect(null, null, 'notifyReviewersFinalMeeting', $meetingId);
 	}
 
 	/**
@@ -257,6 +282,73 @@ function meetings($args) {
 			Request::redirect(null, null, 'meetings', null);
 		}
 		
+	}
+	
+/**
+	 * Notify reviewers if meeting schedule is made final.
+	 * Added by ayveemallare 7/12/2011
+	 * @param int $meetingId
+	 */
+	function notifyReviewersFinalMeeting($args) {
+		$this->validate();
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		//$this->validate($meetinGId, SECTION)
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+	
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		if (SectionEditorAction::notifyReviewersFinalMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
+			Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}
+	}
+	
+	/**
+	 * Notify reviewers if meeting is cancelled
+	 * Added by ayveemallare 7/12/2011
+	 * @param int $meetingId
+	 */
+	function notifyReviewersCancelMeeting($args) {
+		$this->validate();
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		//$this->validate($meetinGId, SECTION)
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
+		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+	
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		if (SectionEditorAction::notifyReviewersCancelMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
+			Request::redirect(null, null, 'cancelMeeting', $meetingId);
+		}
+	}
+	
+	/**
+	 * Remind reviewers of schedule meeting
+	 * Added by ayveemallare 7/12/2011
+	 * @param $args
+	 */
+	function remindReviewersMeeting($args = null) {
+		$this->validate();
+		$meetingId = Request::getUserVar('meetingId');
+		$reviewerId = Request::getUserVar('reviewerId');
+		//$this->validate($meetinGId, SECTION)
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =$meetingDao->getMeetingById($meetingId);
+		
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		if (SectionEditorAction::remindReviewersMeeting($meeting, $reviewerId, $submissionIds, Request::getUserVar('send'))) {
+			Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}
 	}
 
 

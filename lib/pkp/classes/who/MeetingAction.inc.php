@@ -22,7 +22,8 @@ class MeetingAction extends Action {
 				$meetingDao->cancelMeeting($meetingId);
 			} return true;
 			
-		}return false;
+		}
+		return false;
 	
 	}
 	
@@ -49,11 +50,14 @@ class MeetingAction extends Action {
 			$meetingTime = $tmp[1];
 			$meetingTimeMarker = $tmp[2];
 			$meetingTimeParts = explode(':', $meetingTime);
-				
-			if(strcasecmp($meetingTimeMarker, 'pm'))
-				$hour = intval($meetingTimeParts[0]) + 12;
-			else 
-				$hour = intval($meetingTimeParts[0]);
+			$hour = intval($meetingTimeParts[0]);
+			
+			if(strcasecmp($meetingTimeMarker, 'pm') == 0) {
+				if($hour != 12) $hour += 12;
+			}
+			else {
+				if($hour == 12) $hour = 0;
+			}
 			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
 		}
 		else {
@@ -84,9 +88,16 @@ class MeetingAction extends Action {
 		/**
 		 * Update an existing meeting
 		 */
-		}else{
+		}else{ 
+			 $isNew = false;
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 			 $meeting = $meetingDao->getMeetingById($meetingId);
+			 
+			 //check if new meeting date is equal to old meeting date
+			 $oldDate = 0;
+			 if($meetingDate != strtotime($meeting->getDate()))
+			 	$oldDate = $meeting->getDate();
+			 
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
@@ -101,6 +112,11 @@ class MeetingAction extends Action {
 				$selectedProposals[$i];
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedSubmissions[$i]);
 			}
+		}
+		if($isNew) {
+			Request::redirect(null, null, 'notifyReviewersNewMeeting', $meetingId);
+		} else if($oldDate!=0){
+			Request::redirect(null, null, 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
 		}
 		
 		return $meetingId;
