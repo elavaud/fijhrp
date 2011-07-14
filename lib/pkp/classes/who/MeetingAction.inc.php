@@ -63,6 +63,8 @@ class MeetingAction extends Action {
 		/**
 		 * Create new meeting
 		 */
+		
+		$isNew = true;
 		if($meetingId == null) {
 		
 			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
