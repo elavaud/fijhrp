@@ -288,10 +288,6 @@
 	<message key="editor.meetings.addProposalsToDiscuss">Add/Remove proposals to discuss</message>
 	<message key="editor.meetings.submissions">Submissions to be discussed</message>
 	
-	<!--  ********************************************
-	* Additional keys for meetings
-	* Added by MSB, July 13 2011
-	*-->
 	<message key="editor.meetings.reviewer.name">Name</message>
 	<message key="editor.meetings.reviewer.replyStatus">Reply Status</message>
 	<message key="editor.meetings.reviewer.reply">Remarks</message>
@@ -303,7 +299,6 @@
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>
 	<message key="editor.meetings.form.selectAtleastOneProposal">Select at least one (1) proposal to discuss</message>
 	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
-		
 	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</messge>
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
 
