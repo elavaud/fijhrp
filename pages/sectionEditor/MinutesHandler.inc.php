@@ -177,9 +177,11 @@ class MinutesHandler extends Handler {
 		$this->validate($meetingId, MEETING_STATUS_INITIAL_REVIEWS);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
-		
+
+		$journal = Request::getJournal();
+		$user = Request::getUser();
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview($user->getId(), $journalId, FILTER_SECTION_ALL); 
+		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview($user->getId(), $journal->getId(), FILTER_SECTION_ALL); 
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('meetingId', $meetingId);

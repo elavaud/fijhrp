@@ -66,7 +66,7 @@
 			<td width="30%" align="right">---</td>
 		{elseif $statusMap.2 == 0}
 			<td width="40%">
-				<a href="{url op="selectInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
+				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right">
