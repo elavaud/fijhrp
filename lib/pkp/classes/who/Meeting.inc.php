@@ -1,14 +1,13 @@
 <?php
 
-define ('MEETING_STATUS_COMPLETE', 255);
+define ('MEETING_STATUS_COMPLETE', 128);
 define ('MEETING_STATUS_ATTENDANCE', 1);
-define ('MEETING_STATUS_ANNOUNCEMENTS', 2);
-define ('MEETING_STATUS_INITIAL_REVIEWS', 4);
-define ('MEETING_STATUS_REREVIEWS', 8);
-define ('MEETING_STATUS_CONTINUING_REVIEWS', 16);
-define ('MEETING_STATUS_AMENDMENTS', 32);
-define ('MEETING_STATUS_ADVERSE_EVENTS', 64);
-define ('MEETING_STATUS_INFORMATION_ITEMS', 128);
+define ('MEETING_STATUS_INITIAL_REVIEWS', 2);
+define ('MEETING_STATUS_REREVIEWS', 4);
+define ('MEETING_STATUS_CONTINUING_REVIEWS', 8);
+define ('MEETING_STATUS_AMENDMENTS', 16);
+define ('MEETING_STATUS_ADVERSE_EVENTS', 32);
+define ('MEETING_STATUS_INFORMATION_ITEMS', 64);
 define ('MEETING_SCHEDULE_FINAL', 1);
 define ('MEETING_SCHEDULE_PROPOSED', 0);
 define ('MEETING_REPLY_ATTENDING', 1);
@@ -92,6 +91,23 @@ class Meeting extends DataObject {
 	function getIsFinal() {
 		return $this->getData('isFinal');
 	}
+		
+	function isPresent() {
+		return $this->getData('isPresent');
+	}
+	
+	function setIsPresent($isPresent) {
+		$this->setData('isPresent', $isPresent);
+	}
+	
+	function getReasonForAbsence() {
+		return $this->getData('reasonForAbsence');
+	}
+	
+	function setReasonForAbsence($reasonForAbsence) {
+		$this->setData('reasonForAbsence', $reasonForAbsence);
+	}
+	
 	
 	/**
 	 * Get array mapping of completed sections of the meeting minutes
@@ -100,7 +116,7 @@ class Meeting extends DataObject {
 	function getStatusMap() {
 		$meetingStatus = $this->getStatus();
 		$meetingMap = array();
-		for($i=7; $i>=0; $i--) {
+		for($i=6; $i>=0; $i--) {
 			$num = pow(2, $i);
 			if($num <= $meetingStatus) {
 				$meetingMap[$num] = 1;

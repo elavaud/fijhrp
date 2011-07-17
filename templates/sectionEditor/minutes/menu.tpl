@@ -9,3 +9,4 @@
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
 </ul>
 <div class="separator"></div>
+{include file="common/formErrors.tpl"}

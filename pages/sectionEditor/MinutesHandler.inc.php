@@ -7,6 +7,7 @@
  */
 define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
+define('INITIAL_REVIEW', 0x00001);
 // Filter section
 define('FILTER_SECTION_ALL', 0);
 
@@ -18,6 +19,8 @@ class MinutesHandler extends Handler {
 	/**
 	 * Constructor
 	 **/
+	var $meeting;
+	
 	function MinutesHandler() {
 		parent::Handler();
 		
@@ -102,25 +105,13 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function uploadMinutes($args, $request) {
-		$this->validate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();
-		$userId = $user->getId();
-		
-		if($meetingId == null) {
-			Request::redirect(null, null, 'minutes', null);
-		}
-		
+		$this->validate($meetingId);
 		$this->setupTemplate(true, $meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$templateMgr =& TemplateManager::getManager();		
 		$templateMgr->assign_by_ref('meeting', $meeting);
-		$templateMgr->assign('pageToDisplay', $page);
-		$templateMgr->assign('sectionEditor', $user->getFullName());	
 		$templateMgr->display('sectionEditor/minutes/uploadMinutes.tpl');
 	}
 	
@@ -131,35 +122,21 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function uploadAttendance($args, $request) {
-		$this->validate();
-		$this->setupTemplate();
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-
-		if($meetingId == 0) {
-			Request::redirect(null, null, 'minutes', null);
-		}
-		
+		$this->validate($meetingId, MEETING_STATUS_ATTENDANCE);
 		$this->setupTemplate(true, $meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId);
-		$statusMap = $meeting->getStatusMap();
+		$meeting =& $this->meeting;
 		
-		if($statusMap[MEETING_STATUS_ATTENDANCE]) {
-			Request::redirect(null, null, 'uploadMinutes', $meetingId);
-		}
-		
-		import('classes.sectionEditor.form.AttendanceForm');           
-		$attendanceForm = new AttendanceForm($meetingId, $journalId);
+		$journal = Request::getJournal();
+		import('lib.pkp.classes.who.form.AttendanceForm');           
+		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
 		if ($attendanceForm->isLocaleResubmit()) {
-       		$attendanceForm->readInputData();
+       		$attendanceForm->readInputData();       		
 		} 
 		else {
 			$attendanceForm->initData();
 		}
-		$attendanceForm->display();
-						
+		$attendanceForm->display();						
 	}
 	
 	/**
@@ -169,80 +146,24 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function submitAttendance($args, $request) {
-		$this->validate();
-		$this->setupTemplate();
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId);
 		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
 		
-		import('classes.sectionEditor.form.AttendanceForm');
-		$attendanceForm = new AttendanceForm($meetingId, $journalId);
+		$journal =& Request::getJournal();
+		import('lib.pkp.classes.who.form.AttendanceForm');
+		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
+		
 		$attendanceForm->readInputData();
 		if($attendanceForm->validate()) {
+			
 			$attendanceForm->execute();
 			$attendanceForm->showPdf();
-			//Request::redirect(null, null, 'uploadMinutes', $meetingId);
 		}
 		else {
 			$attendanceForm->display();
 		}	
-	}
-	
-	/**
-	 * Added  6/29/2011
-	 * Display form for announcements
-	 * @param $args
-	 * @param $request
-	 */
-	function uploadAnnouncements($args, $request) {
-		$this->validate();
-		$meetingId = isset($args[0]) ? $args[0]: 0;
-		
-		if($meetingId == 0) {
-			Request::redirect(null, null, 'minutes', null);
-		}
-		
-		$this->setupTemplate(true, $meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId);
-		$statusMap = $meeting->getStatusMap();
-		
-		if($statusMap[MEETING_STATUS_ANNOUNCEMENTS]) {
-			Request::redirect(null, null, 'uploadMinutes', $meetingId);
-		}
-		
-		import('classes.sectionEditor.form.AnnouncementsForm');           
-		$announcementsForm = new AnnouncementsForm($meetingId);           
-		if ($announcementsForm->isLocaleResubmit()) {
-       		$announcementsForm->readInputData();
-		} 
-		else {
-			$announcementsForm->initData();
-		}
-		$announcementsForm->display();		
-	}
-	
-	/**
-	 * Added  6/29/2011
-	 * Update meetings table
-	 * @param $args
-	 * @param $request
-	 */
-	function submitAnnouncements($args, $request) {
-		$this->validate();
-		$meetingId = isset($args[0]) ? $args[0] : 0;
-		
-		import('classes.sectionEditor.form.AnnouncementsForm');
-		$announcementsForm = new AnnouncementsForm($meetingId);
-		$announcementsForm->readInputData();
-		if($announcementsForm->validate()) {
-			$announcementsForm->execute();
-			$announcementsForm->showPdf();			
-		}
-		else {
-			$announcementsForm->display();
-		}		
 	}
 	
 	/**
@@ -252,24 +173,10 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function selectInitialReview($args, $request) {
-		$this->validate();
-		$this->setupTemplate();
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();		
-		$meetingId = isset($args[0]) ? $args[0] : 0;
-		
-		if($meetingId == 0) {
-			Request::redirect(null, null, 'minutes', null);
-		}
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId);
-		$statusMap = $meeting->getStatusMap();
-		
-		if($statusMap[MEETING_STATUS_INITIAL_REVIEWS]) {
-			Request::redirect(null, null, 'uploadMinutes', $meetingId);
-		}
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId, MEETING_STATUS_INITIAL_REVIEWS);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
 		
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview($user->getId(), $journalId, FILTER_SECTION_ALL); 
@@ -287,30 +194,15 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function uploadInitialReview($args, $request) {
-		$this->validate();
-		$this->setupTemplate();
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$meetingId = isset($args[0]) ? $args[0] : 0;
+		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = Request::getUserVar('articleId');
-		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$this->validate($meetingId);
+		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, INITIAL_REVIEW);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		
-		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		if($articleId == null || $submission->getMostRecentDecision() != SUBMISSION_EDITOR_DECISION_ASSIGNED) {
-			Request::redirect(null, null, 'selectInitialReview', $meetingId);
-		}		
-		if($meetingId == 0) {
-			Request::redirect(null, null, 'minutes', null);
-		}		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId);
-		$statusMap = $meeting->getStatusMap();
-				
-		if($statusMap[MEETING_STATUS_INITIAL_REVIEWS]) {
-			Request::redirect(null, null, 'uploadMinutes', $meetingId);
-		}		
-		import('classes.sectionEditor.form.InitialReviewForm');           
+		import('lib.pkp.classes.who.form.InitialReviewForm');           
 		$initialReviewForm = new InitialReviewForm($meetingId, $articleId);           
 		if ($initialReviewForm->isLocaleResubmit()) {
        		$initialReviewForm->readInputData();
@@ -330,14 +222,13 @@ class MinutesHandler extends Handler {
 	function submitInitialReview($args, $request) {
 		$articleId = Request::getUserVar('articleId');
 		$meetingId = Request::getUserVar('meetingId');
-		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW);
-		$submission =& $this->submission;
+		$this->validate($meetingId);
+		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, INITIAL_REVIEW);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+		$submission =& $this->submission;		
 		
-		if($articleId == null) {
-			Request::redirect(null, null, 'selectInitialReview', $meetingId);
-		}		
-		
-		import('classes.sectionEditor.form.InitialReviewForm');
+		import('lib.pkp.classes.who.form.InitialReviewForm');
 		$initialReviewForm = new InitialReviewForm($meetingId, $articleId);
 		$initialReviewForm->readInputData();
 		
@@ -351,19 +242,43 @@ class MinutesHandler extends Handler {
 	}
 	
 	function completeInitialReview($args, $request) {
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();
-		$meetingId = Request::getUserVar("meetingId");
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
 		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =& $meetingDao->getMeetingById($meetingId);
 		$meeting->updateStatus(MEETING_STATUS_INITIAL_REVIEWS);
 		$meetingDao->updateStatus($meeting);
 						
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
-	
+
+	function validate($meetingId = 0, $access = null) {
+		parent::validate();
+		$isValid = true;
+		$user = Request::getUser();
+		if($meetingId != 0) {
+			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+			$meeting = $meetingDao->getMeetingById($meetingId);
+			
+			if($meeting == null)
+				$isValid = false;
+			else if($meeting->getUploader() != $user->getId())
+				$isValid = false;			
+			if($isValid)
+				$this->meeting =& $meeting;
+			$statusMap = $meeting->getStatusMap();
+			if($access != null && $statusMap[$access] == 1) {
+				Request::redirect(null, null, 'uploadMinutes', $meetingId);													
+			}		
+		}
+		
+		if(!$isValid) {
+			Request::redirect(null, Request::getRequestedPage());
+		}
+				
+		return true;
+	}
 
 	/**
 	 * Validate that the user is the assigned section editor for
@@ -372,7 +287,7 @@ class MinutesHandler extends Handler {
 	 * @param $articleId int Article ID to validate
 	 * @param $access int Optional name of access level required -- see SECTION_EDITOR_ACCESS_... constants
 	 */
-	function validateAccess($articleId, $access = null) {
+	function validateAccess($articleId, $access = null, $reviewType = null) {
 		parent::validate();
 		$isValid = true;
 
@@ -391,7 +306,11 @@ class MinutesHandler extends Handler {
 		} else if ($sectionEditorSubmission->getDateSubmitted() == null) {
 			$isValid = false;
 
-		} else {
+		} else if ($reviewType != null) {
+			if ($reviewType == INITIAL_REVIEW && $sectionEditorSubmission->getMostRecentDecision() != SUBMISSION_EDITOR_DECISION_ASSIGNED) 
+				Request::redirect(null, null, 'selectInitialReview', $meetingId);			
+		}
+		 else {
 			$templateMgr =& TemplateManager::getManager();
 
 			if (Validation::isEditor()) {

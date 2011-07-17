@@ -100,6 +100,22 @@ class MeetingReviewerDAO extends DAO {
 			$this->datetimeToDB($dateReminded)), array($meeting->getId(), $reviewerId));
 	}
 	
+	/**
+	 * Update meeting_reviewers table to save attendance in meeting 
+	 * Added by aglet 7/17/2011
+	 * @param Meeting $meeting
+	 */
+	function updateAttendanceOfReviewer($meeting) {
+		$this->update(
+			'UPDATE meeting_reviewers SET present = ?, reason_for_absence = ?
+			WHERE meeting_id = ? AND reviewer_id = ?',
+			array($meeting->isPresent(),
+			$meeting->getReasonForAbsence(), 
+			$meeting->getId(), 
+			$meeting->getReviewerId())
+		);
+	}
+	
 }
 
 ?>

@@ -133,6 +133,9 @@ class MeetingDAO extends DAO {
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
 		$meeting->setIsFinal($row['final']);
+		//added by aglet
+		$meeting->setIsPresent($row['present']);
+		$meeting->setReasonForAbsence($row['reason_for_absence']);
 		
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;

@@ -299,9 +299,25 @@
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>
 	<message key="editor.meetings.form.selectAtleastOneProposal">Select at least one (1) proposal to discuss</message>
 	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
-	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</messge>
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
 
-
-	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</messge>
+	<message key="editor.minutes.adjourned">Meeting was adjourned at</message>
+	<message key="editor.minutes.adjournedRequired">Please indicate the time when meeting was adjourned</message>
+	<message key="editor.minutes.venue">Venue of Meeting</message>
+	<message key="editor.minutes.venueRequired">Please enter venue of meeting</message>
+	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</message>
+	<message key="editor.minutes.fillupCommitteeAttendance">Indicate attendance of committee members in meeting</message>
+	<message key="editor.minutes.fillupGuests">Indicate guests who attended the meeting</message>
+	<message key="editor.minutes.reasonOfAbsence">Reason of Absence</message>
+	<message key="editor.minutes.present">Present</message>
+	<message key="editor.minutes.absent">Absent</message>
+	<message key="editor.minutes.nameOfMember">Name of Member</message>
+	<message key="editor.minutes.affiliationOfMember">Affiliation of Member</message>
+	<message key="editor.reviewer.wproAffiliated">WPRO-affiliated</message>
+	<message key="editor.reviewer.nonWpro">non-WPRO</message>
+	<message key="editor.reviewer.healthAffiliated">Health-affiliated</message>
+	<message key="editor.reviewer.nonHealth">non-Health</message>
+	<message key="editor.minutes.uploadAttendance">Upload Attendance</message>
+	<message key="editor.minutes.uploadInitialReviews">Upload Initial Reviews</message>
+	<message key="editor.minutes.completeInitialReviews">Complete Initial Reviews</message>
 </locale>
