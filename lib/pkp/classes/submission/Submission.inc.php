@@ -28,7 +28,7 @@ define('PROPOSAL_STATUS_WITHDRAWN',9);  //Special tag, not part of lifecycle
 define('PROPOSAL_STATUS_ARCHIVED',10);  //To archive Not Approved and Exempt From Review
 define('PROPOSAL_STATUS_COMPLETED',11);  
 
-define('PROPOSAL_STATUS_EXPIRED',11);
+define('PROPOSAL_STATUS_EXTENSION',12); //Extension Requested
 
 
 class Submission extends DataObject {

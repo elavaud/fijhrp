@@ -93,7 +93,7 @@ class AuthorHandler extends Handler {
 		$templateMgr->assign_by_ref('submissions1', $submissions1);
                 $templateMgr->assign_by_ref('submissions2', $submissions2);
                 $templateMgr->assign_by_ref('submissions3', $submissions3);
-                $templateMgr->assign_by_ref('submissions4', $submissions3);
+                $templateMgr->assign_by_ref('submissions4', $submissions4);
 
 		// assign payment 
 		import('classes.payment.ojs.OJSPaymentManager');
