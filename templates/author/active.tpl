@@ -82,12 +82,6 @@
                                 <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
                                 
                             {/if}
-                        {elseif $status==PROPOSAL_STATUS_EXTENSION}
-                            {assign var="count" value=$count+1}
-                            {translate key="submissions.proposal.extensionrequested"}<br />
-                            <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
-
-
                         {/if}
                  </td>
             </tr>
@@ -148,7 +142,7 @@
 
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
-                    {translate key="submissions.proposal.approved"}{if $submission->isSubmissionDue()}&nbsp;(Due){/if}<br />
+                    {translate key="submissions.proposal.approved"}{if $submission->isSubmissionDue()}&nbsp;(For Continuing Review){/if}<br />
                     {if $submission->isSubmissionDue()}<a href="{url op="addExtensionRequest" path=$articleId}" class="action">Submit Extension Request</a><br />{/if}
                     <a href="{url op="addProgressReport" path=$articleId}" class="action">Upload Progress Report</a><br />
                     <a href="{url op="addCompletionReport" path=$articleId}" class="action">Complete</a><br />

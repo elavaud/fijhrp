@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-07-18 14:39:38
+<?php /* Smarty version 2.6.26, created on 2011-07-18 16:46:49
          compiled from author/active.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/active.tpl', 18, false),array('function', 'sort_heading', 'author/active.tpl', 18, false),array('function', 'url', 'author/active.tpl', 44, false),array('block', 'iterate', 'author/active.tpl', 27, false),array('modifier', 'escape', 'author/active.tpl', 37, false),array('modifier', 'date_format', 'author/active.tpl', 38, false),array('modifier', 'truncate', 'author/active.tpl', 40, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 44, false),)), $this); ?>
@@ -114,15 +114,6 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 </a>
                                 
                             <?php endif; ?>
-                        <?php elseif ($this->_tpl_vars['status'] == PROPOSAL_STATUS_EXTENSION): ?>
-                            <?php $this->assign('count', $this->_tpl_vars['count']+1); ?>
-                            <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.extensionrequested"), $this);?>
-<br />
-                            <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'withdrawSubmission','path' => $this->_tpl_vars['articleId']), $this);?>
-" class="action" ><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.withdraw"), $this);?>
-</a>
-
-
                         <?php endif; ?>
                  </td>
             </tr>
@@ -197,7 +188,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 <?php endif; ?></a></td>
                 <td align="right">
                     <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.approved"), $this);?>
-<?php if ($this->_tpl_vars['submission']->isSubmissionDue()): ?>&nbsp;(Due)<?php endif; ?><br />
+<?php if ($this->_tpl_vars['submission']->isSubmissionDue()): ?>&nbsp;(For Continuing Review)<?php endif; ?><br />
                     <?php if ($this->_tpl_vars['submission']->isSubmissionDue()): ?><a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addExtensionRequest','path' => $this->_tpl_vars['articleId']), $this);?>
 " class="action">Submit Extension Request</a><br /><?php endif; ?>
                     <a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addProgressReport','path' => $this->_tpl_vars['articleId']), $this);?>

@@ -312,9 +312,6 @@ class TrackSubmissionHandler extends AuthorHandler {
                                 if($submitForm->getData('type') == 'Completion Report') {
                                     Request::redirect(null, null, 'setAsCompleted', $articleId);
                                 }
-                                if($submitForm->getData('type') == 'Extension Request') {
-                                    Request::redirect(null, null, 'setAsExtensionRequested', $articleId);
-                                }
                                 else {
                                     Request::redirect(null, null, 'submission', $articleId);
                                 }
@@ -773,20 +770,6 @@ class TrackSubmissionHandler extends AuthorHandler {
             Request::redirect(null, null, 'index');
         }
 
-
-        function setAsExtensionRequested($args) {
-            $articleId = isset($args[0]) ? $args[0] : 0;
-            $this->validate($articleId);
-            $this->setupTemplate(true);
-
-            $articleDao = DAORegistry::getDAO('ArticleDAO');
-            $article = $articleDao->getArticle($articleId);
-            $article->setStatus(PROPOSAL_STATUS_EXTENSION);
-            $articleDao->updateArticle($article);
-
-
-            Request::redirect(null, null, 'index');
-        }
 
         function setAsWithdrawn($args) {
             $articleId = isset($args[0]) ? $args[0] : 0;
