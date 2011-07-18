@@ -1,15 +1,4 @@
-{strip}
-{assign var="pageTitle" value="common.queue.long.minutes"}
-{url|assign:"currentUrl" page="sectionEditor"}
-{include file="common/header.tpl"}
-{/strip}
-
-<ul class="menu">
-	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
-	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
-</ul>
-<br/>
+{include file="sectionEditor/minutes/menu.tpl"}
 <div id="announcements">
 {literal}<script type="text/javascript">
 <!--
@@ -20,37 +9,24 @@
 </script>{/literal}
 
 <h4>Date and Announcements for Meeting #{$meeting->getId()}</h4>
+<div class="separator"></div>
+<br/>
 <form method="POST" action="{url op="submitAnnouncements" path=$meeting->getId()}">
  <table class="data" name="timeDate" id="timeDate">
  	<tr>
-	 	<td width="5%" class="label">Date Held</td>
-	 	<td width="50%" class="value"><input type="text" name="dateHeld" id="dateHeld" size="10" class="textField" value="{$minutesObj->dateHeld}"/>&nbsp;&nbsp;(dd-mm-yyy)</td>
-	 </tr>
-	 <tr>
-	 	<td width="5%" class="label">Time Convened</td>
-	 	<td width="50%" class="value">
-	 		<select name="hour" id="hourConvened" class="selectMenu">
-	 			{html_options options=$hour selected="2"}
-	 		</select>:
-	 		<select name="minute" id="minuteConvened" class="selectMenu">
-	 			{html_options options=$minute selected="00"}
-	 		</select>
-	 		<select name="amPm" id="amPmConvened" class="selectMenu">
-	 			<option value="am">a.m.</option>
-	 			<option value="pm" selected="selected">p.m.</option>
-	 		</select>
-	 	</td>
+	 	<td width="5%" class="label">Date and Time Convened</td>
+	 	<td width="50%" class="value">{$meeting->getDate()}</td>
 	 </tr>
 	 <tr>
 	 	<td width="5%" class="label">Time Adjourned</td>
 	 	<td width="50%" class="value">
-	 		<select name="hour" id="hourAdjourned" class="selectMenu">
+	 		<select name="hourAdjourned" id="hourAdjourned" class="selectMenu">
 	 			{html_options options=$hour selected="2"}
 	 		</select>:
-	 		<select name="minute" id="minuteAdjourned" class="selectMenu">
+	 		<select name="minuteAdjourned" id="minuteAdjourned" class="selectMenu">
 	 			{html_options options=$minute selected="00"}
 	 		</select>
-	 		<select name="amPm" id="amPmAdjourned" class="selectMenu">
+	 		<select name="amPmAdjourned" id="amPmAdjourned" class="selectMenu">
 	 			<option value="am">a.m.</option>
 	 			<option value="pm" selected="selected">p.m.</option>
 	 		</select>
@@ -66,7 +42,8 @@
 	 </tr>	 	 
  </table>
  <br/>
- <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAnnouncements"}')" name="submit" value="Submit Date and Announcements"  class="button" />
- &nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="minutes"}">Back to list of minutes</a>
+ <input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+ <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAnnouncements"}')" name="submit" value="Submit Date and Announcements"  class="button defaultButton" />
+ 	
  </form>
 </div>

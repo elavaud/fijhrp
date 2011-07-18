@@ -35,7 +35,6 @@ $(document).ready(function() {
 <br>
 <div id="submissions">
 <h2>{translate key="editor.meetings.submissions"}</h2>
-
 <form method="post" action="{url op="setMeeting" path=$meetingId }" >
 <p>{fieldLabel name="selectedProposals" required="true" key="editor.meetings.addProposalsToDiscuss"}</p>
 <table class="listing" width="100%">

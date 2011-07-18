@@ -26,7 +26,7 @@ class MeetingReviewer extends DataObject {
 	}
 	
 	function  setIsAttending($isAttending){
-		return $this->setData('isAttending', $isAttending);
+		$this->setData('isAttending', $isAttending);
 	}
 	
 	function getIsAttending(){
@@ -34,11 +34,19 @@ class MeetingReviewer extends DataObject {
 	}
 	
 	function setRemarks($remarks){
-		return $this->setData('remarks', $remarks);
+		$this->setData('remarks', $remarks);
 	}
 	
 	function getRemarks(){
 		return $this->getData('remarks');
+	}
+	
+	function setDateReminded($dateReminded) {
+		$this->setData('dateReminded', $dateReminded);
+	}
+	
+	function getDateReminded(){
+		return $this->getData('dateReminded');
 	}
 	
 	function setFirstName($firstName){

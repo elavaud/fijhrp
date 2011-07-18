@@ -35,12 +35,9 @@ class MeetingAction extends Action {
 		
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		
-		$meetingId = $meetingId;
-		$meetingDate = $meetingDate;
 		$selectedSubmissions =& $selectedSubmissions;
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-
+		
 		/*
 		 * Parse date
 		 * */
@@ -60,14 +57,14 @@ class MeetingAction extends Action {
 			}
 			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
 		}
-		else {
-			$meetingDate = Core::getCurrentDate();
-		}
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		//else {
+		//	$meetingDate = Core::getCurrentDate();
+		//}
 		/**
 		 * Create new meeting
 		 */
+		
+		$isNew = true;
 		if($meetingId == null) {
 		
 			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
@@ -91,12 +88,13 @@ class MeetingAction extends Action {
 		}else{ 
 			 $isNew = false;
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
+			 $meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			 $meeting = $meetingDao->getMeetingById($meetingId);
-			 
 			 //check if new meeting date is equal to old meeting date
 			 $oldDate = 0;
-			 if($meetingDate != strtotime($meeting->getDate()))
-			 	$oldDate = $meeting->getDate();
+			 $diff = $meetingDate - strtotime($meeting->getDate());
+			 if($diff != 0)
+				$oldDate = $meeting->getDate();
 			 
 			 $meeting->setDate($meetingDate);
 			 $meetingDao->updateMeetingDate($meeting);
@@ -114,9 +112,9 @@ class MeetingAction extends Action {
 			}
 		}
 		if($isNew) {
-			Request::redirect(null, 'editor', 'notifyReviewersNewMeeting', $meetingId);
+			Request::redirect(null, null, 'notifyReviewersNewMeeting', $meetingId);
 		} else if($oldDate!=0){
-			Request::redirect(null, 'editor', 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
+			Request::redirect(null, null, 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
 		}
 		
 		return $meetingId;
