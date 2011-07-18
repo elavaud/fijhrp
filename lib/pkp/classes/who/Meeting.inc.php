@@ -1,16 +1,18 @@
 <?php
 
-define ('MEETING_STATUS_COMPLETE', 255);
-define ('MEETING_STATUS_ATTENDANCE', 1);
-define ('MEETING_STATUS_ANNOUNCEMENTS', 2);
-define ('MEETING_STATUS_INITIAL_REVIEWS', 4);
-define ('MEETING_STATUS_REREVIEWS', 8);
-define ('MEETING_STATUS_CONTINUING_REVIEWS', 16);
-define ('MEETING_STATUS_AMENDMENTS', 32);
-define ('MEETING_STATUS_ADVERSE_EVENTS', 64);
-define ('MEETING_STATUS_INFORMATION_ITEMS', 128);
-define ('MEETING_SCHEDULE_FINAL', 1);
-define ('MEETING_SCHEDULE_PROPOSED', 0);
+define ('MINUTES_STATUS_COMPLETE', 255);
+define ('MINUTES_STATUS_ATTENDANCE', 1);
+define ('MINUTES_STATUS_ANNOUNCEMENTS', 2);
+define ('MINUTES_STATUS_INITIAL_REVIEWS', 4);
+define ('MINUTES_STATUS_REREVIEWS', 8);
+define ('MINUTES_STATUS_CONTINUING_REVIEWS', 16);
+define ('MINUTES_STATUS_AMENDMENTS', 32);
+define ('MINUTES_STATUS_ADVERSE_EVENTS', 64);
+define ('MINUTES_STATUS_INFORMATION_ITEMS', 128);
+define ('STATUS_NEW', 0);
+define ('STATUS_FINAL', 1);
+define ('STATUS_RESCHEDULED', 2);
+define ('STATUS_CANCELLED', 3);
 define ('MEETING_REPLY_ATTENDING', 1);
 define ('MEETING_REPLY_NOT_ATTENDING', 2);
 
@@ -48,12 +50,12 @@ class Meeting extends DataObject {
 		return $this->getData('userId');
 	}
 	
-	function setStatus($status) {
-		$this->setData('status', $status);
+	function setMinutesStatus($minutesStatus) {
+		$this->setData('minutesStatus', $minutesStatus);
 	}
 	
-	function getStatus() {
-		return $this->getData('status');
+	function getMinutesStatus() {
+		return $this->getData('minutesStatus');
 	}
 	
 	/********************************** 
@@ -85,12 +87,12 @@ class Meeting extends DataObject {
 		return $this->getData('remarks');
 	}
 	
-	function setIsFinal($isFinal) {
-		$this->setData('isFinal', $isFinal);
+	function setStatus($status) {
+		$this->setData('status', $status);
 	}
 	
-	function getIsFinal() {
-		return $this->getData('isFinal');
+	function getStatus() {
+		return $this->getData('status');
 	}
 	
 	/**
@@ -98,7 +100,7 @@ class Meeting extends DataObject {
 	 * @return array
 	 */
 	function getStatusMap() {
-		$meetingStatus = $this->getStatus();
+		$meetingStatus = $this->getMinutesStatus();
 		$meetingMap = array();
 		for($i=7; $i>=0; $i--) {
 			$num = pow(2, $i);
@@ -117,13 +119,13 @@ class Meeting extends DataObject {
 	 * Get meeting status if complete or incomplete
 	 */
 	function isComplete() {
-		if($this->getStatus() == MEETING_STATUS_COMPLETE) {
+		if($this->getMinutesStatus() == MINUTES_STATUS_COMPLETE) {
 			return true;
 		}
 		return false;
 	}
 	
-	function getStatusKey() {
+	function getMinutesStatusKey() {
 		if($this->isComplete()) {
 			return "COMPLETE";
 		}
@@ -141,18 +143,22 @@ class Meeting extends DataObject {
 		}
 	}
 	
-	function getScheduleStatus() {
-		switch ($this->getIsFinal()) {
-			case MEETING_SCHEDULE_FINAL:
+	function getStatusKey() {
+		switch ($this->getStatus()) {
+			case STATUS_FINAL:
 				return Locale::Translate('reviewer.meetings.scheduleStatus.final');
+			case STATUS_RESCHEDULED:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.rescheduled');
+			case STATUS_CANCELLED:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.cancelled');
 			default:
-				return Locale::Translate('reviewer.meetings.scheduleStatus.proposed');
+				return Locale::Translate('reviewer.meetings.scheduleStatus.new');
 		}
 	}
 	
-	function updateStatus($addToStatus) {
-		$status = $this->getStatus() + $addToStatus;
-		$this->setStatus($status);
+	function updateMinutesStatus($addToStatus) {
+		$status = $this->getMinutesStatus() + $addToStatus;
+		$this->setMinutesStatus($status);
 	}
 	
 }

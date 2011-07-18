@@ -19,7 +19,7 @@ class MeetingDAO extends DAO {
 	 */
 	function &getMeetingsOfUser($userId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$meetings = array();
-		$sql = 'SELECT meeting_id, meeting_date, user_id, status, final FROM meetings as a WHERE user_id = ?';
+		$sql = 'SELECT meeting_id, meeting_date, user_id, minutes_status, status FROM meetings as a WHERE user_id = ?';
 		if ($sortBy) {
 			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
 		}
@@ -50,7 +50,7 @@ class MeetingDAO extends DAO {
 		//Edited by ayveemallare 7/6/2011
 		
 		$result =& $this->retrieve(
-			'SELECT meeting_id, user_id, meeting_date, status, final FROM meetings WHERE meeting_id = ?',
+			'SELECT meeting_id, user_id, meeting_date, minutes_status, status FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -125,15 +125,14 @@ class MeetingDAO extends DAO {
 		$meeting->setId($row['meeting_id']);
 		$meeting->setDate($row['meeting_date']);
 		$meeting->setUploader($row['user_id']);
-		$meeting->setStatus($row['status']);
+		$meeting->setMinutesStatus($row['minutes_status']);
 				
 		//Added additional fields
 		//Edited by ayveemallare 7/6/2011
 		$meeting->setReviewerId($row['reviewer_id']);
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
-		$meeting->setIsFinal($row['final']);
-		
+		$meeting->setStatus($row['status']);
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
 	}
@@ -148,7 +147,7 @@ class MeetingDAO extends DAO {
 
 	function insertMeeting($userId, $meetingDate = null, $status = 0) {
 		$this->update(
-			sprintf('INSERT INTO meetings (meeting_date, user_id, status) VALUES (%s, ?, ?)',
+			sprintf('INSERT INTO meetings (meeting_date, user_id, minutes_status) VALUES (%s, ?, ?)',
 			$this->datetimeToDB($meetingDate)),
 			array($userId, $status)
 		);		
@@ -159,7 +158,7 @@ class MeetingDAO extends DAO {
 				
 		$meetingId = 0;
 		$result =& $this->retrieve(
-			'SELECT max(meeting_id) as meeting_id, meeting_date, user_id, status FROM meetings WHERE user_id = ? GROUP BY meeting_id ORDER BY meeting_id DESC LIMIT 1;',
+			'SELECT max(meeting_id) as meeting_id, meeting_date, user_id, minutes_status FROM meetings WHERE user_id = ? GROUP BY meeting_id ORDER BY meeting_id DESC LIMIT 1;',
 			(int) $userId
 		);
 		$row = $result->GetRowAssoc(false);
@@ -177,11 +176,11 @@ class MeetingDAO extends DAO {
 			array($meeting->getId())
 		);				
 	}
-	
-	function updateStatus($meeting) {
+	//FIXME
+	function updateMinutesStatus($meeting) {
 		$this->update(
-			'UPDATE meetings SET status = ? where meeting_id = ?',
-			array($meeting->getStatus(), $meeting->getId())
+			'UPDATE meetings SET minutes_status = ? where meeting_id = ?',
+			array($meeting->getMinutesStatus(), $meeting->getId())
 		);
 	}
 	
@@ -190,20 +189,21 @@ class MeetingDAO extends DAO {
 			case 'id': return 'a.meeting_id';
 			case 'meetingDate': return 'meeting_date';
 			case 'replyStatus': return 'attending';
-			case 'scheduleStatus': return 'final';
+			case 'scheduleStatus': return 'status';
 			default: return null;
 		}
 	}
 	
 	/**
-	 * Set meeting final
+	 * Update meeting/schedule status
 	 * Added by MSB July 7, 2011
+	 * Edited by ayveemallare 7/7/2011
 	 */
 	
-	function setMeetingFinal($meetingId){
+	function updateStatus($meetingId, $status){
 		$this->update(
-			'UPDATE meetings SET final = ? where meeting_id = ?',
-			array(1,$meetingId)
+			'UPDATE meetings SET status = ? where meeting_id = ?',
+			array($status, $meetingId)
 		);
 	} 
 	

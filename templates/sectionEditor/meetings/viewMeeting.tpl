@@ -31,8 +31,8 @@
 		<td class="value" width="80%">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="20%">{translate key="reviewer.meetings.scheduleStatus"}</td>
-		<td class="value" width="80%">{$meeting->getScheduleStatus()}</td>
+		<td class="label" width="20%">{translate key="common.status"}</td>
+		<td class="value" width="80%">{$meeting->getStatusKey()}</td>
 	</tr>
 </table>
 </div>
@@ -149,12 +149,14 @@
 	</tr>
 </table>
 </div>
-	
-<p> {if $meeting->getIsFinal() != 1}
-	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
-    <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
-   	{else}
+<p> <input type="button" value="{translate key="common.back"}" class="button" onclick="document.location.href='{url op="meetings"}'" />
+	{if $meeting->getStatus() == 1}
     <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
 	<input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
-	{/if}
+	{else}
+		{if $meeting->getStatus() != 3 }
+		<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
+	    <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
+	   	{/if}
+   	{/if}
 {include file="common/footer.tpl"}

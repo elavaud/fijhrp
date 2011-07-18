@@ -358,8 +358,8 @@ class MinutesHandler extends Handler {
 		
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =& $meetingDao->getMeetingById($meetingId);
-		$meeting->updateStatus(MEETING_STATUS_INITIAL_REVIEWS);
-		$meetingDao->updateStatus($meeting);
+		$meeting->updateMinutesStatus(MEETING_STATUS_INITIAL_REVIEWS);
+		$meetingDao->updateMinutesStatus($meeting);
 						
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
