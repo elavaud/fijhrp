@@ -14,7 +14,6 @@
 <ul class="menu">
 	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
-	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
 <div class="separator"></div>
@@ -52,21 +51,18 @@
 	
 	{foreach from=$submissions item=submission}
 	{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
-	{assign var="key" value=$submission->getId()}
 	<tr valign="top">
 		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 		<td>{$submission->getSectionAbbrev()|escape}</td>
 		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submission" path=$map.$key}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 		<td align="right">
 			{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 			{translate key=$proposalStatusKey}
 		</td>
 	</tr>
-	<tr>
-		<td colspan="6" class="separator"></td>
-	</tr>
+	<tr><td colspan="6" class="separator"></td></tr>
 	{/foreach}
 	
 	{if empty($submissions)}
@@ -88,20 +84,24 @@
 	<table class="listing" width="100%">
 		<tr><td colspan="3" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
-			<td width="20%"> {translate key="editor.meetings.reviewer.name"}</td>
-			<td width="60%"> {translate key="editor.meetings.reviewer.reply"} </td>
+			<td width="30%"> {translate key="editor.meetings.reviewer.name"}</td>
+			<td width="50%"> {translate key="editor.meetings.reviewer.reply"} </td>
 			<td width="20%" align="right"> {translate key="editor.meetings.reviewer.replyStatus"} </td>
 		</tr>
 		<tr><td colspan="3" class="headseparator" ></td></tr>
 		{assign var=attendingReviewers value=0}
 		{assign var=notAttendingReviewers value=0}
-		{counter start=0 skip=1 assign="undecidedReviewers"}
+		{assign var=undecidedReviewers value=0}
 		{foreach from=$reviewers item=reviewer}
 		<tr>
-			<td width="20%">{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}</td>
-			<td width="60%">{$reviewer->getRemarks()}</td>
+			<td width="30%">
+				{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}
+				<br/>
+				<a href="{url op="remindReviewersMeeting" meetingId=$meeting->getId() reviewerId=$reviewer->getReviewerId()}" class="action">Send Reminder</a>
+				{$reviewer->getDateReminded()|date_format:$dateFormatShort}
+			</td>
+			<td width="50%">{$reviewer->getRemarks()}</td>
 			<td width="20%" align="right">{$reviewer->getReplyStatus()}</td>
-
 
 			{if $reviewer->getIsAttending() == 1 }
 				<span style="display:none">{$attendingReviewers++}</span> 
@@ -110,7 +110,6 @@
 			{else}
 				<span style="display:none">{$undecidedReviewers++}</span> 
 			{/if}
-			
 		</tr>
 		<tr>
 		<td colspan="3" class="separator"></td>
@@ -124,9 +123,11 @@
 		<tr>
 			<td colspan="3" class="endseparator">&nbsp;</td>
 		</tr>
+		{if !empty($reviewers)}
 		<tr>
 			<td colspan="3" align="left">{$reviewers|@count} reviewers(s)</td>
 		</tr>
+		{/if}
 	</table>
 </div>
 <br>
@@ -153,6 +154,7 @@
 	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
     <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
    	{else}
-    <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
+    <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
+	<input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
 	{/if}
 {include file="common/footer.tpl"}

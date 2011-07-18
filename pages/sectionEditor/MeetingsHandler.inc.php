@@ -15,12 +15,12 @@ import('classes.handler.Handler');
 import('lib.pkp.classes.who.Meeting');
 import('lib.pkp.classes.who.MeetingAction');
 
-
 class MeetingsHandler extends Handler {
-
 	/**
 	* Constructor
 	**/
+	var $meeting;
+		
 	function MeetingsHandler() {
 		parent::Handler();
 		
@@ -33,7 +33,7 @@ class MeetingsHandler extends Handler {
 		$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_EDITOR)));
 	
 	}
-	
+
 	/**
 	* Setup common template variables.
 	* @param $subclass boolean set to true if caller is below this handler in the hierarchy
@@ -61,8 +61,8 @@ class MeetingsHandler extends Handler {
 		
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
-	
-	
+
+
 	/**
 	* Display submission management instructions.
 	* @param $args (type)
@@ -74,15 +74,9 @@ class MeetingsHandler extends Handler {
 			Request::redirect(null, null, 'index');
 		}
 	}
-	
-	/**
-	 * 
-	 * Display list of meetings. Show the link to set a new meeting
-	 * @param $args
-	 * @param $request
-	 */
+
 	function meetings($args) {
-		$this->validate(null,true,null);
+		$this->validate(0, true);
 		$this->setupTemplate(false);
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
@@ -92,8 +86,12 @@ class MeetingsHandler extends Handler {
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
 		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
 		$articleDao = DAORegistry::getDAO('ArticleDAO');
-	
-		$meetings =& $meetingDao->getMeetingsOfUser($userId);
+		
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'id';
+		$sortDirection = Request::getUserVar('sortDirection');
+			
+		$meetings =& $meetingDao->getMeetingsOfUser($userId, $sort, $sortDirection);
 		
 		$map = array();
 			
@@ -111,6 +109,9 @@ class MeetingsHandler extends Handler {
 		$templateMgr->assign_by_ref('meetings', $meetings);
 		$templateMgr->assign_by_ref('submissions', $submissions); 
 		$templateMgr->assign_by_ref('map', $map); 
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
+		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
 		$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 	}
@@ -151,9 +152,10 @@ class MeetingsHandler extends Handler {
 	* Store meeting details such as proposals to discuss and meeting date
 	* @ param $args (type)
 	*/
+	
 	function saveMeeting($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId);
+		$this->validate($meetingId, false, true);
 		$selectedSubmissions = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
 		$meetingId = MeetingAction::saveMeeting($meetingId,$selectedSubmissions,$meetingDate, null);
@@ -174,11 +176,6 @@ class MeetingsHandler extends Handler {
 		Request::redirect(null, null, 'notifyReviewersFinalMeeting', $meetingId);
 	}
 
-	/**
-	 * Added by MSB July 07 2011
-	 * View the details of the meeting...
-	 * @param $args (type)
-	 */
 	function viewMeeting($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
@@ -219,26 +216,21 @@ class MeetingsHandler extends Handler {
 		}else{
 			Request::redirect(null, null, 'meetings', null);
 		}
-		
 
 	}
 	
-	/**
-	 * Added by MSB July 12 2011
-	 * Cancel the meeting
-	 * @param $args (type)
-	 */	
 	function cancelMeeting($args){
-		
-		$this->validate();
 		$meetingId = isset($args[0]) ? $args[0]: 0;
+			
+		$this->validate($meetingId);
+		
 		if(MeetingAction::cancelMeeting($meetingId, null)){
 			Request::redirect(null, null, 'meetings', null);
 		}
 		
 	}
 	
-/** 
+	/** 
 	 * Notify reviewers if new meeting is set
 	 * Added by ayveemallare 7/12/2011
 	 * Enter description here ...
@@ -270,8 +262,7 @@ class MeetingsHandler extends Handler {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
 		$oldDate = isset($args[1]) ? $args[1]: 0;
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
@@ -282,7 +273,6 @@ class MeetingsHandler extends Handler {
 		if (SectionEditorAction::notifyReviewersChangeMeeting($oldDate, $meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
 			Request::redirect(null, null, 'viewMeeting', $meetingId);
 		}
-	
 	}
 	
 	/**
@@ -293,8 +283,7 @@ class MeetingsHandler extends Handler {
 	function notifyReviewersFinalMeeting($args) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
@@ -313,12 +302,10 @@ class MeetingsHandler extends Handler {
 	 * @param int $meetingId
 	 */
 	function notifyReviewersCancelMeeting($args) {
-		$this->validate($meetingId);
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		//$this->validate($meetinGId, SECTION)
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
-		
+		$this->validate($meetingId);
+		$meeting =& $this->meeting;
+
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
 		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
 	
@@ -339,8 +326,7 @@ class MeetingsHandler extends Handler {
 		$meetingId = Request::getUserVar('meetingId');
 		$reviewerId = Request::getUserVar('reviewerId');
 		$this->validate($meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
+		$meeting =& $this->meeting;
 		
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -364,18 +350,19 @@ class MeetingsHandler extends Handler {
 				$isValid = false;
 			if($isValid)
 				$this->meeting =& $meeting;
+				
 		} else {
 			if(!$isList && !$isSetMeeting)
 				$isValid = false;	
 		}
 		
-		if(!$isValid) 
+		if(!$isValid) {
 			Request::redirect(null, Request::getRequestedPage());
+		}
 		
 		return true;
-	} 
-	
-	
+	}
+
 
 }
 
