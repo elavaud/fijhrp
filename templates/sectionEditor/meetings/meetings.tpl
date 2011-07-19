@@ -40,17 +40,15 @@
 				{/if}
 				</a>
 			</td>
-			<td width="25%" align="right">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
+			<td width="25%" align="right">
+				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}
+			</td>
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
-					{if $meeting->getStatus() != 3}
-						{$meeting->getStatusKey()}
-					{else}
-						<font color="red">{$meeting->getStatusKey()}</font>
-					{/if}
-				</a><br/>
+					{$meeting->getStatusKey()}
+				</a>
 				{if $meeting->getStatus() == 1}
-				<a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
+				<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
 					Upload Minutes
 				</a>
 				{/if}

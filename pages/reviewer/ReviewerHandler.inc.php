@@ -153,6 +153,7 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign_by_ref('map', $map); 
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('reviewer/meetings.tpl');
 	}
 	

@@ -38,7 +38,20 @@
 				{/if}
 				
 			</td>
-			<td width="25%" align="right">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
+			<td width="25%" align="right">
+				{if $meeting->getStatus() == 0}
+					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/new.png"}">
+				{/if}
+				{if $meeting->getStatus() == 1}
+					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/final.png"}">
+				{/if}	
+				{if $meeting->getStatus() == 2}
+					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/resched.png"}">
+				{/if}
+				{if $meeting->getStatus() == 3}
+					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/cancelled.png"}">
+				{/if}
+				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getReplyStatus()}

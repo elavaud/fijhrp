@@ -113,6 +113,7 @@ class MeetingsHandler extends Handler {
 		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
+		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 	}
 
@@ -171,8 +172,7 @@ class MeetingsHandler extends Handler {
 	function setMeetingFinal($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meetingDao->setMeetingFinal($meetingId);
+		$meetingId = MeetingAction::setMeetingFinal($meetingId);
 		Request::redirect(null, null, 'notifyReviewersFinalMeeting', $meetingId);
 	}
 

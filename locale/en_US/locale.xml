@@ -769,11 +769,13 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="submission.comments.copyeditComments">Copyedit Comments</message>
 	<message key="submission.comments.viewableDescription"><![CDATA[These comments can be shared with the author.<br />
 (After saving, further comments can be added.)]]></message>
-	<message key="submission.comments.canShareWithAuthor">For author and editor</message>
-	<message key="submission.comments.cannotShareWithAuthor">For editor</message>
+	<!-- Edited by ayveemallare 7/19/2011 -->
+	<!-- Changed Editor to ERC, Author to RTO -->
+	<message key="submission.comments.canShareWithAuthor">For RTO and ERC</message>
+	<message key="submission.comments.cannotShareWithAuthor">For ERC</message>
 	<message key="submission.comments.blindCcReviewers">After sending, present an editable BCC copy to send to reviewers.</message>
-	<message key="submission.comments.forAuthorEditor">For author and editor</message>
-	<message key="submission.comments.forEditor">For editor</message>
+	<message key="submission.comments.forAuthorEditor">For RTO and ERC</message>
+	<message key="submission.comments.forEditor">For ERC</message>
 	<message key="submission.comments.saveAndEmailAuthor">Save and Email Author</message>
 	<message key="submission.comments.saveAndEmailEditor">Save and Email Editor</message>
 	
