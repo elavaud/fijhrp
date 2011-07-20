@@ -1,4 +1,10 @@
 <?php
+
+define ('STATUS_NEW', 0);
+define ('STATUS_FINAL', 1);
+define ('STATUS_RESCHEDULED', 2);
+define ('STATUS_CANCELLED', 3);
+
 class MeetingAction extends Action {
 
 	/**
@@ -9,7 +15,7 @@ class MeetingAction extends Action {
 	}
 	
 
-	function cancelMeeting($meetingId,$user = null){
+	function cancelMeeting($meetingId, $user = null){
 		
 		if ($user == null) $user =& Request::getUser();
 
@@ -19,7 +25,8 @@ class MeetingAction extends Action {
 		/*Only the author can cancel the meeting*/
 		if ($meeting->getUploader() == $user->getId()) {
 			if (!HookRegistry::call('Action::cancelMeeting', array(&$meetingId))) {
-				$meetingDao->cancelMeeting($meetingId);
+				//$meetingDao->cancelMeeting($meetingId);
+				$meetingDao->updateStatus($meetingId, STATUS_CANCELLED);
 			} return true;
 			
 		}
@@ -36,7 +43,9 @@ class MeetingAction extends Action {
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$selectedSubmissions =& $selectedSubmissions;
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
 		
 		/*
 		 * Parse date
@@ -57,25 +66,16 @@ class MeetingAction extends Action {
 			}
 			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
 		}
-		//else {
-		//	$meetingDate = Core::getCurrentDate();
-		//}
 		/**
 		 * Create new meeting
 		 */
-		
 		$isNew = true;
 		if($meetingId == null) {
-		
-			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
-		
 			if($meetingId == 0) {
-				$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 				$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
 				$userDao =& DAORegistry::getDAO('UserDAO');
 				$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
-				$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-
+				
 				$count = 0;
 				foreach($reviewers as $reviewer) {
 						$reviewerId = $reviewer->getId();
@@ -88,7 +88,6 @@ class MeetingAction extends Action {
 		}else{ 
 			 $isNew = false;
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
-			 $meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			 $meeting = $meetingDao->getMeetingById($meetingId);
 			 //check if new meeting date is equal to old meeting date
 			 $oldDate = 0;
@@ -96,8 +95,6 @@ class MeetingAction extends Action {
 			 if($diff != 0)
 				$oldDate = $meeting->getDate();
 			 
-			 $meeting->setDate($meetingDate);
-			 $meetingDao->updateMeetingDate($meeting);
 			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
 		}
 
@@ -111,9 +108,17 @@ class MeetingAction extends Action {
 				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedSubmissions[$i]);
 			}
 		}
+		
 		if($isNew) {
 			Request::redirect(null, null, 'notifyReviewersNewMeeting', $meetingId);
 		} else if($oldDate!=0){
+			//reset reply of all reviewers
+			$meetingReviewerDao->resetReplyOfReviewers($meeting);
+			//update meeting date since old date != new date
+			$meeting->setDate($meetingDate);
+			$meetingDao->updateMeetingDate($meeting);
+			//update meeting as rescheduled
+			$meetingDao->updateStatus($meetingId, STATUS_RESCHEDULED);
 			Request::redirect(null, null, 'notifyReviewersChangeMeeting', array($meetingId, $oldDate));
 		}
 		
@@ -122,8 +127,6 @@ class MeetingAction extends Action {
 	
 	
 	function setMeetingFinal($meetingId, $user=null){
-	
-		
 		if ($user == null) $user =& Request::getUser();
 
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
@@ -131,8 +134,8 @@ class MeetingAction extends Action {
 
 		/*Only the author can set the meeting final*/
 		if ($meeting->getUploader() == $user->getId()) {
-			if (!HookRegistry::call('Action::cancelMeeting', array(&$meetingId))) {
-				$meetingDao->setMeetingFinal($meetingId);
+			if (!HookRegistry::call('Action::setMeetingFinal', array(&$meetingId))) {
+				$meetingDao->updateStatus($meetingId, STATUS_FINAL);
 			} return true;
 			
 		}return false;

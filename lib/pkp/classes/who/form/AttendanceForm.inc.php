@@ -28,8 +28,17 @@ class AttendanceForm extends Form {
 		import('lib.pkp.classes.who.MeetingAttendance');
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
-		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));						
+		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
+		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
+
+		
+		$this->addCheck(new FormValidatorArrayMyCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence', 
+		create_function('$attendance, $reason', 'if(($attendance=="absent") && !isset($reason)) return false; else return true;'), array('attendance','reason')));	
+		
+	
+		
 	}
+
 	
 	/**
 	 * Display the form.
@@ -49,13 +58,14 @@ class AttendanceForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array("adjourned", "venue", "announcements"));
-		$reviewers =& $this->reviewers;
-		foreach($reviewers as $reviewer) {
-			$this->readUserVars("attendance[".$reviewer->getId()."]");
-			$this->readUserVars("reason[".$reviewer->getId()."]");
-		}
-		$this->readUserVars(array("guestName", "guestAffiliation"));
+		$this->readUserVars(
+			array("adjourned", 
+				  "venue", 
+				  "announcements", 
+				  "reviewer_attendance",
+				  "reviewer_absent",
+				  "guest",
+		));
 	}
 
 	/**
@@ -63,15 +73,47 @@ class AttendanceForm extends Form {
 	 * @return userId int
 	 */
 	function execute() {
-		$meeting =& $this->meeting;
-		$attendance = Request::getUserVar("attendance");
-		$reasons = Request::getUserVar("reason");
 
+		$meeting =& $this->meeting;
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
 		$meetingReviewerDao =& DAORegistry::getDAO("MeetingReviewerDAO");
 		$quorum = 0;
 		$reviewerItems = array();
-		foreach($attendance as $index=>$item) {
+		
+		$reviewer  = $this->getData('reviewer_attendance');
+		$reasonOfAbsence = $this->getData('reviewer_absent');
+		for ($i=0, $count=count($reviewer); $i < $count; $i++) {
+
+			$reviewerId = $reviewer[$i]['userId'];
+		
+				$meetingReviewer = new Meeting();
+				$meetingReviewer->setId($meeting->getId());
+				$meetingReviewer->setReviewerId($reviewerId);
+				
+				
+				if($reviewer[$i]['attendance'] =="absent"){
+					$meetingReviewer->setIsPresent(0);
+					$meetingReviewer->setReasonForAbsence($reasonOfAbsence[$i]["reason"]);
+				}else {
+					
+					$meetingReviewer->setIsPresent(1);
+					$meetingReviewer->setReasonForAbsence(null);
+					$quorum++;
+				}
+				
+				$reviewerItems[$reviewerId] = $meetingReviewer;
+				$meetingReviewerDao->updateAttendanceOfReviewer($meetingReviewer);
+		}
+		
+		$this->quorum = $quorum;
+		$this->reviewerItems = $reviewerItems;
+		$meeting->updateMeetingStatus(MEETING_STATUS_ATTENDANCE);
+		$meetingDao->updateStatus($meeting);		 
+			
+		//$quorum = 0;
+		//$reviewerItems = array();
+		/*foreach($attendance as $index=>$item) {
+			
 			$meetingReviewer = new Meeting();
 			$meetingReviewer->setId($meeting->getId());
 			$meetingReviewer->setReviewerId($index);			
@@ -86,11 +128,13 @@ class AttendanceForm extends Form {
 			}
 			$reviewerItems[$index] = $meetingReviewer;
 			$meetingReviewerDao->updateAttendanceOfReviewer($meetingReviewer);
-		}
-		$this->quorum = $quorum;
-		$this->reviewerItems = $reviewerItems;
-		$meeting->updateStatus(MEETING_STATUS_ATTENDANCE);
-		$meetingDao->updateStatus($meeting);		 
+		} */
+		
+		
+		//$this->quorum = $quorum;
+		//$this->reviewerItems = $reviewerItems;
+		//$meeting->updateMeetingStatus(MEETING_STATUS_ATTENDANCE);
+		//$meetingDao->updateStatus($meeting);		 
 	}
 
 	function showPdf() {

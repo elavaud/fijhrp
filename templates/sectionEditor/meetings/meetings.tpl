@@ -21,7 +21,7 @@
 		<td width="5%">{sort_heading key="editor.meetings.meetingId" sort="id"}</td>
 		<td>{translate key="reviewer.meetings.submissions"}</td>
 		<td width="25%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
-		<td width="30%" align="right">{sort_heading key="reviewer.meetings.scheduleStatus" sort="scheduleStatus"}</td>
+		<td width="30%" align="right">{sort_heading key="common.status" sort="scheduleStatus"}</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<p></p>
@@ -43,9 +43,13 @@
 			<td width="25%" align="right">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
-					{$meeting->getScheduleStatus()}
+					{if $meeting->getStatus() != 3}
+						{$meeting->getStatusKey()}
+					{else}
+						<font color="red">{$meeting->getStatusKey()}</font>
+					{/if}
 				</a><br/>
-				{if $meeting->getIsFinal() == 1}
+				{if $meeting->getStatus() == 1}
 				<a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
 					Upload Minutes
 				</a>

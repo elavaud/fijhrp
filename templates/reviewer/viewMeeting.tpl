@@ -37,7 +37,7 @@
 </tr>
 <tr valign="top">
 	<td class="label" width="20%">{translate key="reviewer.meetings.scheduleStatus"}</td>
-	<td class="value" width="80%">{$meeting->getScheduleStatus()}</td>
+	<td class="value" width="80%">{$meeting->getStatusKey()}</td>
 </tr>
 </table>
 </div>

@@ -47,12 +47,12 @@ class Meeting extends DataObject {
 		return $this->getData('userId');
 	}
 	
-	function setStatus($status) {
-		$this->setData('status', $status);
+	function setMinutesStatus($minutesStatus) {
+		$this->setData('minutesStatus', $minutesStatus);
 	}
 	
-	function getStatus() {
-		return $this->getData('status');
+	function getMinutesStatus() {
+		return $this->getData('minutesStatus');
 	}
 	
 	/********************************** 
@@ -84,20 +84,30 @@ class Meeting extends DataObject {
 		return $this->getData('remarks');
 	}
 	
-	function setIsFinal($isFinal) {
-		$this->setData('isFinal', $isFinal);
+	function setStatus($status) {
+		$this->setData('status', $status);
 	}
-	
-	function getIsFinal() {
-		return $this->getData('isFinal');
+
+	function getStatus() {
+		return $this->getData('status');
 	}
 		
-	function isPresent() {
-		return $this->getData('isPresent');
+	
+	function updateMeetingStatus($meetingStatus){
+		$this->setData('meetingStatus', $meetingStatus);
+	}
+
+	function getMeetingStatus(){
+		return $this->getData('meetingStatus');
 	}
 	
+
 	function setIsPresent($isPresent) {
 		$this->setData('isPresent', $isPresent);
+	}
+	
+	function isPresent() {
+		return $this->getData('isPresent');
 	}
 	
 	function getReasonForAbsence() {
@@ -114,7 +124,7 @@ class Meeting extends DataObject {
 	 * @return array
 	 */
 	function getStatusMap() {
-		$meetingStatus = $this->getStatus();
+		$meetingStatus = $this->getMinutesStatus();
 		$meetingMap = array();
 		for($i=6; $i>=0; $i--) {
 			$num = pow(2, $i);
@@ -133,13 +143,13 @@ class Meeting extends DataObject {
 	 * Get meeting status if complete or incomplete
 	 */
 	function isComplete() {
-		if($this->getStatus() == MEETING_STATUS_COMPLETE) {
+		if($this->getMinutesStatus() == MINUTES_STATUS_COMPLETE) {
 			return true;
 		}
 		return false;
 	}
 	
-	function getStatusKey() {
+	function getMinutesStatusKey() {
 		if($this->isComplete()) {
 			return "COMPLETE";
 		}
@@ -157,18 +167,22 @@ class Meeting extends DataObject {
 		}
 	}
 	
-	function getScheduleStatus() {
-		switch ($this->getIsFinal()) {
-			case MEETING_SCHEDULE_FINAL:
+	function getStatusKey() {
+		switch ($this->getStatus()) {
+			case STATUS_FINAL:
 				return Locale::Translate('reviewer.meetings.scheduleStatus.final');
+			case STATUS_RESCHEDULED:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.rescheduled');
+			case STATUS_CANCELLED:
+				return Locale::Translate('reviewer.meetings.scheduleStatus.cancelled');
 			default:
-				return Locale::Translate('reviewer.meetings.scheduleStatus.proposed');
+				return Locale::Translate('reviewer.meetings.scheduleStatus.new');
 		}
 	}
 	
-	function updateStatus($addToStatus) {
-		$status = $this->getStatus() + $addToStatus;
-		$this->setStatus($status);
+	function updateMinutesStatus($addToStatus) {
+		$status = $this->getMinutesStatus() + $addToStatus;
+		$this->setMinutesStatus($status);
 	}
 	
 }

@@ -6,34 +6,35 @@
 <!--
 	var guestCount = 0;
 	$(document).ready(function() {		
-		$('#adjourned').timepicker({ampm:true});
-		//$( ".absence_div" ).hide();
-		$( "#addGuest" ).click(
+		$("#adjourned").timepicker({ampm:true});
+		$(".div_reason_of_absence").hide();
+		$("#addGuest").click(
 				function() {
 					guestCount++;
 					var row="<tr>"+
 			 		"<td width='5%'>Name</td>"+
-	 				"<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='30'></input</td>"+
+	 				"<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50'></input</td>"+
 					"<td width='5%'>Affiliation</td>"+
-	 				"<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='30'></input></td>"+
+	 				"<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50'></input></td>"+
 					"<td width='60%'></td>"+
 	 				"</tr>";
 					$("#guests tr:last").after(row);
 				}
 			);
-			/*
- 			 * If absent button is clicked, ask for type of absence
-			 *
-		 	$(".absent").click( function () {
-			 		var elemVal = $(this).attr('name').substr(11, 1);			 		
-			 		$("#absence_div["+elemVal+"]").show();
-		 		}
-			);
-		 	$(".present").click( function () {
-			 		var elemVal = $(this).attr('name').substr();
-			 		$("#absence_div_"+elemVal).hide();
-	 			}
- 			);*/
+		 $(".absent").click( function () {
+				var elemVal = $(this).attr('id').substring(20);
+				$("#div_reason_of_absence_"+elemVal).show();
+				$("#reviewer-absent-"+elemVal).attr('checked', true);
+				$("#div_title_reason_of_absence").show();
+			}
+		);
+
+		$(".present").click( function () {
+				var elemVal = $(this).attr('id').substring(20);		
+				$("#reviewer-absent-"+elemVal).attr('checked', false);
+				$("#div_reason_of_absence_"+elemVal).hide();
+		}
+ 		);
 	});
 -->
 </script>{/literal}
@@ -64,48 +65,57 @@
 <br/>
 <div id="attendance">
 	<h2>Review Committee</h2>
-		<table width="100%" class="listing" name="ercMembers">
-		<!--	<tr class="heading" valign="bottom"><td colspan="4">REVIEW COMMITTEE</td></tr>-->
-			<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
+	<table width="100%" class="listing" name="ercMembers">
+			<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 		 	<tr>
+		 		<td></td>
 		 		<td width="5%">{translate key="editor.minutes.present"}</td>
-		 		<td width="5%">{translate key="editor.minutes.absent"}</td>
+			 	<td width="5%">{translate key="editor.minutes.absent"}</td>
 		 		<td width="20%">{translate key="editor.minutes.nameOfMember"}</td>
 		 		<td width="20%">{translate key="editor.minutes.affiliationOfMember"}</td>
-		 		<td width="50%">{translate key="editor.minutes.reasonOfAbsence"}</td>
+		 		<td width="50%" class="div_reason_of_absence" id="div_title_reason_of_absence">{translate key="editor.minutes.reasonOfAbsence"}</td>
 		 	</tr>
-		 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
-		 	{foreach from=$reviewers item=user}
-				<tr>
-			 	 		<td width="5%"><input type="radio" class="present" name="attendance[{$user->getId()}]" id="present_{$user->getId()}" value="present"/></td>
-				 		<td width="5%"><input type="radio" class="absent" name="attendance[{$user->getId()}]" id="absent_{$user->getId()}" value="absent" /></td>
-					 	<td width="20%">
-							<label for="attendance[{$user->getId()}]">{$user->getFullName()}</label>						 	
-					 	</td>
-					 	<td width="20%">
+		 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+		 	{foreach from=$reviewers key=userId item=user}
+		 	 <tr>	
+		 			<td width="1%">{fieldLabel name="reviewer-attendance-$userId-userId"}{fieldLabel name="reviewer-attendance-$userId"  key="editor.minutes.uploadAttendance.checkReasonOfAbsence"}</td>
+		 			<td width="5%">
+			 					<input type="hidden" class="present" name="reviewer_attendance[{$userId}][userId]" id="reviewer-attendance-{$userId}-userId" value="{$user->getId()}"/>
+								<input type="radio" class="present" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-attendance-{$userId}" value="present"/>
+		 			</td> 
+					<td width="5%">	
+								<input type="radio"  class="absent" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-attendance-{$userId}" value="absent" />
+								<input type="radio" style="display:none" class="absent" name="reviewer_absent[{$userId}][attendance]" id="reviewer-absent-{$userId}" value="absent" />
+					</td>
+					<td width="20%">
+					 		<label for="attendance[{$userId}]">{$user->getFullName()}</label></td>
+					<td width="20%">
 					 		{if $user->getLocalizedWproAffiliation() == "Yes"} {translate key="editor.reviewer.wproAffiliated"} {else} {translate key="editor.reviewer.nonWpro"} {/if} /
 					 		{if $user->getLocalizedHealthAffiliation() == "Yes"} {translate key="editor.reviewer.healthAffiliated"} {else} {translate key="editor.reviewer.nonHealth"} {/if}					 		
-					 	</td>
-					 	<td width="50%" id="absence_div_{$user->getId()}" class="absence_div">
-					 			<input type="radio" name="reason[{$user->getId()}]" id="duty_travel_{$user->getId()}" value="Duty Travel"/><label for="duty_travel_{$user->getId()}">Duty Travel</label>
-						 		<input type="radio" name="reason[{$user->getId()}]" id="on_leave_{$user->getId()}" value="On Leave"/><label for="on_leave_{$user->getId()}">On Leave</label>
-						 		<input type="radio" name="reason[{$user->getId()}]" id="others_{$user->getId()}" value="Other Commitment"/><label for="others_{$user->getId()}">Other Commitment</label>
-						 		<input type="radio" name="reason[{$user->getId()}]" id="unexcused_{$user->getId()}" value="Unexcused"/><label for="unexcused_{$user->getId()}">Unexcused</label>
-					 	</td>
-				</tr>	
-				<tr><td colspan="5" class="separator"></td></tr>	
+					</td>
+					 	
+					<td width="50%" id="div_reason_of_absence_{$userId}" class="div_reason_of_absence">
+					 			{fieldLabel name="reviewer-absent-$userId-reason" required="true"}
+					 			<input type="radio" name="reviewer_absent[{$userId}][reason]" id="reviewer-absent-{$userId}-reason" value="Duty Travel"/><label for="duty_travel_{$user->getId()}">Duty Travel</label>
+						 		<input type="radio" name="reviewer_absent[{$userId}][reason]" id="reviewer-absent-{$userId}-reason" value="On Leave"/><label for="on_leave_{$user->getId()}">On Leave</label>
+						 		<input type="radio" name="reviewer_absent[{$userId}][reason]" id="reviewer-absent-{$userId}-reason" value="Other Commitment"/><label for="others_{$user->getId()}">Other Commitment</label>
+						 		<input type="radio" name="reviewer_absent[{$userId}][reason]" id="reviewer-absent-{$userId}-reason" value="Unexcused"/><label for="unexcused_{$user->getId()}">Unexcused</label>
+					</td>
+					<input type="hidden" name="areviewer_attendance[{$userId}][userId]" value="{$userId}">
+				</tr>
+				<tr><td colspan="6" class="separator"></td></tr>	
 			{/foreach}	 	
-			<td colspan="5" class="endseparator">&nbsp;</td>	
-		</table> 
-		<br/>
-		<h2>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h2>
-		 <table class="listing" name="guests" id="guests" width="100%">
-			<tr></tr>
-		 </table>
-		<div class="separator"></div>
-		 <br/><br/>
-		 <input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
-		 <input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" name="submitAttendance" value="Submit"  class="button defaultButton" />	 
- </div>
- 
+			<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>	
+	</table> 
+	<br/>
+	<br/>
+	<h2>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h2>
+	<table class="listing" name="guests" id="guests" width="100%">
+	<tr></tr>
+	</table>
+	<div class="separator"></div>
+		<br/><br/>
+		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+		<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" name="submitAttendance" value="Submit"  class="button defaultButton" />	 
+	</div>
  </form>

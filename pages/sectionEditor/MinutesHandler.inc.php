@@ -157,7 +157,6 @@ class MinutesHandler extends Handler {
 		
 		$attendanceForm->readInputData();
 		if($attendanceForm->validate()) {
-			
 			$attendanceForm->execute();
 			$attendanceForm->showPdf();
 		}
@@ -248,12 +247,13 @@ class MinutesHandler extends Handler {
 		$this->validate($meetingId);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
-		
+
 		$meeting->updateStatus(MEETING_STATUS_INITIAL_REVIEWS);
 		$meetingDao->updateStatus($meeting);
-						
+
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
+	
 
 	function validate($meetingId = 0, $access = null) {
 		parent::validate();

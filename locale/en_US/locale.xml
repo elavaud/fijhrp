@@ -609,7 +609,9 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.meetings.replyStatus.notAttending">Not Attending</message>
 	<message key="reviewer.meetings.replyStatus.awaitingReply">Awaiting Reply</message>
 	<message key="reviewer.meetings.scheduleStatus.final">Final</message>
-	<message key="reviewer.meetings.scheduleStatus.proposed">Proposed</message>
+	<message key="reviewer.meetings.scheduleStatus.new">New</message>
+	<message key="reviewer.meetings.scheduleStatus.rescheduled">Rescheduled</message>
+	<message key="reviewer.meetings.scheduleStatus.cancelled">Cancelled</message>
 	
 	
 	<message key="reviewer.pendingReviews">Articles Pending Review</message>
