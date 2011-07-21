@@ -49,7 +49,7 @@
 
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
-	<td width="80%" class="value">{translate key=$proposalStatusKey}</td>
+	<td width="80%" class="value">{if $submission->isSubmissionDue()} {translate key="submissions.proposal.forContinuingReview"} {else} {translate key=$proposalStatusKey}  {/if}</td>
 </tr>
  <!-- 
 {*******************************************************
@@ -107,7 +107,7 @@
  -->
 		
 
-	{elseif $proposalStatus == PROPOSAL_STATUS_DUE_FOR_REVIEW}
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $submission->isSubmissionDue()}
 		<td class="label" width="20%">{translate key="editor.article.selectContinuingReview"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
@@ -178,10 +178,10 @@
 <tr valign="top">
 	<td class="label">{translate key="editor.article.finalDecision"}</td>
 	<td class="value">
-		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+		{if !$submission->isSubmissionDue() && $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
 			{assign var="decision" value=$submission->getEditorDecisionKey()}
 			{translate key=$decision}
-			{if $submission->isSubmissionDue()}&nbsp; (Due){/if}
+			{if $submission->isSubmissionDue()}&nbsp;(Due)&nbsp;{/if}
 			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
 		{else}
 				{translate key="common.none"}

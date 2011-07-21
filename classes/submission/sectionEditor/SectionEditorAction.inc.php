@@ -93,7 +93,8 @@ class SectionEditorAction extends Action {
 		$user =& Request::getUser();
 		$journal =& Request::getJournal();
 
-		$startDate = (($dateDecided == null) ? date(Core::getCurrentDate()) : date($dateDecided));
+		$currentDate = date(Core::getCurrentDate());
+		$startDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;  
 		$editorDecision = array(
 				'editDecisionId' => $lastDecisionId,
@@ -104,7 +105,7 @@ class SectionEditorAction extends Action {
 		);
 		
 		/*
-		 * If assigned for normal erc review, automatically assign all users with REVIEWER role
+		 * If assigned for full erc review, automatically assign all users with REVIEWER role
 		 */
 		if($decision == SUBMISSION_EDITOR_DECISION_ASSIGNED) {
 			$userDao =& DAORegistry::getDAO('UserDAO');
@@ -113,6 +114,14 @@ class SectionEditorAction extends Action {
 				$reviewerId = $reviewer->getId();
 				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
 			}				
+		}
+		
+		/*
+		 * If approved, insert approvalDate
+		 */
+		if($decision == SUBMISSION_EDITOR_DECISION_ACCEPT) {
+			$articleDao =& DaoRegistry::getDAO('ArticleDAO');
+			$articleDao->insertApprovalDate($sectionEditorSubmission, $currentDate);
 		}
 		
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
@@ -128,8 +137,7 @@ class SectionEditorAction extends Action {
 			Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON, LOCALE_COMPONENT_OJS_EDITOR));
 			ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_EDITOR_DECISION, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.decision', array('editorName' => $user->getFullName(), 'articleId' => $sectionEditorSubmission->getArticleId(), 'decision' => Locale::translate($decisions[$decision])));
 		}
-	}
-
+	}	
 
 	/**
 	 * Assigns a reviewer to a submission.
@@ -1979,7 +1987,7 @@ class SectionEditorAction extends Action {
 		$user =& Request::getUser();
 		import('classes.mail.ArticleMailTemplate');
 		//SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => 'EDITOR_DECISION_REVISIONS',
-			
+		/*
 		$decisionTemplateMap = array(
 		SUBMISSION_EDITOR_DECISION_ACCEPT => 'EDITOR_DECISION_ACCEPT',
 		SUBMISSION_EDITOR_DECISION_RESUBMIT => 'EDITOR_DECISION_RESUBMIT',
@@ -1990,10 +1998,10 @@ class SectionEditorAction extends Action {
 		$decisions = array_pop($decisions); // Rounds
 		$decision = array_pop($decisions);
 		$decisionConst = $decision?$decision['decision']:null;
-
+		*/
 		$email = new ArticleMailTemplate(
 		$sectionEditorSubmission,
-		isset($decisionTemplateMap[$decisionConst])?$decisionTemplateMap[$decisionConst]:null
+		$sectionEditorSubmission->getEditorDecisionKey()
 		);
 
 		$copyeditor = $sectionEditorSubmission->getUserBySignoffType('SIGNOFF_COPYEDITING_INITIAL');

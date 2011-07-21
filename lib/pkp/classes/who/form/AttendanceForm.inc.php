@@ -43,11 +43,13 @@ class AttendanceForm extends Form {
 	/**
 	 * Display the form.
 	 */
-	function display(&$args, &$request) {
+	function display() {
 		$journal =& Request::getJournal();
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
 
+		
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
@@ -64,7 +66,8 @@ class AttendanceForm extends Form {
 				  "announcements", 
 				  "reviewer_attendance",
 				  "reviewer_absent",
-				  "guest",
+				  "guestName",
+				  "guestAffiliation"
 		));
 	}
 
@@ -107,8 +110,8 @@ class AttendanceForm extends Form {
 		
 		$this->quorum = $quorum;
 		$this->reviewerItems = $reviewerItems;
-		$meeting->updateMeetingStatus(MEETING_STATUS_ATTENDANCE);
-		$meetingDao->updateStatus($meeting);		 
+		$meeting->updateMinutesStatus(MINUTES_STATUS_ATTENDANCE);
+		$meetingDao->updateMinutesStatus($meeting);		 
 			
 		//$quorum = 0;
 		//$reviewerItems = array();
@@ -133,7 +136,7 @@ class AttendanceForm extends Form {
 		
 		//$this->quorum = $quorum;
 		//$this->reviewerItems = $reviewerItems;
-		//$meeting->updateMeetingStatus(MEETING_STATUS_ATTENDANCE);
+		//$meeting->updateMeetingStatus(MINUTES_STATUS_ATTENDANCE);
 		//$meetingDao->updateStatus($meeting);		 
 	}
 

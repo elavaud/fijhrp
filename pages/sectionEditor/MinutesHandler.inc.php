@@ -123,7 +123,7 @@ class MinutesHandler extends Handler {
 	 */
 	function uploadAttendance($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId, MEETING_STATUS_ATTENDANCE);
+		$this->validate($meetingId, MINUTES_STATUS_ATTENDANCE);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 		
@@ -162,7 +162,7 @@ class MinutesHandler extends Handler {
 		}
 		else {
 			$attendanceForm->display();
-		}	
+		}
 	}
 	
 	/**
@@ -173,7 +173,7 @@ class MinutesHandler extends Handler {
 	 */
 	function selectInitialReview($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId, MEETING_STATUS_INITIAL_REVIEWS);
+		$this->validate($meetingId, MINUTES_STATUS_INITIAL_REVIEWS);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 
@@ -242,15 +242,28 @@ class MinutesHandler extends Handler {
 		}
 	}
 	
-	function completeInitialReview($args, $request) {
+	function completeInitialReviews($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 
-		$meeting->updateStatus(MEETING_STATUS_INITIAL_REVIEWS);
-		$meetingDao->updateStatus($meeting);
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$meeting->updateMinutesStatus(MINUTES_STATUS_INITIAL_REVIEWS);
+		$meetingDao->updateMinutesStatus($meeting);
 
+		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+	}
+	
+	function setMinutesFinal($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$meeting->setMinutesStatus(MINUTES_STATUS_COMPLETE);
+		$meetingDao->updateMinutesStatus($meeting);
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
 	

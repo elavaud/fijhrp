@@ -178,7 +178,7 @@
 	<message key="editor.article.decision.incomplete">Incomplete</message>
 	<message key="editor.article.decision.exempted">Exempt From Review</message>
 	<message key="editor.article.decision.expedited">For Expedited Review</message>
-	<message key="editor.article.decision.assigned">For ERC Review</message>
+	<message key="editor.article.decision.assigned">For Full Review</message>
 	<message key="editor.article.selectInitialReview">Select Initial Review</message>
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
@@ -320,7 +320,10 @@
 	<message key="editor.minutes.uploadAttendance">Upload Attendance</message>
 	<message key="editor.minutes.uploadInitialReviews">Upload Initial Reviews</message>
 	<message key="editor.minutes.completeInitialReviews">Complete Initial Reviews</message>
-	
+	<message key="editor.minutes.complete">Complete</message>
+	<message key="editor.minutes.incomplete">Incomplete</message>
+	<message key="editor.meetingStatus">Meeting Status</message>
+	<message key="editor.minutesStatus">Minutes Status</message>
 
 	<message key="editor.minutes.uploadAttendance.checkReasonOfAbsence"></message>
 	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
