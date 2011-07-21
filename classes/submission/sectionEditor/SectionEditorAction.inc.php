@@ -95,7 +95,7 @@ class SectionEditorAction extends Action {
 
 		$currentDate = date(Core::getCurrentDate());
 		$startDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
-		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;  
+		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;
 		$editorDecision = array(
 				'editDecisionId' => $lastDecisionId,
 				'editorId' => $user->getId(),
@@ -103,7 +103,7 @@ class SectionEditorAction extends Action {
 				'dateDecided' => $startDate,
 				'resubmitCount' => $resubmitCount
 		);
-		
+
 		/*
 		 * If assigned for full erc review, automatically assign all users with REVIEWER role
 		 */
@@ -113,9 +113,9 @@ class SectionEditorAction extends Action {
 			foreach($reviewers as $reviewer) {
 				$reviewerId = $reviewer->getId();
 				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
-			}				
+			}
 		}
-		
+
 		/*
 		 * If approved, insert approvalDate
 		 */
@@ -123,7 +123,7 @@ class SectionEditorAction extends Action {
 			$articleDao =& DaoRegistry::getDAO('ArticleDAO');
 			$articleDao->insertApprovalDate($sectionEditorSubmission, $currentDate);
 		}
-		
+
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
 			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
 			$sectionEditorSubmission->stampStatusModified();
@@ -137,7 +137,7 @@ class SectionEditorAction extends Action {
 			Locale::requireComponents(array(LOCALE_COMPONENT_APPLICATION_COMMON, LOCALE_COMPONENT_OJS_EDITOR));
 			ArticleLog::logEvent($sectionEditorSubmission->getArticleId(), ARTICLE_LOG_EDITOR_DECISION, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.decision', array('editorName' => $user->getFullName(), 'articleId' => $sectionEditorSubmission->getArticleId(), 'decision' => Locale::translate($decisions[$decision])));
 		}
-	}	
+	}
 
 	/**
 	 * Assigns a reviewer to a submission.
@@ -641,9 +641,9 @@ class SectionEditorAction extends Action {
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
 				$reviewAssignment->setDateDue($newDueDateTimestamp);
 			}
-			
+				
 			$reviewAssignment->stampModified();
-			
+				
 			$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
 
 			if ($logEntry) {
@@ -1973,7 +1973,7 @@ class SectionEditorAction extends Action {
 	}
 
 	/**
-	 * Email editor decision comment.
+	 * Email editor decision comment
 	 * @param $sectionEditorSubmission object
 	 * @param $send boolean
 	 */
@@ -1986,8 +1986,7 @@ class SectionEditorAction extends Action {
 
 		$user =& Request::getUser();
 		import('classes.mail.ArticleMailTemplate');
-		//SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => 'EDITOR_DECISION_REVISIONS',
-		/*
+
 		$decisionTemplateMap = array(
 		SUBMISSION_EDITOR_DECISION_ACCEPT => 'EDITOR_DECISION_ACCEPT',
 		SUBMISSION_EDITOR_DECISION_RESUBMIT => 'EDITOR_DECISION_RESUBMIT',
@@ -1998,10 +1997,10 @@ class SectionEditorAction extends Action {
 		$decisions = array_pop($decisions); // Rounds
 		$decision = array_pop($decisions);
 		$decisionConst = $decision?$decision['decision']:null;
-		*/
+
 		$email = new ArticleMailTemplate(
 		$sectionEditorSubmission,
-		$sectionEditorSubmission->getEditorDecisionKey()
+		isset($decisionTemplateMap[$decisionConst])?$decisionTemplateMap[$decisionConst]:null
 		);
 
 		$copyeditor = $sectionEditorSubmission->getUserBySignoffType('SIGNOFF_COPYEDITING_INITIAL');
@@ -2009,14 +2008,6 @@ class SectionEditorAction extends Action {
 		if ($send && !$email->hasErrors()) {
 			HookRegistry::call('SectionEditorAction::emailEditorDecisionComment', array(&$sectionEditorSubmission, &$send));
 			$email->send();
-
-			if ($decisionConst == SUBMISSION_EDITOR_DECISION_DECLINE) {
-				// If the most recent decision was a decline,
-				// sending this email archives the submission.
-				//$sectionEditorSubmission->setStatus(STATUS_ARCHIVED);
-				//$sectionEditorSubmission->stampStatusModified();
-				//$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
-			}
 
 			$articleComment = new ArticleComment();
 			$articleComment->setCommentType(COMMENT_TYPE_EDITOR_DECISION);
@@ -2111,6 +2102,7 @@ class SectionEditorAction extends Action {
 			return false;
 		}
 	}
+
 
 	/**
 	 * Blind CC the reviews to reviewers.
@@ -2455,12 +2447,12 @@ class SectionEditorAction extends Action {
 		}
 		return $breadcrumb;
 	}
-	
+
 	/**
 	 * Notify reviewers of new meeting set by section editor
 	 * Added by ayveemallare 7/12/2011
 	 */
-	
+
 	function notifyReviewersNewMeeting($meeting, $reviewerIds, $submissionIds, $send = false) {
 		$journal =& Request::getJournal();
 		$user = & Request::getUser();
@@ -2477,27 +2469,27 @@ class SectionEditorAction extends Action {
 			$reviewer = $userDao->getUser($reviewerId->getReviewerId());
 			array_push($reviewers, $reviewer);
 		}
-		
+
 		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
-		
+
 		$preventAddressChanges = $reviewerAccessKeysEnabled;
-		
+
 		import('classes.mail.MailTemplate');
 		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_NEW':'MEETING_NEW');
-		
+
 		if($preventAddressChanges) {
 			$email->setAddressFieldsEnabled(false);
 		}
-		
+
 		if($send && !$email->hasErrors()) {
 			HookRegistry::call('SectionEditorAction::notifyReviewersNewMeeting', array(&$meeting, &$reviewers, &$submissions, &$email));
-			
+				
 			if($reviewerAccessKyesEnabled) {
 				import('lib.pkp.classes.security.AccessKeyManager');
 				import('pages.reviewer.ReviewerHandler');
 				$accessKeyManager = new AccessKeyManager();
 			}
-			
+				
 			if($preventAddressChanges) {
 				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
 				$email->clearAllRecipients();
@@ -2514,7 +2506,7 @@ class SectionEditorAction extends Action {
 				}
 			}
 			if(!Request::getUserVar('continued')) {
-				if($meeting->getDate() != null) {	
+				if($meeting->getDate() != null) {
 					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
 				}
 				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());
@@ -2531,12 +2523,12 @@ class SectionEditorAction extends Action {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Notify reviewers of change of schedule in a meeting set by section editor
 	 * Added by ayveemallare 7/12/2011
 	 */
-	
+
 	function notifyReviewersChangeMeeting($oldDate, $meeting, $reviewerIds, $submissionIds, $send = false) {
 		$journal =& Request::getJournal();
 		$user = & Request::getUser();
@@ -2553,27 +2545,27 @@ class SectionEditorAction extends Action {
 			$reviewer = $userDao->getUser($reviewerId->getReviewerId());
 			array_push($reviewers, $reviewer);
 		}
-		
+
 		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
-		
+
 		$preventAddressChanges = $reviewerAccessKeysEnabled;
-		
+
 		import('classes.mail.MailTemplate');
 		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_CHANGE':'MEETING_CHANGE');
-		
+
 		if($preventAddressChanges) {
 			$email->setAddressFieldsEnabled(false);
 		}
-		
+
 		if($send && !$email->hasErrors()) {
 			HookRegistry::call('SectionEditorAction::notifyReviewersChangeMeeting', array(&$meeting, &$reviewers, &$submissions, &$email));
-			
+				
 			if($reviewerAccessKyesEnabled) {
 				import('lib.pkp.classes.security.AccessKeyManager');
 				import('pages.reviewer.ReviewerHandler');
 				$accessKeyManager = new AccessKeyManager();
 			}
-			
+				
 			if($preventAddressChanges) {
 				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
 				$email->clearAllRecipients();
@@ -2590,7 +2582,7 @@ class SectionEditorAction extends Action {
 				}
 			}
 			if(!Request::getUserVar('continued')) {
-				if($meeting->getDate() != null) {	
+				if($meeting->getDate() != null) {
 					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
 				}
 				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());
@@ -2608,12 +2600,12 @@ class SectionEditorAction extends Action {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Notify reviewers if meeting schedule is set to final
 	 * Added by ayveemallare 7/12/2011
 	 */
-	
+
 	function notifyReviewersFinalMeeting($meeting, $reviewerIds, $submissionIds, $send = false) {
 		$journal =& Request::getJournal();
 		$user = & Request::getUser();
@@ -2630,27 +2622,27 @@ class SectionEditorAction extends Action {
 			$reviewer = $userDao->getUser($reviewerId->getReviewerId());
 			array_push($reviewers, $reviewer);
 		}
-		
+
 		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
-		
+
 		$preventAddressChanges = $reviewerAccessKeysEnabled;
-		
+
 		import('classes.mail.MailTemplate');
 		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_FINAL':'MEETING_FINAL');
-		
+
 		if($preventAddressChanges) {
 			$email->setAddressFieldsEnabled(false);
 		}
-		
+
 		if($send && !$email->hasErrors()) {
 			HookRegistry::call('SectionEditorAction::notifyReviewersFinalMeeting', array(&$meeting, &$reviewers, &$submissions, &$email));
-			
+				
 			if($reviewerAccessKyesEnabled) {
 				import('lib.pkp.classes.security.AccessKeyManager');
 				import('pages.reviewer.ReviewerHandler');
 				$accessKeyManager = new AccessKeyManager();
 			}
-			
+				
 			if($preventAddressChanges) {
 				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
 				$email->clearAllRecipients();
@@ -2667,7 +2659,7 @@ class SectionEditorAction extends Action {
 				}
 			}
 			if(!Request::getUserVar('continued')) {
-				if($meeting->getDate() != null) {	
+				if($meeting->getDate() != null) {
 					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
 				}
 				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());
@@ -2684,12 +2676,12 @@ class SectionEditorAction extends Action {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Notify reviewers if meeting is cancelled
 	 * Added by ayveemallare 7/12/2011
 	 */
-	
+
 	function notifyReviewersCancelMeeting($meeting, $reviewerIds, $submissionIds, $send = false) {
 		$journal =& Request::getJournal();
 		$user = & Request::getUser();
@@ -2706,27 +2698,27 @@ class SectionEditorAction extends Action {
 			$reviewer = $userDao->getUser($reviewerId->getReviewerId());
 			array_push($reviewers, $reviewer);
 		}
-		
+
 		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
-		
+
 		$preventAddressChanges = $reviewerAccessKeysEnabled;
-		
+
 		import('classes.mail.MailTemplate');
 		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_CANCEL':'MEETING_CANCEL');
-		
+
 		if($preventAddressChanges) {
 			$email->setAddressFieldsEnabled(false);
 		}
-		
+
 		if($send && !$email->hasErrors()) {
 			HookRegistry::call('SectionEditorAction::notifyReviewersCancelMeeting', array(&$meeting, &$reviewers, &$submissions, &$email));
-			
+				
 			if($reviewerAccessKyesEnabled) {
 				import('lib.pkp.classes.security.AccessKeyManager');
 				import('pages.reviewer.ReviewerHandler');
 				$accessKeyManager = new AccessKeyManager();
 			}
-			
+				
 			if($preventAddressChanges) {
 				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
 				$email->clearAllRecipients();
@@ -2743,7 +2735,7 @@ class SectionEditorAction extends Action {
 				}
 			}
 			if(!Request::getUserVar('continued')) {
-				if($meeting->getDate() != null) {	
+				if($meeting->getDate() != null) {
 					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
 				}
 				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());
@@ -2760,12 +2752,12 @@ class SectionEditorAction extends Action {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Remind reviewers of a meeting
 	 * Added by ayveemallare 7/12/2011
 	 */
-	
+
 	function remindReviewersMeeting($meeting, $reviewerId, $submissionIds, $send = false) {
 		$journal =& Request::getJournal();
 		$user = & Request::getUser();
@@ -2778,34 +2770,34 @@ class SectionEditorAction extends Action {
 		}
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$reviewer = $userDao->getUser($reviewerId);
-		
+
 		$reviewerAccessKeysEnabled = $journal->getSetting('reviewerAccessKeysEnabled');
-		
+
 		$preventAddressChanges = $reviewerAccessKeysEnabled;
-		
+
 		import('classes.mail.MailTemplate');
 		$email = new MailTemplate($reviewerAccessKeysEnabled?'MEETING_REMIND':'MEETING_REMIND');
-		
+
 		if($preventAddressChanges) {
 			$email->setAddressFieldsEnabled(false);
 		}
-		
+
 		if($send && !$email->hasErrors()) {
 			HookRegistry::call('SectionEditorAction::remindReviewersMeeting', array(&$meeting, &$reviewer, &$submissions, &$email));
-			
+				
 			if($reviewerAccessKyesEnabled) {
 				import('lib.pkp.classes.security.AccessKeyManager');
 				import('pages.reviewer.ReviewerHandler');
 				$accessKeyManager = new AccessKeyManager();
 			}
-			
+				
 			if($preventAddressChanges) {
 				// Ensure that this messages goes to the reviewers, and the reviewers ONLY.
 				$email->clearAllRecipients();
 				$email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
 			}
 			$email->send();
-			
+				
 			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');
 			$meetingReviewerDao->updateDateReminded(Core::getCurrentDate(), $reviewerId, $meeting);
 			return true;
@@ -2814,7 +2806,7 @@ class SectionEditorAction extends Action {
 				$email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
 			}
 			if(!Request::getUserVar('continued')) {
-				if($meeting->getDate() != null) {	
+				if($meeting->getDate() != null) {
 					$meetingDate = strftime('%B %d, %Y %I:%M %p', strtotime($meeting->getDate()));
 				}
 				$replyUrl = Request::url(null, 'reviewer', 'viewMeeting', $meeting->getId(), $reviewerAccessKeyEnabled?array('key' => 'ACCESS_KEY'):array());

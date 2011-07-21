@@ -48,11 +48,12 @@ class AttendanceForm extends Form {
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
 
-		
-		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
+		$templateMgr->assign('adjourned', $this->getData('adjourned'));
+		$templateMgr->assign('venue', $this->getData('$venue'));
+		$templateMgr->assign('announcements', $this->getData('announcements'));
 		parent::display();
 	}
 
@@ -70,7 +71,7 @@ class AttendanceForm extends Form {
 				  "guestAffiliation"
 		));
 	}
-
+	
 	/**
 	 *
 	 * @return userId int

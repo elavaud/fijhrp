@@ -130,13 +130,27 @@ class MinutesHandler extends Handler {
 		$journal = Request::getJournal();
 		import('lib.pkp.classes.who.form.AttendanceForm');           
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
-		if ($attendanceForm->isLocaleResubmit()) {
-       		$attendanceForm->readInputData();       		
-		} 
-		else {
-			$attendanceForm->initData();
+		$submitted = Request::getUserVar("submitAttendance") != null ? true : false;
+		
+		if($submitted) {
+			$attendanceForm->readInputData();
+			if($attendanceForm->validate()) {
+				$attendanceForm->execute();
+				$attendanceForm->showPdf();
+			}
+			else {
+				if ($attendanceForm->isLocaleResubmit()) {
+		       		$attendanceForm->readInputData();       		
+				} 
+				else {
+					$attendanceForm->initData();
+				}
+				$attendanceForm->display();
+			}
 		}
-		$attendanceForm->display();						
+		else {
+			$attendanceForm->display();
+		}						
 	}
 	
 	/**

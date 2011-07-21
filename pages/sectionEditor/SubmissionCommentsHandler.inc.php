@@ -237,22 +237,14 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 	 * Email an editor decision comment.
 	 */
 	function emailEditorDecisionComment() {
+
 		$articleId = (int) Request::getUserVar('articleId');
 		$submissionEditHandler = new SubmissionEditHandler();
 		$submissionEditHandler->validate($articleId);
 		$submission =& $submissionEditHandler->submission;
 
 		$this->setupTemplate(true);
-		//if (SectionEditorAction::emailEditorDecisionComment($submission, Request::getUserVar('send'))) {
-		/*
-		 * Redirect to email template and set Send button to automatically send email
-		 * Edited by aglet
-		 * Last Update: 6/5/2011
-		 * TODO: FIX @ SectionEditorAction: does not reflect decision in email 
-		 */
-		
-		if (SectionEditorAction::emailEditorDecisionComment($submission, 'Send')) {
-			Request::redirect(null, null, 'submissionReview', array($articleId));
+		if (SectionEditorAction::emailEditorDecisionComment($submission, Request::getUserVar('send'))) {
 			if (Request::getUserVar('blindCcReviewers')) {
 				SubmissionCommentsHandler::blindCcReviewsToReviewers();
 			} else {
@@ -271,9 +263,9 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$this->addCheck(new HandlerValidatorSubmissionComment($this, $commentId));
 		$this->validate();
 		$comment =& $this->comment;
-		
+
 		$this->setupTemplate(true);
-		
+
 		$submissionEditHandler = new SubmissionEditHandler();
 		$submissionEditHandler->validate($articleId);
 		$submission =& $submissionEditHandler->submission;
@@ -299,7 +291,7 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$this->addCheck(new HandlerValidatorSubmissionComment($this, $commentId));
 		$this->validate();
 		$comment =& $this->comment;
-		
+
 		$this->setupTemplate(true);
 
 		$submissionEditHandler = new SubmissionEditHandler();
@@ -341,9 +333,9 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$this->addCheck(new HandlerValidatorSubmissionComment($this, $commentId));
 		$this->validate();
 		$comment =& $this->comment;
-		
+
 		$this->setupTemplate(true);
-		
+
 		$submissionEditHandler = new SubmissionEditHandler();
 		$submissionEditHandler->validate($articleId);
 		$submission =& $submissionEditHandler->submission;

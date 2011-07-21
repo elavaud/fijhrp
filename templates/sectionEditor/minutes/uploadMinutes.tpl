@@ -78,7 +78,7 @@
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right">
-				<a href="{url op="selectInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
+				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
 				<a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a>
 			</td>				
 		{/if}
