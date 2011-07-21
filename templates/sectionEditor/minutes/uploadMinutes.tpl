@@ -29,13 +29,13 @@
 	<td width="40%">{translate key="submissions.sec"}</td>
 	<td width="10%">{translate key="common.status"}</td>
 	<td width="30%" align="right">Action</td>
-	
+	{$statusMap.1}
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(1)</td>
 		{if $statusMap.1 == 1}
 			<td width="40%">			
-				{translate key="editor.minutes.attendance"}
+				<a href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
 			</td>
 			<td width="10%">Done</td>
 			<td width="30%" align="right">---</td>

@@ -13,6 +13,7 @@ class AttendanceForm extends Form {
 	var $reviewers;
 	var $reviewerItems;
 	var $quorum;
+	var $journalId;
 	/**
 	 * Constructor.
 	 */
@@ -20,11 +21,14 @@ class AttendanceForm extends Form {
 		parent::Form('sectionEditor/minutes/uploadAttendance.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 		
+		$this->journalId =$journalId;
+		
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$this->meeting =& $meetingDao->getMeetingById($meetingId);		
 
 		$userDao =& DAORegistry::getDAO('UserDAO');		
 		$this->reviewers =& $userDao->getUsersWithReviewerRole($journalId);
+		
 		import('lib.pkp.classes.who.MeetingAttendance');
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
@@ -34,11 +38,13 @@ class AttendanceForm extends Form {
 		
 		$this->addCheck(new FormValidatorArrayMyCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence', 
 		create_function('$attendance, $reason', 'if(($attendance=="absent") && !isset($reason)) return false; else return true;'), array('attendance','reason')));	
-		
 	
-		
 	}
 
+	/**
+	 * Initialize form
+	 * */
+	
 	
 	/**
 	 * Display the form.
@@ -47,10 +53,21 @@ class AttendanceForm extends Form {
 		$journal =& Request::getJournal();
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
-
+	
+		$attendance  = $this->getData('reviewer_attendance');
+		$reasonOfAbsence = $this->getData('reviewer_absent');
+		$guestNames = $this->getData("guestName");
+		$guestAffiliations = $this->getData("guestAffiliation");
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
+		
+		$templateMgr->assign_by_ref('attendance', $attendance);
+		$templateMgr->assign_by_ref('reasonOfAbsence', $reasonOfAbsence);
+		$templateMgr->assign_by_ref('guestNames', $guestNames);
+		$templateMgr->assign_by_ref('guestAffiliations', $guestAffiliations);
+
 		parent::display();
 	}
 
@@ -64,7 +81,8 @@ class AttendanceForm extends Form {
 				  "announcements", 
 				  "reviewer_attendance",
 				  "reviewer_absent",
-				  "guest",
+				  "guestName",
+				  "guestAffiliation"
 		));
 	}
 
@@ -82,18 +100,18 @@ class AttendanceForm extends Form {
 		
 		$reviewer  = $this->getData('reviewer_attendance');
 		$reasonOfAbsence = $this->getData('reviewer_absent');
-		for ($i=0, $count=count($reviewer); $i < $count; $i++) {
-
-			$reviewerId = $reviewer[$i]['userId'];
+		foreach($reviewer as $index=>$item) {
+		
+			$reviewerId = $index;
 		
 				$meetingReviewer = new Meeting();
 				$meetingReviewer->setId($meeting->getId());
 				$meetingReviewer->setReviewerId($reviewerId);
 				
 				
-				if($reviewer[$i]['attendance'] =="absent"){
+				if($reviewer[$reviewerId]['attendance'] =="absent"){
 					$meetingReviewer->setIsPresent(0);
-					$meetingReviewer->setReasonForAbsence($reasonOfAbsence[$i]["reason"]);
+					$meetingReviewer->setReasonForAbsence($reasonOfAbsence[reviewerId]["reason"]);
 				}else {
 					
 					$meetingReviewer->setIsPresent(1);
@@ -107,37 +125,11 @@ class AttendanceForm extends Form {
 		
 		$this->quorum = $quorum;
 		$this->reviewerItems = $reviewerItems;
-		$meeting->updateMeetingStatus(MEETING_STATUS_ATTENDANCE);
-		$meetingDao->updateStatus($meeting);		 
-			
-		//$quorum = 0;
-		//$reviewerItems = array();
-		/*foreach($attendance as $index=>$item) {
-			
-			$meetingReviewer = new Meeting();
-			$meetingReviewer->setId($meeting->getId());
-			$meetingReviewer->setReviewerId($index);			
-			if($item == "absent") {
-				$meetingReviewer->setIsPresent(0);
-				$meetingReviewer->setReasonForAbsence($reasons[$index]);
-			}
-			else {
-				$meetingReviewer->setIsPresent(1);
-				$meetingReviewer->setReasonForAbsence(null);
-				$quorum++;
-			}
-			$reviewerItems[$index] = $meetingReviewer;
-			$meetingReviewerDao->updateAttendanceOfReviewer($meetingReviewer);
-		} */
-		
-		
-		//$this->quorum = $quorum;
-		//$this->reviewerItems = $reviewerItems;
-		//$meeting->updateMeetingStatus(MEETING_STATUS_ATTENDANCE);
-		//$meetingDao->updateStatus($meeting);		 
+		$meeting->updateMinutesStatus(MEETING_STATUS_ATTENDANCE);
+		$meetingDao->updateMinutesStatus($meeting);		 
 	}
 
-	function showPdf() {
+	function savePdf() {
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
 		$reviewerItems =& $this->reviewerItems;		
@@ -173,8 +165,16 @@ class AttendanceForm extends Form {
 		$pdf->ChapterItemVal($details);
 		if($this->getData("announcements"))
 			$pdf->ChapterItemKeyVal("Announcements", $this->getData("announcements"), "BU");
-		$pdf->Output();
-	}
+		
+		$journal =& Request::getJournal();
+		$journalId = $journal->getId();
+		$filename = $meeting->getId()."-".date( "FjY-gia", strtotime( $meeting->getDate() ) );
+		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$filename;
+		
+		$pdf->Output($meetingFilesDir,"F");		
+	} 
+	
+	
 }
 
 ?>

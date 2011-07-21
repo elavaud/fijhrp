@@ -177,6 +177,7 @@ switch ($op) {
 	case 'minutes':
 	case 'createMinutes':
 	case 'uploadMinutes':
+	case 'viewMinutes':
 	case 'uploadAnnouncements':
 	case 'submitAnnouncements':
 	case 'uploadAttendance':

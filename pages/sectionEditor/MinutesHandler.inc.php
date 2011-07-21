@@ -155,14 +155,25 @@ class MinutesHandler extends Handler {
 		import('lib.pkp.classes.who.form.AttendanceForm');
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
 		
-		$attendanceForm->readInputData();
-		if($attendanceForm->validate()) {
-			$attendanceForm->execute();
-			$attendanceForm->showPdf();
+		$submitAttendance = Request::getUserVar('submitAttendance') != null ? true : false;
+		
+		if ($submitAttendance) {
+			$attendanceForm->readInputData();
+			if($attendanceForm->validate()){	
+					$attendanceForm->execute();
+					$attendanceForm->savePdf();
+					Request::redirect(null, null, 'uploadMinutes', $meetingId);			
+			}else{
+				if ($attendanceForm->isLocaleResubmit()) {
+					$attendanceForm->readInputData();
+				}
+					$attendanceForm->display($args);
+			}
+		
+		}else {
+			$attendanceForm->display($args);
 		}
-		else {
-			$attendanceForm->display();
-		}	
+		
 	}
 	
 	/**
@@ -235,6 +246,7 @@ class MinutesHandler extends Handler {
 		
 		if($initialReviewForm->validate()) {
 			$initialReviewForm->execute();
+			$initialReviewForm->savePdf();
 			$initialReviewForm->showPdf();
 		}
 		else {
@@ -248,10 +260,26 @@ class MinutesHandler extends Handler {
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 
-		$meeting->updateStatus(MEETING_STATUS_INITIAL_REVIEWS);
+		$meeting->updateMinutesStatus(MEETING_STATUS_INITIAL_REVIEWS);
 		$meetingDao->updateStatus($meeting);
 
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+	}
+	
+	/*Added by MSB, July 20, 2010*/
+	
+	/**
+	 * Download file.
+	 * @param $meetingId int
+	 * @param $fileId int
+	 * @param $fileId int
+	 */
+	
+	function viewMinutes($args) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meetingId);
+		return $minutesFileManager->viewFile();
 	}
 	
 
@@ -269,7 +297,7 @@ class MinutesHandler extends Handler {
 				$isValid = false;			
 			if($isValid)
 				$this->meeting =& $meeting;
-			$statusMap = $meeting->getStatusMap();
+				$statusMap = $meeting->getStatusMap();
 			if($access != null && $statusMap[$access] == 1) {
 				Request::redirect(null, null, 'uploadMinutes', $meetingId);													
 			}		

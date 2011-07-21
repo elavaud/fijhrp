@@ -132,7 +132,7 @@ class MeetingDAO extends DAO {
 		$meeting->setReviewerId($row['reviewer_id']);
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
-		$meeting->setStatus($row['status']);
+		$meeting->setMinutesStatus($row['minutes_status']);
 		//added by aglet
 		$meeting->setIsPresent($row['present']);
 		$meeting->setReasonForAbsence($row['reason_for_absence']);
@@ -180,8 +180,14 @@ class MeetingDAO extends DAO {
 			array($meeting->getId())
 		);				
 	}
-	//FIXME
+	/**
+	 * 
+	 * Update minutes status
+	 * @param Meeting $meeting
+	 */
 	function updateMinutesStatus($meeting) {
+		$meeting->getMinutesStatus();
+		
 		$this->update(
 			'UPDATE meetings SET minutes_status = ? where meeting_id = ?',
 			array($meeting->getMinutesStatus(), $meeting->getId())
