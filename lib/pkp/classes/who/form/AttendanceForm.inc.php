@@ -62,18 +62,15 @@ class AttendanceForm extends Form {
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
-<<<<<<< HEAD
 		
 		$templateMgr->assign_by_ref('attendance', $attendance);
 		$templateMgr->assign_by_ref('reasonOfAbsence', $reasonOfAbsence);
 		$templateMgr->assign_by_ref('guestNames', $guestNames);
 		$templateMgr->assign_by_ref('guestAffiliations', $guestAffiliations);
 
-=======
 		$templateMgr->assign('adjourned', $this->getData('adjourned'));
 		$templateMgr->assign('venue', $this->getData('$venue'));
 		$templateMgr->assign('announcements', $this->getData('announcements'));
->>>>>>> 8cec937d0f0aa9a4b15b10a701788bbd11020269
 		parent::display();
 	}
 
@@ -131,39 +128,10 @@ class AttendanceForm extends Form {
 		
 		$this->quorum = $quorum;
 		$this->reviewerItems = $reviewerItems;
-<<<<<<< HEAD
 		$meeting->updateMinutesStatus(MEETING_STATUS_ATTENDANCE);
 		$meetingDao->updateMinutesStatus($meeting);		 
-=======
 		$meeting->updateMinutesStatus(MINUTES_STATUS_ATTENDANCE);
 		$meetingDao->updateMinutesStatus($meeting);		 
-			
-		//$quorum = 0;
-		//$reviewerItems = array();
-		/*foreach($attendance as $index=>$item) {
-			
-			$meetingReviewer = new Meeting();
-			$meetingReviewer->setId($meeting->getId());
-			$meetingReviewer->setReviewerId($index);			
-			if($item == "absent") {
-				$meetingReviewer->setIsPresent(0);
-				$meetingReviewer->setReasonForAbsence($reasons[$index]);
-			}
-			else {
-				$meetingReviewer->setIsPresent(1);
-				$meetingReviewer->setReasonForAbsence(null);
-				$quorum++;
-			}
-			$reviewerItems[$index] = $meetingReviewer;
-			$meetingReviewerDao->updateAttendanceOfReviewer($meetingReviewer);
-		} */
-		
-		
-		//$this->quorum = $quorum;
-		//$this->reviewerItems = $reviewerItems;
-		//$meeting->updateMeetingStatus(MINUTES_STATUS_ATTENDANCE);
-		//$meetingDao->updateStatus($meeting);		 
->>>>>>> 8cec937d0f0aa9a4b15b10a701788bbd11020269
 	}
 
 	function savePdf() {
