@@ -45,23 +45,23 @@
 </script>{/literal}
 <h2>Announcements and Attendance for Meeting #{$meeting->getId()}</h2>
 <br/>
-<form method="POST" action="{url op="submitAttendance" path=$meeting->getId()}">
+<form method="POST" action="{url op="uploadAttendance" path=$meeting->getId()}">
 	
 <div id="announcements">
 	<h2>Details</h2>
 	<table class="data" width="100%">
 		<tr>
 			<td class="label" width="20%">{fieldLabel name="adjourned" required="true" key="editor.minutes.adjourned"}</td>
-			<td class="value" width="80%"><input type="text" class="textField" name="adjourned" id="adjourned" size="20" /></td>
+			<td class="value" width="80%"><input type="text" class="textField" name="adjourned" id="adjourned" size="20" value="{$adjourned|date_format:"%Y-%m-%d %I:%M %p"}" /></td>
 		</tr>
 		<tr>
 			<td class="label" width="20%">{fieldLabel name="venue" required="true" key="editor.minutes.venue"}</td>
-			<td class="value" width="80%"><input type="text" class="textField" name="venue" id="venue" size="20" /></td>
+			<td class="value" width="80%"><input type="text" class="textField" name="venue" id="venue" size="20" value="{$venue}"/></td>
 		</tr>
 		<tr>
 		 	<td class="label" width="20%">{translate key="editor.minutes.announcements"}</td>
 		 	<td class="value" width="80%">
-		 		<textarea name="announcements" id="announcements" rows="7" class="textArea"></textarea>
+		 		<textarea name="announcements" id="announcements" rows="7" class="textArea">{$announcements}</textarea>
 		 	</td>
 		 </tr>
 	</table>
@@ -133,6 +133,6 @@
 	<div class="separator"></div>
 		<br/><br/>
 		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
-		<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" name="submitAttendance" value="Submit"  class="button defaultButton" />	 
+		<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>	 
 	</div>
  </form>

@@ -186,6 +186,7 @@ switch ($op) {
 	case 'uploadInitialReview':
 	case 'submitInitialReview':
 	case 'completeInitialReview':
+	case 'completeInitialReviews':
 	case 'setMinutesFinal':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
