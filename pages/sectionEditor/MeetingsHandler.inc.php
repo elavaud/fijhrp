@@ -90,12 +90,13 @@ class MeetingsHandler extends Handler {
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
+		$rangeInfo = Handler::getRangeInfo('meetings');
 			
-		$meetings =& $meetingDao->getMeetingsOfUser($userId, $sort, $sortDirection);
-		
+		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection);
+		$meetingsArray = $meetings->toArray();
 		$map = array();
 			
-		foreach($meetings as $meeting) {
+		foreach($meetingsArray as $meeting) {
 			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
 			$submissions = array();
 			foreach($submissionIds as $submissionId) {
@@ -105,14 +106,18 @@ class MeetingsHandler extends Handler {
 			$map[$meeting->getId()] = $submissions;
 		}
 		
+		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection);
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings);
 		$templateMgr->assign_by_ref('submissions', $submissions); 
-		$templateMgr->assign_by_ref('map', $map); 
+		$templateMgr->assign_by_ref('map', $map);
+		$templateMgr->assign('rangeInfo', count($meetings)); 
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
+		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 	}
 
@@ -170,8 +175,7 @@ class MeetingsHandler extends Handler {
 	function setMeetingFinal($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meetingDao->setMeetingFinal($meetingId);
+		$meetingId = MeetingAction::setMeetingFinal($meetingId);
 		Request::redirect(null, null, 'notifyReviewersFinalMeeting', $meetingId);
 	}
 

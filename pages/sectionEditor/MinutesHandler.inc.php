@@ -123,20 +123,34 @@ class MinutesHandler extends Handler {
 	 */
 	function uploadAttendance($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId, MEETING_STATUS_ATTENDANCE);
+		$this->validate($meetingId, MINUTES_STATUS_ATTENDANCE);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 		
 		$journal = Request::getJournal();
 		import('lib.pkp.classes.who.form.AttendanceForm');           
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
-		if ($attendanceForm->isLocaleResubmit()) {
-       		$attendanceForm->readInputData();       		
-		} 
-		else {
-			$attendanceForm->initData();
+		$submitted = Request::getUserVar("submitAttendance") != null ? true : false;
+		
+		if($submitted) {
+			$attendanceForm->readInputData();
+			if($attendanceForm->validate()) {
+				$attendanceForm->execute();
+				$attendanceForm->showPdf();
+			}
+			else {
+				if ($attendanceForm->isLocaleResubmit()) {
+		       		$attendanceForm->readInputData();       		
+				} 
+				else {
+					$attendanceForm->initData();
+				}
+				$attendanceForm->display();
+			}
 		}
-		$attendanceForm->display();						
+		else {
+			$attendanceForm->display();
+		}						
 	}
 	
 	/**
@@ -173,7 +187,6 @@ class MinutesHandler extends Handler {
 		}else {
 			$attendanceForm->display($args);
 		}
-		
 	}
 	
 	/**
@@ -232,6 +245,7 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function submitInitialReview($args, $request) {
+
 		$articleId = Request::getUserVar('articleId');
 		$meetingId = Request::getUserVar('meetingId');
 		$this->validate($meetingId);
@@ -247,7 +261,6 @@ class MinutesHandler extends Handler {
 		if($initialReviewForm->validate()) {
 			$initialReviewForm->execute();
 			$initialReviewForm->savePdf();
-			$initialReviewForm->showPdf();
 		}
 		else {
 			$initialReviewForm->display();
@@ -260,12 +273,25 @@ class MinutesHandler extends Handler {
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 
-		$meeting->updateMinutesStatus(MEETING_STATUS_INITIAL_REVIEWS);
-		$meetingDao->updateStatus($meeting);
-
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$meeting->updateMinutesStatus(MINUTES_STATUS_INITIAL_REVIEWS);
+		$meetingDao->updateMinutesStatus($meeting);
+		
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
 	
+	function setMinutesFinal($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$meeting->setMinutesStatus(MINUTES_STATUS_COMPLETE);
+		$meetingDao->updateMinutesStatus($meeting);
+		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+	}
+		
 	/*Added by MSB, July 20, 2010*/
 	
 	/**

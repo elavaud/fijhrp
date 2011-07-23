@@ -17,25 +17,17 @@ class MeetingDAO extends DAO {
 	 * @param $meeting int
 	 * @return Meeting
 	 */
-	function &getMeetingsOfUser($userId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-		$meetings = array();
+	function &getMeetingsOfUser($userId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$sql = 'SELECT meeting_id, meeting_date, user_id, minutes_status, status FROM meetings as a WHERE user_id = ?';
 		if ($sortBy) {
 			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
 		}
-		$result =& $this->retrieve(
-			$sql, (int) $userId
+		$result =& $this->retrieveRange(
+			$sql, (int) $userId, $rangeInfo
 		);
-
-		while (!$result->EOF) {
-			$meetings[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
-			$result->MoveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $meetings;
+		
+		$returner = new DAOResultFactory($result, $this, '_returnMeetingFromRow');
+		return $returner;
 	}
 	
 	/**
@@ -68,8 +60,7 @@ class MeetingDAO extends DAO {
 	 * 
 	 * @param unknown_type $reviewerId
 	 */
-	function &getMeetingsByReviewerId($reviewerId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-		$meetings = array();
+	function &getMeetingsByReviewerId($reviewerId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$sql = 
 			'SELECT * 
 			FROM meetings a INNER JOIN meeting_reviewers b
@@ -77,17 +68,11 @@ class MeetingDAO extends DAO {
 		if ($sortBy) {
 			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
 		}
-		$result =& $this->retrieve(
-			$sql,(int) $reviewerId );
-		while (!$result->EOF) {
-			$meetings[] =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
-			$result->MoveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $meetings;
+		$result =& $this->retrieveRange(
+			$sql,(int) $reviewerId, $rangeInfo );
+			
+		$returner = new DAOResultFactory($result, $this, '_returnMeetingFromRow');
+		return $returner;
 	}
 	
 	/**
@@ -125,18 +110,14 @@ class MeetingDAO extends DAO {
 		$meeting->setId($row['meeting_id']);
 		$meeting->setDate($row['meeting_date']);
 		$meeting->setUploader($row['user_id']);
-		$meeting->setStatus($row['status']);
-
+		$meeting->setMinutesStatus($row['minutes_status']);
+				
 		//Added additional fields
 		//Edited by ayveemallare 7/6/2011
 		$meeting->setReviewerId($row['reviewer_id']);
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
-		$meeting->setMinutesStatus($row['minutes_status']);
-		//added by aglet
-		$meeting->setIsPresent($row['present']);
-		$meeting->setReasonForAbsence($row['reason_for_absence']);
-
+		$meeting->setStatus($row['status']);
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
 	}
@@ -180,14 +161,8 @@ class MeetingDAO extends DAO {
 			array($meeting->getId())
 		);				
 	}
-	/**
-	 * 
-	 * Update minutes status
-	 * @param Meeting $meeting
-	 */
+	//FIXME
 	function updateMinutesStatus($meeting) {
-		$meeting->getMinutesStatus();
-		
 		$this->update(
 			'UPDATE meetings SET minutes_status = ? where meeting_id = ?',
 			array($meeting->getMinutesStatus(), $meeting->getId())
