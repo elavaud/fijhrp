@@ -4,10 +4,10 @@ define ('MINUTES_STATUS_COMPLETE', 128);
 define ('MINUTES_STATUS_ATTENDANCE', 1);
 define ('MINUTES_STATUS_INITIAL_REVIEWS', 2);
 define ('MINUTES_STATUS_REREVIEWS', 4);
-define ('MEETING_STATUS_CONTINUING_REVIEWS', 8);
-define ('MEETING_STATUS_AMENDMENTS', 16);
-define ('MEETING_STATUS_ADVERSE_EVENTS', 32);
-define ('MEETING_STATUS_INFORMATION_ITEMS', 64);
+define ('MINUTES_STATUS_CONTINUING_REVIEWS', 8);
+define ('MINUTES_STATUS_AMENDMENTS', 16);
+define ('MINUTES_STATUS_ADVERSE_EVENTS', 32);
+define ('MINUTES_STATUS_INFORMATION_ITEMS', 64);
 define ('MEETING_SCHEDULE_FINAL', 1);
 define ('MEETING_SCHEDULE_PROPOSED', 0);
 define ('MEETING_REPLY_ATTENDING', 1);
@@ -142,7 +142,7 @@ class Meeting extends DataObject {
 	 * Added by aglet 6/30/2011
 	 * Get meeting status if complete or incomplete
 	 */
-	function isComplete() {
+	function isMinutesComplete() {
 		if($this->getMinutesStatus() == MINUTES_STATUS_COMPLETE) {
 			return true;
 		}
@@ -150,10 +150,12 @@ class Meeting extends DataObject {
 	}
 	
 	function getMinutesStatusKey() {
-		if($this->isComplete()) {
-			return "COMPLETE";
+		if ($this->isMinutesComplete()) {
+			return Locale::Translate('editor.minutes.complete');			
 		}
-		return "INCOMPLETE";
+		else {
+			return Locale::Translate('editor.minutes.incomplete');
+		}
 	}
 	
 	function getReplyStatus() {

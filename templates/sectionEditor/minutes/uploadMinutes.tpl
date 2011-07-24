@@ -12,10 +12,18 @@
 			<td class="value" width="80%">{$meeting->getDate()|date_format:$dateFormatTrunc}</td>
 		</tr>
 		<tr>
-			<td class="label" width="20%">{translate key="common.status"}</td>
+			<td class="label" width="20%">{translate key="editor.meetingStatus"}</td>
 			<td class="value" width="80%">{$meeting->getStatusKey()}</td>
 		</tr>
-		
+		<tr>
+			<td class="label" width="20%">{translate key="editor.minutesStatus"}</td>
+			<td class="value" width="80%">
+				{$meeting->getMinutesStatusKey()}&nbsp;&nbsp;&nbsp;
+				{if $meeting->isMinutesComplete()}
+					<a href="">Download Minutes</a>
+				{/if}
+			</td>
+		</tr>
 	</table>
 </div>
 <div class="separator"></div>
@@ -78,5 +86,7 @@
 </table>
 </div>
 <br/>
-<input type="button" value="Save Minutes" class="button defaultButton" onclick="document.location.href='{url op="submitMinute" path=$meeting->getId()}'"/>
+{if !$meeting->isMinutesComplete()}
+	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />	
+{/if}
 {include file="common/footer.tpl"}
