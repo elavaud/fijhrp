@@ -20,7 +20,7 @@
 			<td class="value" width="80%">
 				{$meeting->getMinutesStatusKey()}&nbsp;&nbsp;&nbsp;
 				{if $meeting->isMinutesComplete()}
-					<a href="">Download Minutes</a>
+					<a target="_blank" href="{url op="viewMinutes" path=$meeting->getId()}">Download Minutes</a>
 				{/if}
 			</td>
 		</tr>
@@ -61,7 +61,7 @@
 		<td width="10%">(2)</td>
 		{if $statusMap.1 == 0}
 			<td width="40%">			
-				{translate key="editor.minutes.initialReviews"}
+				<a href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right"><a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a></td>

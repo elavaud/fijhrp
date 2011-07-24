@@ -214,10 +214,7 @@ switch ($op) {
 	case 'uploadInitialReview':
 	case 'submitInitialReview':
 	case 'completeInitialReviews':
-<<<<<<< HEAD
-=======
 	case 'setMinutesFinal':
->>>>>>> 8cec937d0f0aa9a4b15b10a701788bbd11020269
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;
