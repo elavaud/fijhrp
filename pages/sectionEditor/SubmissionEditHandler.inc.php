@@ -425,9 +425,11 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$submission =& $this->submission;
 
 		$decision = Request::getUserVar('decision');
-		$resubmitCount = Request::getUserVar('resubmitCount');
+		$articleDao =& DAORegistry::getDAO("ArticleDAO");
+		$previousDecision =& $articleDao->getLastEditorDecision($articleId);
+		$resubmitCount = $previousDecision['resubmitCount'];
 		//pass lastDecisionId of this article to update existing row in edit_decisions
-		$lastDecisionId = Request::getUserVar('lastDecisionId');
+		$lastDecisionId = $previousDecision['editDecisionId'];
 		 
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:

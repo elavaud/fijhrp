@@ -7,15 +7,7 @@
 		$("#adjourned").timepicker({ampm:true});
 		$("#addGuest").click(
 				function() {
-					guestCount++;
-					var row="<tr>"+
-			 		"<td width='5%'>Name</td>"+
-	 				"<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' /></td>"+
-					"<td width='5%'>Affiliation</td>"+
-	 				"<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' /></td>"+
-					"<td width='60%'></td>"+
-	 				"</tr>";
-					$("#guests tr:last").after(row);
+					$("#guests tr:last").after($("#guests tr:last").clone());
 				}
 			);
 		 $(".absent").click( function () {
@@ -43,7 +35,7 @@
  		});
 	});
 </script>{/literal}
-<h2>Announcements and Attendance for Meeting #{$meeting->getId()}</h2>
+<h2>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getId()}</h2>
 <br/>
 <form method="POST" action="{url op="uploadAttendance" path=$meeting->getId()}">
 	
@@ -130,7 +122,13 @@
 		</tr>
 		{/if}
 	{/foreach}
-	<tr></tr>
+	<tr>
+		<td width='5%'>Name</td>
+	 	<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' value="" /></td>
+		<td width='5%'>Affiliation</td>
+	 	<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' value="" /></td>
+		<td width='60%'></td>
+	</tr>
 	</table>
 	<div class="separator"></div>
 		<br/><br/>
