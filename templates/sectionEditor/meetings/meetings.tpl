@@ -25,7 +25,7 @@
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<p></p>
-	{foreach from=$meetings item=meeting}
+	{iterate from=meetings item=meeting}
 	{assign var="key" value=$meeting->getId()}
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
@@ -57,7 +57,7 @@
 			</td>
 		</tr>	
 		<tr><td colspan="6" class="separator"></td></tr>
-	{/foreach}
+	{/iterate}
 	{if empty($meetings)}
 		<tr>
 			<td colspan="6" class="nodata">{translate key="editor.meetings.noMeetings"}</td>

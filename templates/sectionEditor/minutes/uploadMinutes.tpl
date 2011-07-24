@@ -28,8 +28,7 @@
 	<td width="10%">Section No.</td>
 	<td width="40%">{translate key="submissions.sec"}</td>
 	<td width="10%">{translate key="common.status"}</td>
-	<td width="30%" align="right">Action</td>
-	{$statusMap.1}
+	<td width="30%" align="right">Action</td>	
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(1)</td>
@@ -70,7 +69,7 @@
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right">
-				<a href="{url op="selectInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
+				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
 				<a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a>
 			</td>				
 		{/if}

@@ -127,29 +127,27 @@ class MinutesHandler extends Handler {
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 		
-		$journal = Request::getJournal();
-		import('lib.pkp.classes.who.form.AttendanceForm');           
+		$journal =& Request::getJournal();
+		import('lib.pkp.classes.who.form.AttendanceForm');
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
-		$submitted = Request::getUserVar("submitAttendance") != null ? true : false;
 		
-		if($submitted) {
+		$submitAttendance = Request::getUserVar('submitAttendance') != null ? true : false;
+		
+		if ($submitAttendance) {
 			$attendanceForm->readInputData();
-			if($attendanceForm->validate()) {
-				$attendanceForm->execute();
-				$attendanceForm->showPdf();
-			}
-			else {
+			if($attendanceForm->validate()){	
+					$attendanceForm->execute();
+					$attendanceForm->savePdf();
+					Request::redirect(null, null, 'uploadMinutes', $meetingId);			
+			}else{
 				if ($attendanceForm->isLocaleResubmit()) {
-		       		$attendanceForm->readInputData();       		
-				} 
-				else {
-					$attendanceForm->initData();
+					$attendanceForm->readInputData();
 				}
-				$attendanceForm->display();
+					$attendanceForm->display($args);
 			}
-		}
-		else {
-			$attendanceForm->display();
+		
+		}else {
+			$attendanceForm->display($args);
 		}						
 	}
 	
@@ -267,9 +265,9 @@ class MinutesHandler extends Handler {
 		}
 	}
 	
-	function completeInitialReview($args, $request) {
+	function completeInitialReviews($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId);
+		$this->validate($meetingId, MINUTES_STATUS_INITIAL_REVIEWS);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 
@@ -277,7 +275,7 @@ class MinutesHandler extends Handler {
 		$meeting->updateMinutesStatus(MINUTES_STATUS_INITIAL_REVIEWS);
 		$meetingDao->updateMinutesStatus($meeting);
 		
-		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+		//Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
 	
 	function setMinutesFinal($args, $request) {
@@ -327,6 +325,9 @@ class MinutesHandler extends Handler {
 			if($access != null && $statusMap[$access] == 1) {
 				Request::redirect(null, null, 'uploadMinutes', $meetingId);													
 			}		
+		}
+		else {
+			$isValid = false;
 		}
 		
 		if(!$isValid) {

@@ -320,10 +320,7 @@
 	<message key="editor.minutes.uploadAttendance">Upload Attendance</message>
 	<message key="editor.minutes.uploadInitialReviews">Upload Initial Reviews</message>
 	<message key="editor.minutes.completeInitialReviews">Complete Initial Reviews</message>
-	
-
-	<message key="editor.minutes.uploadAttendance"></message>
-	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
+		<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
 	<message key="editor.minutes.uploadAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
 	
 </locale>

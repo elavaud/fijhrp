@@ -54,6 +54,9 @@ class AttendanceForm extends Form {
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
 	
+		$adjourned = $this->getData('adjourned');
+		$venue = $this->getData('venue');
+		$announcements = $this->getData('announcements');
 		$attendance  = $this->getData('reviewer_attendance');
 		$reasonOfAbsence = $this->getData('reviewer_absent');
 		$guestNames = $this->getData("guestName");
@@ -62,7 +65,9 @@ class AttendanceForm extends Form {
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
-		
+		$templateMgr->assign_by_ref('adjourned', $adjourned);
+		$templateMgr->assign_by_ref('venue', $venue);
+		$templateMgr->assign_by_ref('announcements', $announcements);
 		$templateMgr->assign_by_ref('attendance', $attendance);
 		$templateMgr->assign_by_ref('reasonOfAbsence', $reasonOfAbsence);
 		$templateMgr->assign_by_ref('guestNames', $guestNames);
@@ -158,6 +163,7 @@ class AttendanceForm extends Form {
 		if(count($guestNames)>0) {		
 			$pdf->ChapterItemKey('Member Participating in Other Capacity', 'BU');
 			foreach($guestNames as $key=>$guest)
+				if($guest!="" && $guest != null)
 				$pdf->ChapterItemVal("$guest (Affiliation: $guestAffiliations[$key])");
 		}
 			

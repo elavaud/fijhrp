@@ -163,6 +163,7 @@ class MeetingDAO extends DAO {
 	}
 	//FIXME
 	function updateMinutesStatus($meeting) {
+		echo $meeting->getMinuteStatus;
 		$this->update(
 			'UPDATE meetings SET minutes_status = ? where meeting_id = ?',
 			array($meeting->getMinutesStatus(), $meeting->getId())

@@ -213,7 +213,7 @@ switch ($op) {
 	case 'selectInitialReview':
 	case 'uploadInitialReview':
 	case 'submitInitialReview':
-	case 'completeInitialReview':
+	case 'completeInitialReviews':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;
