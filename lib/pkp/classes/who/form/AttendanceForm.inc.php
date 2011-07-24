@@ -65,7 +65,6 @@ class AttendanceForm extends Form {
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
-<<<<<<< HEAD
 		$templateMgr->assign_by_ref('adjourned', $adjourned);
 		$templateMgr->assign_by_ref('venue', $venue);
 		$templateMgr->assign_by_ref('announcements', $announcements);
@@ -73,12 +72,6 @@ class AttendanceForm extends Form {
 		$templateMgr->assign_by_ref('reasonOfAbsence', $reasonOfAbsence);
 		$templateMgr->assign_by_ref('guestNames', $guestNames);
 		$templateMgr->assign_by_ref('guestAffiliations', $guestAffiliations);
-
-=======
-		$templateMgr->assign('adjourned', $this->getData('adjourned'));
-		$templateMgr->assign('venue', $this->getData('$venue'));
-		$templateMgr->assign('announcements', $this->getData('announcements'));
->>>>>>> 8cec937d0f0aa9a4b15b10a701788bbd11020269
 		parent::display();
 	}
 
@@ -136,10 +129,6 @@ class AttendanceForm extends Form {
 		
 		$this->quorum = $quorum;
 		$this->reviewerItems = $reviewerItems;
-<<<<<<< HEAD
-		$meeting->updateMinutesStatus(MEETING_STATUS_ATTENDANCE);
-		$meetingDao->updateMinutesStatus($meeting);		 
-=======
 		$meeting->updateMinutesStatus(MINUTES_STATUS_ATTENDANCE);
 		$meetingDao->updateMinutesStatus($meeting);		 
 			
@@ -168,7 +157,6 @@ class AttendanceForm extends Form {
 		//$this->reviewerItems = $reviewerItems;
 		//$meeting->updateMeetingStatus(MINUTES_STATUS_ATTENDANCE);
 		//$meetingDao->updateStatus($meeting);		 
->>>>>>> 8cec937d0f0aa9a4b15b10a701788bbd11020269
 	}
 
 	function savePdf() {
@@ -207,7 +195,7 @@ class AttendanceForm extends Form {
 		$pdf->Ln(10);
 		$pdf->ChapterItemVal($details);
 		if($this->getData("announcements"))
-			$pdf->ChapterItemKeyVal("Announcements", $this->getData("announcements"), "BU");
+			$pdf->ChapterItemKeyVal("Minutes of Last Meeting and Announcements", $this->getData("announcements"), "BU");
 		
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();

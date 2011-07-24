@@ -42,7 +42,7 @@
 		<td width="10%">(1)</td>
 		{if $statusMap.1 == 1}
 			<td width="40%">			
-				<a href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
+				<a target="_blank" href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
 			</td>
 			<td width="10%">Done</td>
 			<td width="30%" align="right">---</td>
@@ -61,7 +61,7 @@
 		<td width="10%">(2)</td>
 		{if $statusMap.1 == 0}
 			<td width="40%">			
-				<a href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
+				<a target="_blank" href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right"><a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a></td>
@@ -87,6 +87,7 @@
 </div>
 <br/>
 {if !$meeting->isMinutesComplete()}
-	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />	
+	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />		
 {/if}
+<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {include file="common/footer.tpl"}

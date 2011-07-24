@@ -328,5 +328,8 @@
 	<message key="editor.minutes.uploadAttendance.checkReasonOfAbsence"></message>
 	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
 	<message key="editor.minutes.uploadAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
+	<message key="editor.minutes.minutesOfLastMeeting">Minutes of Last Meeting</message>
+	<message key="editor.minutes.selectProposal">Select proposal</message>
+	<message key="editor.minutes.selectProposalRequired">Please select a proposal to review.</message>
 	
 </locale>
