@@ -122,7 +122,6 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function uploadAttendance($args, $request) {
-		echo "UA";
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId, MINUTES_STATUS_ATTENDANCE);
 		$this->setupTemplate(true, $meetingId);

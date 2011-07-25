@@ -10,9 +10,9 @@
 				var elemVal = $(this).attr('id').substring(19);
 				var present = $(this).attr('checked');
 				if(present){
+					alert(elemVal);
 					$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('disabled',true);
 					$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('checked',false);
-					$("#reviewer-absent-"+elemVal).attr('checked', false);
 				}
 			}
 		);
@@ -34,27 +34,23 @@
 		$(".absent").click( function () {
 				var elemVal = $(this).attr('id').substring(18);
 				$("#div_reason_of_absence_"+elemVal).show();
-				$("#reviewer-absent-"+elemVal).attr('checked', true);
 				$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('disabled',false);
 			}
 		);
 
 		$(".present").click( function () {
 				var elemVal = $(this).attr('id').substring(19);	
-				$("#reviewer-absent-"+elemVal).attr('checked', false);
 				$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('disabled',true);
 				$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('checked',false);
 		}
  		);
  		$(".div_reason_of_absence").click( function (){
-			var elemVal = $(this).attr('id').substring(22);
-			var present = $("#reviewer-isabsent-"+elemVal).attr('checked');
-			alert(elemval);
-			if(!present){
+ 			var elemVal = $(this).attr('id').substring(22);
+			var present = $("#reviewer-ispresent-"+elemVal).attr('checked');
+			if(present){
 				alert("Mark the reviewer absent first.");
  	 	 	}else{
- 	 	 	 	alert("present");
-	 	 	 	$("#reviewer-absent-"+elemVal).attr('checked');
+ 	 	 		$("#reviewer-isabsent-"+elemVal).attr('checked',true);
  	 	 	}
  	 	 	
  		});
@@ -97,23 +93,18 @@
 		 		<td width="50%" class="div_reason_of_absence" id="div_title_reason_of_absence">{translate key="editor.minutes.reasonOfAbsence"}</td>
 		 	</tr>
 		 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
-		 	{assign var="ind" value="attendance"}
-		 	{assign var="iny" value="reason"}
+		 	{assign var="isPresent" value="attendance"}
+		 	{assign var="reason" value="reason"}
 		 	{foreach from=$reviewers  item=user}
 		 	{assign var="userId" value=$user->getId()}
 		 	<tr>	
 					<td width="5%">	
 								<input type="radio"  class="absent" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-isabsent-{$userId}" 
-									{if $attendance[$userId][$ind]} == "absent" } checked="checked" {/if} value="absent"  />
-								<input type="radio" class="absent" style="display:none" name="reviewer_absent[{$userId}][attendance]" id="reviewer-absent-{$userId}" 
-									{if $attendance[$userId][$ind]} == "absent" } checked="checked" {/if} value="absent" />
-								
+									{if $attendance[$userId][$isPresent]} == "absent" } checked="checked" {/if} value="absent"  />
 					</td>
 		 			<td width="5%">
-								<input type="hidden" class="present" name="reviewer_attendance[{$userId}][userId]" id="reviewer-attendance-{$userId}-userId"
-			 						 value="{$user->getId()}" />
 								<input type="radio" class="present" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-ispresent-{$userId}" 
-									{if $attendance[$userId][$ind] == "present" } checked="checked" {/if} value="present" />
+									{if $attendance[$userId][$isPresent] == "present" } checked="checked" {/if} value="present" />
 		 			</td>
 					<td width="20%">
 					 		<label for="attendance[{$userId}]">{$user->getSalutation} {$user->getFirstName()} {$user->getLastName()}</label></td>
@@ -122,10 +113,10 @@
 					 		{if $user->getLocalizedHealthAffiliation() == "Yes"} {translate key="editor.reviewer.healthAffiliated"} {else} {translate key="editor.reviewer.nonHealth"} {/if}					 		
 					</td>
 					<td width="50%" id="div_reason_of_absence_{$userId}" class="div_reason_of_absence">
-					 			<input type="radio" name="reviewer_absent[{$userId}][reason]" id="absent-{$userId}-duty-travel" value="Duty Travel" {if  $reasonOfAbsence[$userId][$iny] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$user->getId()}">Duty Travel</label>
-						 		<input type="radio" name="reviewer_absent[{$userId}][reason]" id="absent-{$userId}-on-leave" value="On Leave" {if  $reasonOfAbsence[$userId][$iny] == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$user->getId()}">On Leave</label>
-						 		<input type="radio" name="reviewer_absent[{$userId}][reason]" id="absent-{$userId}-other-commitment" value="Other Commitment" {if  $reasonOfAbsence[$userId][$iny] == "Other Commitment" } checked="checked"{/if}/><label for="others_{$user->getId()}">Other Commitment</label>
-						 		<input type="radio" name="reviewer_absent[{$userId}][reason]" id="absent-{$userId}-unexcused" value="Unexcused" {if  $reasonOfAbsence[$userId][$iny] == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$user->getId()}">Unexcused</label>
+					 			<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-duty-travel" value="Duty Travel" {if  $attendance[$userId][$reason] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$user->getId()}">Duty Travel</label>
+						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-on-leave" value="On Leave" {if $attendance[$userId][$reason] == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$user->getId()}">On Leave</label>
+						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-other-commitment" value="Other Commitment" {if  $attendance[$userId][$reason] == "Other Commitment" } checked="checked"{/if}/><label for="others_{$user->getId()}">Other Commitment</label>
+						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-unexcused" value="Unexcused" {if  $attendance[$userId][$reason] == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$user->getId()}">Unexcused</label>
 					</td>
 					<input type="hidden" name="areviewer_attendance[{$userId}][userId]" value="{$userId}">
 			</tr>

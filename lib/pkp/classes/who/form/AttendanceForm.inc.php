@@ -33,8 +33,8 @@ class AttendanceForm extends Form {
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
-		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
-		$this->addCheck(new FormValidatorCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence',
+		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance')));
+		$this->addCheck(new FormValidatorCustom($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence',
 				 create_function('$reviewer_absent,$form', 'foreach($reviewer_absent as $key=>$reviewer){
 					if(($reviewer["attendance"]=="absent") && ($reviewer["reason"]==null))
 					{return false;}	
@@ -59,7 +59,6 @@ class AttendanceForm extends Form {
 		$reviewers =& $this->reviewers;
 	
 		$attendance  = $this->getData('reviewer_attendance');
-		$reasonOfAbsence = $this->getData('reviewer_absent');
 		$guestNames = $this->getData("guestName");
 		$guestAffiliations = $this->getData("guestAffiliation");
 		
@@ -68,7 +67,6 @@ class AttendanceForm extends Form {
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
 		
 		$templateMgr->assign_by_ref('attendance', $attendance);
-		$templateMgr->assign_by_ref('reasonOfAbsence', $reasonOfAbsence);
 		$templateMgr->assign_by_ref('guestNames', $guestNames);
 		$templateMgr->assign_by_ref('guestAffiliations', $guestAffiliations);
 
@@ -87,7 +85,6 @@ class AttendanceForm extends Form {
 				  "venue", 
 				  "announcements", 
 				  "reviewer_attendance",
-				  "reviewer_absent",
 				  "guestName",
 				  "guestAffiliation"
 		));
@@ -106,7 +103,6 @@ class AttendanceForm extends Form {
 		$reviewerItems = array();
 		
 		$reviewer  = $this->getData('reviewer_attendance');
-		$reasonOfAbsence = $this->getData('reviewer_absent');
 		foreach($reviewer as $index=>$item) {
 		
 			$reviewerId = $index;
@@ -118,7 +114,8 @@ class AttendanceForm extends Form {
 				
 				if($reviewer[$reviewerId]['attendance'] =="absent"){
 					$meetingReviewer->setIsPresent(0);
-					$meetingReviewer->setReasonForAbsence($reasonOfAbsence[reviewerId]["reason"]);
+					echo $reviewer[$reviewerId]['reason'];
+					$meetingReviewer->setReasonForAbsence($reviewer[reviewerId]["reason"]);
 				}else {
 					
 					$meetingReviewer->setIsPresent(1);
