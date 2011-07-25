@@ -375,4 +375,6 @@
 	<message key="editor.minutes.chairReview">Remarks if to be reviewed by Chair and Secretariat</message>
 	<message key="editor.minutes.chairReviewRequired">Please enter remarks if to be reviewed by Chair and Secretariat</message>
 	<message key="editor.minutes.wproRole">WPRO Role in Research</message>
+	<message key="editor.minutes.wproRoleRequired">Please indicate WPRO Role in Research</message>
+	<message key="editor.minutes.summaryRequired">Please enter protocol summary</message>
 </locale>

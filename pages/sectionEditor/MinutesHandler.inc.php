@@ -216,7 +216,7 @@ class MinutesHandler extends Handler {
 			if($initialReviewForm->validate()) {
 				$initialReviewForm->execute();
 				$initialReviewForm->savePdf();
-				Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				//Request::redirect(null, null, 'uploadMinutes', $meetingId);
 			}
 			else {
 				if ($initialReviewForm->isLocaleResubmit()) {

@@ -22,8 +22,11 @@ class InitialReviewForm extends Form {
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$this->meeting =& $meetingDao->getMeetingById($meetingId);
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-		$this->submission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($articleId);
-
+		$submission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($articleId);
+		$this->submission = $submission;
+		if($submission->getSummaryFile()==null)
+		$this->addCheck(new FormValidator($this, 'summary', 'required', 'editor.minutes.summaryRequired'));
+		$this->addCheck(new FormValidator($this, 'wproRole', 'required', 'editor.minutes.wproRoleRequired'));
 		$this->addCheck(new FormValidator($this, 'generalDiscussion', 'required', 'editor.minutes.generalDiscussionRequired'));
 		$this->addCheck(new FormValidator($this, 'decision', 'required', 'editor.minutes.decisionRequired'));
 		$this->addCheck(new FormValidator($this, 'unanimous', 'required', 'editor.minutes.unanimousRequired'));
@@ -37,18 +40,6 @@ class InitialReviewForm extends Form {
 		 create_function('$unanimous, $minorityReason', 'if(isset($unanimous) || (!isset($unanimous) && ( $minorityReason=="" || $minorityReason == null))) return true; else return false;'), array('unanimous','minorityReason')));
 		 $this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
 		 create_function('$unanimous, $chairReview', 'if(isset($unanimous) || (!isset($unanimous) && ( $chairReview=="" || $chairReview == null))) return true; else return false;'), array('unanimous','chairReview')));
-
-		 /*
-		 $this->addCheck(new FormValidatorAlphaNum($this, 'stipulations', 'required', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidatorAlphaNum($this, 'recommendations', 'required', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidator($this, 'decision', 'required', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidator($this, 'unanimous', 'optional', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidator($this, 'startDate', 'optional', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidator($this, 'useRtoDate', 'optional', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidatorAlphaNum($this, 'votesApproved', 'optional', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidatorAlphaNum($this, 'votesNotApproved', 'optional', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidatorAlphaNum($this, 'votesAbstain', 'optional', 'user.profile.form.usernameRequired'));
-		 $this->addCheck(new FormValidatorAlphaNum($this, 'minorityReasons', 'optional', 'user.profile.form.usernameRequired'));
 		 */
 	}
 
@@ -69,6 +60,13 @@ class InitialReviewForm extends Form {
 		$templateMgr->assign("unanimous", $this->getData('unanimous'));
 		$templateMgr->assign("votes", $this->getData('votes'));
 		$templateMgr->assign("minorityReason", $this->getData('minorityReason'));
+		$templateMgr->assign('decision', $this->getData('decision'));
+		$templateMgr->assign('wproRole', $this->getData('wproRole'));
+		$templateMgr->assign('summary', $this->getData('summary'));
+		$templateMgr->assign('generalDiscussion', $this->getData('generalDiscussion'));
+		$templateMgr->assign('stipulations', $this->getData('stipulations'));
+		$templateMgr->assign('recommendations', $this->getData('recommendations'));
+		$templateMgr->assign('chairReview', $this->getData('chairReview'));
 		parent::display();
 	}
 
@@ -86,7 +84,10 @@ class InitialReviewForm extends Form {
 			'votes',
 			'unanimous',
 			'minorityReason',
-			'wproRole'
+			'wproRole',
+			'stipulations',
+			'recommendations',
+			'chairReview'
 			));
 	}
 
@@ -97,7 +98,7 @@ class InitialReviewForm extends Form {
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($submission->getId());
 
-		$dateDecided = ($decision == SUBMISSION_EDITOR_DECISION_ACCEPT && $useRtoDate == "1") ? $submission->getLocalizedStartDate() : $meeting->getDate() ;
+		$dateDecided = $meeting->getDate() ;
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
@@ -111,12 +112,16 @@ class InitialReviewForm extends Form {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 
-		$summary=null;
-		foreach ($submission->getSuppFiles() as $suppFile) {
-			if ($suppFile->getType() == 'Summary')
-			$summary = $suppFile->getSuppFileTitle();
-		}
-		$summary = $summary == null ? $this->getData('summary') : null;
+		$summary = $submission->getSummaryFile()!=null ? $submission->getSummaryFile() : $this->getData('summary');
+		$specificDiscussionText = $this->getData('discussionText');
+		$discussionType = $this->getData('discussionType');
+		$typeOther = $this->getData('typeOther');
+		$isUnanimous = $this->getData('unanimous')=="Yes" ? true: false;
+		$decision = $this->getData("decision");
+		$votes= $this->getData("votes");
+		$minorityReason = $this->getData("minorityReason");
+		$chairReview = $this->getData('chairReview');
+			
 		$pdf = new PDF();
 		$pdf->AddPage();
 		$pdf->ChapterTitle('INITIAL REVIEW of ' . $submission->getLocalizedTitle());
@@ -126,38 +131,29 @@ class InitialReviewForm extends Form {
 		$pdf->ChapterItemKeyVal('Unique project identification # assigned', $submission->getLocalizedWhoId() , "BU");
 		$pdf->ChapterItemKeyVal('Responsible WPRO Staff Member', $submission->getUser()->getFullName(), "BU");
 
-		if($summary!=null) {
-			$pdf->ChapterItemKey('Protocol Summary', "BU");
-			$pdf->ChapterItemVal($summary);
-		}
-
+		$pdf->ChapterItemKey('Protocol Summary', "BU");
+		$pdf->ChapterItemVal($summary);
 		$pdf->ChapterItemKey("(a) Discussion", "BU");
 		$pdf->ChapterItemKey('General', "B");
 		$pdf->ChapterItemVal($this->getData('generalDiscussion'));
 
-		$specificDiscussionText = $this->getData('discussionText');
 		if($specificDiscussionText!=null) {
 			$pdf->ChapterItemKey('Specific', "B");
-			$pdf->ChapterItemVal($this->getData('generalDiscussion'));
-			$discussionType = $this->getData('discussionType');
-			$typeOther = $this->getData('typeOther');
 			$count = 0;
 			foreach($specificDiscussionText as $idx=>$discussionText) {
 				$count++;
-				$printType = $discussionType[$idx] == "0" ?$discussionType[$idx] : $typeOther[$idx];
-				$pdf->ChapterItemKey("($count) ".$printType, "B");
-				$pdf->ChapterItemVal($discussionText);				
+				$printType = $discussionType[$idx] == MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS ? $typeOther[$idx] : $meeting->getSpecificDiscussionsText($discussionType[$idx]);
+				$pdf->ChapterItemKey("($count) $printType", "B");
+				$pdf->ChapterItemVal($discussionText);
 			}
 		}
 
-		$pdf->ChapterItemKey('(b) Stipulations / Recommendations', "BU");
+		$pdf->ChapterItemKey('(b) Stipulations / Conditions', "BU");
 		$pdf->ChapterItemVal($this->getData('stipulations'));
-		$pdf->ChapterItemKey('(c) Recommendations');
+		$pdf->ChapterItemKey('(c) Recommendations', "BU");
 		$pdf->ChapterItemVal($this->getData('recommendations'));
 
-		$isUnanimous = $this->getData('unanimous')=="Yes" ? true: false;
-		$decision = $this->getData("decision");
-		$decision = $submission->getMostRecentDecision();
+		//$decision = $submission->getMostRecentDecision();
 		if($isUnanimous) {
 			switch($decision) {
 				case SUBMISSION_EDITOR_DECISION_ACCEPT:
@@ -183,15 +179,11 @@ class InitialReviewForm extends Form {
 					$decisionStr = "The proposal was not accepted in principal unanimously by the majority of WPRO-ERC members present in the meeting due to concerns stated above.";
 					break;
 			}
-			$approveCount = $this->getData("approveCount");
-			$notApproveCount = $this->getData("notApproveCount");
-			$abstainCount = $this->getData("abstainCount");
-			$minorityReason = $this->getData("minorityReason");
-			$votesStr = "The distribution of votes are as follows. $approveCount member(s) voted for, $notApproveCount member(s) voted against, $abstsainCount member(s) abstained.";
-			$reasonsStr = "Reasons for Minority Opinions are as follows. $minorityReason";
-			$chairReview = $this->getData('chairReview');
+
+			$votesStr = "The distribution of votes are as follows. ". $votes[0]." member(s) voted for, ".$votes[1]." member(s) voted against, ".$votes[2]." member(s) abstained.";
+			$reasonsStr = "Reasons for minority opinions are as follows. $minorityReason";			
 		}
-		$pdf->ChapterItemKey('IRB Decision and Votes', "BU");
+		$pdf->ChapterItemKey('(d) IRB Decision and Votes', "BU");
 		$pdf->ChapterItemVal($decisionStr);
 		if(!$isUnanimous) {
 			$pdf->ChapterItemVal($votesStr);
@@ -203,8 +195,8 @@ class InitialReviewForm extends Form {
 		$journalId = $journal->getId();
 		$filename = $meeting->getId()."-".date( "FjY-gia", strtotime( $meeting->getDate() ) );
 		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$filename;
-		
-		$pdf->Output($meetingFilesDir,"F");
+
+		$pdf->Output($meetingFilesDir,"F");		
 	}
 
 

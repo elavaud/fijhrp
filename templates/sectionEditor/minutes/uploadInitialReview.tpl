@@ -2,27 +2,7 @@
 {literal}
 <script type="text/javascript">
 <!--
-	var meetingDate = "";
-	var rtoDate = "{/literal}{$submission->getLocalizedStartDate()|date_format:$dateFormatShort}{literal}";
-	
-	$(document).ready(function() {
-			meetingDate = $("#startDate").val();
-			$("#startDateRow").hide();
-			$("#decision").change(function (){
-				$("#decision option:selected").each( function () {
-					var selectVal = $(this).val();
-					if(selectVal == '1') {
-						$("#startDateRow").show();					
-					}
-					else {
-						$("#startDateRow").hide();
-					}
-				});		
-			});
-			$("#useRtoDate").click(function(){				
-				$('#useRtoDate').is(':checked') ? $("#startDate").val(rtoDate) : $("#startDate").val(meetingDate);
-				$('#useRtoDate').is(':checked') ? $("#useRtoDate").val("1") : $("#useRtoDate").val("0");
-			});
+	$(document).ready(function() {			
 			$("#addDiscussion").click(
 					function() {
 						$("#discussions tr:last").after($("#discussions tr:last").clone());
@@ -60,23 +40,19 @@
 			</td>
 		</tr>
 		<tr>
-			<td width="20%">{translate key="editor.minutes.summary"}<br/><br/></td>
+			<td width="20%">{fieldLabel name="summary" required="true" key="editor.minutes.summary"}<br/><br/></td>
 			<td class="value">
-				{assign var="hasSummary" value="false"}
-				{foreach from=$submission->getSuppFiles() item=suppFile}
-					{if $suppFile->getType() == 'Summary'}
-							Supplementary File: {$suppFile->getSuppFileTitle()}
-							{assign var="hasSummary" value="true"}
-					{/if}														
-				{/foreach}
-				{if $hasSummary == "false"}
+				{assign var="summaryFile" value=$submission->getSummaryFile()}
+				{if $summaryFile!=null}
+					Summary in Supplementary File: {$summaryFile}
+				{else}
 					<textarea name="summary" id="summary" class="textArea" rows="10" cols="43" >{$summary}</textarea>
 				{/if}
 			<br/><br/>
 			</td>
 		</tr>
 		<tr>
-			<td width="20%">{translate key="editor.minutes.wproRole"}<br/><br/></td>
+			<td width="20%">{fieldLabel name="wproRole" required="true" key="editor.minutes.wproRole"}<br/><br/></td>
 			<td class="value">
 				<textarea name="wproRole" class="textArea" rows="10" cols="43" >{$wproRole}</textarea>
 			</td>
@@ -124,12 +100,12 @@
 	<table class="data" width="100%" id="stipulationsRecommendations">		
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.stipulations"}</td>
-			<td><textarea name="stipulations" class="textArea" rows="10" cols="60"></textarea></td>
+			<td><textarea name="stipulations" class="textArea" rows="10" cols="60">{$stipulations}</textarea></td>
 		</tr>
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.recommendations"}</td>
-			<td><textarea name="recommendations" class="textArea" rows="10" cols="60"></textarea></td>
+			<td><textarea name="recommendations" class="textArea" rows="10" cols="60">{$recommendations}</textarea></td>
 		</tr>
 	</table>
 	<br/>
@@ -143,48 +119,40 @@
 			<td class="label" width="20%" align="right">{fieldLabel name="decision" required="true" key="editor.article.selectDecision"}</td>
 			<td width="80%" class="value">
 					<select name="decision" id="decision" size="1" class="selectMenu">
-						{html_options_translate options=$submission->getEditorDecisionOptions()}
+						{html_options_translate options=$submission->getEditorDecisionOptions() selected=$decision}
 					</select>																						
 			</td>			
 		</tr>
 		<tr>
-			<td class="label" width="20%" align="right">{fieldLabel name="unanimous" key="editor.minutes.unanimous"}</td>
+			<td class="label" width="20%" align="right">{fieldLabel name="unanimous" required="true" key="editor.minutes.unanimous"}</td>
 			<td width="80%" class="value">
-				<input type="radio" name="unanimous" id="unanimousYes" value="Yes" /><label for="unanimousYes">Yes</label>
-				<input type="radio" name="unanimous" id="unanimousNo" value="No" /><label for="unanimousNo">No</label>
+				<input type="radio" name="unanimous" id="unanimousYes" value="Yes" {if $unanimous=="Yes"}checked="checked"{/if}/><label for="unanimousYes">Yes</label>
+				<input type="radio" name="unanimous" id="unanimousNo" value="No" {if $unanimous=="No"}checked="checked"{/if}/><label for="unanimousNo">No</label>
 			</td>
-		</tr>
-		<tr id="startDateRow">
-			<td class="label" align="right">Start Date (if approved)<br/><br/></td>
-			<td width="80%" class="value">
-				<input type="text" name="startDate" id="startDate" size="17" class="textField" value="{$meeting->getDate()|date_format:$dateFormatShort}">
-				<input type="checkbox" name="useRtoDate" id="useRtoDate"/><label for="useRtoDate">Use start date proposed by RTO</label>
-				<br/><br/>
-			</td>
-		</tr>
+		</tr>		
 		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
 		<tr class="heading">
 			<td colspan="6">{fieldLabel name="votes" key="editor.minutes.votes"}</td>				
 		</tr>
 		<tr>
 			<td class="label" align="right">{fieldLabel name="votes[0]" key="editor.minutes.approveCount"}</td>
-			<td class="value"><input type="text" name="votes[0]" size="17" class="textField"/></td>			
+			<td class="value"><input type="text" name="votes[0]" size="17" class="textField"/>{$votes[0]}</td>
 		</tr>
 		<tr>
 			<td class="label" align="right">{fieldLabel name="votes[1]" key="editor.minutes.notApproveCount"}</td>
-			<td class="value"><input type="text" name="votes[1]" size="17" class="textField"/></td>			
+			<td class="value"><input type="text" name="votes[1]" size="17" class="textField"/>{$votes[1]}</td>
 		</tr>
 		<tr>
 			<td class="label" align="right">{fieldLabel name="votes[2]" key="editor.minutes.abstainCount"}</td>
-			<td class="value"><input type="text" name="votes[2]" size="17" class="textField"/></td>			
+			<td class="value"><input type="text" name="votes[2]" size="17" class="textField"/>{$votes[2]}</td>
 		</tr>
 		<tr>
 			<td width="20%" class="label">{fieldLabel name="minorityReason" key="editor.minutes.minorityReasons"}</td>
-			<td class="value"><textarea name="minorityReason" class="textArea" rows="10" cols="40"></textarea></td>
+			<td class="value"><textarea name="minorityReason" class="textArea" rows="10" cols="40">{$minorityReason}</textarea></td>
 		</tr>
 		<tr>
 			<td width="20%" class="label">{fieldLabel name="chairReview" key="editor.minutes.chairReview"}</td>
-			<td class="value"><textarea name="chairReview" class="textArea" rows="10" cols="40"></textarea></td>
+			<td class="value"><textarea name="chairReview" class="textArea" rows="10" cols="40" >{$chairReview}</textarea></td>
 		</tr>
 	</table>	
   	<br/>

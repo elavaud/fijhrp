@@ -204,21 +204,47 @@ class Meeting extends DataObject {
 	 */
 	function &getSpecificDiscussionOptions() {
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
-		$headings = $meetingDao->getSpecificDiscussionHeadings(); 
 		static $specificOptions = array(
-			'MINUTES_INITIAL_REVIEW_POPULATION_SELECTION' => 'editor.minutes.initialReview.populationSelect',
-			'MINUTES_INITIAL_REVIEW_SCIENTIFIC_DESIGN' => 'editor.minutes.initialReview.scientificDesign',
-			'MINUTES_INITIAL_REVIEW_MINIMIZATIONS' => 'editor.minutes.initialReview.minimizations',
-			'MINUTES_INITIAL_REVIEW_SAFEGUARDS' => 'editor.minutes.initialReview.safeguards',
-			'MINUTES_INITIAL_REVIEW_CONFIDENTIALITY' => 'editor.minutes.initialReview.confidentiality',
-			'MINUTES_INITIAL_REVIEW_RISKS' => 'editor.minutes.initialReview.risks',
-			'MINUTES_INITIAL_REVIEW_BENEFITS' => 'editor.minutes.initialReview.benefits',
-			'MINUTES_INITIAL_REVIEW_CONSENT_DOCUMENT' => 'editor.minutes.initialReview.consentDocument',
-			'MINUTES_INITIAL_REVIEW_OTHER_CONSIDERATIONS' => 'editor.minutes.initialReview.otherConsiderations',
-			'MINUTES_INITIAL_REVIEW_LOCAL_IRB' => 'editor.minutes.initialReview.localIrbApproval',
-			'MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS' => 'editor.minutes.initialReview.other'
+			MINUTES_INITIAL_REVIEW_POPULATION_SELECTION => 'editor.minutes.initialReview.populationSelect',
+			MINUTES_INITIAL_REVIEW_SCIENTIFIC_DESIGN => 'editor.minutes.initialReview.scientificDesign',
+			MINUTES_INITIAL_REVIEW_MINIMIZATIONS => 'editor.minutes.initialReview.minimizations',
+			MINUTES_INITIAL_REVIEW_SAFEGUARDS => 'editor.minutes.initialReview.safeguards',
+			MINUTES_INITIAL_REVIEW_CONFIDENTIALITY => 'editor.minutes.initialReview.confidentiality',
+			MINUTES_INITIAL_REVIEW_RISKS => 'editor.minutes.initialReview.risks',
+			MINUTES_INITIAL_REVIEW_BENEFITS => 'editor.minutes.initialReview.benefits',
+			MINUTES_INITIAL_REVIEW_CONSENT_DOCUMENT => 'editor.minutes.initialReview.consentDocument',
+			MINUTES_INITIAL_REVIEW_OTHER_CONSIDERATIONS => 'editor.minutes.initialReview.otherConsiderations',
+			MINUTES_INITIAL_REVIEW_LOCAL_IRB => 'editor.minutes.initialReview.localIrbApproval',
+			MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS => 'editor.minutes.initialReview.other'
 		);
 		return $specificOptions;
+	}
+	
+	function getSpecificDiscussionsText($option) {
+		switch ($option) {
+			case MINUTES_INITIAL_REVIEW_POPULATION_SELECTION:
+				return Locale::Translate('editor.minutes.initialReview.populationSelect');
+			case MINUTES_INITIAL_REVIEW_SCIENTIFIC_DESIGN:
+				return Locale::Translate('editor.minutes.initialReview.scientificDesign');
+			case MINUTES_INITIAL_REVIEW_MINIMIZATIONS:
+				return Locale::Translate('editor.minutes.initialReview.minimizations');
+			case MINUTES_INITIAL_REVIEW_SAFEGUARDS:
+				return Locale::Translate('editor.minutes.initialReview.safeguards');
+			case MINUTES_INITIAL_REVIEW_CONFIDENTIALITY:
+				return Locale::Translate('editor.minutes.initialReview.confidentiality');
+			case MINUTES_INITIAL_REVIEW_RISKS:
+				return Locale::Translate('editor.minutes.initialReview.risks');
+			case MINUTES_INITIAL_REVIEW_BENEFITS:
+				return Locale::Translate('editor.minutes.initialReview.benefits');
+			case MINUTES_INITIAL_REVIEW_CONSENT_DOCUMENT:
+				return Locale::Translate('editor.minutes.initialReview.consentDocument');
+			case MINUTES_INITIAL_REVIEW_OTHER_CONSIDERATIONS:
+				return Locale::Translate('editor.minutes.initialReview.otherConsiderations');
+			case MINUTES_INITIAL_REVIEW_LOCAL_IRB:
+				return Locale::Translate('editor.minutes.initialReview.localIrbApproval');				
+			default:
+				return Locale::Translate('editor.minutes.specificDiscussion');				
+		}
 	}
 
 }
