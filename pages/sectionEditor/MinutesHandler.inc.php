@@ -216,7 +216,7 @@ class MinutesHandler extends Handler {
 			if($initialReviewForm->validate()) {
 				$initialReviewForm->execute();
 				$initialReviewForm->savePdf();
-				//Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				Request::redirect(null, null, 'uploadMinutes', $meetingId);
 			}
 			else {
 				if ($initialReviewForm->isLocaleResubmit()) {
@@ -275,6 +275,19 @@ class MinutesHandler extends Handler {
 		import('classes.file.MinutesFileManager');
 		$minutesFileManager = new MinutesFileManager($meetingId);
 		return $minutesFileManager->viewFile();
+	}
+	
+	/**
+	 * Download file.
+	 * @param $meetingId int
+	 * @param $fileId int
+	 * @param $fileId int
+	 */
+	function downloadAttendance($args) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meetingId);
+		return $minutesFileManager->downloadFile(false, "attendance");
 	}
 
 

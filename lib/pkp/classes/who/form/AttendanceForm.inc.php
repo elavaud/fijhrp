@@ -199,10 +199,14 @@ class AttendanceForm extends Form {
 		
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		$filename = $meeting->getId()."-".date( "FjY-gia", strtotime( $meeting->getDate() ) );
-		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$filename;
+		$filename = $meeting->getId()."-".date( "FjY-gia", strtotime( $meeting->getDate() ) )."-attendance";
+		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/".$filename;
 		
-		$pdf->Output($meetingFilesDir,"F");		
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meeting->getId());
+		if($minutesFileManager->createDirectory()) {
+			$pdf->Output($meetingFilesDir,"F");
+		}		
 	} 
 	
 	
