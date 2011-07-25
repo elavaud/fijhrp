@@ -849,6 +849,18 @@ class SectionEditorSubmission extends Article {
 		}
 		return null;
 	}
+	
+	function getSummaryFile() {
+		$summaryFile = null;
+		$suppFiles = $this->getSuppFiles();
+		foreach($suppFiles as $file) {
+			if($file->getType()=="Summary") {
+				$summaryFile = $file->getSuppFileTitle();
+				break;
+			}
+		}
+		return $summaryFile;
+	}
 }
 
 ?>

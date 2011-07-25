@@ -1,31 +1,41 @@
- {include file="sectionEditor/minutes/menu.tpl"}
-<div id="selectInitialReview">
-<h4>Select Proposal for Initial Review</h4>
+{include file="sectionEditor/minutes/menu.tpl"}
+
+<h4>Proposals for Initial Review</h4>
 <br/>
-{if $submissions == null }
+{if count($submissions) == 0 }
 	No proposals are assigned for initial ERC Review.
 {else}
 	
-	<table class="data">
-		{foreach from=$submissions item=submission}
-		<tr>
-			<td class="label">
-					<a href="{url op="uploadInitialReview" path=$meetingId|to_array:$submission->getArticleId()}" >
-						{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}
-					</a>
-			</td>
-		</tr>
-		<tr><td class="separator">&nbsp;</td></tr>
-		{/foreach}
-		<tr>
-			<td colspan="6">
-				<br/>				
-			</td>
-		</tr>
-	</table>
+	<div id="proposals">
+	
+	</div>
+	<div id="selectInitialReview">
+		<table class="data">
+			<form method="POST" action="{url op="selectInitialReview" path=$meeting->getId()}">			
+			<tr>
+				<td class="label">
+					{fieldLabel name="articleId" required="true" key="editor.minutes.selectProposal"}													
+				</td>		
+				<td class="value">
+					<select name="articleId" id="articleId" class="selectMenu">
+						<option value="none">Choose One</option>
+						{foreach from=$submissions item=submission}
+							<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
+						{/foreach}
+					</select>
+					&nbsp;&nbsp;&nbsp;<input type="submit" class="button" name="selectProposal" value="Select Proposal"/></td>	
+			</tr>
+			</form>	
+			<tr>
+				<td colspan="6">
+					<br/>				
+				</td>
+			</tr>
+		</table>
+	</div>
 {/if}	
 	<form method="POST" action="{url op="completeInitialReview"}">
 		<input type="hidden" name="meetingId" value="{$meetingId}"/>
-		<br/><input type="submit" class="button" id="complete" name="complete" value="Complete Initial Reviews"/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="uploadMinutes" path=$meetingId}">Back to sections of minutes</a>
+		<br/><input type="submit" class="button defaultButton" id="complete" name="complete" value="Complete Initial Reviews"/>
+		<input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
 	</form>
-</div>

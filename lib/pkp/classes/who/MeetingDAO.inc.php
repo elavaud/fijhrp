@@ -111,7 +111,6 @@ class MeetingDAO extends DAO {
 		$meeting->setDate($row['meeting_date']);
 		$meeting->setUploader($row['user_id']);
 		$meeting->setMinutesStatus($row['minutes_status']);
-
 		//Added additional fields
 		//Edited by ayveemallare 7/6/2011
 		$meeting->setReviewerId($row['reviewer_id']);
@@ -167,6 +166,7 @@ class MeetingDAO extends DAO {
 	 * @param Meeting $meeting
 	 */
 	function updateMinutesStatus($meeting) {
+		echo $meeting->getMinuteStatus;
 		$this->update(
 			'UPDATE meetings SET minutes_status = ? where meeting_id = ?',
 			array($meeting->getMinutesStatus(), $meeting->getId())

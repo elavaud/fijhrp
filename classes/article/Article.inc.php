@@ -694,7 +694,7 @@ class Article extends Submission {
 			);
 		}
 		return $reasonsForExemptionMap;
-	}		
+	}	
 }
 
 ?>

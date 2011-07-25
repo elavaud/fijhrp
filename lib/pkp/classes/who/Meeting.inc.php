@@ -12,78 +12,89 @@ define ('MEETING_SCHEDULE_FINAL', 1);
 define ('MEETING_SCHEDULE_PROPOSED', 0);
 define ('MEETING_REPLY_ATTENDING', 1);
 define ('MEETING_REPLY_NOT_ATTENDING', 2);
+define ('MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS', 0);
+define ('MINUTES_INITIAL_REVIEW_SCIENTIFIC_DESIGN', 1);
+define ('MINUTES_INITIAL_REVIEW_RISKS', 2);
+define ('MINUTES_INITIAL_REVIEW_BENEFITS', 3);
+define ('MINUTES_INITIAL_REVIEW_POPULATION_SELECTION', 4);
+define ('MINUTES_INITIAL_REVIEW_SAFEGUARDS', 5);
+define ('MINUTES_INITIAL_REVIEW_MINIMIZATIONS', 6);
+define ('MINUTES_INITIAL_REVIEW_CONFIDENTIALITY', 7);
+define ('MINUTES_INITIAL_REVIEW_CONSENT_DOCUMENT', 8);
+define ('MINUTES_INITIAL_REVIEW_OTHER_CONSIDERATIONS', 9);
+define ('MINUTES_INITIAL_REVIEW_LOCAL_IRB', 10);
 
 class Meeting extends DataObject {
-	
+
 	function Meeting() {
 		parent::DataObject();
 	}
-	
+
 	function setId($meetingId) {
 		$this->setData('meetingId', $meetingId);
 	}
-	
+
 	function getId() {
 		return $this->getData('meetingId');
 	}
-	
+
 	function setDate($meetingDate) {
 		$this->setData('meetingDate', $meetingDate);
 	}
-	
+
 	function getDate() {
 		return $this->getData('meetingDate');
 	}
-	
+
 	function setUploader($userId) {
-		$this->setUser($userId);	
+		$this->setUser($userId);
 	}
-	
+
 	function setUser($userId) {
 		$this->setData('userId', $userId);
 	}
-	
+
 	function getUploader() {
 		return $this->getData('userId');
 	}
-	
+
 	function setMinutesStatus($minutesStatus) {
 		$this->setData('minutesStatus', $minutesStatus);
 	}
-	
+
 	function getMinutesStatus() {
 		return $this->getData('minutesStatus');
 	}
-	
-	/********************************** 
+
+	/**********************************
 	 * Additional fields for meeting
 	 *  Added by ayveemallare 7/6/2011
 	 **********************************/
-	
+
 	function setReviewerId($reviewerId) {
 		$this->setData('reviewerId', $reviewerId);
 	}
-	
+
 	function getReviewerId() {
 		return $this->getData('reviewerId');
 	}
-	
+
 	function setIsAttending($isAttending) {
 		$this->setData('isAttending', $isAttending);
 	}
-	
+
 	function getIsAttending() {
 		return $this->getData('isAttending');
 	}
-	
+
 	function setRemarks($remarks) {
 		$this->setData('remarks', $remarks);
 	}
-	
+
 	function getRemarks() {
 		return $this->getData('remarks');
 	}
-	
+
 	function setStatus($status) {
 		$this->setData('status', $status);
 	}
@@ -91,8 +102,8 @@ class Meeting extends DataObject {
 	function getStatus() {
 		return $this->getData('status');
 	}
-		
-	
+
+
 	function updateMeetingStatus($meetingStatus){
 		$this->setData('meetingStatus', $meetingStatus);
 	}
@@ -100,25 +111,25 @@ class Meeting extends DataObject {
 	function getMeetingStatus(){
 		return $this->getData('meetingStatus');
 	}
-	
+
 
 	function setIsPresent($isPresent) {
 		$this->setData('isPresent', $isPresent);
 	}
-	
+
 	function isPresent() {
 		return $this->getData('isPresent');
 	}
-	
+
 	function getReasonForAbsence() {
 		return $this->getData('reasonForAbsence');
 	}
-	
+
 	function setReasonForAbsence($reasonForAbsence) {
 		$this->setData('reasonForAbsence', $reasonForAbsence);
 	}
-	
-	
+
+
 	/**
 	 * Get array mapping of completed sections of the meeting minutes
 	 * @return array
@@ -133,11 +144,11 @@ class Meeting extends DataObject {
 				$meetingStatus = $meetingStatus - $num;
 			}
 			else
-				$meetingMap[$num] = 0;			
+			$meetingMap[$num] = 0;
 		}
 		return $meetingMap;
 	}
-	
+
 	/**
 	 * Added by aglet 6/30/2011
 	 * Get meeting status if complete or incomplete
@@ -148,16 +159,16 @@ class Meeting extends DataObject {
 		}
 		return false;
 	}
-	
+
 	function getMinutesStatusKey() {
 		if ($this->isMinutesComplete()) {
-			return Locale::Translate('editor.minutes.complete');			
+			return Locale::Translate('editor.minutes.complete');
 		}
 		else {
 			return Locale::Translate('editor.minutes.incomplete');
 		}
 	}
-	
+
 	function getReplyStatus() {
 		switch ($this->getIsAttending()) {
 			case MEETING_REPLY_ATTENDING:
@@ -168,7 +179,7 @@ class Meeting extends DataObject {
 				return Locale::Translate('reviewer.meetings.replyStatus.awaitingReply');
 		}
 	}
-	
+
 	function getStatusKey() {
 		switch ($this->getStatus()) {
 			case STATUS_FINAL:
@@ -181,12 +192,61 @@ class Meeting extends DataObject {
 				return Locale::Translate('reviewer.meetings.scheduleStatus.new');
 		}
 	}
-	
+
 	function updateMinutesStatus($addToStatus) {
 		$status = $this->getMinutesStatus() + $addToStatus;
 		$this->setMinutesStatus($status);
 	}
+
+	/**
+	 * Get an assoc array matching dropdown options for type of discussion in Minutes with locale strings
+	 * @return array type => localeString
+	 */
+	function &getSpecificDiscussionOptions() {
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		static $specificOptions = array(
+			MINUTES_INITIAL_REVIEW_POPULATION_SELECTION => 'editor.minutes.initialReview.populationSelect',
+			MINUTES_INITIAL_REVIEW_SCIENTIFIC_DESIGN => 'editor.minutes.initialReview.scientificDesign',
+			MINUTES_INITIAL_REVIEW_MINIMIZATIONS => 'editor.minutes.initialReview.minimizations',
+			MINUTES_INITIAL_REVIEW_SAFEGUARDS => 'editor.minutes.initialReview.safeguards',
+			MINUTES_INITIAL_REVIEW_CONFIDENTIALITY => 'editor.minutes.initialReview.confidentiality',
+			MINUTES_INITIAL_REVIEW_RISKS => 'editor.minutes.initialReview.risks',
+			MINUTES_INITIAL_REVIEW_BENEFITS => 'editor.minutes.initialReview.benefits',
+			MINUTES_INITIAL_REVIEW_CONSENT_DOCUMENT => 'editor.minutes.initialReview.consentDocument',
+			MINUTES_INITIAL_REVIEW_OTHER_CONSIDERATIONS => 'editor.minutes.initialReview.otherConsiderations',
+			MINUTES_INITIAL_REVIEW_LOCAL_IRB => 'editor.minutes.initialReview.localIrbApproval',
+			MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS => 'editor.minutes.initialReview.other'
+		);
+		return $specificOptions;
+	}
 	
+	function getSpecificDiscussionsText($option) {
+		switch ($option) {
+			case MINUTES_INITIAL_REVIEW_POPULATION_SELECTION:
+				return Locale::Translate('editor.minutes.initialReview.populationSelect');
+			case MINUTES_INITIAL_REVIEW_SCIENTIFIC_DESIGN:
+				return Locale::Translate('editor.minutes.initialReview.scientificDesign');
+			case MINUTES_INITIAL_REVIEW_MINIMIZATIONS:
+				return Locale::Translate('editor.minutes.initialReview.minimizations');
+			case MINUTES_INITIAL_REVIEW_SAFEGUARDS:
+				return Locale::Translate('editor.minutes.initialReview.safeguards');
+			case MINUTES_INITIAL_REVIEW_CONFIDENTIALITY:
+				return Locale::Translate('editor.minutes.initialReview.confidentiality');
+			case MINUTES_INITIAL_REVIEW_RISKS:
+				return Locale::Translate('editor.minutes.initialReview.risks');
+			case MINUTES_INITIAL_REVIEW_BENEFITS:
+				return Locale::Translate('editor.minutes.initialReview.benefits');
+			case MINUTES_INITIAL_REVIEW_CONSENT_DOCUMENT:
+				return Locale::Translate('editor.minutes.initialReview.consentDocument');
+			case MINUTES_INITIAL_REVIEW_OTHER_CONSIDERATIONS:
+				return Locale::Translate('editor.minutes.initialReview.otherConsiderations');
+			case MINUTES_INITIAL_REVIEW_LOCAL_IRB:
+				return Locale::Translate('editor.minutes.initialReview.localIrbApproval');				
+			default:
+				return Locale::Translate('editor.minutes.specificDiscussion');				
+		}
+	}
+
 }
 
 ?>

@@ -16,20 +16,20 @@
 
 <div id="meetings">
 <table class="listing" width="100%">
-	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">{sort_heading key="editor.meetings.meetingId" sort="id"}</td>
-		<td width="40%">{translate key="reviewer.meetings.submissions"}</td>
+		<td>{translate key="reviewer.meetings.submissions"}</td>
 		<td width="25%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
 		<td width="30%" align="right">{sort_heading key="common.status" sort="scheduleStatus"}</td>
 	</tr>
-	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<p></p>
 	{iterate from=meetings item=meeting}
 	{assign var="key" value=$meeting->getId()}
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
-			<td width="40%">
+			<td>
 				<a href="{url op="viewMeeting" path=$meeting->getId()}">
 				{foreach from=$map.$key item=submission name=submissions}
 					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
@@ -40,35 +40,35 @@
 				{/if}
 				</a>
 			</td>
-			<td width="25%" align="right">
-				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}
-			</td>
+			<td width="25%" align="right">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 			<td width="30%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
-					{$meeting->getStatusKey()}
-				</a>
+					{if $meeting->getStatus() != 3}
+						{$meeting->getStatusKey()}
+					{else}
+						<font color="red">{$meeting->getStatusKey()}</font>
+					{/if}
+				</a><br/>
 				{if $meeting->getStatus() == 1}
-				<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
+				<a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
 					Upload Minutes
 				</a>
 				{/if}
 			</td>
 		</tr>	
-		<tr>
-			<td colspan="4" class="{if $meetings->eof()}end{/if}separator">&nbsp;</td>
-		</tr>
+		<tr><td colspan="6" class="separator"></td></tr>
 	{/iterate}
-	{if $meetings->wasEmpty()}
+	{if empty($meetings)}
 		<tr>
-			<td colspan="4" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
+			<td colspan="6" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
 		</tr>
-	<tr>
-		<td colspan="4" class="endseparator">&nbsp;</td>
-	</tr>
-	{else}
+	{/if}
 		<tr>
-			<td colspan="2" align="left">{page_info iterator=$meetings}</td>
-			<td colspan="2" align="right">{page_links anchor="meetings" name="meetings" iterator=$meetings sort=$sort sortDirection=$sortDirection}</td>
+			<td colspan="6" class="endseparator">&nbsp;</td>
+		</tr>
+	{if !empty($meetings)}
+		<tr>
+			<td colspan="6" align="left">{$meetings|@count} {translate key="editor.meetings.meetingsCount"}</td>
 		</tr>
 	{/if}
 	</table>

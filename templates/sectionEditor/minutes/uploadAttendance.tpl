@@ -19,15 +19,7 @@
 		
 		$("#addGuest").click(
 				function() {
-					guestCount++;
-					var row="<tr>"+
-			 		"<td width='5%'>Name</td>"+
-	 				"<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' /></td>"+
-					"<td width='5%'>Affiliation</td>"+
-	 				"<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' /></td>"+
-					"<td width='60%'></td>"+
-	 				"</tr>";
-					$("#guests tr:last").after(row);
+					$("#guests tr:last").after($("#guests tr:last").clone());
 				}
 			);
 
@@ -56,7 +48,7 @@
  		});
 	});
 </script>{/literal}
-<h2>Announcements and Attendance for Meeting #{$meeting->getId()}</h2>
+<h2>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getId()}</h2>
 <br/>
 <form method="POST" action="{url op="submitAttendance" path=$meeting->getId()}">
 	
@@ -65,14 +57,14 @@
 	<table class="data" width="100%">
 		<tr>
 			<td class="label" width="20%">{fieldLabel name="adjourned" required="true" key="editor.minutes.adjourned"}</td>
-			<td class="value" width="80%"><input type="text" class="textField" name="adjourned" id="adjourned" size="20" value="{$adjourned|date_format:"%Y-%m-%d %I:%M %p"}" /></td>
+			<td class="value" width="80%"><input type="text" class="textField" name="adjourned" id="adjourned" size="20" value="{$adjourned}"/></td>
 		</tr>
 		<tr>
 			<td class="label" width="20%">{fieldLabel name="venue" required="true" key="editor.minutes.venue"}</td>
 			<td class="value" width="80%"><input type="text" class="textField" name="venue" id="venue" size="20" value="{$venue}"/></td>
 		</tr>
 		<tr>
-		 	<td class="label" width="20%">{translate key="editor.minutes.announcements"}</td>
+		 	<td class="label" width="20%">{translate key="editor.minutes.announcements"} and {translate key="editor.minutes.minutesOfLastMeeting"}</td>
 		 	<td class="value" width="80%">
 		 		<textarea name="announcements" id="announcements" rows="7" class="textArea">{$announcements}</textarea>
 		 	</td>
@@ -129,6 +121,7 @@
 	<h2>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h2>
 	<table class="listing" name="guests" id="guests" width="100%">
 	{foreach from=$guestNames key=guestIndex item=guest}
+		{if $guest != null }
 		<tr>
 		<td width='5%'>Name</td>
 	 	<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' value="{$guest}" /></td>
@@ -136,8 +129,15 @@
 	 	<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' value="{$guestAffiliations[$guestIndex]}" /></td>
 		<td width='60%'></td>
 		</tr>
+		{/if}
 	{/foreach}
-	<tr></tr>
+	<tr>
+		<td width='5%'>Name</td>
+	 	<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' value="" /></td>
+		<td width='5%'>Affiliation</td>
+	 	<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' value="" /></td>
+		<td width='60%'></td>
+	</tr>
 	</table>
 	<div class="separator"></div>
 		<br/><br/>
