@@ -34,10 +34,14 @@ class AttendanceForm extends Form {
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
 		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
+		$this->addCheck(new FormValidatorCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence',
+				 create_function('$reviewer_absent,$form', 'foreach($reviewer_absent as $key=>$reviewer){
+					if(($reviewer["attendance"]=="absent") && ($reviewer["reason"]==null))
+					{return false;}	
+				 } return true;'), array(&$this)));
 
-		
-		$this->addCheck(new FormValidatorArrayMyCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence', 
-		create_function('$attendance, $reason', 'if(($attendance=="absent") && !isset($reason)) return false; else return true;'), array('attendance','reason')));	
+	//	$this->addCheck(new FormValidatorArrayMyCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence', 
+	//	create_function('$attendance, $reason', 'if(($attendance=="absent") && !isset($reason)) return false; else return true;'), array('attendance','reason')));	
 	
 	}
 

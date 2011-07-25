@@ -325,8 +325,62 @@
 	<message key="editor.meetingStatus">Meeting Status</message>
 	<message key="editor.minutesStatus">Minutes Status</message>
 
-	<message key="editor.minutes.uploadAttendance"></message>
+	<message key="editor.minutes.requiredAttendance">Please fill this form properly</message>
 	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
 	<message key="editor.minutes.uploadAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
+	
+	<!--  LABELS USED IN MINUTES.INITIALREVIEWFORM -->
+
+	<message key="editor.minutes.initialReviewForm.discussion">(A) Discussion</message>
+	<message key="editor.minutes.initialReviewForm.generalDiscussion">General Discussion</message>
+	<message key="editor.minutes.initialReviewForm.specificDiscussion">Specific Discussion</message>
+	<message key="editor.minutes.initialReviewForm.scientificDesign">Scientific design (discuss and note that institute pre-scientific review has been done)</message>
+	<message key="editor.minutes.initialReviewForm.subjectSelection">Subject selection (discuss populations to be studied  &amp;  recruitment)</message>
+	<message key="editor.minutes.initialReviewForm.levelOfRisk">LEVEL OF RISK</message>	
+	<message key="editor.minutes.initialReviewForm.levelOfRisk.option1">The research involves no more than minimal risk to subject.</message>	
+	<message key="editor.minutes.initialReviewForm.levelOfRisk.option2">The research involves more than minimal risk to subjects. The risk(s) represents more than a minor increase over minimal risk.</message>	
+	<message key="editor.minutes.initialReviewForm.levelOfRisk.option3">The research involves more than minimal risk to subjects. The risk(s) represents a minor increase over minimal risk.</message>
+	<message key="editor.minutes.initialReviewForm.benefitCategory">BENEFIT CATEGORY</message>
+	<message key="editor.minutes.initialReviewForm.benefitCategory.option1">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge about the participants’ disorder or condition.</message>
+	<message key="editor.minutes.initialReviewForm.benefitCategory.option2">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge to further society’s understanding or the disorder or condition under study.</message>
+	<message key="editor.minutes.initialReviewForm.benefitCategory.option3">The research involves the prospect of direct benefit to individual participants.</message>
+	<message key="editor.minutes.initialReviewForm.additionalSafeguards">Additional Safeguards for Vulnerable Subjects</message>
+	<message key="editor.minutes.initialReviewForm.minimizationOfRisk">Minimization of Risks to Subjects</message>
+	<message key="editor.minutes.initialReviewForm.confidentiality">Privacy and Confidentiality</message>
+	<message key="editor.minutes.initialReviewForm.consentDocument">Consent Document (document that all required elements are present)</message>
+	<message key="editor.minutes.initialReviewForm.additionalConsiderations">Additional Considerations (e.g. multi-center research; collaborative research; nested study. State if these considerations do not apply)</message>
+	<message key="editor.minutes.initialReviewForm.stipulations">(B) STIPULATIONS</message>
+	<message key="editor.minutes.initialReviewForm.numOfStipulations">No. of Stipulations</message>
+	<message key="editor.minutes.initialReviewForm.recommendations">(C) Recommendations</message>
+	<message key="editor.minutes.initialReviewForm.numOfRecommendation">No. of Recommendations</message>
+	<message key="editor.minutes.initialReviewForm.IRBDecision">(D) IRB DECISION</message>
+	<message key="editor.minutes.initialReviewForm.decision">Select Decision</message>
+	<message key="editor.minutes.initialReviewForm.startDate">Start Date (if approved)</message>
+	<message key="editor.minutes.initialReviewForm.useRTODate">Use start date proposed by RTO</message>
+	<message key="editor.minutes.initialReviewForm.IRBVotes"> IRB VOTES</message>
+	<message key="editor.minutes.initialReviewForm.votesApproved">No. of approvals</message>
+	<message key="editor.minutes.initialReviewForm.votesNotApproved">No. of disapprovals</message>
+	<message key="editor.minutes.initialReviewForm.votesAbstained">No. of abstain votes</message>
+	<message key="editor.minutes.initialReviewForm.minorityReasons">Reasons for Minority Options</message>
+	<!--  ERROR keys USED in MINUTES.INITIALREVIEWFORM -->
+	<message key="editor.minutes.initialReviewForm.generalDiscussionRequired">General Discussion field is required</message>
+	<message key="editor.minutes.initialReviewForm.specificDiscussionRequired">Specific Discussion field is required</message>
+	<message key="editor.minutes.initialReviewForm.scientificDesignRequired">Scientific design field is required</message>
+	<message key="editor.minutes.initialReviewForm.subjectSelectionRequired">Subject selection field is required</message>
+	<message key="editor.minutes.initialReviewForm.levelOfRiskRequired">Please indicate level of risk</message>
+	<message key="editor.minutes.initialReviewForm.benefitCategoryRequired">Please indicate benefit category</message>
+	<message key="editor.minutes.initialReviewForm.additionalSafeguardsRequired">Safeguards for vulnerable subjects field is required</message>
+	<message key="editor.minutes.initialReviewForm.minimizationOfRiskRequired">Minimization of risks to subjects field is required</message>
+	<message key="editor.minutes.initialReviewForm.confidentialityRequired">Privacy and Confidentiality field is required.</message>
+	<message key="editor.minutes.initialReviewForm.consentDocumentRequired">Consent Document field is required</message>
+	<message key="editor.minutes.initialReviewForm.additionalConsiderationsRequired">Additional Considerations field is required</message>
+	<message key="editor.minutes.initialReviewForm.numOfStipulationsRequired">No. of Stipulations field must be alphanumeric</message>
+	<message key="editor.minutes.initialReviewForm.numOfRecommendationsRequired">No. of Recommendations field must be alphanumeric</message>
+	<message key="editor.minutes.initialReviewForm.decisionRequired">Please indicate decision</message>
+	<message key="editor.minutes.initialReviewForm.startDateRequired">Start date field required</message>
+	<message key="editor.minutes.initialReviewForm.votesApprovedRequired">No. of approvals must be alphanumeric</message>
+	<message key="editor.minutes.initialReviewForm.votesNotApprovedRequired">No. of disapprovals field must be alphanumeric</message>
+	<message key="editor.minutes.initialReviewForm.votesAbstainedRequired">No. of abstain votes field must be alphanumeric</message>
+	<message key="editor.minutes.initialReviewForm.minorityReasonsRequired">Reasons for Minority Options field is required</message>	
 	
 </locale>

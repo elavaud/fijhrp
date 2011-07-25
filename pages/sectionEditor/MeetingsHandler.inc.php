@@ -133,22 +133,18 @@ class MeetingsHandler extends Handler {
 		$this->validate($meetingId,false, true);
 		$this->setupTemplate();
 		$setMeetingForm= new SetMeetingForm($args,$request);
-		$saveMeetingSubmit = Request::getUserVar('saveMeeting') != null ? true : false;
-		
-		if ($saveMeetingSubmit) {
-			$setMeetingForm->readInputData();
 
-			if($setMeetingForm->validate()){	
-					$this->saveMeeting($args);
+		$setMeetingForm->readInputData();
+		if($setMeetingForm->validate()){	
+				$this->saveMeeting($args);
 			}else{
 				if ($setMeetingForm->isLocaleResubmit()) {
 					$setMeetingForm->readInputData();
+				}else{
+					$setMeetingForm->initData();
 				}
-				$setMeetingForm->display($args);
-			}
-		}else {
-			$setMeetingForm->display($args);
 		}
+		$setMeetingForm->display($args);
 	}
 	
 	/**

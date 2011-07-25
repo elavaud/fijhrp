@@ -5,6 +5,18 @@
 	$(document).ready(function() {
 		var guestCount = 0;
 		$("#adjourned").timepicker({ampm:true});
+
+		$('.present').each( function(){
+				var elemVal = $(this).attr('id').substring(19);
+				var present = $(this).attr('checked');
+				if(present){
+					$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('disabled',true);
+					$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('checked',false);
+					$("#reviewer-absent-"+elemVal).attr('checked', false);
+				}
+			}
+		);
+		
 		$("#addGuest").click(
 				function() {
 					guestCount++;
@@ -18,15 +30,15 @@
 					$("#guests tr:last").after(row);
 				}
 			);
-		 $(".absent").click( function () {
+
+		$(".absent").click( function () {
 				var elemVal = $(this).attr('id').substring(18);
 				$("#div_reason_of_absence_"+elemVal).show();
 				$("#reviewer-absent-"+elemVal).attr('checked', true);
 				$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('disabled',false);
-							}
+			}
 		);
 
-			 
 		$(".present").click( function () {
 				var elemVal = $(this).attr('id').substring(19);	
 				$("#reviewer-absent-"+elemVal).attr('checked', false);
@@ -36,16 +48,21 @@
  		);
  		$(".div_reason_of_absence").click( function (){
 			var elemVal = $(this).attr('id').substring(22);
-			var present = $("#reviewer-absent-"+elemVal).attr('checked');
+			var present = $("#reviewer-isabsent-"+elemVal).attr('checked');
+			alert(elemval);
 			if(!present){
- 				alert("Mark the reviewer absent first.");
- 			}
+				alert("Mark the reviewer absent first.");
+ 	 	 	}else{
+ 	 	 	 	alert("present");
+	 	 	 	$("#reviewer-absent-"+elemVal).attr('checked');
+ 	 	 	}
+ 	 	 	
  		});
 	});
 </script>{/literal}
 <h2>Announcements and Attendance for Meeting #{$meeting->getId()}</h2>
 <br/>
-<form method="POST" action="{url op="uploadAttendance" path=$meeting->getId()}">
+<form method="POST" action="{url op="submitAttendance" path=$meeting->getId()}">
 	
 <div id="announcements">
 	<h2>Details</h2>
@@ -69,7 +86,7 @@
 <div class="separator"></div>
 <br/>
 <div id="attendance">
-	<h2>Review Committee {fieldLabel name="reviewer_attendance" required="true" key="editor.minutes.uploadAttendance"}</h2>
+	<h2>Review Committee </h2>
 	<table width="100%" class="listing" name="ercMembers">
 			<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		 	<tr>
@@ -88,11 +105,12 @@
 					<td width="5%">	
 								<input type="radio"  class="absent" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-isabsent-{$userId}" 
 									{if $attendance[$userId][$ind]} == "absent" } checked="checked" {/if} value="absent"  />
-								<input type="radio" style="display:none" class="absent" name="reviewer_absent[{$userId}][attendance]" id="reviewer-absent-{$userId}" 
+								<input type="radio" class="absent" style="display:none" name="reviewer_absent[{$userId}][attendance]" id="reviewer-absent-{$userId}" 
 									{if $attendance[$userId][$ind]} == "absent" } checked="checked" {/if} value="absent" />
+								
 					</td>
 		 			<td width="5%">
-			 					<input type="hidden" class="present" name="reviewer_attendance[{$userId}][userId]" id="reviewer-attendance-{$userId}-userId"
+								<input type="hidden" class="present" name="reviewer_attendance[{$userId}][userId]" id="reviewer-attendance-{$userId}-userId"
 			 						 value="{$user->getId()}" />
 								<input type="radio" class="present" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-ispresent-{$userId}" 
 									{if $attendance[$userId][$ind] == "present" } checked="checked" {/if} value="present" />

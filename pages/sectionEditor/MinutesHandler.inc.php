@@ -122,6 +122,7 @@ class MinutesHandler extends Handler {
 	 * @param $request
 	 */
 	function uploadAttendance($args, $request) {
+		echo "UA";
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId, MINUTES_STATUS_ATTENDANCE);
 		$this->setupTemplate(true, $meetingId);
@@ -130,27 +131,14 @@ class MinutesHandler extends Handler {
 		$journal = Request::getJournal();
 		import('lib.pkp.classes.who.form.AttendanceForm');           
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
-		$submitted = Request::getUserVar("submitAttendance") != null ? true : false;
-		
-		if($submitted) {
-			$attendanceForm->readInputData();
-			if($attendanceForm->validate()) {
-				$attendanceForm->execute();
-				$attendanceForm->showPdf();
-			}
-			else {
-				if ($attendanceForm->isLocaleResubmit()) {
-		       		$attendanceForm->readInputData();       		
-				} 
-				else {
-					$attendanceForm->initData();
-				}
-				$attendanceForm->display();
-			}
-		}
+	
+		if ($attendanceForm->isLocaleResubmit()) {
+       		$attendanceForm->readInputData();
+		} 
 		else {
-			$attendanceForm->display();
-		}						
+			$attendanceForm->initData();
+		}
+		$attendanceForm->display();							
 	}
 	
 	/**
@@ -168,24 +156,14 @@ class MinutesHandler extends Handler {
 		$journal =& Request::getJournal();
 		import('lib.pkp.classes.who.form.AttendanceForm');
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
-		
-		$submitAttendance = Request::getUserVar('submitAttendance') != null ? true : false;
-		
-		if ($submitAttendance) {
-			$attendanceForm->readInputData();
-			if($attendanceForm->validate()){	
-					$attendanceForm->execute();
-					$attendanceForm->savePdf();
-					Request::redirect(null, null, 'uploadMinutes', $meetingId);			
-			}else{
-				if ($attendanceForm->isLocaleResubmit()) {
-					$attendanceForm->readInputData();
-				}
-					$attendanceForm->display($args);
-			}
-		
-		}else {
-			$attendanceForm->display($args);
+		$attendanceForm->readInputData();
+	
+		if($attendanceForm->validate()){	
+				$attendanceForm->execute();
+				$attendanceForm->savePdf();
+				Request::redirect(null, null, 'uploadMinutes', $meetingId);			
+		}else{
+				$attendanceForm->display($args);
 		}
 	}
 	
@@ -203,8 +181,16 @@ class MinutesHandler extends Handler {
 
 		$journal = Request::getJournal();
 		$user = Request::getUser();
-		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+	/*	$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview($user->getId(), $journal->getId(), FILTER_SECTION_ALL); 
+	*/
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$submissions = array();
+		foreach($selectedProposals as $submission) {
+				$submissions[$submission] = $articleDao->getArticle($submission, $journalId, false);
+		}
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('meetingId', $meetingId);
@@ -220,7 +206,7 @@ class MinutesHandler extends Handler {
 	 */
 	function uploadInitialReview($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$articleId = Request::getUserVar('articleId');
+		$articleId = isset($args[1]) ? $args[1]: 0;
 		$this->validate($meetingId);
 		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, INITIAL_REVIEW);
 		$this->setupTemplate(true, $meetingId);
@@ -327,11 +313,9 @@ class MinutesHandler extends Handler {
 				Request::redirect(null, null, 'uploadMinutes', $meetingId);													
 			}		
 		}
-		
 		if(!$isValid) {
 			Request::redirect(null, Request::getRequestedPage());
 		}
-				
 		return true;
 	}
 

@@ -1,4 +1,4 @@
-{include file="sectionEditor/minutes/menu.tpl"}
+ {include file="sectionEditor/minutes/menu.tpl"}
 <div id="selectInitialReview">
 <h4>Select Proposal for Initial Review</h4>
 <br/>
@@ -7,19 +7,16 @@
 {else}
 	
 	<table class="data">
-		<form method="POST" action="{url op="uploadInitialReview" path=$meetingId}">			
+		{foreach from=$submissions item=submission}
 		<tr>
 			<td class="label">
-				<select name="articleId" id="articleId" class="selectMenu">
-					<option value="none">Choose One</option>
-					{foreach from=$submissions item=submission}
-						<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
-					{/foreach}
-				</select>								
-			</td>		
-			<td class="value"><input type="submit" class="button" id="select_button" name="select_button" value="Select Proposal"/></td>	
+					<a href="{url op="uploadInitialReview" path=$meetingId|to_array:$submission->getArticleId()}" >
+						{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}
+					</a>
+			</td>
 		</tr>
-		</form>	
+		<tr><td class="separator">&nbsp;</td></tr>
+		{/foreach}
 		<tr>
 			<td colspan="6">
 				<br/>				

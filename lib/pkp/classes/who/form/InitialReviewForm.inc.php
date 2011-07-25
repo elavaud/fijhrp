@@ -24,33 +24,34 @@ class InitialReviewForm extends Form {
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');		
 		$this->submission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($articleId);
 		
-		/*
-		$this->addCheck(new FormValidator($this, 'generalDiscussion', 'required', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidator($this, 'specificDiscussion', 'required', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidator($this, 'scientificDesign', 'required', 'user.profile.form.usernameRequired'));
-		if($submission->getLocalizedProposalType == "CWHS" || $submission->getLocalizedProposalType == "PWHS") {
 		
-		/*
-			$this->addCheck(new FormValidator($this, 'subjectSelection', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'levelOfRisk', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'benefitCategory', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'additionalSafeguards', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'minimization', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'confidentiality', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'consentDocument', 'required', 'user.profile.form.usernameRequired'));
-			$this->addCheck(new FormValidator($this, 'additionalConsiderations', 'required', 'user.profile.form.usernameRequired'));
+		$this->addCheck(new FormValidator($this, 'generalDiscussion', 'required', 'editor.minutes.initialReviewForm.generalDiscussionRequired'));
+		$this->addCheck(new FormValidator($this, 'specificDiscussion', 'required', 'editor.minutes.initialReviewForm.specificDiscussionRequired'));
+		$this->addCheck(new FormValidator($this, 'scientificDesign', 'required', 'editor.minutes.initialReviewForm.scientificDesignRequired'));
+		
+		if($this->submission->getLocalizedProposalType() == "CWHS" || $this->submission->getLocalizedProposalType() == "PWHS") {
+		
+			$this->addCheck(new FormValidator($this, 'subjectSelection', 'required', 'editor.minutes.initialReviewForm.subjectSelectionRequired'));
+			$this->addCheck(new FormValidator($this, 'levelOfRisk', 'required', 'editor.minutes.initialReviewForm.levelOfRiskRequired'));
+			$this->addCheck(new FormValidator($this, 'benefitCategory', 'required', 'editor.minutes.initialReviewForm.benefitCategoryRequired'));
+			$this->addCheck(new FormValidator($this, 'additionalSafeguards', 'required', 'editor.minutes.initialReviewForm.additionalSafeguardsRequired'));
+			$this->addCheck(new FormValidator($this, 'minimization', 'required', 'editor.minutes.initialReviewForm.minimizationOfRiskRequired'));
+			$this->addCheck(new FormValidator($this, 'confidentiality', 'required', 'editor.minutes.initialReviewForm.confidentialityRequired'));
+			$this->addCheck(new FormValidator($this, 'consentDocument', 'required', 'editor.minutes.initialReviewForm.consentDocumentRequired'));
+			$this->addCheck(new FormValidator($this, 'additionalConsiderations', 'required', 'editor.minutes.initialReviewForm.additionalConsiderationsRequired'));
 		}
-		$this->addCheck(new FormValidatorAlphaNum($this, 'stipulations', 'required', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidatorAlphaNum($this, 'recommendations', 'required', 'user.profile.form.usernameRequired'));		
-		$this->addCheck(new FormValidator($this, 'decision', 'required', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidator($this, 'unanimous', 'optional', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidator($this, 'startDate', 'optional', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidator($this, 'useRtoDate', 'optional', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidatorAlphaNum($this, 'votesApproved', 'optional', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidatorAlphaNum($this, 'votesNotApproved', 'optional', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidatorAlphaNum($this, 'votesAbstain', 'optional', 'user.profile.form.usernameRequired'));
-		$this->addCheck(new FormValidatorAlphaNum($this, 'minorityReasons', 'optional', 'user.profile.form.usernameRequired'));
-		*/
+		$this->addCheck(new FormValidatorAlphaNum($this, 'numOfStipulations', 'required', 'editor.minutes.initialReviewForm.numOfStipulationsRequired'));
+		$this->addCheck(new FormValidatorAlphaNum($this, 'numOfRecommendations', 'required', 'editor.minutes.initialReviewForm.numOfRecommendationsRequired'));		
+		$this->addCheck(new FormValidator($this, 'decision', 'required', 'editor.minutes.initialReviewForm.decisionRequired'));
+		$this->addCheck(new FormValidatorCustom($this, 'startDate', 'required', 'editor.minutes.initialReviewForm.startDateRequired',
+				 create_function('$startDate,$form', 'if ($form->getData(\'decision\') != 1) return true; else return ($form->getData(\'oldPath\') != null);'), array(&$this, DAORegistry::getDAO('JournalDAO'))));
+		$this->addCheck(new FormValidator($this, 'unanimous', 'optional', 'editor.minutes.initialReviewForm.unanimousRequired'));
+		$this->addCheck(new FormValidator($this, 'useRTODate', 'optional', 'editor.minutes.initialReviewForm.usertoDateRequired'));
+		$this->addCheck(new FormValidatorAlphaNum($this, 'votesApproved', 'optional', 'editor.minutes.initialReviewForm.votesApprovedRequired'));
+		$this->addCheck(new FormValidatorAlphaNum($this, 'votesNotApproved', 'optional', 'editor.minutes.initialReviewForm.votesNotApprovedRequired'));
+		$this->addCheck(new FormValidatorAlphaNum($this, 'votesAbstained', 'optional', 'editor.minutes.initialReviewForm.votesAbstainRequired'));
+		$this->addCheck(new FormValidatorAlphaNum($this, 'minorityReasons', 'optional', 'editor.minutes.initialReviewForm.minorityReasonsRequired'));
+	
 	}
 
 	/**
@@ -61,8 +62,7 @@ class InitialReviewForm extends Form {
 		$submission =& $this->submission;
 		
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		$lastDecision = $articleDao->getLastEditorDecision($submission->getId());			
-		
+		$lastDecision = $articleDao->getLastEditorDecision($submission->getId());		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign("lastDecision", $lastDecision);
 		$templateMgr->assign("meeting", $meeting);
@@ -86,7 +86,7 @@ class InitialReviewForm extends Form {
 			'recommendations',
 			'decision',
 			'unanimous',
-			'useRtoDate',
+			'useRTODate',
 			'votesApproved',
 			'votesNotApproved',
 			'votesAbstain',
@@ -129,7 +129,7 @@ class InitialReviewForm extends Form {
 		}		
 	}
 
-	function showPdf() {
+	function savePdf() {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		$summary=null;

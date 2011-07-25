@@ -53,7 +53,7 @@
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right">
-				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.uploadAttendance"}</a>				
+				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.uploadAttendance" }</a>				
 			</td>				
 		{/if}
 	</tr>
