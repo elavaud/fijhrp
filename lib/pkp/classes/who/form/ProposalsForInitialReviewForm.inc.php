@@ -28,7 +28,8 @@ class ProposalsForInitialReviewForm extends Form {
 		$submissions = array();
 		foreach($submissionIds as $submissionId) {
 			$submission = $sectionEditorSubmissionDao->getSectionEditorSubmission($submissionId, $journalId, false);
-			array_push($submissions, $submission);
+			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+				array_push($submissions, $submission);
 		}
 		$this->submissions = $submissions;
 		$this->addCheck(new FormValidatorCustom($this, 'articleId', 'required', 'editor.minutes.selectProposalRequired',

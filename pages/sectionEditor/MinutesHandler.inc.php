@@ -8,6 +8,7 @@
 define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 define('INITIAL_REVIEW', 0x00001);
+define('CONTINUING_REVIEW', 0x00002);
 // Filter section
 define('FILTER_SECTION_ALL', 0);
 
@@ -184,12 +185,12 @@ class MinutesHandler extends Handler {
 				else {
 					$initialReviewForm->initData();
 				}
-	//			$initialReviewForm->display();
+				$initialReviewForm->display();
 			}
 		}
-	//	else {
+		else {
 			$initialReviewForm->display();
-	//	}
+		}
 	}
 
 	/**
@@ -216,7 +217,7 @@ class MinutesHandler extends Handler {
 			if($initialReviewForm->validate()) {
 				$initialReviewForm->execute();
 				$initialReviewForm->savePdf();
-				//Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				Request::redirect(null, null, 'uploadMinutes', $meetingId);
 			}
 			else {
 				if ($initialReviewForm->isLocaleResubmit()) {
@@ -244,6 +245,97 @@ class MinutesHandler extends Handler {
 		$meetingDao->updateMinutesStatus($meeting);
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
+	
+	/**
+	 * Added  6/29/2011
+	 * Display dropdown for proposals assigned for (continuing) normal ERC review
+	 * @param $args
+	 * @param $request
+	 */
+	function selectContinuingReview($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId, MINUTES_STATUS_CONTINUING_REVIEWS);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+
+		$journal = Request::getJournal();
+		import('lib.pkp.classes.who.form.ProposalsForContinuingReviewForm');
+		$continuingReviewForm = new ProposalsForContinuingReviewForm($meetingId, $journal->getId());
+		$submitted = Request::getUserVar("selectProposal") != null ? true : false;
+		$articleId = Request::getUserVar("articleId");
+		
+		if($submitted) {
+			$continuingReviewForm->readInputData();
+			if($continuingReviewForm->validate()) {
+				Request::redirect(null, null, 'uploadContinuingReview', array($meetingId, $articleId));
+			}
+			else {
+				if ($continuingReviewForm->isLocaleResubmit()) {
+					$continuingReviewForm->readInputData();
+				}
+				else {
+					$continuingReviewForm->initData();
+				}
+				$continuingReviewForm->display();
+			}
+		}
+		else {
+			$continuingReviewForm->display();
+		}
+	}
+	
+	/**
+	 * Added  6/29/2011
+	 * Display form for continuing review given article id and Generate pdf file for this continuing review and update edit_decisions table
+	 * @param $args
+	 * @param $request
+	 */
+	function uploadContinuingReview($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$articleId = isset($args[1]) ? $args[1]: 0;
+		$this->validate($meetingId);
+		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, CONTINUING_REVIEW);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+		$submission =& $this->submission;
+
+		import('lib.pkp.classes.who.form.ContinuingReviewForm');
+		$continuingReviewForm = new ContinuingReviewForm($meetingId, $articleId);
+		$submitted = Request::getUserVar("submitContinuingReview") != null ? true : false;
+
+		if($submitted) {
+			$continuingReviewForm->readInputData();
+			if($continuingReviewForm->validate()) {
+				$continuingReviewForm->execute();
+				$continuingReviewForm->savePdf();
+				Request::redirect(null, null, 'uploadMinutes', $meetingId);
+			}
+			else {
+				if ($continuingReviewForm->isLocaleResubmit()) {
+					$continuingReviewForm->readInputData();
+				}
+				else {
+					$continuingReviewForm->initData();
+				}
+				$continuingReviewForm->display();
+			}
+		}
+		else {
+			$continuingReviewForm->display();
+		}
+	}
+	
+	function completeContinuingReviews($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$this->validate($meetingId, MINUTES_STATUS_CONTINUING_REVIEWS);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$meeting->updateMinutesStatus(MINUTES_STATUS_CONTINUING_REVIEWS);
+		$meetingDao->updateMinutesStatus($meeting);
+		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+	}
 
 	/**
 	 * Update minutes_status as complete, activate download link
@@ -262,8 +354,13 @@ class MinutesHandler extends Handler {
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
 
-	/*Added by MSB, July 20, 2010*/
-
+	function downloadMinutes($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meetingId);
+		return $minutesFileManager->downloadMinutesArchive();
+	}
+	
 	/**
 	 * Download file.
 	 * @param $meetingId int
@@ -276,8 +373,7 @@ class MinutesHandler extends Handler {
 		$minutesFileManager = new MinutesFileManager($meetingId);
 		return $minutesFileManager->viewFile();
 	}
-
-
+	
 	function validate($meetingId = 0, $access = null) {
 		parent::validate();
 		$isValid = true;
@@ -328,6 +424,10 @@ class MinutesHandler extends Handler {
 		if ($reviewType == INITIAL_REVIEW) {
 			if ($articleId == 0)
 				Request::redirect(null, null, 'selectInitialReview', $this->meeting->getId());
+		}
+		if ($reviewType == CONTINUING_REVIEW) {
+			if ($articleId == 0)
+				Request::redirect(null, null, 'selectContinuingReview', $this->meeting->getId());
 		}
 		if ($sectionEditorSubmission == null) {
 			$isValid = false;

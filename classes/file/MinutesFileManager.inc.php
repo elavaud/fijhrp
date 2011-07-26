@@ -30,7 +30,7 @@ class MinutesFileManager extends FileManager {
 	 * Create a manager for handling article file uploads.
 	 * @param $articleId int
 	 */
-	function MinutesFileManager($meetingId) {
+	function MinutesFileManager($meetingId, $dirNode = null, $articleId = null) {
 		$this->meetingId = $meetingId;
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$this->meeting =& $meetingDao->getMeetingById($meetingId);
@@ -42,7 +42,13 @@ class MinutesFileManager extends FileManager {
 		
 		$this->filename = $meetingId."-".date("FjY-gia", strtotime($meeting->getDate()));
 		$this->filesDir = Config::getVar('files', 'files_dir') . '/journals/' . $this->journalId .
-		'/meetings/';
+		'/meetings/'.$meetingId.'/';
+		if($dirNode != null) {
+			$this->filesDir = $this->filesDir.$dirNode."/"; 
+		}
+		if($articleId != null) {
+			$this->filename = $this->filename."-".$articleId; 
+		}
 	}
 	
 	/**
@@ -51,8 +57,18 @@ class MinutesFileManager extends FileManager {
 	 * @param $inline print file as inline instead of attachment, optional
 	 * @return boolean
 	 */
-	function downloadFile($inline = false) {
-	    $filePath = $this->filesDir . $this->filename;
+	function downloadFile($inline = false, $section = null, $articleId = null) {
+		if($section=="attendance")
+			$filename = $this->filename."-". $section;
+		else if ($articleId != null)
+			$filename = $this->filename."-". $articleId;
+		else
+			$filename = $this->filename;
+		if($section=="initialReviews")
+			$filesDir = $this->filesDir."/initialReviews/";
+		else 
+			$filesDir = $this->filesDir;
+		$filePath = $filesDir . $filename;
 		$fileType = "application/pdf";	
 		return parent::downloadFile($filePath, $fileType, $inline);
 	}
@@ -64,6 +80,37 @@ class MinutesFileManager extends FileManager {
 	function viewFile($inline) {
 		$this->downloadFile(true);
 	}
+	
+	/**
+	 * Check if directory exists and create one if it doesn't exist
+	 * aglet 7/25/2011
+	 * @return boolean returns true if successful
+	 */
+	function createDirectory() {
+		if (!FileManager::fileExists($this->filesDir, 'dir')) {
+			return FileManager::mkdirtree($this->filesDir);
+		}
+		return true;
+	}
+	
+	/**
+	 * Create meetings/archives directory if it doesn't exist, create zip archive of meetings/$meetingId if it doesn't exist then download archive
+	 */
+	function downloadMinutesArchive() {
+		$archiveDir = Config::getVar('files', 'files_dir') . '/journals/' .$this->journalId.'/meetings/archives/';
+		if(!FileManager::fileExists($archiveDir, 'dir')) {
+			FileManager::mkdirtree($archiveDir);
+		}
+		if(!FileManager::fileExists($archiveDir.$this->filename.".zip")) { 
+			import('classes.lib.zip.MinutesZip');
+			$zip = new MinutesZip($this->journalId, $this->meetingId);
+			$zip->test();
+			$zip->export();
+		}		
+		$filePath = $archiveDir.$this->filename.".zip";
+		$fileType = "application/zip";
+		return parent::downloadFile($filePath, $fileType, false);		
+	}	
 	
 }
 

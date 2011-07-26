@@ -202,18 +202,21 @@ switch ($op) {
 	case 'instructions':
 		define('HANDLER_CLASS', 'EditorHandler');
 		import('pages.editor.EditorHandler');
+		break;
 	case 'minutes':
 	case 'createMinutes':
 	case 'uploadMinutes':
 	case 'viewMinutes':
-	case 'uploadAnnouncements':
-	case 'submitAnnouncements':
-	case 'uploadAttendance':
-	case 'submitAttendance':
+	case 'downloadMinutes':
+	case 'uploadAttendance':	
+	case 'downloadAttendance':
 	case 'selectInitialReview':
 	case 'uploadInitialReview':
-	case 'submitInitialReview':
 	case 'completeInitialReviews':
+	case 'downloadInitialReviews':
+	case 'selectContinuingReview':
+	case 'uploadContinuingReview':
+	case 'completeContinuingReviews':
 	case 'setMinutesFinal':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
