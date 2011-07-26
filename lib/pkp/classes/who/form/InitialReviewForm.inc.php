@@ -42,9 +42,7 @@ class InitialReviewForm extends Form {
 				$discussionType = $form->getData(\'discussionType\');
 				if(isset($discussion_text) && $discussionType[$key]==""){return false;}
 		}return true;'), array(&$this)));	
-		*/		
-		
-			
+		*/							
 			
 		/*Di ko alam kung bakit di ko mapagana yung array dito kay iniba ko yung names*/
 		$this->addCheck(new FormValidatorCustom($this, 'votesApprove', 'required', 'editor.minutes.approveCountRequired',

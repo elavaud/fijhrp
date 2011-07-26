@@ -41,12 +41,12 @@ class ReviewerHandler extends Handler {
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingDAO');
 		$rangeInfo = Handler::getRangeInfo('submissions');
 
-		$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), true, $rangeInfo);
+		$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo);
 		$meetings = $meetingReviewerDao->getMeetingsByReviewerId($user->getId());
 		//$meetings = $meetingReviewerDao->getMeetingsOfUser($user->getId());
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign('rangeInfo', count($submissions->toArray()));
-		$templateMgr->assign('meetingsCount', count($meetings->toArray()));
+		$templateMgr->assign('rangeInfo', count($submissions));
+		$templateMgr->assign('meetingsCount', count($meetings));
 
 		$templateMgr->display('reviewer/index.tpl');
 	}
@@ -62,6 +62,7 @@ class ReviewerHandler extends Handler {
 		$user =& Request::getUser();
 		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
 		$rangeInfo = Handler::getRangeInfo('submissions');
+
 		$page = isset($args[0]) ? $args[0] : '';
 		switch($page) {
 			case 'completed':
@@ -92,6 +93,7 @@ class ReviewerHandler extends Handler {
 		}  else {
 			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
 		}
+
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign('pageToDisplay', $page);
@@ -130,14 +132,12 @@ class ReviewerHandler extends Handler {
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
-		$rangeInfo = Handler::getRangeInfo('meetings');
 		
-		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection);
+		$meetings =& $meetingDao->getMeetingsByReviewerId($userId, $sort, $sortDirection);
 		
 		$map = array();
-		$meetingsArray = $meetings->toArray();
 		
-		foreach($meetingsArray as $meeting) {
+		foreach($meetings as $meeting) {
 			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
 			$submissions = array();
 			foreach($submissionIds as $submissionId) {
@@ -146,16 +146,13 @@ class ReviewerHandler extends Handler {
 			}
 			$map[$meeting->getId()] = $submissions;
 		}
-		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings); 
 		$templateMgr->assign_by_ref('submissions', $submissions); 
 		$templateMgr->assign_by_ref('map', $map); 
 		$templateMgr->assign('sort', $sort);
-		$templateMgr->assign('rangeInfo', count($meetings));
 		$templateMgr->assign('sortDirection', $sortDirection);
-		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->display('reviewer/meetings.tpl');
 	}
 	

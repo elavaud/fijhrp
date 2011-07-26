@@ -125,6 +125,8 @@ class AttendanceForm extends Form {
 		
 		$this->quorum = $quorum;
 		$this->reviewerItems = $reviewerItems;
+		$meeting->updateMinutesStatus(MEETING_STATUS_ATTENDANCE);
+		$meetingDao->updateMinutesStatus($meeting);		 
 		$meeting->updateMinutesStatus(MINUTES_STATUS_ATTENDANCE);
 		$meetingDao->updateMinutesStatus($meeting);		 
 	}
@@ -172,14 +174,13 @@ class AttendanceForm extends Form {
 		if(count($guestNames)>0) {		
 			$pdf->ChapterItemKey('Member Participating in Other Capacity', 'BU');
 			foreach($guestNames as $key=>$guest)
-				if($guest!="" && $guest != null)
 				$pdf->ChapterItemVal("$guest (Affiliation: $guestAffiliations[$key])");
 		}
 			
 		$pdf->Ln(10);
 		$pdf->ChapterItemVal($details);
 		if($this->getData("announcements"))
-			$pdf->ChapterItemKeyVal("Minutes of Last Meeting and Announcements", $this->getData("announcements"), "BU");
+			$pdf->ChapterItemKeyVal("Announcements", $this->getData("announcements"), "BU");
 		
 		$pdf->ChapterItemKeyVal('Minutes of the Meeting Submitted by', $userDao->getUserFullName($meeting->getUploader()), "B");
 			

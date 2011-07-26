@@ -362,7 +362,7 @@ class MinutesHandler extends Handler {
 		$minutesFileManager = new MinutesFileManager($meetingId);
 		return $minutesFileManager->downloadMinutesArchive();
 	}
-	
+		
 	function validate($meetingId = 0, $access = null) {
 		parent::validate();
 		$isValid = true;
