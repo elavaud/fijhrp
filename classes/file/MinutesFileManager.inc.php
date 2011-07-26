@@ -44,7 +44,7 @@ class MinutesFileManager extends FileManager {
 		$this->filesDir = Config::getVar('files', 'files_dir') . '/journals/' . $this->journalId .
 		'/meetings/'.$meetingId.'/';
 		if($dirNode != null) {
-			$this->filesDir = $this->filesDir."/".$dirNode."/"; 
+			$this->filesDir = $this->filesDir.$dirNode."/"; 
 		}
 		if($articleId != null) {
 			$this->filename = $this->filename."-".$articleId; 
@@ -82,9 +82,8 @@ class MinutesFileManager extends FileManager {
 	}
 	
 	/**
-	 * Write a file.
-	 * @param $dest string the path where the file is to be saved
-	 * @param $contents string the contents to write to the file
+	 * Check if directory exists and create one if it doesn't exist
+	 * aglet 7/25/2011
 	 * @return boolean returns true if successful
 	 */
 	function createDirectory() {
@@ -92,6 +91,25 @@ class MinutesFileManager extends FileManager {
 			return FileManager::mkdirtree($this->filesDir);
 		}
 		return true;
+	}
+	
+	/**
+	 * Create meetings/archives directory if it doesn't exist, create zip archive of meetings/$meetingId if it doesn't exist then download archive
+	 */
+	function downloadMinutesArchive() {
+		$archiveDir = Config::getVar('files', 'files_dir') . '/journals/' .$this->journalId.'/meetings/archives/';
+		if(!FileManager::fileExists($archiveDir, 'dir')) {
+			FileManager::mkdirtree($archiveDir);
+		}
+		if(!FileManager::fileExists($archiveDir.$this->filename.".zip")) { 
+			import('classes.lib.zip.MinutesZip');
+			$zip = new MinutesZip($this->journalId, $this->meetingId);
+			$zip->test();
+			$zip->export();
+		}		
+		$filePath = $archiveDir.$this->filename.".zip";
+		$fileType = "application/zip";
+		return parent::downloadFile($filePath, $fileType, false);		
 	}	
 	
 }

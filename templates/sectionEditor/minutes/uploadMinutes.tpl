@@ -42,7 +42,7 @@
 				{translate key="editor.minutes.attendance"}
 			</td>
 			<td width="10%">Done</td>
-			<td width="30%" align="right"><a target="_blank" href="{url op="downloadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.downloadAttendance"}</a></td>
+			<td width="30%" align="right">---</td>
 		{elseif $statusMap.1 == 0}
 			<td width="40%">
 				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
@@ -67,9 +67,7 @@
 				{translate key="editor.minutes.initialReviews"}
 			</td>
 			<td width="10%">Done</td>
-			<td width="30%" align="right">
-				<a target="_blank" href="{url op="downloadInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.downloadInitialReviews}</a>
-			</td>
+			<td width="30%" align="right">---</td>
 		{elseif $statusMap.2 == 0}
 			<td width="40%">
 				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
