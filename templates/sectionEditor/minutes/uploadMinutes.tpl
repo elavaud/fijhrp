@@ -1,97 +1,93 @@
 {include file="sectionEditor/minutes/menu.tpl"}
-<h4>MINUTES OF MEETING <a href="{url op="viewMeeting" path=$meeting->getId()}">#{$meeting->getId()}</a></h4>
-<div id="submissions">
+<br/>
+<h2>{translate key="reviewer.meetings.details}</h2>
+<div id="details">
+	<table width="100%" class="data">
+		<tr>
+			<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
+			<td class="value" width="80%"><a href="{url op="viewMeeting" path=$meeting->getId()}">#{$meeting->getId()}</a></td>
+		</tr>
+		<tr>
+			<td class="label" width="20%">{translate key="editor.meetings.meetingDate"}</td>
+			<td class="value" width="80%">{$meeting->getDate()|date_format:$dateFormatTrunc}</td>
+		</tr>
+		<tr>
+			<td class="label" width="20%">{translate key="editor.meetingStatus"}</td>
+			<td class="value" width="80%">{$meeting->getStatusKey()}</td>
+		</tr>
+		<tr>
+			<td class="label" width="20%">{translate key="editor.minutesStatus"}</td>
+			<td class="value" width="80%">
+				{$meeting->getMinutesStatusKey()}&nbsp;&nbsp;&nbsp;
+				{if $meeting->isMinutesComplete()}
+					<a target="_blank" href="{url op="viewMinutes" path=$meeting->getId()}">Download Minutes</a>
+				{/if}
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="separator"></div>
+<br/>
+<div id="sections">
 {assign var="statusMap" value=$meeting->getStatusMap()}
-{translate key="common.status"}: {$meeting->getStatusKey()}
+<h2>Sections</h2>
 <table class="listing" width="100%">
-    <tr {if $statusMap.2 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<td width="10%">Section No.</td>
+	<td width="40%">{translate key="submissions.sec"}</td>
+	<td width="10%">{translate key="common.status"}</td>
+	<td width="30%" align="right">Action</td>	
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr valign="bottom">
 		<td width="10%">(1)</td>
-		<td width="80%" >
-			{if $statusMap.2 == 0}
-				<a href="{url op="uploadAnnouncements" path=$meeting->getId()}">{translate key="editor.minutes.announcements"}</a>
-			{else}
-				{translate key="editor.minutes.announcements"}
-			{/if}					
-		</td>
-	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.1 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-    	<td width="10%">(2)</td>
-		<td width="80%" >		
-			{if $statusMap.2 == 0 || $statusMap.1 == 1}
-				{translate key="editor.minutes.attendance"}
-			{elseif $statusMap.1 == 0}
+		{if $statusMap.1 == 1}
+			<td width="40%">			
+				<a target="_blank" href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
+			</td>
+			<td width="10%">Done</td>
+			<td width="30%" align="right">---</td>
+		{elseif $statusMap.1 == 0}
+			<td width="40%">
 				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.attendance"}</a>
-			{/if}
-		</td>
+			</td>
+			<td width="10%">Not Done</td>
+			<td width="30%" align="right">
+				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.uploadAttendance"}</a>				
+			</td>				
+		{/if}
 	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.4 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-		<td width="10%">(3)</td>
-		<td width="80%" >
-			{if $statusMap.1 == 0 || $statusMap.4 == 1}
+	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>
+	<tr valign="bottom">
+		<td width="10%">(2)</td>
+		{if $statusMap.1 == 0}
+			<td width="40%">			
+				<a target="_blank" href="{url op="viewMinutes" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
+			</td>
+			<td width="10%">Not Done</td>
+			<td width="30%" align="right"><a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a></td>
+		{elseif $statusMap.2 == 1}
+			 <td width="40%">			
 				{translate key="editor.minutes.initialReviews"}
-			{elseif $statusMap.4 == 0}
+			</td>
+			<td width="10%">Done</td>
+			<td width="30%" align="right">---</td>
+		{elseif $statusMap.2 == 0}
+			<td width="40%">
 				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.initialReviews"}</a>
-			{/if}			
-		</td>
+			</td>
+			<td width="10%">Not Done</td>
+			<td width="30%" align="right">
+				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
+				<a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a>
+			</td>				
+		{/if}
 	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.8 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-		<td width="10%">(4)</td>
-		<td width="80%" >
-			{if $statusMap.4 == 0 || $statusMap.8 == 1}
-				{translate key="editor.minutes.rereviews"}
-			{elseif $statusMap.8 == 0}
-				<a href="{url op="selectRereview" path=$meeting->getId()}">{translate key="editor.minutes.rereviews"}</a>
-			{/if}			
-		</td>
-	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.16 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-		<td width="10%">(5)</td>
-		<td width="80%" >
-			{if $statusMap.8 == 0 || $statusMap.16 == 1}
-				{translate key="editor.minutes.continuingReviews"}
-			{elseif $statusMap.16 == 0}
-				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">{translate key="editor.minutes.continuingReviews"}</a>
-			{/if}			
-		</td>
-	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.32 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-		<td width="10%">(6)</td>
-		<td width="80%" >
-			{if $statusMap.16 == 0 || $statusMap.32 == 1}
-				{translate key="editor.minutes.amendments"}
-			{elseif $statusMap.32 == 0}
-				<a href="{url op="selectAmendment" path=$meeting->getId()}">{translate key="editor.minutes.amendments"}</a>
-			{/if}			
-		</td>
-	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.64 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-		<td width="10%">(7)</td>
-		<td width="80%" >
-			{if $statusMap.32 == 0 || $statusMap.64 == 1}
-				{translate key="editor.minutes.adverseEvents"}
-			{elseif $statusMap.64 == 0}
-				<a href="{url op="selectAdverseEvent" path=$meeting->getId()}">{translate key="editor.minutes.adverseEvents"}</a>
-			{/if}			
-		</td>
-	</tr>
-	<tr><td colspan="10"><div class="separator"></div></td></tr>
-	<tr {if $statusMap.128 == 0} class="heading highlight" {else} class="heading" {/if} valign="bottom">
-		<td width="10%">(8)</td>
-		<td width="80%" >
-			{if $statusMap.64 == 0 || $statusMap.128 == 1}
-				{translate key="editor.minutes.informationItems"}
-			{elseif $statusMap.128 == 0}
-				<a href="{url op="informationItems" path=$meeting->getId()}">{translate key="editor.minutes.informationItems"}</a>
-			{/if}			
-		</td>		 
-	</tr>		
+	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>	
 </table>
 </div>
-
+<br/>
+{if !$meeting->isMinutesComplete()}
+	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />		
+{/if}
+<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {include file="common/footer.tpl"}

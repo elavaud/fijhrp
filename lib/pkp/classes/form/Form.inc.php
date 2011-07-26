@@ -22,6 +22,7 @@ import('lib.pkp.classes.form.FormError');
 import('lib.pkp.classes.form.validation.FormValidatorAlphaNum');
 import('lib.pkp.classes.form.validation.FormValidatorArray');
 import('lib.pkp.classes.form.validation.FormValidatorArrayCustom');
+import('lib.pkp.classes.form.validation.FormValidatorArrayMyCustom');
 import('lib.pkp.classes.form.validation.FormValidatorControlledVocab');
 import('lib.pkp.classes.form.validation.FormValidatorCustom');
 import('lib.pkp.classes.form.validation.FormValidatorCaptcha');

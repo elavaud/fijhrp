@@ -45,28 +45,7 @@ class SetMeetingForm extends Form {
 	
 	}
 
-	/**
-	 * Initialize form
-	 * */
-	function initData($args){
 
-		$meetingId = isset($args[0]) ? $args[0]: 0;
-		
-		/*Get the selected submissions to be reviewed*/
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-		$selectedSubmissions =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
-		
-		/*Get the meeting details*/
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
-		
-		$this->_data = array(
-			'selectedProposals' => $selectedSubmissions,
-			'meetingDate' => $meeting->getDate(),
-			'meetingId' => $meeting->getId()
-		);
-	}
-	
 	/**
 	 * Display the form.
 	 */

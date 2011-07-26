@@ -142,11 +142,10 @@ class MeetingsHandler extends Handler {
 					$this->saveMeeting($args);
 			}else{
 				if ($setMeetingForm->isLocaleResubmit()) {
-					$profileForm->readInputData();
+					$setMeetingForm->readInputData();
 				}
 				$setMeetingForm->display($args);
 			}
-		
 		}else {
 			$setMeetingForm->display($args);
 		}

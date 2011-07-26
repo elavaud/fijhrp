@@ -169,13 +169,9 @@ class SectionEditorSubmission extends Article {
                 if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
                 
                 //Archived status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
-                
-                if($this->getStatus() == PROPOSAL_STATUS_DUE_FOR_REVIEW) return PROPOSAL_STATUS_DUE_FOR_REVIEW;
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
 
                 $status = $this->getProposalStatus();
-                $articleDao = DAORegistry::getDAO('ArticleDAO');
-                $decision = $articleDao->getLastEditorDecision($this->getId());
                 
                 /*if($status == PROPOSAL_STATUS_RETURNED) {
                     $articleDao = DAORegistry::getDAO('ArticleDAO');
@@ -191,10 +187,12 @@ class SectionEditorSubmission extends Article {
 	
 	
 	function isSubmissionDue() {         
+        $today = time();
         $startdate = strtotime($this->getStartDate($this->getLocale()));
         $dueDate = strtotime ('+1 year', $startdate) ;
-    	$today = time();
-        return ($today >= $dueDate);
+    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
+        $approvalDue = strtotime ('+1 year', $approvalDate) ;
+    	return ($today >= $dueDate && $today >= $approvalDue);
     }
 	
 	/*
@@ -850,6 +848,18 @@ class SectionEditorSubmission extends Article {
 			}
 		}
 		return null;
+	}
+	
+	function getSummaryFile() {
+		$summaryFile = null;
+		$suppFiles = $this->getSuppFiles();
+		foreach($suppFiles as $file) {
+			if($file->getType()=="Summary") {
+				$summaryFile = $file->getSuppFileTitle();
+				break;
+			}
+		}
+		return $summaryFile;
 	}
 }
 

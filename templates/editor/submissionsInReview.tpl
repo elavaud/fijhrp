@@ -42,6 +42,9 @@
 				<td align="right">
 					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 					{translate key=$proposalStatusKey}
+					{if $submission->isSubmissionDue()} 
+						({translate key="submissions.proposal.forContinuingReview"}) 
+					{/if}					
 				</td>		
 			</tr>
 			<tr>
@@ -84,9 +87,8 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision() }
 
-        {if $status == PROPOSAL_STATUS_COMPLETED || ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}		
-			
-            {assign var="articleId" value=$submission->getArticleId()}
+        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}		
+			{assign var="articleId" value=$submission->getArticleId()}
             {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 			{assign var="count" value=$count+1}
 			<tr valign="top">
@@ -96,12 +98,8 @@
 				<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
 				<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 				<td align="right">
-					{if $status == PROPOSAL_STATUS_COMPLETED}
-						{assign var="displayStatus" value=$submission->getProposalStatusKey()}						
-					{else}
-						{assign var="displayStatus" value=$submission->getEditorDecisionKey()}						
-					{/if}
-					{translate key=$displayStatus}
+					{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
+					{translate key=$displayStatus}{if $submission->isSubmissionDue()}&nbsp; ({translate key="submissions.proposal.forContinuingReview"}){/if}
 				</td>		
 			</tr>
 			<tr>
@@ -190,7 +188,6 @@
 </table>
 
 
-
 <br/><br/>
 <table class="listing" width="100%">
         <tr><td colspan="6">EXEMPT FROM REVIEW</td></tr>
@@ -253,6 +250,7 @@
 	</tr>
 {/if}
 </table>
+
 
 </div>
 

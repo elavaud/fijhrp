@@ -17,6 +17,7 @@ define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 
 import('pages.sectionEditor.SectionEditorHandler');
+import('pages.sectionEditor.SubmissionCommentsHandler');
 
 class SubmissionEditHandler extends SectionEditorHandler {
 	/** submission associated with the request **/
@@ -412,13 +413,11 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'submission', $articleId);
 	}
 
-	/***************************************************************************
-	 *
+	/**	 
 	 * Record editor decision (Added additional editor decision cases)
 	 * Edited by aglet
 	 * Last Update: 5/5/2011
-	 *
-	 ***************************************************************************/
+	 */
 
 	function recordDecision() {
 		$articleId = Request::getUserVar('articleId');
@@ -426,10 +425,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$submission =& $this->submission;
 
 		$decision = Request::getUserVar('decision');
-		$resubmitCount = Request::getUserVar('resubmitCount');
+		$articleDao =& DAORegistry::getDAO("ArticleDAO");
+		$previousDecision =& $articleDao->getLastEditorDecision($articleId);
+		$resubmitCount = $previousDecision['resubmitCount'];
 		//pass lastDecisionId of this article to update existing row in edit_decisions
-		$lastDecisionId = Request::getUserVar('lastDecisionId');
-
+		$lastDecisionId = $previousDecision['editDecisionId'];
+		 
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
@@ -443,11 +444,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				break;
 		}
 
-		/*
-		 * Confirm if this is still necessary
-		 * Edited by aglet 6/8/2011
-		 */
-		/*if submitted decision is RESUBMIT, start a new round of review
+		
+		/*Do not start new round of review
 		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
 			SectionEditorAction::initiateNewReviewRound($submission);
 		}*/
@@ -461,13 +459,17 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
-				SectionEditorAction::emailEditorDecisionComment($submission, 'Send');
+				SubmissionCommentsHandler::emailEditorDecisionComment($articleId);
 				break;
+			/*default:
+				Request::redirect(null, null, 'submissionReview', $articleId);
+				break;
+			*/
 		}
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 	
-	/*
+	/**
 	 * If proposal is exempted, record reasons for exemption
 	 */
 	function recordReasonsForExemption($args, $request) {
