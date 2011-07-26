@@ -156,7 +156,7 @@
 		</tr>
 	</table>	
   	<br/>
- 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
+ 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
  	<input type="button" class="button" onclick="document.location.href='{url op="selectInitialReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
  	</form>
 </div>

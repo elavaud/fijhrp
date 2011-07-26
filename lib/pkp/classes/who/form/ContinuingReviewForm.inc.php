@@ -94,7 +94,7 @@ class ContinuingReviewForm extends Form {
 	function execute() {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
-
+		$decision = $this->getData('decision');
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($submission->getId());
 
@@ -142,7 +142,7 @@ class ContinuingReviewForm extends Form {
 			$count = 0;
 			foreach($specificDiscussionText as $idx=>$discussionText) {
 				$count++;
-				$printType = $discussionType[$idx] == MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS ? $typeOther[$idx] : $meeting->getSpecificDiscussionsText($discussionType[$idx]);
+				$printType = $discussionType[$idx] == MINUTES_REVIEW_OTHER_DISCUSSIONS ? $typeOther[$idx] : $meeting->getSpecificDiscussionsText($discussionType[$idx]);
 				$pdf->ChapterItemKey("($count) $printType", "B");
 				$pdf->ChapterItemVal($discussionText);
 			}

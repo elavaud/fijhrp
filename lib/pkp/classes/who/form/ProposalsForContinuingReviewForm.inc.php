@@ -27,8 +27,8 @@ class ProposalsForContinuingReviewForm extends Form {
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$submissions = array();
 		foreach($submissionIds as $submissionId) {
-			$submission = $sectionEditorSubmissionDao->getSectionEditorSubmission($submissionId, $journalId, false);
-			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_REVIEWED)
+			$submission = $sectionEditorSubmissionDao->getSectionEditorSubmission($submissionId, $journalId, false);			
+			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
 				array_push($submissions, $submission);
 		}
 		$this->submissions = $submissions;

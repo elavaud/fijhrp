@@ -28,7 +28,7 @@ class ProposalsForInitialReviewForm extends Form {
 		$submissions = array();
 		foreach($submissionIds as $submissionId) {
 			$submission = $sectionEditorSubmissionDao->getSectionEditorSubmission($submissionId, $journalId, false);
-			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_REVIEWED)
+			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
 				array_push($submissions, $submission);
 		}
 		$this->submissions = $submissions;

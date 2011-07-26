@@ -56,13 +56,7 @@
 	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
-		{if $statusMap.1 == 0}
-			<td width="40%">			
-				{translate key="editor.minutes.initialReviews"}
-			</td>
-			<td width="10%">Not Done</td>
-			<td width="30%" align="right"><a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a></td>
-		{elseif $statusMap.2 == 1 || $meeting->isMinutesComplete()}
+		{if $statusMap.2 == 1 || $meeting->isMinutesComplete()}
 			 <td width="40%">			
 				{translate key="editor.minutes.initialReviews"}
 			</td>
@@ -76,6 +70,26 @@
 			<td width="30%" align="right">
 				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
 				<a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a>
+			</td>				
+		{/if}
+	</tr>
+	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>
+	<tr valign="bottom">
+		<td width="10%">(2)</td>
+		{if $statusMap.8 == 1 || $meeting->isMinutesComplete()}
+			 <td width="40%">			
+				{translate key="editor.minutes.continuingReviews"}
+			</td>
+			<td width="10%">Done</td>
+			<td width="30%" align="right">---</td>
+		{elseif $statusMap.8 == 0}
+			<td width="40%">
+				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">{translate key="editor.minutes.continuingReviews"}</a>
+			</td>
+			<td width="10%">Not Done</td>
+			<td width="30%" align="right">
+				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadContinuingReviews"}</a><br/>
+				<a href="{url op="completeContinuingReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeContinuingReviews"}</a>
 			</td>				
 		{/if}
 	</tr>
