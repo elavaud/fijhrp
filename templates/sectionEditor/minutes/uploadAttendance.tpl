@@ -10,7 +10,6 @@
 				var elemVal = $(this).attr('id').substring(19);
 				var present = $(this).attr('checked');
 				if(present){
-					alert(elemVal);
 					$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('disabled',true);
 					$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('checked',false);
 				}
@@ -50,7 +49,7 @@
 </script>{/literal}
 <h2>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getId()}</h2>
 <br/>
-<form method="POST" action="{url op="submitAttendance" path=$meeting->getId()}">
+<form method="POST" action="{url op="uploadAttendance" path=$meeting->getId()}">
 	
 <div id="announcements">
 	<h2>Details</h2>
@@ -91,6 +90,8 @@
 		 	{assign var="userId" value=$user->getId()}
 		 	<tr>	
 					<td width="5%">	
+	
+								<input type="hidden" name="reviewer_attendance[{$userId}][userId]" id="reviewer-userId-{$userId}" value="{$userId}" /> 
 								<input type="radio"  class="absent" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-isabsent-{$userId}" 
 									{if $attendance[$userId][$isPresent]} == "absent" } checked="checked" {/if} value="absent"  />
 					</td>

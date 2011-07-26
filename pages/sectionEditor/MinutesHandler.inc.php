@@ -184,12 +184,12 @@ class MinutesHandler extends Handler {
 				else {
 					$initialReviewForm->initData();
 				}
-				$initialReviewForm->display();
+	//			$initialReviewForm->display();
 			}
 		}
-		else {
+	//	else {
 			$initialReviewForm->display();
-		}
+	//	}
 	}
 
 	/**

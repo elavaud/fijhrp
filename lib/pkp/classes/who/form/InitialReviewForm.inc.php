@@ -30,17 +30,45 @@ class InitialReviewForm extends Form {
 		$this->addCheck(new FormValidator($this, 'generalDiscussion', 'required', 'editor.minutes.generalDiscussionRequired'));
 		$this->addCheck(new FormValidator($this, 'decision', 'required', 'editor.minutes.decisionRequired'));
 		$this->addCheck(new FormValidator($this, 'unanimous', 'required', 'editor.minutes.unanimousRequired'));
-		/*$this->addCheck(new FormValidatorCustom($this, 'votes[0]', 'required', 'editor.minutes.approveCountRequired',
-		 create_function('$unanimous, $votes', 'if (isset($unanimous)) return true; else if (isset($votes[0])) return true; else return false;'), array('unanimous','votes')));
-		 /*$this->addCheck(new FormValidatorCustom($this, 'votes[1]', 'required', 'editor.minutes.notApproveCountRequired',
-		 create_function('$unanimous, $votes', 'if(isset($unanimous) || (!isset($unanimous) && isset($votes[1]))) return true; else return false;'), array('unanimous','votes')));
-		 $this->addCheck(new FormValidatorCustom($this, 'votes[2]', 'required', 'editor.minutes.abstainCountRequired',
-		 create_function('$unanimous, $votes', 'if(isset($unanimous) || (!isset($unanimous) && isset($votes[2]))) return true; else return false;'), array('unanimous','votes')));
-		 $this->addCheck(new FormValidatorCustom($this, 'minorityReason', 'required', 'editor.minutes.minorityReasonRequired',
-		 create_function('$unanimous, $minorityReason', 'if(isset($unanimous) || (!isset($unanimous) && ( $minorityReason=="" || $minorityReason == null))) return true; else return false;'), array('unanimous','minorityReason')));
-		 $this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
-		 create_function('$unanimous, $chairReview', 'if(isset($unanimous) || (!isset($unanimous) && ( $chairReview=="" || $chairReview == null))) return true; else return false;'), array('unanimous','chairReview')));
-		 */
+
+
+		$this->addCheck(new FormValidatorCustom($this, 'discussionType', 'required', 'editor.minutes.typeOtherRequired',
+			create_function('$discussionType, $form', 'foreach($discussionType as $key=>$discussion_type){
+				$typeOther = $form->getData(\'typeOther\');
+				if($discussion_type==0 && $typeOther[$key]==""){ return false; }
+		}return true;'), array(&$this)));	
+
+		/*	 	
+		$this->addCheck(new FormValidatorCustom($this, 'discussionText', 'required', 'editor.minutes.discussionTypeRequired',
+			create_function('$discussionText, $form', 'foreach($discussionText as $key=>$discussion_text){
+				$discussionType = $form->getData(\'discussionType\');
+				if(isset($discussion_text) && $discussionType[$key]==""){return false;}
+		}return true;'), array(&$this)));	
+		*/		
+		
+			
+			
+		/*Di ko alam kung bakit di ko mapagana yung array dito kay iniba ko yung names*/
+		$this->addCheck(new FormValidatorCustom($this, 'votesApprove', 'required', 'editor.minutes.approveCountRequired',
+			create_function('$votesApprove,$form', 	  'if ($form->getData(\'unanimous\') == "Yes") return true; else return is_numeric($votesApprove);'), array(&$this)));
+		$this->addCheck(new FormValidatorCustom($this, 'votesNotApprove', 'required', 'editor.minutes.notApproveCountRequired',
+			create_function('$votesNotApprove,$form', 'if ($form->getData(\'unanimous\') == "Yes") return true; else return is_numeric($votesNotApprove);'), array(&$this)));
+		$this->addCheck(new FormValidatorCustom($this, 'votesAbstain', 'required', 'editor.minutes.abstainCountRequired',
+			create_function('$votesAbstain,$form',    'if ($form->getData(\'unanimous\') == "Yes") return true; else return is_numeric($votesAbstain);'), array(&$this)));
+	
+		/*IF NOT UNANIMOUS, REQURIED YUNG FIELDS NA minority at chairReview --paedit nalang kung mali*/
+		$this->addCheck(new FormValidatorCustom($this, 'minorityReason', 'required', 'editor.minutes.minorityReasonRequired',
+			create_function('$minorityReason, $form', 'if ($form->getData(\'unanimous\') == "Yes") return true; else return (($minorityReason != "") || ($minorityReason != null));'), array(&$this)));
+		$this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
+		 	create_function('$chairReview, $form', 'if ($form->getData(\'unanimous\') == "Yes") return true; else return (($chairReview !="") || ($chairReview != null));'), array(&$this)));
+		
+		/*IF APPROVED, REQURIED YUNG FIELDS NA minorityReason at chairReview -- paedit nalang kung mali*/
+		$this->addCheck(new FormValidatorCustom($this, 'minorityReason', 'required', 'editor.minutes.minorityReasonRequired',
+			create_function('$minorityReason, $form', 'if ($form->getData(\'decision\') != 1) return true; else return (($minorityReason != "") || ($minorityReason != null));'), array(&$this)));
+		$this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
+		 	create_function('$chairReview, $form', 'if ($form->getData(\'decision\') != 1) return true; else return (($chairReview !="") || ($chairReview != null));'), array(&$this)));
+		 	
+		 	
 	}
 
 	/**
@@ -81,7 +109,9 @@ class InitialReviewForm extends Form {
 			'discussionText',
 			'typeOther',
 			'decision',
-			'votes',
+			'votesApprove',
+			'votesNotApprove',
+			'votesAbstain',
 			'unanimous',
 			'minorityReason',
 			'wproRole',
