@@ -41,12 +41,14 @@
 <h2>{translate key="editor.meetings.submissions"}</h2>
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-	<td width="10%">WHO Proposal ID</td>
-	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-	<td width="5%">{translate key="submissions.sec"}</td>
-	<td width="25%">{translate key="article.authors"}</td>
-	<td width="35%">{translate key="article.title"}</td>
-	<td width="25%" align="right">{translate key="common.status"}</td>
+	<tr class="heading" valign="bottom">
+		<td width="10%">WHO Proposal ID</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%">{translate key="submissions.sec"}</td>
+		<td width="25%">{translate key="article.authors"}</td>
+		<td width="35%">{translate key="article.title"}</td>
+		<td width="25%" align="right">{translate key="common.status"}</td>
+	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	
 	{foreach from=$submissions item=submission}

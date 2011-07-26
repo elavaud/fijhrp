@@ -47,12 +47,14 @@
 <h2>{translate key="reviewer.meetings.submissions"}</h2>
 <div class="separator"></div>
 <table width="100%" class="listing">
-	<td width="10%">WHO Proposal ID</td>
-	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{translate key="submissions.submit"}</td>
-	<td width="5%">{translate key="submissions.sec"}</td>
-	<td width="25%">{translate key="article.authors"}</td>
-	<td width="35%">{translate key="article.title"}</td>
-	<td width="25%" align="right">{translate key="common.status"}</td>
+	<tr class="heading" valign="bottom">
+		<td width="10%">WHO Proposal ID</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{translate key="submissions.submit"}</td>
+		<td width="5%">{translate key="submissions.sec"}</td>
+		<td width="25%">{translate key="article.authors"}</td>
+		<td width="35%">{translate key="article.title"}</td>
+		<td width="25%" align="right">{translate key="common.status"}</td>
+	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	
 	{foreach from=$submissions item=submission}

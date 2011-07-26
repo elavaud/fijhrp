@@ -1,6 +1,7 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 <br/>
 <h2>{translate key="reviewer.meetings.details}</h2>
+<div class="separator"></div>
 <div id="details">
 	<table width="100%" class="data">
 		<tr>
@@ -26,17 +27,18 @@
 		</tr>
 	</table>
 </div>
-<div class="separator"></div>
 <br/>
 <div id="sections">
 {assign var="statusMap" value=$meeting->getStatusMap()}
 <h2>Sections</h2>
 <table class="listing" width="100%">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-	<td width="10%">Section No.</td>
-	<td width="40%">{translate key="submissions.sec"}</td>
-	<td width="10%">{translate key="common.status"}</td>
+	<tr class="heading" valign="bottom">
+		<td width="10%">Section No.</td>
+		<td width="40%">{translate key="submissions.sec"}</td>
+		<td width="10%">{translate key="common.status"}</td>
 	<td width="30%" align="right">Action</td>	
+	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(1)</td>
@@ -56,7 +58,7 @@
 			</td>				
 		{/if}
 	</tr>
-	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>
+	<tr><td colspan="6" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
 		{if $statusMap.1 == 0}
@@ -86,8 +88,8 @@
 </table>
 </div>
 <br/>
+<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {if !$meeting->isMinutesComplete()}
 	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />		
 {/if}
-<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {include file="common/footer.tpl"}
