@@ -1,14 +1,11 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 
-<h4>Proposals for Initial Review</h4>
+<h4>{translate key="editor.minutes.proposalsForInitialReview"}</h4>
 <br/>
 {if count($submissions) == 0 }
-	No proposals are assigned for initial ERC Review.
+	{translate key="editor.minutes.noProposalsForInitialReview"}
 {else}
 	
-	<div id="proposals">
-	
-	</div>
 	<div id="selectInitialReview">
 		<table class="data">
 			<form method="POST" action="{url op="selectInitialReview" path=$meeting->getId()}">			
@@ -34,8 +31,6 @@
 		</table>
 	</div>
 {/if}	
-	<form method="POST" action="{url op="completeInitialReview"}">
-		<input type="hidden" name="meetingId" value="{$meetingId}"/>
-		<br/><input type="submit" class="button defaultButton" id="complete" name="complete" value="Complete Initial Reviews"/>
-		<input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
-	</form>
+	
+<br/><input type="button" class="button defaultButton" id="complete" name="complete" value="{translate key="editor.minutes.completeInitialReviews"}" onclick="document.location.href='{url op="completeInitialReviews" path=$meeting->getId()}'"/>
+<input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />	

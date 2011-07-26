@@ -178,14 +178,14 @@ switch ($op) {
 	case 'createMinutes':
 	case 'uploadMinutes':
 	case 'viewMinutes':
-	case 'uploadAnnouncements':
-	case 'submitAnnouncements':
-	case 'uploadAttendance':
-	case 'submitAttendance':
+	case 'downloadMinutes':
+	case 'uploadAttendance':	
 	case 'selectInitialReview':
 	case 'uploadInitialReview':
-	case 'submitInitialReview':
-	case 'completeInitialReviews':
+	case 'completeInitialReviews':	
+	case 'selectContinuingReview':
+	case 'uploadContinuingReview':
+	case 'completeContinuingReviews':
 	case 'setMinutesFinal':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');

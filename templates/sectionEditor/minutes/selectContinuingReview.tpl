@@ -1,45 +1,35 @@
-{strip}
-{assign var="pageTitle" value="common.queue.long.minutes"}
-{url|assign:"currentUrl" page="sectionEditor"}
-{include file="common/header.tpl"}
-{/strip}
+{include file="sectionEditor/minutes/menu.tpl"}
 
-<ul class="menu">
-	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
-	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
-</ul>
+<h4>{translate key="editor.minutes.proposalsForContinuingReview"}</h4>
 <br/>
-<div id="selectContinuingReview">
-<h4>Select Proposal for Initial Review</h4>
-<br/>
-{if $submissions == null }
-	No proposals are assigned for continuing review.
+{if count($submissions) == 0 }
+	{translate key="editor.minutes.noProposalsForContinuingReview"}
 {else}
 	
-	<table class="data">
-		<form method="POST" action="{url op="uploadContinuingReview" path=$meetingId}">			
-		<tr>
-			<td class="label">
-				<select name="articleId" id="articleId" class="selectMenu">
-					<option value="none">Choose One</option>
-					{foreach from=$submissions item=submission}
-						<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
-					{/foreach}
-				</select>								
-			</td>		
-			<td class="value"><input type="submit" class="button" id="select_button" name="select_button" value="Select Proposal"/></td>	
-		</tr>
-		</form>	
-		<tr>
-			<td colspan="6">
-				<br/>				
-			</td>
-		</tr>
-	</table>
+	<div id="selectContinuingReview">
+		<table class="data">
+			<form method="POST" action="{url op="selectContinuingReview" path=$meeting->getId()}">			
+			<tr>
+				<td class="label">
+					{fieldLabel name="articleId" required="true" key="editor.minutes.selectProposal"}													
+				</td>		
+				<td class="value">
+					<select name="articleId" id="articleId" class="selectMenu">
+						<option value="none">Choose One</option>
+						{foreach from=$submissions item=submission}
+							<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
+						{/foreach}
+					</select>
+					&nbsp;&nbsp;&nbsp;<input type="submit" class="button" name="selectProposal" value="Select Proposal"/></td>	
+			</tr>
+			</form>	
+			<tr>
+				<td colspan="6">
+					<br/>				
+				</td>
+			</tr>
+		</table>
+	</div>
 {/if}	
-	<form method="POST" action="{url op="completeContinuingReview"}">
-		<input type="hidden" name="meetingId" value="{$meetingId}"/>
-		<br/><input type="submit" class="button" id="complete" name="complete" value="Complete Initial Reviews"/>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="uploadMinutes" path=$meetingId}">Back to sections of minutes</a>
-	</form>
-</div>
+<br/><input type="button" class="button defaultButton" id="complete" name="complete" value="{translate key="editor.minutes.completeContinuingReviews"}" onclick="document.location.href='{url op="completeContinuingReviews" path=$meeting->getId()}'"/>
+<input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
