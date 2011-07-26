@@ -13,6 +13,23 @@
 	<li class="current"><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
 </ul>
+<div class="separator"></div>
+<br/>
+<div id="search">
+<form name="meetingSearch" method="post" action="{url op="meetingSearch"}">
+	 <select name="status" size="1"  class="selectMenu">
+		<option value="{$smarty.const.STATUS_NEW}">New</option>
+		<option value="{$smarty.const.STATUS_RESCHEDULED}">Rescheduled</option>
+		<option value="{$smarty.const.STATUS_FINAL}">Final</option>
+		<option value="{$smarty.const.STATUS_CANCELLED}">Cancelled</option>
+	</select>
+	{translate key="common.between"}
+	{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
+	{translate key="common.and"}
+	{html_select_date prefix="dateTo" time=$dateTo all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
+	
+</form>
+</div>
 
 <div id="meetings">
 <table class="listing" width="100%">
@@ -48,8 +65,13 @@
 					{$meeting->getStatusKey()}
 				</a>
 				{if $meeting->getStatus() == 1}
-				<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
-					Upload Minutes
+					{if $meeting->isMinutesComplete()}
+						<br/><a href="{url op="downloadMinutes" path=$meeting->getId()}" class="action">
+						{translate key="editor.minutes.downloadMinutes"}
+					{else}
+						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
+						{translate key="editor.minutes.uploadMinutes"}
+					{/if}
 				</a>
 				{/if}
 			</td>
@@ -74,6 +96,7 @@
 	</table>
 </div>
 <br />
+
 <h2>{translate key="editor.meetings.setNewMeeting"}</h2>
 <a href="{url op="setMeeting"}">{translate key="editor.meetings.clickHere"}</a>&nbsp;{translate key="editor.meetings.toSetNewMeeting"}
 {include file="common/footer.tpl"}

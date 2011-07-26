@@ -381,6 +381,7 @@
 	<message key="editor.minutes.downloadAttendance">Download Attendance</message>
 	<message key="editor.minutes.downloadInitialReviews">Download Initial Reviews</message>
 	<message key="editor.minutes.downloadMinutes">Download Minutes</message>
+	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
 	<message key="editor.minutes.confirmContinuingReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.confirmInitialReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.proposalsForInitialReview">Proposals for Initial Review</message>
