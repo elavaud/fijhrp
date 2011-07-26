@@ -28,8 +28,6 @@ $(document).ready(function() {
 	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
-<div class="separator"></div>
-<br>
 {include file="common/formErrors.tpl"}
 <div class="separator"></div>
 <br>

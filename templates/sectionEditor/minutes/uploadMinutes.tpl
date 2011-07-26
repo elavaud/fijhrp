@@ -75,7 +75,7 @@
 			</td>				
 		{/if}
 	</tr>
-	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>
+	<tr><td colspan="6" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
 		{if $statusMap.8 == 1 || $meeting->isMinutesComplete()}
@@ -99,10 +99,10 @@
 </table>
 </div>
 <br/>
-<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {if !$meeting->isMinutesComplete()}
 	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />
 {else}
 	<input type="button" value="{translate key="editor.minutes.downloadMinutes"}" class="button defaultButton" onclick="document.location.href='{url op="downloadMinutes" path=$meeting->getId() }'" />		
 {/if}
+<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {include file="common/footer.tpl"}
