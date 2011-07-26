@@ -8,15 +8,15 @@ import('classes.lib.fpdf.pdf');
 import('lib.pkp.classes.form.Form');
 import('classes.submission.sectionEditor.SectionEditorAction');
 
-class ProposalsForInitialReviewForm extends Form {
+class ProposalsForContinuingReviewForm extends Form {
 	/** @var int The meeting this form is for */
 	var $meeting;
 	var $submissions;
 	/**
 	 * Constructor.
 	 */
-	function ProposalsForInitialReviewForm($meetingId, $journalId) {
-		parent::Form('sectionEditor/minutes/selectInitialReview.tpl');
+	function ProposalsForContinuingReviewForm($meetingId, $journalId) {
+		parent::Form('sectionEditor/minutes/selectContinuingReview.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
@@ -27,8 +27,8 @@ class ProposalsForInitialReviewForm extends Form {
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$submissions = array();
 		foreach($submissionIds as $submissionId) {
-			$submission = $sectionEditorSubmissionDao->getSectionEditorSubmission($submissionId, $journalId, false);
-			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+			$submission = $sectionEditorSubmissionDao->getSectionEditorSubmission($submissionId, $journalId, false);			
+			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
 				array_push($submissions, $submission);
 		}
 		$this->submissions = $submissions;

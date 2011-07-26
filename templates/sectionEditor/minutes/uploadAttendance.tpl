@@ -131,8 +131,15 @@
 		<td width='60%'></td>
 	</tr>
 	</table>
+<<<<<<< HEAD
 	<br/><br/>
 	<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>	 
+=======
+	<div class="separator"></div>
+		<br/><br/>		
+		<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>
+		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />	 
+>>>>>>> refs/remotes/gay/master
 	</div>
  </form>

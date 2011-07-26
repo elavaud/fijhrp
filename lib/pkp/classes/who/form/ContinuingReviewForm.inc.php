@@ -8,15 +8,15 @@ import('classes.lib.fpdf.pdf');
 import('lib.pkp.classes.form.Form');
 import('classes.submission.sectionEditor.SectionEditorAction');
 
-class InitialReviewForm extends Form {
+class ContinuingReviewForm extends Form {
 	/** @var int The meeting this form is for */
 	var $meeting;
 	var $submission;
 	/**
 	 * Constructor.
 	 */
-	function InitialReviewForm($meetingId, $articleId) {
-		parent::Form('sectionEditor/minutes/uploadInitialReview.tpl');
+	function ContinuingReviewForm($meetingId, $articleId) {
+		parent::Form('sectionEditor/minutes/uploadContinuingReview.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
@@ -95,7 +95,6 @@ class InitialReviewForm extends Form {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		$decision = $this->getData('decision');
-		
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($submission->getId());
 
@@ -125,7 +124,7 @@ class InitialReviewForm extends Form {
 			
 		$pdf = new PDF();
 		$pdf->AddPage();
-		$pdf->ChapterTitle('INITIAL REVIEW of ' . $submission->getLocalizedTitle());
+		$pdf->ChapterTitle('CONTINUING REVIEW of ' . $submission->getLocalizedTitle());
 		$pdf->ChapterItemKeyVal('Protocol Title', $submission->getLocalizedTitle(), "BU");
 		$pdf->ChapterItemKeyVal('Principal Investigator (PI)', $submission->getAuthorString(), "BU");
 		$pdf->ChapterItemKeyVal('WPRO Role in Research', $this->getData('wproRole'), "BU");
@@ -195,10 +194,10 @@ class InitialReviewForm extends Form {
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$filename = $submission->getLocalizedTitle();
-		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/initialReviews/".$filename;
+		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/continuingReviews/".$filename;
 
 		import('classes.file.MinutesFileManager');
-		$minutesFileManager = new MinutesFileManager($meeting->getId(), "initialReviews", $submission->getId());
+		$minutesFileManager = new MinutesFileManager($meeting->getId(), "continuingReviews", $submission->getId());
 		if($minutesFileManager->createDirectory()) {
 			$pdf->Output($meetingFilesDir,"F");
 		}

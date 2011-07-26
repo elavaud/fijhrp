@@ -332,6 +332,7 @@
 	<message key="editor.minutes.selectProposal">Select proposal</message>
 	<message key="editor.minutes.selectProposalRequired">Please select a proposal to review.</message>
 	<message key="editor.minutes.proposal.initialReview">Initial Review for Proposal</message>
+	<message key="editor.minutes.proposal.continuingReview">Continuing Review for Proposal</message>
 	<message key="editor.minutes.initialReview.scientificDesign">Scientific Design and Institute Review</message>
 	<message key="editor.minutes.initialReview.risks">Level of Risk</message>	
 	<message key="editor.minutes.initialReview.benefits">Benefit Category</message>
@@ -377,4 +378,15 @@
 	<message key="editor.minutes.wproRole">WPRO Role in Research</message>
 	<message key="editor.minutes.wproRoleRequired">Please indicate WPRO Role in Research</message>
 	<message key="editor.minutes.summaryRequired">Please enter protocol summary</message>
+	<message key="editor.minutes.downloadAttendance">Download Attendance</message>
+	<message key="editor.minutes.downloadInitialReviews">Download Initial Reviews</message>
+	<message key="editor.minutes.downloadMinutes">Download Minutes</message>
+	<message key="editor.minutes.confirmContinuingReview">This cannot be undone. Are you sure you want to submit this review?</message>
+	<message key="editor.minutes.confirmInitialReview">This cannot be undone. Are you sure you want to submit this review?</message>
+	<message key="editor.minutes.proposalsForInitialReview">Proposals for Initial Review</message>
+	<message key="editor.minutes.noProposalsForInitialReview">No proposals are assigned for initial ERC Review.</message>
+	<message key="editor.minutes.proposalsForContinuingReview">Proposals for Continuing Review</message>
+	<message key="editor.minutes.noProposalsForContinuingReview">No proposals are assigned for continuing ERC Review.</message>
+	<message key="editor.minutes.uploadContinuingReviews">Upload Continuing Reviews</message>
+	<message key="editor.minutes.completeContinuingReviews">Complete Continuing Reviews</message>
 </locale>
