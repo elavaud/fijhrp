@@ -132,7 +132,13 @@ class ReviewerHandler extends Handler {
 		$sortDirection = Request::getUserVar('sortDirection');
 		$rangeInfo = Handler::getRangeInfo('meetings');
 		
-		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection);
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
+		$status = Request::getUserVar('status');
+		$replyStatus = Request::getUserVar('replyStatus');
+		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection, $status, $replyStatus, $fromDate, $toDate);
 		
 		$map = array();
 		$meetingsArray = $meetings->toArray();
@@ -146,7 +152,7 @@ class ReviewerHandler extends Handler {
 			}
 			$map[$meeting->getId()] = $submissions;
 		}
-		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection);
+		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection, $status, $replyStatus, $fromDate, $toDate);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings); 
@@ -156,6 +162,19 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('rangeInfo', count($meetings));
 		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
+		$templateMgr->assign('dateFrom', $fromDate);
+		$templateMgr->assign('dateTo', $toDate);
+		$templateMgr->assign('status', $status);
+		$templateMgr->assign('replyStatus', $replyStatus);
+		
+		// Set search parameters
+		$duplicateParameters = array(
+			'dateFromMonth', 'dateFromDay', 'dateFromYear',
+			'dateToMonth', 'dateToDay', 'dateToYear', 'status', 'replyStatus'
+		);
+		foreach ($duplicateParameters as $param)
+			$templateMgr->assign($param, Request::getUserVar($param));
+		
 		$templateMgr->display('reviewer/meetings.tpl');
 	}
 	

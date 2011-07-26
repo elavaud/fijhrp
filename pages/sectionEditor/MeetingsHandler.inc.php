@@ -91,8 +91,15 @@ class MeetingsHandler extends Handler {
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
 		$rangeInfo = Handler::getRangeInfo('meetings');
-			
-		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection);
+
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
+		$status = Request::getUserVar('status');
+		$minutesStatus = Request::getUserVar('minutesStatus');
+		
+		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection, $status, $minutesStatus, $fromDate, $toDate);
 		$meetingsArray = $meetings->toArray();
 		$map = array();
 			
@@ -106,7 +113,7 @@ class MeetingsHandler extends Handler {
 			$map[$meeting->getId()] = $submissions;
 		}
 		
-		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection);
+		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection, $status, $minutesStatus, $fromDate, $toDate);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings);
@@ -118,6 +125,19 @@ class MeetingsHandler extends Handler {
 		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
+		$templateMgr->assign('dateFrom', $fromDate);
+		$templateMgr->assign('dateTo', $toDate);
+		$templateMgr->assign('status', $status);
+		$templateMgr->assign('minutesStatus', $minutesStatus);
+		
+		// Set search parameters
+		$duplicateParameters = array(
+			'dateFromMonth', 'dateFromDay', 'dateFromYear',
+			'dateToMonth', 'dateToDay', 'dateToYear', 'status', 'minutesStatus'
+		);
+		foreach ($duplicateParameters as $param)
+			$templateMgr->assign($param, Request::getUserVar($param));
+		
 		$templateMgr->display('sectionEditor/meetings/meetings.tpl');
 	}
 
