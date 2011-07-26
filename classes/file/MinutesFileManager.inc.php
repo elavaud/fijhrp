@@ -40,7 +40,7 @@ class MinutesFileManager extends FileManager {
 		$journal =& Request::getJournal();
 		$this->journalId = $journal->getId();
 		
-		$this->filename = $meetingId."-".date("FjY-gia", strtotime($meeting->getDate()));
+		$this->filename = $meetingId."-".date("d-F-Y-gia", strtotime($meeting->getDate()));
 		$this->filesDir = Config::getVar('files', 'files_dir') . '/journals/' . $this->journalId .
 		'/meetings/'.$meetingId.'/';
 		if($dirNode != null) {
