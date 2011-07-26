@@ -13,7 +13,7 @@
 	<li class="current"><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
 </ul>
-<div class="separator"></div>
+<!-- div class="separator"></div>
 <br/>
 <div id="search">
 <form name="meetingSearch" method="post" action="{url op="meetingSearch"}">
@@ -29,7 +29,7 @@
 	{html_select_date prefix="dateTo" time=$dateTo all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
 	
 </form>
-</div>
+</div-->
 
 <div id="meetings">
 <table class="listing" width="100%">
