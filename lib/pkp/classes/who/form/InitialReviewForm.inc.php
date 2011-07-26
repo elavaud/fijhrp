@@ -30,15 +30,19 @@ class InitialReviewForm extends Form {
 		$this->addCheck(new FormValidator($this, 'generalDiscussion', 'required', 'editor.minutes.generalDiscussionRequired'));
 		$this->addCheck(new FormValidator($this, 'decision', 'required', 'editor.minutes.decisionRequired'));
 		$this->addCheck(new FormValidator($this, 'unanimous', 'required', 'editor.minutes.unanimousRequired'));
-
-
 		$this->addCheck(new FormValidatorCustom($this, 'discussionType', 'required', 'editor.minutes.typeOtherRequired',
 			create_function('$discussionType, $form', 'foreach($discussionType as $key=>$discussion_type){
 				$typeOther = $form->getData(\'typeOther\');
 				if($discussion_type==0 && $typeOther[$key]==""){ return false; }
 		}return true;'), array(&$this)));	
 
-
+		/*	 	
+		$this->addCheck(new FormValidatorCustom($this, 'discussionText', 'required', 'editor.minutes.discussionTypeRequired',
+			create_function('$discussionText, $form', 'foreach($discussionText as $key=>$discussion_text){
+				$discussionType = $form->getData(\'discussionType\');
+				if(isset($discussion_text) && $discussionType[$key]==""){return false;}
+		}return true;'), array(&$this)));	
+		*/							
 			
 		/*Di ko alam kung bakit di ko mapagana yung array dito kay iniba ko yung names*/
 		$this->addCheck(new FormValidatorCustom($this, 'votesApprove', 'required', 'editor.minutes.approveCountRequired',
@@ -48,15 +52,9 @@ class InitialReviewForm extends Form {
 		$this->addCheck(new FormValidatorCustom($this, 'votesAbstain', 'required', 'editor.minutes.abstainCountRequired',
 			create_function('$votesAbstain,$form',    'if ($form->getData(\'unanimous\') == "Yes") return true; else return is_numeric($votesAbstain);'), array(&$this)));
 	
-		/*IF NOT UNANIMOUS, REQURIED YUNG FIELDS NA minority at chairReview --paedit nalang kung mali*/
 		$this->addCheck(new FormValidatorCustom($this, 'minorityReason', 'required', 'editor.minutes.minorityReasonRequired',
 			create_function('$minorityReason, $form', 'if ($form->getData(\'unanimous\') == "Yes") return true; else return (($minorityReason != "") || ($minorityReason != null));'), array(&$this)));
-		$this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
-		 	create_function('$chairReview, $form', 'if ($form->getData(\'unanimous\') == "Yes") return true; else return (($chairReview !="") || ($chairReview != null));'), array(&$this)));
 		
-		/*IF APPROVED, REQURIED YUNG FIELDS NA minorityReason at chairReview -- paedit nalang kung mali*/
-		$this->addCheck(new FormValidatorCustom($this, 'minorityReason', 'required', 'editor.minutes.minorityReasonRequired',
-			create_function('$minorityReason, $form', 'if ($form->getData(\'decision\') != 1) return true; else return (($minorityReason != "") || ($minorityReason != null));'), array(&$this)));
 		$this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
 		 	create_function('$chairReview, $form', 'if ($form->getData(\'decision\') != 1) return true; else return (($chairReview !="") || ($chairReview != null));'), array(&$this)));
 		 	
@@ -78,7 +76,9 @@ class InitialReviewForm extends Form {
 		$templateMgr->assign("discussionText", $this->getData('discussionText'));
 		$templateMgr->assign("typeOther", $this->getData('typeOther'));
 		$templateMgr->assign("unanimous", $this->getData('unanimous'));
-		$templateMgr->assign("votes", $this->getData('votes'));
+		$templateMgr->assign("votesApprove", $this->getData('votesApprove'));
+		$templateMgr->assign("votesNotApprove", $this->getData('votesNotApprove'));
+		$templateMgr->assign("votesAbstain", $this->getData('votesAbstain'));
 		$templateMgr->assign("minorityReason", $this->getData('minorityReason'));
 		$templateMgr->assign('decision', $this->getData('decision'));
 		$templateMgr->assign('wproRole', $this->getData('wproRole'));
@@ -116,7 +116,7 @@ class InitialReviewForm extends Form {
 	function execute() {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
-
+		$decision = $this->getData('decision');
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($submission->getId());
 
@@ -163,10 +163,12 @@ class InitialReviewForm extends Form {
 			$pdf->ChapterItemKey('Specific', "B");
 			$count = 0;
 			foreach($specificDiscussionText as $idx=>$discussionText) {
-				$count++;
-				$printType = $discussionType[$idx] == MINUTES_INITIAL_REVIEW_OTHER_DISCUSSIONS ? $typeOther[$idx] : $meeting->getSpecificDiscussionsText($discussionType[$idx]);
-				$pdf->ChapterItemKey("($count) $printType", "B");
-				$pdf->ChapterItemVal($discussionText);
+				if($discussionText!="" || $discussionText!=null) {
+					$count++;
+					$printType = $discussionType[$idx] == MINUTES_REVIEW_OTHER_DISCUSSIONS ? $typeOther[$idx] : $meeting->getSpecificDiscussionsText($discussionType[$idx]);
+					$pdf->ChapterItemKey("($count) $printType", "B");
+					$pdf->ChapterItemVal($discussionText);
+				}
 			}
 		}
 
@@ -202,8 +204,8 @@ class InitialReviewForm extends Form {
 					break;
 			}
 
-			$votesStr = "The distribution of votes are as follows. ". $votes[0]." member(s) voted for, ".$votes[1]." member(s) voted against, ".$votes[2]." member(s) abstained.";
-			$reasonsStr = "Reasons for minority opinions are as follows. $minorityReason";			
+			$votesStr = "The distribution of votes are as follows. ". $this->getData('votesApprove')." member(s) voted for, ".$this->getData('votesNotApprove')." member(s) voted against, ".$this->getData('votesAbstain')." member(s) abstained.";
+			$reasonsStr = "Reasons for minority opinions are as follows: $minorityReason";
 		}
 		$pdf->ChapterItemKey('(d) IRB Decision and Votes', "BU");
 		$pdf->ChapterItemVal($decisionStr);
@@ -211,14 +213,18 @@ class InitialReviewForm extends Form {
 			$pdf->ChapterItemVal($votesStr);
 			$pdf->ChapterItemVal($reasonsStr);
 			if($chairReview!=null)
-				$pdf->ChapterItemVal($chairReview);
+			$pdf->ChapterItemVal($chairReview);
 		}
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		$filename = $meeting->getId()."-".date( "FjY-gia", strtotime( $meeting->getDate() ) );
-		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$filename;
+		$filename = $submission->getLocalizedTitle().".pdf";
+		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/initialReviews/".$filename;
 
-		$pdf->Output($meetingFilesDir,"F");		
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meeting->getId(), "initialReviews", $submission->getId());
+		if($minutesFileManager->createDirectory()) {
+			$pdf->Output($meetingFilesDir,"F");
+		}
 	}
 
 

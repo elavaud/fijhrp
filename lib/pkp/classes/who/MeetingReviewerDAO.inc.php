@@ -100,6 +100,13 @@ class MeetingReviewerDAO extends DAO {
 			$this->datetimeToDB($dateReminded)), array($meeting->getId(), $reviewerId));
 	}
 	
+	function resetReplyOfReviewers($meeting) {
+		$this->update(
+			'UPDATE meeting_reviewers SET attending = 0, remarks = NULL
+			WHERE meeting_id = ?', $meeting->getId()
+		);
+	}
+	
 	/**
 	 * Update meeting_reviewers table to save attendance in meeting 
 	 * Added by aglet 7/17/2011

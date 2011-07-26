@@ -33,7 +33,7 @@ class AttendanceForm extends Form {
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
-		/*Pakibago yung dati*/
+		
 		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
 		$this->addCheck(new FormValidatorCustom($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence',
 				 create_function('$reviewer_attendance,$form', 'foreach($reviewer_attendance as $key=>$reviewer){
@@ -68,7 +68,7 @@ class AttendanceForm extends Form {
 		$templateMgr->assign_by_ref('guestAffiliations', $guestAffiliations);
 
 		$templateMgr->assign('adjourned', $this->getData('adjourned'));
-		$templateMgr->assign('venue', $this->getData('$venue'));
+		$templateMgr->assign('venue', $this->getData('venue'));
 		$templateMgr->assign('announcements', $this->getData('announcements'));
 		parent::display();
 	}
@@ -134,28 +134,42 @@ class AttendanceForm extends Form {
 	function savePdf() {
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
+		$userDao =& DAORegistry::getDAO("UserDAO");
 		$reviewerItems =& $this->reviewerItems;		
 		$guestNames = $this->getData("guestName");
 		$guestAffiliations = $this->getData("guestAffiliation");
-		$details= "The meeting was convened at ". $this->getData("venue") . " on " . $meeting->getDate() . " with the required quorum of ".$this->quorum." members present. The meeting was adjourned at " .  $this->getData('adjourned') .".";				
+		$meetingDateTime = date( "d F Y g:ia", strtotime( $meeting->getDate() ) );
+		$meetingDate = date( "d F Y", strtotime( $meeting->getDate() ) );
+		$details= "The meeting was convened at ". $this->getData("venue") . " on " . $meetingDateTime . " with the required quorum of ".$this->quorum." members present. The meeting was adjourned at " .  $this->getData('adjourned') .".";
 		$pdf = new PDF();
 		$pdf->AddPage();
-		$pdf->ChapterTitle("Minutes of the Meeting held on ".$meeting->getDate(), "BU");
-		$pdf->ChapterItemKey('Members Present', 'BU');
+		$pdf->ChapterTitle("Minutes of the WPRO-ERC Meeting held on ".$meetingDate, "BU");
 		
+		$memberCount = 0;
+		$pdf->ChapterItemKey('Members Present', 'BU');
 		foreach($reviewers as $reviewer) {
 			$reviewerId = $reviewer->getId();
 			if($reviewerItems[$reviewerId]->isPresent()==1) {
-				$pdf->ChapterItemVal($reviewer->getFullName());									
+				$pdf->ChapterItemVal($reviewer->getFullName());
+				$memberCount++;									
 			}
 		}
+		
+		if($memberCount == 0) 
+			$pdf->ChapterItemVal("None");
+		
+		$memberCount = 0;
 		$pdf->ChapterItemKey('Members Absent', 'BU');
 		foreach($reviewers as $reviewer) {
 			$reviewerId = $reviewer->getId();
 			if($reviewerItems[$reviewerId]->isPresent()==0) {
-				$pdf->ChapterItemVal($reviewer->getFullName(). " (Reason for absence: " . $reviewerItems[$reviewerId]->getReasonForAbsence() .")");																	
+				$pdf->ChapterItemVal($reviewer->getFullName(). " (Reason for absence: " . $reviewerItems[$reviewerId]->getReasonForAbsence() .")");
+				$memberCount++;																	
 			}			
 		}
+		
+		if($memberCount == 0) 
+			$pdf->ChapterItemVal("None");
 		
 		if(count($guestNames)>0) {		
 			$pdf->ChapterItemKey('Member Participating in Other Capacity', 'BU');
@@ -168,12 +182,18 @@ class AttendanceForm extends Form {
 		if($this->getData("announcements"))
 			$pdf->ChapterItemKeyVal("Announcements", $this->getData("announcements"), "BU");
 		
+		$pdf->ChapterItemKeyVal('Minutes of the Meeting Submitted by', $userDao->getUserFullName($meeting->getUploader()), "B");
+			
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		$filename = $meeting->getId()."-".date( "FjY-gia", strtotime( $meeting->getDate() ) );
-		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$filename;
+		$filename = "attendance.pdf";
+		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/".$filename;
 		
-		$pdf->Output($meetingFilesDir,"F");		
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meeting->getId());
+		if($minutesFileManager->createDirectory()) {
+			$pdf->Output($meetingFilesDir,"F");
+		}		
 	} 
 	
 	

@@ -41,12 +41,14 @@
 <h2>{translate key="editor.meetings.submissions"}</h2>
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
-	<td width="10%">WHO Proposal ID</td>
-	<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-	<td width="5%">{translate key="submissions.sec"}</td>
-	<td width="25%">{translate key="article.authors"}</td>
-	<td width="35%">{translate key="article.title"}</td>
-	<td width="25%" align="right">{translate key="common.status"}</td>
+	<tr class="heading" valign="bottom">
+		<td width="10%">WHO Proposal ID</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%">{translate key="submissions.sec"}</td>
+		<td width="25%">{translate key="article.authors"}</td>
+		<td width="35%">{translate key="article.title"}</td>
+		<td width="25%" align="right">{translate key="common.status"}</td>
+	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	
 	{foreach from=$submissions item=submission}
@@ -149,14 +151,15 @@
 	</tr>
 </table>
 </div>
-<p> <input type="button" value="{translate key="common.back"}" class="button" onclick="document.location.href='{url op="meetings"}'" />
-	{if $meeting->getStatus() == 1}
-    <input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
-	<input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
+<p> {if $meeting->getStatus() == 1}
+    <input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
+	<input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
 	{else}
 		{if $meeting->getStatus() != 3 }
 		<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />
 	    <input type="button" value="{translate key="common.edit"}" class="button defaultButton" onclick="document.location.href='{url op="setMeeting" path=$meeting->getId()}'" />
 	   	{/if}
    	{/if}
+   	<input type="button" value="{translate key="common.back"}" class="button" onclick="document.location.href='{url op="meetings"}'" />
+	
 {include file="common/footer.tpl"}

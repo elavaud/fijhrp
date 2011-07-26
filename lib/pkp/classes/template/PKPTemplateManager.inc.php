@@ -474,7 +474,7 @@ class PKPTemplateManager extends Smarty {
 			if (empty($content)) $smarty->assign($params['key'], 1);
 			else $smarty->assign($params['key'], $smarty->get_template_vars($params['key'])+1);
 		}
-		
+	
 		// If the iterator is empty, we're finished.
 		if (!$iterator || $iterator->eof()) {
 			if (!$repeat) return $content;

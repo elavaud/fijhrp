@@ -354,26 +354,15 @@ class MinutesHandler extends Handler {
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
 
+	/*Added by MSB, July 20, 2010*/
+
 	function downloadMinutes($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		import('classes.file.MinutesFileManager');
 		$minutesFileManager = new MinutesFileManager($meetingId);
 		return $minutesFileManager->downloadMinutesArchive();
 	}
-	
-	/**
-	 * Download file.
-	 * @param $meetingId int
-	 * @param $fileId int
-	 * @param $fileId int
-	 */
-	function viewMinutes($args) {
-		$meetingId = isset($args[0]) ? $args[0]: 0;
-		import('classes.file.MinutesFileManager');
-		$minutesFileManager = new MinutesFileManager($meetingId);
-		return $minutesFileManager->viewFile();
-	}
-	
+		
 	function validate($meetingId = 0, $access = null) {
 		parent::validate();
 		$isValid = true;
