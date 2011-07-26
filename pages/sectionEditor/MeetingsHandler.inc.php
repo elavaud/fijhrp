@@ -91,7 +91,7 @@ class MeetingsHandler extends Handler {
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
 		$rangeInfo = Handler::getRangeInfo('meetings');
-
+		
 		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
 		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);

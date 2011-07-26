@@ -14,7 +14,7 @@ class MinutesZip extends Zip {
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =& $meetingDao->getMeetingById($meetingId);		
 		
-		$this->filename = $meetingId."-".date("FjY-gia", strtotime($meeting->getDate()));
+		$this->filename = $meetingId."-".date("d-F-Y-gia", strtotime($meeting->getDate()));
 		$this->meetingsDir = Config::getVar('files', 'files_dir') . '/journals/' . $journalId .'/meetings/';
 		$this->filesDir = $this->meetingsDir.$meetingId.'/';
 		$this->archivesDir = $this->meetingsDir."archives/";

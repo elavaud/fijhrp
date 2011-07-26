@@ -29,10 +29,11 @@
 			<td>
 			<select name="status" size="1"  class="selectMenu" >
 				<option value="">{translate key="common.all"}</option>
-				<option value="4" {if $status==4}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.new"}</option>
-				<option value="2" {if $status==2}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.rescheduled"}</option>
 				<option value="1" {if $status==1}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.final"}</option>
+				<option value="2" {if $status==2}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.rescheduled"}</option>
 				<option value="3" {if $status==3}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.cancelled"}</option>
+				<option value="4" {if $status==4}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.new"}</option>
+				<option value="5" {if $status==5}selected{/if}>{translate key="common.done"}</option>
 			</select>
 			</td>
 			<td>Reply</td>
@@ -86,7 +87,7 @@
 				
 			</td>
 			<td width="25%" align="right">
-				{if $meeting->getStatus() == 0}
+				{if $meeting->getStatus() == 4}
 					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/new.png"}">
 				{/if}
 				{if $meeting->getStatus() == 1}
@@ -97,6 +98,9 @@
 				{/if}
 				{if $meeting->getStatus() == 3}
 					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/cancelled.png"}">
+				{/if}
+				{if $meeting->getStatus() == 5}
+					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/done.png"}">
 				{/if}
 				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
 			<td width="30%" align="right">

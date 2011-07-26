@@ -13,6 +13,7 @@ define ('STATUS_NEW', 4);
 define ('STATUS_FINAL', 1);
 define ('STATUS_RESCHEDULED', 2);
 define ('STATUS_CANCELLED', 3);
+define ('STATUS_DONE', 5);
 define ('MEETING_REPLY_ATTENDING', 1);
 define ('MEETING_REPLY_NOT_ATTENDING', 2);
 define ('MINUTES_REVIEW_OTHER_DISCUSSIONS', 0);
@@ -191,6 +192,8 @@ class Meeting extends DataObject {
 				return Locale::Translate('reviewer.meetings.scheduleStatus.rescheduled');
 			case STATUS_CANCELLED:
 				return Locale::Translate('reviewer.meetings.scheduleStatus.cancelled');
+			case STATUS_DONE:
+				return Locale::Translate('common.done');
 			default:
 				return Locale::Translate('reviewer.meetings.scheduleStatus.new');
 		}

@@ -197,7 +197,7 @@
 	<message key="editor.article.exemption.publicOfficials">Public officials are interviewed in their official capacity on issues that are in the public domain.</message>
 	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
-	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations’s Ethics Review Committee (WHOERC).</message>
+	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations's Ethics Review Committee (WHOERC).</message>
 	<message key="editor.minutes.minutes">Minutes</message>
 	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
 	<message key="editor.minutes.attendance">Attendance</message>
@@ -382,6 +382,7 @@
 	<message key="editor.minutes.downloadInitialReviews">Download Initial Reviews</message>
 	<message key="editor.minutes.downloadMinutes">Download Minutes</message>
 	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
+	<message key="editor.minutes.confirmAttendance">This cannot be undone. Are you sure you want to submit this attendance?</message>
 	<message key="editor.minutes.confirmContinuingReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.confirmInitialReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.proposalsForInitialReview">Proposals for Initial Review</message>

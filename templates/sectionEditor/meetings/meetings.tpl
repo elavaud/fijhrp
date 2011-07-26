@@ -30,10 +30,11 @@
 			<td>
 			<select name="status" size="1"  class="selectMenu" >
 				<option value="">{translate key="common.all"}</option>
-				<option value="4" {if $status==4}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.new"}</option>
-				<option value="2" {if $status==2}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.rescheduled"}</option>
 				<option value="1" {if $status==1}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.final"}</option>
+				<option value="2" {if $status==2}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.rescheduled"}</option>
 				<option value="3" {if $status==3}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.cancelled"}</option>
+				<option value="4" {if $status==4}selected{/if}>{translate key="reviewer.meetings.scheduleStatus.new"}</option>
+				<option value="5" {if $status==5}selected{/if}>{translate key="common.done"}</option>
 			</select>
 			</td>
 		<td>Minutes&nbsp;</td>
@@ -96,14 +97,12 @@
 					{$meeting->getStatusKey()}
 				</a>
 				{if $meeting->getStatus() == 1}
-					{if $meeting->isMinutesComplete()}
-						<br/><a href="{url op="downloadMinutes" path=$meeting->getId()}" class="action">
-						{translate key="editor.minutes.downloadMinutes"}
-					{else}
 						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
-						{translate key="editor.minutes.uploadMinutes"}
-					{/if}
-				</a>
+						{translate key="editor.minutes.uploadMinutes"}</a>
+				{/if}
+				{if $meeting->getStatus() == 5}
+						<br/><a href="{url op="downloadMinutes" path=$meeting->getId()}" class="action">
+						{translate key="editor.minutes.downloadMinutes"}</a>
 				{/if}
 			</td>
 		</tr>	

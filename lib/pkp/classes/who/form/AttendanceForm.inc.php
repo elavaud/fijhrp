@@ -33,12 +33,13 @@ class AttendanceForm extends Form {
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
-		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
-
 		
-		$this->addCheck(new FormValidatorArrayMyCustom($this, 'reviewer_absent', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence', 
-		create_function('$attendance, $reason', 'if(($attendance=="absent") && !isset($reason)) return false; else return true;'), array('attendance','reason')));	
-	
+		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
+		$this->addCheck(new FormValidatorCustom($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence',
+				 create_function('$reviewer_attendance,$form', 'foreach($reviewer_attendance as $key=>$reviewer){
+					if(($reviewer["attendance"]=="absent") && ($reviewer["reason"]==null))
+					{return false;}	
+				 } return true;'), array(&$this)));	
 	}
 
 	/**
@@ -54,24 +55,21 @@ class AttendanceForm extends Form {
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
 	
-		$adjourned = $this->getData('adjourned');
-		$venue = $this->getData('venue');
-		$announcements = $this->getData('announcements');
 		$attendance  = $this->getData('reviewer_attendance');
-		$reasonOfAbsence = $this->getData('reviewer_absent');
 		$guestNames = $this->getData("guestName");
 		$guestAffiliations = $this->getData("guestAffiliation");
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('reviewers', $reviewers);
-		$templateMgr->assign_by_ref('adjourned', $adjourned);
-		$templateMgr->assign_by_ref('venue', $venue);
-		$templateMgr->assign_by_ref('announcements', $announcements);
+		
 		$templateMgr->assign_by_ref('attendance', $attendance);
-		$templateMgr->assign_by_ref('reasonOfAbsence', $reasonOfAbsence);
 		$templateMgr->assign_by_ref('guestNames', $guestNames);
 		$templateMgr->assign_by_ref('guestAffiliations', $guestAffiliations);
+
+		$templateMgr->assign('adjourned', $this->getData('adjourned'));
+		$templateMgr->assign('venue', $this->getData('venue'));
+		$templateMgr->assign('announcements', $this->getData('announcements'));
 		parent::display();
 	}
 
@@ -84,7 +82,6 @@ class AttendanceForm extends Form {
 				  "venue", 
 				  "announcements", 
 				  "reviewer_attendance",
-				  "reviewer_absent",
 				  "guestName",
 				  "guestAffiliation"
 		));
@@ -103,7 +100,6 @@ class AttendanceForm extends Form {
 		$reviewerItems = array();
 		
 		$reviewer  = $this->getData('reviewer_attendance');
-		$reasonOfAbsence = $this->getData('reviewer_absent');
 		foreach($reviewer as $index=>$item) {
 		
 			$reviewerId = $index;
@@ -115,7 +111,7 @@ class AttendanceForm extends Form {
 				
 				if($reviewer[$reviewerId]['attendance'] =="absent"){
 					$meetingReviewer->setIsPresent(0);
-					$meetingReviewer->setReasonForAbsence($reasonOfAbsence[reviewerId]["reason"]);
+					$meetingReviewer->setReasonForAbsence($reviewer[$reviewerId]["reason"]);
 				}else {
 					
 					$meetingReviewer->setIsPresent(1);
@@ -129,77 +125,68 @@ class AttendanceForm extends Form {
 		
 		$this->quorum = $quorum;
 		$this->reviewerItems = $reviewerItems;
+		$meeting->updateMinutesStatus(MEETING_STATUS_ATTENDANCE);
+		$meetingDao->updateMinutesStatus($meeting);		 
 		$meeting->updateMinutesStatus(MINUTES_STATUS_ATTENDANCE);
 		$meetingDao->updateMinutesStatus($meeting);		 
-			
-		//$quorum = 0;
-		//$reviewerItems = array();
-		/*foreach($attendance as $index=>$item) {
-			
-			$meetingReviewer = new Meeting();
-			$meetingReviewer->setId($meeting->getId());
-			$meetingReviewer->setReviewerId($index);			
-			if($item == "absent") {
-				$meetingReviewer->setIsPresent(0);
-				$meetingReviewer->setReasonForAbsence($reasons[$index]);
-			}
-			else {
-				$meetingReviewer->setIsPresent(1);
-				$meetingReviewer->setReasonForAbsence(null);
-				$quorum++;
-			}
-			$reviewerItems[$index] = $meetingReviewer;
-			$meetingReviewerDao->updateAttendanceOfReviewer($meetingReviewer);
-		} */
-		
-		
-		//$this->quorum = $quorum;
-		//$this->reviewerItems = $reviewerItems;
-		//$meeting->updateMeetingStatus(MINUTES_STATUS_ATTENDANCE);
-		//$meetingDao->updateStatus($meeting);		 
 	}
 
 	function savePdf() {
 		$meeting =& $this->meeting;
 		$reviewers =& $this->reviewers;
+		$userDao =& DAORegistry::getDAO("UserDAO");
 		$reviewerItems =& $this->reviewerItems;		
 		$guestNames = $this->getData("guestName");
 		$guestAffiliations = $this->getData("guestAffiliation");
-		$details= "The meeting was convened at ". $this->getData("venue") . " on " . $meeting->getDate() . " with the required quorum of ".$this->quorum." members present. The meeting was adjourned at " .  $this->getData('adjourned') .".";				
+		$meetingDateTime = date( "d F Y g:ia", strtotime( $meeting->getDate() ) );
+		$meetingDate = date( "d F Y", strtotime( $meeting->getDate() ) );
+		$details= "The meeting was convened at ". $this->getData("venue") . " on " . $meetingDateTime . " with the required quorum of ".$this->quorum." members present. The meeting was adjourned at " .  $this->getData('adjourned') .".";
 		$pdf = new PDF();
 		$pdf->AddPage();
-		$pdf->ChapterTitle("Minutes of the Meeting held on ".$meeting->getDate(), "BU");
-		$pdf->ChapterItemKey('Members Present', 'BU');
+		$pdf->ChapterTitle("Minutes of the WPRO-ERC Meeting held on ".$meetingDate, "BU");
 		
+		$memberCount = 0;
+		$pdf->ChapterItemKey('Members Present', 'BU');
 		foreach($reviewers as $reviewer) {
 			$reviewerId = $reviewer->getId();
 			if($reviewerItems[$reviewerId]->isPresent()==1) {
-				$pdf->ChapterItemVal($reviewer->getFullName());									
+				$pdf->ChapterItemVal($reviewer->getFullName());
+				$memberCount++;									
 			}
 		}
+		
+		if($memberCount == 0) 
+			$pdf->ChapterItemVal("None");
+		
+		$memberCount = 0;
 		$pdf->ChapterItemKey('Members Absent', 'BU');
 		foreach($reviewers as $reviewer) {
 			$reviewerId = $reviewer->getId();
 			if($reviewerItems[$reviewerId]->isPresent()==0) {
-				$pdf->ChapterItemVal($reviewer->getFullName(). " (Reason for absence: " . $reviewerItems[$reviewerId]->getReasonForAbsence() .")");																	
+				$pdf->ChapterItemVal($reviewer->getFullName(). " (Reason for absence: " . $reviewerItems[$reviewerId]->getReasonForAbsence() .")");
+				$memberCount++;																	
 			}			
 		}
+		
+		if($memberCount == 0) 
+			$pdf->ChapterItemVal("None");
 		
 		if(count($guestNames)>0) {		
 			$pdf->ChapterItemKey('Member Participating in Other Capacity', 'BU');
 			foreach($guestNames as $key=>$guest)
-				if($guest!="" && $guest != null)
 				$pdf->ChapterItemVal("$guest (Affiliation: $guestAffiliations[$key])");
 		}
 			
 		$pdf->Ln(10);
 		$pdf->ChapterItemVal($details);
 		if($this->getData("announcements"))
-			$pdf->ChapterItemKeyVal("Minutes of Last Meeting and Announcements", $this->getData("announcements"), "BU");
+			$pdf->ChapterItemKeyVal("Announcements", $this->getData("announcements"), "BU");
 		
+		$pdf->ChapterItemKeyVal('Minutes of the Meeting Submitted by', $userDao->getUserFullName($meeting->getUploader()), "B");
+			
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		$filename = "attendance";
+		$filename = "attendance.pdf";
 		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/".$filename;
 		
 		import('classes.file.MinutesFileManager');

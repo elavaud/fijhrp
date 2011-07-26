@@ -1,15 +1,32 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 {literal}
 <script type="text/javascript">
-<!--
 	$(document).ready(function() {			
+		var quantity = $("#discussions").length;
+		   $(".discussionType").change(
+				function() {
+						var elemId = $(this).attr('id').substring(15);
+						var elemVal = $("#discussionType-"+elemId).val();
+						if(elemVal == 0){
+							$("#typeOther-"+elemId).show();
+						}else{
+							$("#typeOther-"+elemId).hide();
+						}
+				}
+			);
 			$("#addDiscussion").click(
 					function() {
-						$("#discussions tr:last").after($("#discussions tr:last").clone());
-					}
-				);
-		});
--->
+						var clone = $("#discussions tr:last").clone(true);
+							 clone.find('div').attr('id', 'typeOther-'+quantity);
+							 clone.find('select').attr('id', 'discussionType-'+quantity);
+							 clone.find('select').val(1);
+							 clone.find('div').attr('style','display:none');
+							 $("#discussions tr:last").after(clone);
+							 quantity = quantity + 1;
+						}
+			);
+	});
+	
 </script>
 {/literal}
 <div id="submissions">
@@ -68,7 +85,7 @@
 			<td class="value"><textarea name="generalDiscussion" class="textArea" rows="10" cols="43" >{$generalDiscussion}</textarea></td>
 		</tr>		
 		<tr>
-			<td width="20%"><br/>{translate key="editor.minutes.specificDiscussion"}&nbsp;&nbsp;<input type="button" id="addDiscussion" value="+"/></td>
+			<td width="20%"><br/>{fieldLabel name="discussionType" required="true"  key="editor.minutes.specificDiscussion"}&nbsp;&nbsp;<input type="button" id="addDiscussion" value="+"/></td>
 			<td width="80%"></td>
 		</tr>
 		{foreach from=$discussionText key=idx item=discussion}
@@ -76,9 +93,12 @@
 			<tr>
 				<td width="20%" class="label"></td>
 				<td width="80%" class="value">
-					{html_options_translate name="discussionType[]" options=$discussionTypes selected=$discussionType[$idx]}<br/>
-					{fieldLabel name="specifyType" required="true" key="editor.minutes.specify"}&nbsp;
-					<input type="text" class="textField" size="32" name="typeOther[]" value="{$typeOther[$idx]}"/><br/>
+					{html_options_translate name="discussionType[]" class="discussionType" id="discussionType-$idx" options=$discussionTypes selected=$discussionType[$idx]}<br/>
+					<div id="typeOther-$idx"  {if $discussionType[$idx] != 0 } style="display:none" {/if}>
+					Please specify *
+					<input type="text"  class="textField" size="30" name="typeOther[]" id="typeOther-$idx" value="{$typeOther[$idx]}"/>
+					</div>
+					<br/>
 					<textarea name="discussionText[]" class="textArea" rows="10" cols="43" >{$discussion}</textarea>
 				</td>
 			</tr>
@@ -87,9 +107,11 @@
 		<tr>
 			<td width="20%" class="label"></td>
 			<td width="80%" class="value">
-				{html_options_translate name="discussionType[]" options=$discussionTypes }<br/>
-				{fieldLabel name="specifyType" required="true" key="editor.minutes.specify"}&nbsp;
-				<input type="text" class="textField" size="32" name="typeOther[]" value=""><br/>
+				{html_options_translate name="discussionType[]" class="discussionType" id="discussionType-0" options=$discussionTypes }<br/>
+				<div id="typeOther-0" style="display:none" >
+				Please specify *
+				<input type="text"  class="textField"  size="30" name="typeOther[]" value=""><br/>
+				</div>
 				<textarea name="discussionText[]" class="textArea" rows="10" cols="43" ></textarea>
 			</td>
 		</tr>				
@@ -126,25 +148,25 @@
 		<tr>
 			<td class="label" width="20%" align="right">{fieldLabel name="unanimous" required="true" key="editor.minutes.unanimous"}</td>
 			<td width="80%" class="value">
-				<input type="radio" name="unanimous" id="unanimousYes" value="Yes" {if $unanimous=="Yes"}checked="checked"{/if}/><label for="unanimousYes">Yes</label>
-				<input type="radio" name="unanimous" id="unanimousNo" value="No" {if $unanimous=="No"}checked="checked"{/if}/><label for="unanimousNo">No</label>
+				<input type="radio" class="unanimous" name="unanimous" id="unanimousYes" value="Yes" {if $unanimous=="Yes"}checked="checked"{/if}/><label for="unanimousYes">Yes</label>
+				<input type="radio" class="unanimous" name="unanimous" id="unanimousNo" value="No" {if $unanimous=="No"}checked="checked"{/if}/><label for="unanimousNo">No</label>
 			</td>
 		</tr>		
 		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
 		<tr class="heading">
 			<td colspan="6">{fieldLabel name="votes" key="editor.minutes.votes"}</td>				
 		</tr>
-		<tr>
-			<td class="label" align="right">{fieldLabel name="votes[0]" key="editor.minutes.approveCount"}</td>
-			<td class="value"><input type="text" name="votes[0]" size="17" class="textField"/>{$votes[0]}</td>
+		<tr >
+			<td class="label" align="right">{fieldLabel name="votesApprove" key="editor.minutes.approveCount"}</td>
+			<td class="value"><input type="text" name="votesApprove" size="17" class="textField" value="{$votesApprove}"/></td>
 		</tr>
-		<tr>
-			<td class="label" align="right">{fieldLabel name="votes[1]" key="editor.minutes.notApproveCount"}</td>
-			<td class="value"><input type="text" name="votes[1]" size="17" class="textField"/>{$votes[1]}</td>
+		<tr >
+			<td class="label" align="right">{fieldLabel name="votesNotApprove" key="editor.minutes.notApproveCount"}</td>
+			<td class="value"><input type="text" name="votesNotApprove" size="17" class="textField" value="{$votesNotApprove}"/></td>
 		</tr>
-		<tr>
-			<td class="label" align="right">{fieldLabel name="votes[2]" key="editor.minutes.abstainCount"}</td>
-			<td class="value"><input type="text" name="votes[2]" size="17" class="textField"/>{$votes[2]}</td>
+		<tr >
+			<td class="label" align="right">{fieldLabel name="votesAbstain" key="editor.minutes.abstainCount"}</td>
+			<td class="value"><input type="text" name="votesAbstain" size="17" class="textField" value="{$votesAbstain}"/></td>
 		</tr>
 		<tr>
 			<td width="20%" class="label">{fieldLabel name="minorityReason" key="editor.minutes.minorityReasons"}</td>
@@ -156,7 +178,7 @@
 		</tr>
 	</table>	
   	<br/>
- 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
+ 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
  	<input type="button" class="button" onclick="document.location.href='{url op="selectInitialReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
  	</form>
 </div>
