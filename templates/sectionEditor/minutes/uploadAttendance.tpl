@@ -53,6 +53,7 @@
 	
 <div id="announcements">
 	<h2>Details</h2>
+	<div class="separator"></div><br/>
 	<table class="data" width="100%">
 		<tr>
 			<td class="label" width="20%">{fieldLabel name="adjourned" required="true" key="editor.minutes.adjourned"}</td>
@@ -70,13 +71,12 @@
 		 </tr>
 	</table>
 </div>
-<div class="separator"></div>
 <br/>
 <div id="attendance">
 	<h2>Review Committee </h2>
 	<table width="100%" class="listing" name="ercMembers">
 			<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
-		 	<tr>
+		 	<tr class="heading">
 			 	<td width="5%">{translate key="editor.minutes.absent"}</td>
 		 		<td width="5%">{translate key="editor.minutes.present"}</td>
 		 		<td width="20%">{translate key="editor.minutes.nameOfMember"}</td>
@@ -106,10 +106,10 @@
 					 		{if $user->getLocalizedHealthAffiliation() == "Yes"} {translate key="editor.reviewer.healthAffiliated"} {else} {translate key="editor.reviewer.nonHealth"} {/if}					 		
 					</td>
 					<td width="50%" id="div_reason_of_absence_{$userId}" class="div_reason_of_absence">
-					 			<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-duty-travel" value="Duty Travel" {if  $attendance[$userId][$reason] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$user->getId()}">Duty Travel</label>
-						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-on-leave" value="On Leave" {if $attendance[$userId][$reason] == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$user->getId()}">On Leave</label>
-						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-other-commitment" value="Other Commitment" {if  $attendance[$userId][$reason] == "Other Commitment" } checked="checked"{/if}/><label for="others_{$user->getId()}">Other Commitment</label>
-						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-unexcused" value="Unexcused" {if  $attendance[$userId][$reason] == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$user->getId()}">Unexcused</label>
+					 			<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-duty-travel" value="Duty Travel" {if  $attendance[$userId][$reason] == "Duty Travel" } checked="checked"{/if} disabled /><label for="duty_travel_{$user->getId()}">Duty Travel</label>
+						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-on-leave" value="On Leave" {if $attendance[$userId][$reason] == "On Leave" } checked="checked"{/if} disabled/><label for="on_leave_{$user->getId()}">On Leave</label>
+						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-other-commitment" value="Other Commitment" {if  $attendance[$userId][$reason] == "Other Commitment" } checked="checked"{/if} disabled/><label for="others_{$user->getId()}">Other Commitment</label>
+						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" id="absent-{$userId}-unexcused" value="Unexcused" {if  $attendance[$userId][$reason] == "Unexcused" } checked="checked"{/if} disabled/><label for="unexcused_{$user->getId()}">Unexcused</label>
 					</td>
 					<input type="hidden" name="areviewer_attendance[{$userId}][userId]" value="{$userId}">
 			</tr>
@@ -120,6 +120,7 @@
 	<br/>
 	<br/>
 	<h2>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h2>
+	<div class="separator"></div><br/>
 	<table class="listing" name="guests" id="guests" width="100%">
 	{foreach from=$guestNames key=guestIndex item=guest}
 		{if $guest != null }
@@ -140,9 +141,8 @@
 		<td width='60%'></td>
 	</tr>
 	</table>
-	<div class="separator"></div>
 		<br/><br/>
-		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
 		<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>	 
+		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
 	</div>
  </form>

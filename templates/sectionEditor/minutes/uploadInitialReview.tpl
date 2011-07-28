@@ -3,7 +3,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {			
 		var quantity = $("#discussions").length;
-		$(".discussionType").change(
+		   $(".discussionType").change(
 				function() {
 						var elemId = $(this).attr('id').substring(15);
 						var elemVal = $("#discussionType-"+elemId).val();
@@ -19,6 +19,8 @@
 						var clone = $("#discussions tr:last").clone(true);
 							 clone.find('div').attr('id', 'typeOther-'+quantity);
 							 clone.find('select').attr('id', 'discussionType-'+quantity);
+							 clone.find('select').val(1);
+							 clone.find('div').attr('style','display:none');
 							 $("#discussions tr:last").after(clone);
 							 quantity = quantity + 1;
 						}
@@ -89,7 +91,7 @@
 		{foreach from=$discussionText key=idx item=discussion}
 			{if $discussion!=null}
 			<tr>
-				<td width="20%" class="label">{fieldLabel name="discussionText" required="true" key="editor.minutes.specificDiscussion"}</td>
+				<td width="20%" class="label"></td>
 				<td width="80%" class="value">
 					{html_options_translate name="discussionType[]" class="discussionType" id="discussionType-$idx" options=$discussionTypes selected=$discussionType[$idx]}<br/>
 					<div id="typeOther-$idx"  {if $discussionType[$idx] != 0 } style="display:none" {/if}>
@@ -176,7 +178,7 @@
 		</tr>
 	</table>	
   	<br/>
- 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
+ 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
  	<input type="button" class="button" onclick="document.location.href='{url op="selectInitialReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
  	</form>
 </div>

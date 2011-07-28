@@ -28,8 +28,6 @@ $(document).ready(function() {
 	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
-<div class="separator"></div>
-<br>
 {include file="common/formErrors.tpl"}
 <div class="separator"></div>
 <br>
@@ -113,8 +111,8 @@ $(document).ready(function() {
 {/if}
 </table>
 
-<p> {if $meetingId == 0}<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
-	
+<p> {if $meetingId == 0}
+		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
 	{else}
 		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meetingId }'" />
 	{/if} 

@@ -41,12 +41,12 @@ class ReviewerHandler extends Handler {
 		$meetingReviewerDao =& DAORegistry::getDAO('MeetingDAO');
 		$rangeInfo = Handler::getRangeInfo('submissions');
 
-		$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo);
+		$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), true, $rangeInfo);
 		$meetings = $meetingReviewerDao->getMeetingsByReviewerId($user->getId());
 		//$meetings = $meetingReviewerDao->getMeetingsOfUser($user->getId());
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign('rangeInfo', count($submissions));
-		$templateMgr->assign('meetingsCount', count($meetings));
+		$templateMgr->assign('rangeInfo', count($submissions->toArray()));
+		$templateMgr->assign('meetingsCount', count($meetings->toArray()));
 
 		$templateMgr->display('reviewer/index.tpl');
 	}
@@ -62,7 +62,6 @@ class ReviewerHandler extends Handler {
 		$user =& Request::getUser();
 		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
 		$rangeInfo = Handler::getRangeInfo('submissions');
-
 		$page = isset($args[0]) ? $args[0] : '';
 		switch($page) {
 			case 'completed':
@@ -93,7 +92,6 @@ class ReviewerHandler extends Handler {
 		}  else {
 			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
 		}
-
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign('pageToDisplay', $page);
@@ -132,12 +130,20 @@ class ReviewerHandler extends Handler {
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
+		$rangeInfo = Handler::getRangeInfo('meetings');
 		
-		$meetings =& $meetingDao->getMeetingsByReviewerId($userId, $sort, $sortDirection);
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
+		$status = Request::getUserVar('status');
+		$replyStatus = Request::getUserVar('replyStatus');
+		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection, $status, $replyStatus, $fromDate, $toDate);
 		
 		$map = array();
+		$meetingsArray = $meetings->toArray();
 		
-		foreach($meetings as $meeting) {
+		foreach($meetingsArray as $meeting) {
 			$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meeting->getId());
 			$submissions = array();
 			foreach($submissionIds as $submissionId) {
@@ -146,13 +152,29 @@ class ReviewerHandler extends Handler {
 			}
 			$map[$meeting->getId()] = $submissions;
 		}
+		$meetings = $meetingDao->getMeetingsByReviewerId($userId, $sort, $rangeInfo, $sortDirection, $status, $replyStatus, $fromDate, $toDate);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings); 
 		$templateMgr->assign_by_ref('submissions', $submissions); 
 		$templateMgr->assign_by_ref('map', $map); 
 		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('rangeInfo', count($meetings));
 		$templateMgr->assign('sortDirection', $sortDirection);
+		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
+		$templateMgr->assign('dateFrom', $fromDate);
+		$templateMgr->assign('dateTo', $toDate);
+		$templateMgr->assign('status', $status);
+		$templateMgr->assign('replyStatus', $replyStatus);
+		
+		// Set search parameters
+		$duplicateParameters = array(
+			'dateFromMonth', 'dateFromDay', 'dateFromYear',
+			'dateToMonth', 'dateToDay', 'dateToYear', 'status', 'replyStatus'
+		);
+		foreach ($duplicateParameters as $param)
+			$templateMgr->assign($param, Request::getUserVar($param));
+		
 		$templateMgr->display('reviewer/meetings.tpl');
 	}
 	

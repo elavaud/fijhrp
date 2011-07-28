@@ -17,15 +17,33 @@ class MeetingDAO extends DAO {
 	 * @param $meeting int
 	 * @return Meeting
 	 */
-	function &getMeetingsOfUser($userId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getMeetingsOfUser($userId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC, 
+		$status=null, $minutesStatus=null, $dateFrom=null, $dateTo=null) {
 		$sql = 'SELECT meeting_id, meeting_date, user_id, minutes_status, status FROM meetings as a WHERE user_id = ?';
-		if ($sortBy) {
-			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
-		}
-		$result =& $this->retrieveRange(
-			$sql, (int) $userId, $rangeInfo
-		);
+		$searchSql = '';
 		
+		if (!empty($dateFrom) || !empty($dateTo)) {
+			if (!empty($dateFrom)) {
+				$searchSql .= ' AND meeting_date >= ' . $this->datetimeToDB($dateFrom);
+			}
+			if (!empty($dateTo)) {
+				$searchSql .= ' AND meeting_date <= ' . $this->datetimeToDB($dateTo);
+			}
+		}
+		if(!empty($status)) {
+			$searchSql .= ' AND status = ' . $status;
+		}
+		
+		if(!empty($minutesStatus)) {
+			$searchSql .= ' AND minutes_status = ' . $minutesStatus;
+		}
+		
+		
+		$result =& $this->retrieveRange(
+			$sql. ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''), 
+			(int) $userId, $rangeInfo
+		);
+			
 		$returner = new DAOResultFactory($result, $this, '_returnMeetingFromRow');
 		return $returner;
 	}
@@ -60,16 +78,34 @@ class MeetingDAO extends DAO {
 	 * 
 	 * @param unknown_type $reviewerId
 	 */
-	function &getMeetingsByReviewerId($reviewerId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getMeetingsByReviewerId($reviewerId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC,
+		$status=null, $replyStatus=null, $dateFrom=null, $dateTo=null) {
+			
 		$sql = 
 			'SELECT * 
 			FROM meetings a INNER JOIN meeting_reviewers b
 			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
-		if ($sortBy) {
-			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
+		
+		$searchSql = '';
+		
+		if (!empty($dateFrom) || !empty($dateTo)) {
+			if (!empty($dateFrom)) {
+				$searchSql .= ' AND meeting_date >= ' . $this->datetimeToDB($dateFrom);
+			}
+			if (!empty($dateTo)) {
+				$searchSql .= ' AND meeting_date <= ' . $this->datetimeToDB($dateTo);
+			}
 		}
+		if(!empty($status)) {
+			$searchSql .= ' AND status = ' . $status;
+		}
+		if(!empty($replyStatus)) {
+			$searchSql .= ' AND attending = ' . $replyStatus;
+		}
+		
 		$result =& $this->retrieveRange(
-			$sql,(int) $reviewerId, $rangeInfo );
+			$sql. ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''), 
+			(int) $reviewerId, $rangeInfo );
 			
 		$returner = new DAOResultFactory($result, $this, '_returnMeetingFromRow');
 		return $returner;

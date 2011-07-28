@@ -104,7 +104,7 @@ class MinutesFileManager extends FileManager {
 		if(!FileManager::fileExists($archiveDir.$this->filename.".zip")) { 
 			import('classes.lib.zip.MinutesZip');
 			$zip = new MinutesZip($this->journalId, $this->meetingId);
-			$zip->test();
+	//		$zip->test();
 			$zip->export();
 		}		
 		$filePath = $archiveDir.$this->filename.".zip";
