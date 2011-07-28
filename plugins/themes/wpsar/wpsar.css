@@ -1,0 +1,286 @@
+/**
+ * polished.css
+ *
+ * Copyright (c) 2003-2008 John Willinsky
+ * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
+ *
+ * Wpsar theme.
+ *
+ * $Id: night.css,v 1.3 2008/06/11 18:55:16 asmecher Exp $
+ */
+
+body {
+	background: #e5e5e4;
+	color: #3e4748;
+	font-family: verdana, helvetica, sans-serif;
+}
+
+a, a:link {
+	color: #334545;
+	text-decoration:underline;
+}
+a:hover {
+	color: #217d7d;
+	text-decoration:underline;
+}
+
+#header {
+	margin: 0px;
+	background: url(/whorrp/plugins/themes/wpsar/wpsar_banner.jpg) no-repeat;
+	height: 150px;
+}
+
+#main {
+	padding: 10px 0px 0px 5px;
+	border-top: none;
+	position:relative;
+	margin:0;
+	top: +2px;	
+	background: #e5e5e4 url(/whorrp/plugins/themes/wpsar/body_bg.gif) repeat-y;
+}
+
+div #sidebar {
+margin-left: 0px;
+}
+
+.block {
+	background: #FFF url(/whorrp/plugins/themes/wpsar/widget-bg.gif) repeat-x bottom right;
+	padding: 5px 10px 10px 10px;
+	margin-bottom: 5px;
+	border: 2px solid #DBEFF6;
+}
+
+#headerTitle h1 {
+	margin-left: 15px;
+	font-family: Helvetica,sans-serif;
+}
+
+#main h2, #content h3 {
+	font-family: Arial,Verdana,Helvetica,sans-serif;
+}
+
+#content {
+	width: 98%;
+	border-top: 2px solid #DBEFF6;
+}
+#navbar a.selected {
+	color:#7a5c3d;
+	background-color: #c7e6e8;
+	border-left:9px solid #7a5c3d;
+	}
+#navbar {
+	height: 30px;
+	width: 98%;
+	border-bottom: 2px solid #DBEFF6;
+	line-height: normal;
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+}
+
+
+#nav_box {
+	width:149px;
+	margin:0px;
+	padding:25px 0px 0px;
+	background-image: url(../images/nav_top.gif);
+	background-position: top left;
+	background-repeat:no-repeat;
+	position:absolute;
+	top:29px;
+	}
+
+#nav_box ul{
+	margin:0px;
+	padding:0px 0px 25px 0px;
+	background-image: url(../images/nav_bottom.gif);
+	background-position: bottom left;
+	background-repeat:no-repeat;
+	list-style:none;
+	}
+
+#nav_box ul li a {
+	font-weight:bold;
+	text-decoration:none;
+	padding:6px 10px;
+	display: block;
+	color: #3e4748;
+	background-color: #95c1cc;
+	border-left:9px solid #8fb0c1;
+	border-right:1px solid #8fb0c1;
+	border-top:1px solid white;
+	}
+
+#nav_box ul li a:hover, 
+#nav_box ul li a.secondary:hover, 
+#nav_box ul li a.secondary_parent_selected:hover, 
+#nav_box ul li a.tertiary:hover, 
+#nav_box ul li a.tertiary_parent_selected:hover   {
+	background-color: #c7e6e8;
+	border-left:9px solid #3e4748;
+	}
+
+#nav_box ul li a.selected {
+	color:#7a5c3d;
+	background-color: #c7e6e8;
+	border-left:9px solid #7a5c3d;
+	}
+
+#nav_box ul li a.indent_selected {
+	color:#7a5c3d;
+	background-color: #c7e6e8;
+	border-left:9px solid #7a5c3d;
+	padding:6px 10px 6px 20px;
+}
+
+#nav_box ul li a.primary_selected {
+	font-weight:bold;
+	padding:6px 10px;
+	color:#7a5c3d;
+	background-color: #c7e6e8;
+	border-left:9px solid #7a5c3d;
+}
+
+
+
+#nav_box ul li a.secondary {
+	font-weight:normal;
+	padding:6px 10px;
+	color: #3e4748;
+	border-left:9px solid #E3D179;
+	background-color: #F2F1E2;
+}
+
+
+
+#nav_box ul li a.secondary_selected {
+	font-weight:bold;
+	padding:6px 10px;
+	color: #3e4748;
+	border-left:9px solid #E3D179;
+	background-color: #F2F1E2;
+}
+
+
+
+#nav_box ul li a.secondary_parent_selected {
+	font-weight:normal;
+	padding:6px 10px;
+	color: #3e4748;
+	border-left:9px solid #E3D179;
+	background-color: #F2F1E2;
+}
+
+
+
+#nav_box ul li a.tertiary {
+	font-weight:normal;
+	padding:6px 10px 6px 20px;
+	color: #3e4748;
+	border-left:9px solid #F2F1E2;
+	background-color: #F2F1E2;
+}
+
+
+
+#nav_box ul li a.tertiary_selected {
+	font-weight:bold;
+	padding:6px 10px 6px 20px;
+	color: #3e4748;
+	border-left:9px solid #F2F1E2;
+	background-color: #F2F1E2;
+}
+
+
+
+#nav_box ul li a.tertiary_parent_selected {
+	font-weight:normal;
+	padding:6px 10px 6px 20px;
+	color: #3e4748;
+	border-left:9px solid #F2F1E2;
+	background-color: #F2F1E2;
+}
+
+#nav_box ul li a.wprosites_on {
+	background-color: #fff9b3;
+	border-left:9px solid #fff9b3;
+}
+	
+
+#nav_box ul li a.secondHead{
+	color: #1b2808;
+	background-color: #9dbb95;
+	border-left:9px solid #1b2808;
+	}
+
+#nav_box ul li a.secondItem{
+	font-weight:normal;
+	padding-left: 20px;
+	color: #1b2808;
+	border-left:9px solid #9dbb95;
+	background-color: #9dbb95;
+	}
+
+#nav_box ul li a.secondItem:hover,  #nav_box ul li a.selected_secondItem{
+	color:#1b2808;
+	background-color: #c7e6e8;
+	border-left:9px solid #557f19;
+}
+.menu {
+	list-style: none;
+	margin: 0 3px;
+	padding: 0px;
+}
+
+.menu li, td input.button {
+	float: left;
+	height: 30px;
+	background:#FFFFFF;
+	margin: 0 0px;
+	white-space: nowrap;
+	font-size: 20px;
+	border: 1px solid #becbdd;
+}
+
+.menu li a, td input.button{
+	color:#485B84;
+	display: block;
+	background:#FFFFFF;
+	width: 100%;
+
+	text-decoration: none;
+	padding: 0px 0px 0px 30px;
+	font: bold 14px Arial, Helvetica, sans-serif;
+	line-height: 30px;
+	text-transform: uppercase; 	
+}
+
+.menu li:hover, input.button:hover {
+	background:#dae4f2;
+	color:#ffffff;
+}
+
+.menu li a:hover, input.button:hover {
+	background-position: 0px -36px;
+	border: none;
+	color:#ffffff;
+	background:#dae4f2;
+}
+
+input.textField, select.selectMenu, textarea.textArea, input.uploadField {
+	background-color: #F0F0F0;
+	border: 2px solid #DBEFF6;
+	color: #0C72A2;
+}
+
+td input.button {
+	padding-left: 0px;
+	height: 2em;
+	max-width: 200px;
+}
+
+#container {
+	width: 1000px !important;
+	min-width: 730px !important;
+	margin: 0px;
+	text-align: center;
+}
