@@ -97,7 +97,7 @@
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getStatusKey()}
 				</a>
-				{if $meeting->getStatus() == 256}
+				{if $meeting->getStatus() == 1}
 						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
 						{translate key="editor.minutes.uploadMinutes"}</a>
 				{/if}
