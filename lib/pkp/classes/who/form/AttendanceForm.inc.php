@@ -33,7 +33,7 @@ class AttendanceForm extends Form {
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
-		/*Pakibago yung dati*/
+		
 		$this->addCheck(new FormValidatorArray($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','userId')));
 		$this->addCheck(new FormValidatorCustom($this, 'reviewer_attendance', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence',
 				 create_function('$reviewer_attendance,$form', 'foreach($reviewer_attendance as $key=>$reviewer){

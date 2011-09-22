@@ -36,17 +36,6 @@ class ContinuingReviewForm extends Form {
 				if($discussion_type==0 && $typeOther[$key]==""){ return false; }
 		}return true;'), array(&$this)));	
 
-		/*	 	
-		$this->addCheck(new FormValidatorCustom($this, 'discussionText', 'required', 'editor.minutes.discussionTypeRequired',
-			create_function('$discussionText, $form', 'foreach($discussionText as $key=>$discussion_text){
-				$discussionType = $form->getData(\'discussionType\');
-				if(isset($discussion_text) && $discussionType[$key]==""){return false;}
-		}return true;'), array(&$this)));	
-		*/		
-		
-			
-			
-		/*Di ko alam kung bakit di ko mapagana yung array dito kay iniba ko yung names*/
 		$this->addCheck(new FormValidatorCustom($this, 'votesApprove', 'required', 'editor.minutes.approveCountRequired',
 			create_function('$votesApprove,$form', 	  'if ($form->getData(\'unanimous\') == "Yes") return true; else return is_numeric($votesApprove);'), array(&$this)));
 		$this->addCheck(new FormValidatorCustom($this, 'votesNotApprove', 'required', 'editor.minutes.notApproveCountRequired',
@@ -58,7 +47,7 @@ class ContinuingReviewForm extends Form {
 			create_function('$minorityReason, $form', 'if ($form->getData(\'unanimous\') == "Yes") return true; else return (($minorityReason != "") || ($minorityReason != null));'), array(&$this)));
 		
 		$this->addCheck(new FormValidatorCustom($this, 'chairReview', 'required', 'editor.minutes.chairReviewRequired',
-		 	create_function('$chairReview, $form', 'if ($form->getData(\'decision\') != 1) return true; else return (($chairReview !="") || ($chairReview != null));'), array(&$this)));
+		 	create_function('$chairReview, $form', 'if ($form->getData(\'unanimous\') != 1) return true; else return (($chairReview !="") || ($chairReview != null));'), array(&$this)));
 		 	
 		 	
 	}
