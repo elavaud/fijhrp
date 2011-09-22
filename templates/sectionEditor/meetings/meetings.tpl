@@ -22,11 +22,11 @@
 {if !$dateTo}
 {assign var="dateTo" value="--"}
 {/if}
-<div id="search">
 <form method="post" name="submit" action="{url op="meetings"}">
-	<table width="100%" align="right">
+<div id="search">
+	<table align="left">
 		<tr>
-			<td>Meeting&nbsp;</td>
+			<td>{translate key="editor.meetings"}</td>
 			<td>
 			<select name="status" size="1"  class="selectMenu" >
 				<option value="">{translate key="common.all"}</option>
@@ -37,15 +37,15 @@
 				<option value="5" {if $status==5}selected{/if}>{translate key="common.done"}</option>
 			</select>
 			</td>
-		<td>Minutes&nbsp;</td>
+			<td>Minutes</td>
 			<td>
-			<select name="minutesStatus" size="1"  class="selectMenu">
+			<select name="minutesStatus" size="1"  class="selectMenu" >
 				<option value="">{translate key="common.all"}</option>
 				<option value="128" {if $minutesStatus==128}selected{/if}>{translate key="editor.minutes.complete"}</option>
-				<option value="256" {if $minutesStatus==256}selected{/if}>{translate key="editor.minutes.incomplete"}</option>
-			</select>
-		</td>
-		
+				<option value="256" {if $replyStatus==256}selected{/if}>{translate key="editor.minutes.incomplete"}</option>
+			</select></td>
+			</tr>
+			<tr>
 			<td class="label">{translate key="search.dateFrom"}</td>
 			<td class="value">{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}</td>
 			<td class="label">{translate key="search.dateTo"}</td>
@@ -56,12 +56,13 @@
 				<input type="hidden" name="dateToSecond" value="59" />
 			</td>
 			<td>
-			<input type="submit" class="button defaultButton" value="{translate key="common.search"}"/>
+			
 		</td>
 		</tr>
 	</table>
+</div><br/><br/><br/>
+<p align="left"><input type="submit" class="button defaultButton" value="{translate key="common.search"}"/></p>
 </form>
-</div><br/>
 
 <div id="meetings">
 <table class="listing" width="100%">
@@ -100,7 +101,7 @@
 						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
 						{translate key="editor.minutes.uploadMinutes"}</a>
 				{/if}
-				{if $meeting->getStatus() == 5}
+				{if $meeting->getMinutesStatus() == 128}
 						<br/><a href="{url op="downloadMinutes" path=$meeting->getId()}" class="action">
 						{translate key="editor.minutes.downloadMinutes"}</a>
 				{/if}

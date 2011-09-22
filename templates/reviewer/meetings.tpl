@@ -21,9 +21,9 @@
 {if !$dateTo}
 {assign var="dateTo" value="--"}
 {/if}
-<div id="search">
 <form method="post" name="submit" action="{url op="meetings"}">
-	<table width="100%" align="right">
+<div id="search">
+	<table align="left">
 		<tr>
 			<td>{translate key="editor.meetings"}</td>
 			<td>
@@ -43,8 +43,14 @@
 				<option value="1" {if $replyStatus==1}selected{/if}>{translate key="reviewer.meetings.replyStatus.attending"}</option>
 				<option value="2" {if $replyStatus==2}selected{/if}>{translate key="reviewer.meetings.replyStatus.notAttending"}</option>
 				<option value="3" {if $replyStatus==3}selected{/if}>{translate key="reviewer.meetings.replyStatus.awaitingReply"}</option>
+<<<<<<< HEAD
 			</select>
 			</td>
+=======
+			</select></td>
+			</tr>
+			<tr>
+>>>>>>> 2bb360b153ddbc9a32a414d7179e08934ac4bd5b
 			<td class="label">{translate key="search.dateFrom"}</td>
 			<td class="value">{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}</td>
 			<td class="label">{translate key="search.dateTo"}</td>
@@ -55,22 +61,33 @@
 				<input type="hidden" name="dateToSecond" value="59" />
 			</td>
 			<td>
+<<<<<<< HEAD
 			<input type="submit" class="button defaultButton" value="{translate key="common.search"}"/>
 		</td>
 		</tr>
 	</table>
 </form>
 </div><br/>
+=======
+			
+		</td>
+		</tr>
+	</table>
+</div><br/><br/><br/>
+<p align="left"><input type="submit" class="button defaultButton" value="{translate key="common.search"}"/></p>
+</form>
+>>>>>>> 2bb360b153ddbc9a32a414d7179e08934ac4bd5b
 <div id="meetings">
 	<table class="listing" width="100%">
-		<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
+		<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		<tr class="heading" valign="bottom">
 			<td width="5%">{sort_heading key="editor.meetings.meetingId" sort="id"}</td>
 			<td width="40%">{translate key="reviewer.meetings.submissions"}</td>
 			<td width="25%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
-			<td width="30%" align="right">{sort_heading key="reviewer.meetings.replyStatus" sort="replyStatus"}</td>
+			<td width="15%" align="right">{sort_heading key="editor.meetings.scheduleStatus" sort="scheduleStatus"}</td>
+			<td width="15%" align="right">{sort_heading key="reviewer.meetings.replyStatus" sort="replyStatus"}</td>
 		</tr>
-		<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
+		<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 	<p></p>
 	{iterate from=meetings item=meeting}
 	{assign var="key" value=$meeting->getId()}
@@ -87,6 +104,7 @@
 				
 			</td>
 			<td width="25%" align="right">
+<<<<<<< HEAD
 				{if $meeting->getStatus() == 4}
 					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/new.png"}">
 				{/if}
@@ -102,23 +120,43 @@
 				{if $meeting->getStatus() == 5}
 					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/done.png"}">
 				{/if}
+=======
+<!--				{if $meeting->getStatus() == 4}-->
+<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/new.png"}">-->
+<!--				{/if}-->
+<!--				{if $meeting->getStatus() == 1}-->
+<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/final.png"}">-->
+<!--				{/if}	-->
+<!--				{if $meeting->getStatus() == 2}-->
+<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/resched.png"}">-->
+<!--				{/if}-->
+<!--				{if $meeting->getStatus() == 3}-->
+<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/cancelled.png"}">-->
+<!--				{/if}-->
+<!--				{if $meeting->getStatus() == 5}-->
+<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/done.png"}">-->
+<!--				{/if}-->
+>>>>>>> 2bb360b153ddbc9a32a414d7179e08934ac4bd5b
 				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
-			<td width="30%" align="right">
+			<td width="15%" align="right">
+				{$meeting->getStatusKey()}
+			</td>
+			<td width="15%" align="right">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getReplyStatus()}
 				</a>
 			</td>
 		</tr>	
 		<tr>
-			<td colspan="4" class="{if $meetings->eof()}end{/if}separator">&nbsp;</td>
+			<td colspan="5" class="{if $meetings->eof()}end{/if}separator">&nbsp;</td>
 		</tr>
 	{/iterate}
 	{if $meetings->wasEmpty()}
 		<tr>
-			<td colspan="4" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
+			<td colspan="5" class="nodata">{translate key="editor.meetings.noMeetings"}</td>
 		</tr>
 	<tr>
-		<td colspan="4" class="endseparator">&nbsp;</td>
+		<td colspan="5" class="endseparator">&nbsp;</td>
 	</tr>
 	{else}
 		<tr>
