@@ -66,8 +66,15 @@ class ProofreaderHandler extends Handler {
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'title';
 		$sortDirection = Request::getUserVar('sortDirection');
-
-		$submissions = $proofreaderSubmissionDao->getSubmissions($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $active, $rangeInfo, $sort, $sortDirection);
+		/**
+		 * Get user's search conditions for technical unit and RTO
+		 * Added by: Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+		 */
+		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$countryField = Request::getUserVar('countryField');
+		
+		$submissions = $proofreaderSubmissionDao->getSubmissions($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $technicalUnitField, $countryField, $active, $rangeInfo, $sort, $sortDirection);
  
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
@@ -96,13 +103,29 @@ class ProofreaderHandler extends Handler {
 			SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
 			SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		));
-
+		/*********************************************************************
+		 * Get list of WHO technical units from the XML file and get all countries
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+         *********************************************************************/
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+        
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
 		$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
 		$templateMgr->assign('helpTopicId', 'editorial.proofreadersRole.submissions');
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		// Added by igm 9/24/11
+		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+		$templateMgr->assign('countryField', $countryField);
+		
 		$templateMgr->display('proofreader/index.tpl');
 	}
 

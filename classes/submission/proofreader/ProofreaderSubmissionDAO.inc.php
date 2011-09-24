@@ -126,7 +126,8 @@ class ProofreaderSubmissionDAO extends DAO {
 	 * @param $active boolean true to select active assignments, false to select completed assignments
 	 * @return array ProofreaderSubmission
 	 */
-	function &getSubmissions($proofreaderId, $journalId = null, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $active = true, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSubmissions($proofreaderId, $journalId = null, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
+							$technicalUnitField = null, $countryField = null, $active = true, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 
@@ -141,6 +142,12 @@ class ProofreaderSubmissionDAO extends DAO {
 			$locale,
 			'cleanTitle', // Article title
 			'cleanTitle',
+			$locale,
+			'technicalUnit',
+			'technicalUnit',
+			$locale,
+			'proposalCountry',
+			'proposalCountry',
 			$locale,
 			ASSOC_TYPE_ARTICLE, 
 			'SIGNOFF_COPYEDITING_FINAL',
@@ -238,6 +245,18 @@ class ProofreaderSubmissionDAO extends DAO {
 				}
 				break;
 		}
+							/** 
+		 * Added technical unit and country filter fields
+		 * Last updated by igm 9/24/2011
+		 */
+		
+		if (!empty($technicalUnitField)) {
+			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+		}
+											  	
+		if (!empty($countryField)) {
+			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+		}
 		$sql = 'SELECT DISTINCT
 				a.*,
 				spr.date_notified AS date_assigned,
@@ -258,6 +277,10 @@ class ProofreaderSubmissionDAO extends DAO {
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
 				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? and atl.locale = ?)
+				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
+				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
+				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
 				LEFT JOIN signoffs scpf ON (a.article_id = scpf.assoc_id AND scpf.assoc_type = ? AND scpf.symbolic = ?)
 				LEFT JOIN signoffs sle ON (a.article_id = sle.assoc_id AND sle.assoc_type = ? AND sle.symbolic = ?)
 				LEFT JOIN signoffs spr ON (a.article_id = spr.assoc_id AND spr.assoc_type = ? AND spr.symbolic = ?)
@@ -273,7 +296,7 @@ class ProofreaderSubmissionDAO extends DAO {
 			$sql .= ' AND spr.date_completed IS NOT NULL';		
 		}
 
-		$result =& $this->retrieveRange($sql . ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''), $params, $rangeInfo);
+		$result =& $this->retrieveRange($sql . ' ' . $searchSql  . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''), $params, $rangeInfo);
 
 		$returner = new DAOResultFactory ($result, $this, '_returnSubmissionFromRow');
 		return $returner;

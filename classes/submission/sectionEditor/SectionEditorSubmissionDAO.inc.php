@@ -342,7 +342,8 @@ class SectionEditorSubmissionDAO extends DAO {
 	/**
 	 * Retrieve unfiltered section editor submissions
 	 */
-	function &_getUnfilteredSectionEditorSubmissions($sectionEditorId, $journalId, $sectionId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $additionalWhereSql = '', $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &_getUnfilteredSectionEditorSubmissions($sectionEditorId, $journalId, $sectionId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null,
+	 												 $technicalUnitField = null, $countryField = null, $additionalWhereSql = '', $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 
@@ -363,6 +364,12 @@ class SectionEditorSubmissionDAO extends DAO {
 			$locale,
 			'cleanTitle', // Article title
 			'cleanTitle',
+			$locale,
+			'technicalUnit',
+			'technicalUnit',
+			$locale,
+			'proposalCountry',
+			'proposalCountry',
 			$locale,
 			$journalId,
 			$sectionEditorId
@@ -452,6 +459,18 @@ class SectionEditorSubmissionDAO extends DAO {
 				}
 				break;
 		}
+	 	/** 
+		 * Added technical unit and country filter fields
+		 * Last updated by igm 9/24/2011
+		 */
+		
+		if (!empty($technicalUnitField)) {
+			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+		}
+											  	
+		if (!empty($countryField)) {
+			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+		}
 
 		$sql = 'SELECT DISTINCT
 				a.*,
@@ -483,6 +502,10 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
 				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
+				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
+				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
 				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	a.journal_id = ?
@@ -496,7 +519,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$searchSql .= ' AND a.section_id = ?';
 		}
 
-		$result =& $this->retrieveRange($sql . ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+		$result =& $this->retrieveRange($sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 			$params,
 			$rangeInfo
 		);
@@ -517,11 +540,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInReviewIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInReviewIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision IS NULL OR edec.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -542,11 +565,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInEditingIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInEditingIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_edit = 1 AND edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -567,11 +590,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsArchivesIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsArchivesIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result = $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status <> ' . STATUS_QUEUED,
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1247,7 +1270,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1263,12 +1286,12 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $sectionEditorSubmissions;
 	}
 	
-	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$sectionEditorSubmissions = array();
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1285,12 +1308,12 @@ class SectionEditorSubmissionDAO extends DAO {
 	}
 	
 
-	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$sectionEditorSubmissions = array();
 		$result = $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'(a.status <> ' . STATUS_QUEUED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1311,7 +1334,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
