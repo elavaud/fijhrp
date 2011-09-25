@@ -41,6 +41,25 @@ class AuthorHandler extends Handler {
 		$rangeInfo =& Handler::getRangeInfo('submissions');
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 
+		
+		/**
+		 * Get user search fields
+		 * Added by: Ayvee Mallare
+		 * Last Updated: Sept 25, 2011
+		 */
+		$searchField = Request::getUserVar('searchField');
+		$dateSearchField = Request::getUserVar('dateSearchField');
+		$searchMatch = Request::getUserVar('searchMatch');
+		$search = Request::getUserVar('search');
+
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+		
+		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$countryField = Request::getUserVar('countryField');
+		
 		$page = isset($args[0]) ? $args[0] : '';
 		switch($page) {
 			case 'completed':
@@ -58,7 +77,8 @@ class AuthorHandler extends Handler {
 
 		if ($sort == 'status') {
 			// FIXME Does not pass $rangeInfo else we only get partial results
-			$unsortedSubmissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, null, $sort, $sortDirection);
+			$unsortedSubmissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, null, $sort, $sortDirection);
 
 			// Sort all submissions by status, which is too complex to do in the DB
 			$submissionsArray = $unsortedSubmissions->toArray();
@@ -76,14 +96,18 @@ class AuthorHandler extends Handler {
                         $submissions3 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
                         $submissions4 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		} else {
-			$submissions1 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+			$submissions1 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
                         //Clumsy workaround due to lack of iterate reset, AIM, June 1, 2011  TODO: Find better way
-                        $submissions2 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
-                        $submissions3 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
-                        $submissions4 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+                        $submissions2 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
+                        $submissions3 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField,$rangeInfo, $sort, $sortDirection);
+                        $submissions4 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate,  
+											  $technicalUnitField, $countryField,$rangeInfo, $sort, $sortDirection);
 		}
 
-                $templateMgr =& TemplateManager::getManager();
+        $templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
 		if (!$active) {
 			// Make view counts available if enabled.
@@ -91,10 +115,43 @@ class AuthorHandler extends Handler {
 		}
                 
 		$templateMgr->assign_by_ref('submissions1', $submissions1);
-                $templateMgr->assign_by_ref('submissions2', $submissions2);
-                $templateMgr->assign_by_ref('submissions3', $submissions3);
-                $templateMgr->assign_by_ref('submissions4', $submissions3);
-
+        $templateMgr->assign_by_ref('submissions2', $submissions2);
+        $templateMgr->assign_by_ref('submissions3', $submissions3);
+        $templateMgr->assign_by_ref('submissions4', $submissions3);
+        
+		/*********************************************************************
+		 * Add search fields to template
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Sept 25, 2011
+         *********************************************************************/
+        $duplicateParameters = array(
+			'searchField', 'searchMatch', 'search',
+			'dateFromMonth', 'dateFromDay', 'dateFromYear',
+			'dateToMonth', 'dateToDay', 'dateToYear',
+			'dateSearchField'
+		);
+		foreach ($duplicateParameters as $param)
+			$templateMgr->assign($param, Request::getUserVar($param));
+                
+        $templateMgr->assign('dateFrom', $fromDate);
+		$templateMgr->assign('dateTo', $toDate);
+		$templateMgr->assign('fieldOptions', Array(
+			SUBMISSION_FIELD_TITLE => 'article.title',
+			SUBMISSION_FIELD_AUTHOR => 'user.role.author',
+			SUBMISSION_FIELD_EDITOR => 'user.role.editor'
+		));
+		$templateMgr->assign('dateFieldOptions', Array(
+			SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
+		));
+		
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+        
 		// assign payment 
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
@@ -114,6 +171,10 @@ class AuthorHandler extends Handler {
 		$templateMgr->assign('helpTopicId', 'editorial.authorsRole.submissions');
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		// Added by igm 9/24/11
+		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+		$templateMgr->assign('countryField', $countryField);
+		
 		$templateMgr->display('author/index.tpl');
 	}
 

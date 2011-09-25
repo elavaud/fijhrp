@@ -256,7 +256,7 @@ class EditorSubmissionDAO extends DAO {
 				break;
 			case SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE:
 				if (!empty($dateFrom)) {
-					$searchSql .= ' AND sfc.date_completed >= ' . $this->datetimeToDB($dateFrom);
+					$searchSql .= ' AND scf.date_completed >= ' . $this->datetimeToDB($dateFrom);
 				}
 				if (!empty($dateTo)) {
 					$searchSql .= ' AND scf.date_completed <= ' . $this->datetimeToDB($dateTo);
