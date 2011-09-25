@@ -251,14 +251,88 @@ class ReviewerSubmissionDAO extends DAO {
 	}
 	/**
 	 * Get all submissions for a reviewer of a journal.
+	 * Added filtering
+	 * Last Updated by igm 9/25/2011
 	 * @param $reviewerId int
 	 * @param $journalId int
 	 * @param $rangeInfo object
 	 * @return array ReviewerSubmissions
 	 */
-	function &getReviewerSubmissionsByReviewerId($reviewerId, $journalId, $active = true, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getReviewerSubmissionsByReviewerId($reviewerId, $journalId, $active = true, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
+											  $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
+		$params = array(
+				'cleanTitle', // Article title
+				'cleanTitle',
+				$locale,
+				'technicalUnit',
+				'technicalUnit',
+				$locale,
+				'proposalCountry',
+				'proposalCountry',
+				$locale,
+				'title', // Section title
+				$primaryLocale,
+				'title',
+				$locale,
+				'abbrev', // Section abbreviation
+				$primaryLocale,
+				'abbrev',
+				$locale,
+				$journalId,
+				$reviewerId);
+		$searchSql = '';
+		if (!empty($search)) switch ($searchField) {
+			case SUBMISSION_FIELD_TITLE:
+				if ($searchMatch === 'is') {
+					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) = LOWER(?)';
+				} elseif ($searchMatch === 'contains') {
+					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$search = '%' . $search . '%';
+				} else { // $searchMatch === 'startsWith'
+					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$search = $search . '%';
+				}
+				$params[] = $search;
+				break;
+			case SUBMISSION_FIELD_AUTHOR:
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'aa.', $params);
+				break;
+			case SUBMISSION_FIELD_EDITOR:
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ed.', $params);
+				break;
+			case SUBMISSION_FIELD_REVIEWER:
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 're.', $params);
+				break;
+			case SUBMISSION_FIELD_COPYEDITOR:
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ce.', $params);
+				break;
+			case SUBMISSION_FIELD_LAYOUTEDITOR:
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'le.', $params);
+				break;
+			case SUBMISSION_FIELD_PROOFREADER:
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'pe.', $params);
+				break;
+		}
+		if (!empty($dateFrom) || !empty($dateTo)) switch($dateField) {
+			case SUBMISSION_FIELD_DATE_SUBMITTED:
+				if (!empty($dateFrom)) {
+					$searchSql .= ' AND a.date_submitted >= ' . $this->datetimeToDB($dateFrom);
+				}
+				if (!empty($dateTo)) {
+					$searchSql .= ' AND a.date_submitted <= ' . $this->datetimeToDB($dateTo);
+				}
+				break;
+		}
+		
+		if (!empty($technicalUnitField)) {
+			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+		}
+											  	
+		if (!empty($countryField)) {
+			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+		}
 		$sql = 'SELECT	a.*,
 				r.*,
 				r2.review_revision,
@@ -267,9 +341,14 @@ class ReviewerSubmissionDAO extends DAO {
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
 				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
+				LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
 				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
 				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
 				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
+				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
+				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
 				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
@@ -287,27 +366,9 @@ class ReviewerSubmissionDAO extends DAO {
 			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1)';
 		}
 
-		if ($sortBy) {
-			$sql .=  ' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection);
-		}
-
 		$result =& $this->retrieveRange(
-			$sql,
-			array(
-				'cleanTitle', // Article title
-				'cleanTitle',
-				$locale,
-				'title', // Section title
-				$primaryLocale,
-				'title',
-				$locale,
-				'abbrev', // Section abbreviation
-				$primaryLocale,
-				'abbrev',
-				$locale,
-				$journalId,
-				$reviewerId
-			),
+			$sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+			count($params)===1?array_shift($params):$params,
 			$rangeInfo
 		);
 
@@ -315,6 +376,26 @@ class ReviewerSubmissionDAO extends DAO {
 		return $returner;
 	}
 
+	/**
+	 * FIXME Move this into somewhere common (SubmissionDAO?) as this is used in several classes.
+	 */
+	function _generateUserNameSearchSQL($search, $searchMatch, $prefix, &$params) {
+		$first_last = $this->_dataSource->Concat($prefix.'first_name', '\' \'', $prefix.'last_name');
+		$first_middle_last = $this->_dataSource->Concat($prefix.'first_name', '\' \'', $prefix.'middle_name', '\' \'', $prefix.'last_name');
+		$last_comma_first = $this->_dataSource->Concat($prefix.'last_name', '\', \'', $prefix.'first_name');
+		$last_comma_first_middle = $this->_dataSource->Concat($prefix.'last_name', '\', \'', $prefix.'first_name', '\' \'', $prefix.'middle_name');
+		if ($searchMatch === 'is') {
+			$searchSql = " AND (LOWER({$prefix}last_name) = LOWER(?) OR LOWER($first_last) = LOWER(?) OR LOWER($first_middle_last) = LOWER(?) OR LOWER($last_comma_first) = LOWER(?) OR LOWER($last_comma_first_middle) = LOWER(?))";
+		} elseif ($searchMatch === 'contains') {
+			$searchSql = " AND (LOWER({$prefix}last_name) LIKE LOWER(?) OR LOWER($first_last) LIKE LOWER(?) OR LOWER($first_middle_last) LIKE LOWER(?) OR LOWER($last_comma_first) LIKE LOWER(?) OR LOWER($last_comma_first_middle) LIKE LOWER(?))";
+			$search = '%' . $search . '%';
+		} else { // $searchMatch === 'startsWith'
+			$searchSql = " AND (LOWER({$prefix}last_name) LIKE LOWER(?) OR LOWER($first_last) LIKE LOWER(?) OR LOWER($first_middle_last) LIKE LOWER(?) OR LOWER($last_comma_first) LIKE LOWER(?) OR LOWER($last_comma_first_middle) LIKE LOWER(?))";
+			$search = $search . '%';
+		}
+		$params[] = $params[] = $params[] = $params[] = $params[] = $search;
+		return $searchSql;
+	}
 	/**
 	 * Get count of active and complete assignments
 	 * @param reviewerId int
