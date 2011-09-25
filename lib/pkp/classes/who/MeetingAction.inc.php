@@ -136,9 +136,11 @@ class MeetingAction extends Action {
 		if ($meeting->getUploader() == $user->getId()) {
 			if (!HookRegistry::call('Action::setMeetingFinal', array(&$meetingId))) {
 				$meetingDao->updateStatus($meetingId, STATUS_FINAL);
-			} return $meetingId;
+			} 
+			return $meetingId;
 			
-		}return false;
+		}
+		return false;
 	
 	}
 	

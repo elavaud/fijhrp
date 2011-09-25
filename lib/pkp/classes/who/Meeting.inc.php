@@ -1,6 +1,7 @@
 <?php
 
 define ('MINUTES_STATUS_COMPLETE', 128);
+define ('MINUTES_STATUS_INCOMPLETE', 256);
 define ('MINUTES_STATUS_ATTENDANCE', 1);
 define ('MINUTES_STATUS_INITIAL_REVIEWS', 2);
 define ('MINUTES_STATUS_REREVIEWS', 4);
@@ -8,6 +9,11 @@ define ('MINUTES_STATUS_CONTINUING_REVIEWS', 8);
 define ('MINUTES_STATUS_AMENDMENTS', 16);
 define ('MINUTES_STATUS_ADVERSE_EVENTS', 32);
 define ('MINUTES_STATUS_INFORMATION_ITEMS', 64);
+define ('STATUS_NEW', 4);
+define ('STATUS_FINAL', 1);
+define ('STATUS_RESCHEDULED', 2);
+define ('STATUS_CANCELLED', 3);
+define ('STATUS_DONE', 5);
 define ('STATUS_NEW', 0);
 define ('STATUS_FINAL', 1);
 define ('STATUS_RESCHEDULED', 2);
@@ -190,6 +196,8 @@ class Meeting extends DataObject {
 				return Locale::Translate('reviewer.meetings.scheduleStatus.rescheduled');
 			case STATUS_CANCELLED:
 				return Locale::Translate('reviewer.meetings.scheduleStatus.cancelled');
+			case STATUS_DONE:
+				return Locale::Translate('common.done');
 			default:
 				return Locale::Translate('reviewer.meetings.scheduleStatus.new');
 		}

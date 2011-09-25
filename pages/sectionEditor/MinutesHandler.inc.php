@@ -350,7 +350,9 @@ class MinutesHandler extends Handler {
 
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
 		$meeting->setMinutesStatus(MINUTES_STATUS_COMPLETE);
+		$meeting->setStatus(STATUS_DONE);
 		$meetingDao->updateMinutesStatus($meeting);
+		$meetingDao->updateStatus($meeting->getId(), STATUS_DONE);
 		Request::redirect(null, null, 'uploadMinutes', $meetingId);
 	}
 
@@ -362,7 +364,7 @@ class MinutesHandler extends Handler {
 		$minutesFileManager = new MinutesFileManager($meetingId);
 		return $minutesFileManager->downloadMinutesArchive();
 	}
-		
+	
 	function validate($meetingId = 0, $access = null) {
 		parent::validate();
 		$isValid = true;

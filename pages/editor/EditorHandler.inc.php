@@ -59,6 +59,21 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('fieldOptions', $this->getSearchFieldOptions());
 		$templateMgr->assign('dateFieldOptions', $this->getDateFieldOptions());
 
+		
+		/*********************************************************************
+		 * Get list of WHO technical units from the XML file and get all countries
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+         *********************************************************************/
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+		
+		
 		// Bring in the print_issue_id function (FIXME?)
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
@@ -73,7 +88,15 @@ class EditorHandler extends SectionEditorHandler {
 			$dateSearchField = Request::getUserVar('dateSearchField');
 			$searchMatch = Request::getUserVar('searchMatch');
 			$search = Request::getUserVar('search');
-
+			
+			/**
+			 * Get user's search conditions for technical unit and RTO
+			 * Added by: Ayvee Mallare
+			 * Last Updated: Sept 24, 2011
+			 */
+			$technicalUnitField = Request::getUserVar('technicalUnitField');
+			$countryField = Request::getUserVar('countryField');
+			
 			$sort = Request::getUserVar('sort');
 			$sort = isset($sort) ? $sort : 'id';
 			$sortDirection = Request::getUserVar('sortDirection');
@@ -95,6 +118,8 @@ class EditorHandler extends SectionEditorHandler {
 					$dateSearchField,
 					$fromDate,
 					$toDate,
+					$technicalUnitField,
+					$countryField,
 					null,
 					null,
 					$sort,
@@ -123,6 +148,8 @@ class EditorHandler extends SectionEditorHandler {
 					$dateSearchField,
 					$fromDate,
 					$toDate,
+					$technicalUnitField,
+					$countryField,
 					null,
 					$rangeInfo,
 					$sort,
@@ -140,6 +167,11 @@ class EditorHandler extends SectionEditorHandler {
 
 			$templateMgr->assign('dateFrom', $fromDate);
 			$templateMgr->assign('dateTo', $toDate);
+			
+			// Added by igm 9/24/11
+			$templateMgr->assign('technicalUnitField', $technicalUnitField);
+			$templateMgr->assign('countryField', $countryField);
+			
 			$templateMgr->assign('displayResults', true);
 			$templateMgr->assign('sort', $sort);
 			$templateMgr->assign('sortDirection', $sortDirection);
@@ -330,6 +362,7 @@ class EditorHandler extends SectionEditorHandler {
 			SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		);
 	}
+	
 
 	/**
 	 * Set the canEdit / canReview flags for this submission's edit assignments.

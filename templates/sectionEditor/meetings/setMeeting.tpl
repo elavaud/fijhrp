@@ -111,8 +111,8 @@ $(document).ready(function() {
 {/if}
 </table>
 
-<p> {if $meetingId == 0}<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
-	
+<p> {if $meetingId == 0}
+		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
 	{else}
 		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meetingId }'" />
 	{/if} 
