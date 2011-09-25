@@ -37,7 +37,8 @@
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-                <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
+                <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
+   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
                 {if $status==PROPOSAL_STATUS_DRAFT}
                     {assign var="count" value=$count+1}
                     {assign var="progress" value=$submission->getSubmissionProgress()}
@@ -138,8 +139,9 @@
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-                <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-
+                <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB, Sept25, 2011 -->
+   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
+                
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
                     {translate key="submissions.proposal.approved"}{if $submission->isSubmissionDue()}&nbsp;(Due){/if}<br />
@@ -201,8 +203,9 @@
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-                <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-
+                <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB, Sept25,2011 -->
+   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
+                
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
                     {assign var="count" value=$count+1}
@@ -262,8 +265,9 @@
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-                <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-
+                <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
+   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+                
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
                    {assign var="count" value=$count+1}

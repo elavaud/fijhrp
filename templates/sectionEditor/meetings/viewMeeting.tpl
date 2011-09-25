@@ -44,7 +44,7 @@
 	<tr class="heading" valign="bottom">
 		<td width="10%">WHO Proposal ID</td>
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<td width="5%">{translate key="submissions.sec"}</td>
+		<!-- <td width="5%">{translate key="submissions.sec"}</td> Commented out by MSB, Sept25,2011-->
 		<td width="25%">{translate key="article.authors"}</td>
 		<td width="35%">{translate key="article.title"}</td>
 		<td width="25%" align="right">{translate key="common.status"}</td>
@@ -56,9 +56,10 @@
 	<tr valign="top">
 		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
-		<td>{$submission->getSectionAbbrev()|escape}</td>
-		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
+		<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB -->
+   		<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->		
+   		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 		<td align="right">
 			{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 			{translate key=$proposalStatusKey}
