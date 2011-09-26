@@ -64,7 +64,7 @@ function sortSearch(heading, direction) {
 	<tr class="heading" valign="bottom">
 		<td width="5%">{sort_search key="common.id" sort="id"}</td>
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_search key="common.assign" sort="assignDate"}</td>
-		<td width="5%">{sort_search key="submissions.sec" sort="section"}</td>
+		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
 		<td width="25%">{sort_search key="article.authors" sort="authors"}</td>
 		<td width="30%">{sort_search key="article.title" sort="title"}</td>
 		<td width="5%">{sort_search key="submission.complete" sort="dateCompleted"}</td>
@@ -78,9 +78,10 @@ function sortSearch(heading, direction) {
 	<tr valign="top">
 		<td>{$articleId|escape}</td>
 		<td>{$proofreaderSignoff->getDateNotified()|date_format:$dateFormatTrunc}</td>
-		<td>{$submission->getSectionAbbrev()|escape}</td>
-		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
+		<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB -->
+   		<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->		
+   		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
 		<td>{$proofreaderSignoff->getDateCompleted()|date_format:$dateFormatTrunc}</td>
 		<td align="right">
 			{assign var="status" value=$submission->getStatus()}

@@ -14,7 +14,7 @@
 	<tr class="heading" valign="bottom">
 	<td width="5%">{sort_search key="common.id" sort="id"}</td>
 		<td width="5%">{sort_search key="submissions.submit" sort="submitDate"}</td>
-		<td width="5%">{sort_search key="submissions.sec" sort="section"}</td>
+		<!-- <td width="5%">{sort_search key="submissions.sec" sort="section"}</td> Commented out by MSB, Sept25,2011  -->
 		<td width="20%">{sort_search key="article.authors" sort="authors"}</td>
 		<td width="25%">{sort_search key="article.title" sort="title"}</td>
 		<td width="10%">{sort_search key="submission.copyedit" sort="subCopyedit"}</td>
@@ -33,9 +33,10 @@
 	<tr valign="top"{if $highlightClass} class="{$highlightClass|escape}"{/if}>
 		<td>{$submission->getArticleId()}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
-		<td>{$submission->getSectionAbbrev()|escape}</td>
-		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submissionEditing" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sep25, 2011  --> 
+		<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB -->
+	   	<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+        <td><a href="{url op="submissionEditing" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
 		<td>{$copyeditorFinalSignoff->getDateCompleted()|date_format:$dateFormatTrunc|default:"&mdash;"}</td>
 		<td>{$layoutSignoff->getDateCompleted()|date_format:$dateFormatTrunc|default:"&mdash;"}</td>
 		<td>{$layoutEditorProofSignoff->getDateCompleted()|date_format:$dateFormatTrunc|default:"&mdash;"}</td>
