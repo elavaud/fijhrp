@@ -171,7 +171,7 @@ class AuthorSubmission extends Article {
                 if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
 
                 //Extension Requested status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_EXTENSION) return PROPOSAL_STATUS_EXTENSION;
+                //if($this->getStatus() == PROPOSAL_STATUS_EXTENSION) return PROPOSAL_STATUS_EXTENSION;
 
                 $status = $this->getProposalStatus();
                 if($status == PROPOSAL_STATUS_RETURNED) {
