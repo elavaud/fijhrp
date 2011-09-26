@@ -868,9 +868,9 @@ class ArticleDAO extends DAO {
 	 * Last Update: 7/21/2011
 	 */
 	function insertApprovalDate($article, $approvalDate) {
-		$result =& $this->retrieve('SELECT setting_value FROM article_settings WHERE article_id = ? and setting_name = ? and locale = ? LIMIT 1', array($articleId, 'approvalDate', $article->getLocale()));
+		$result =& $this->retrieve('SELECT setting_value FROM article_settings WHERE article_id = ? and setting_name = ? and locale = ? LIMIT 1', array($article->getId(), 'approvalDate', $article->getLocale()));
 		$row = $result->FetchRow();
-		$existing = (isset($row['setting_value']) ? false : true);
+		$existing = ($row['setting_value'] != null ? true : false);
 		if(!$existing) {
 			$this->update(sprintf('INSERT INTO article_settings 
 			(article_id, locale, setting_name, setting_value, setting_type) 
