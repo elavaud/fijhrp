@@ -194,9 +194,9 @@ class AuthorSubmissionDAO extends DAO {
 				$authorId,
 				$journalId
 		);
-		
 		$searchSql = '';
-		
+		$technicalUnitSql = '';
+		$countrySql = '';
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {

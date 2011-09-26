@@ -212,6 +212,8 @@ class EditorSubmissionDAO extends DAO {
 			$journalId
 		);
 		$searchSql = '';
+		$technicalUnitSql = '';
+		$countrySql = '';
 
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:

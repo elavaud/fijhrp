@@ -167,6 +167,8 @@ class CopyeditorSubmissionDAO extends DAO {
 		$params[] = $copyeditorId;
 
 		$searchSql = '';
+		$technicalUnitSql = '';
+		$countrySql = '';
 
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:

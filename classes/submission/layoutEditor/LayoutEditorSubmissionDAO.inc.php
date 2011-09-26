@@ -160,6 +160,8 @@ class LayoutEditorSubmissionDAO extends DAO {
 		if (isset($journalId)) $params[] = $journalId;
 
 		$searchSql = '';
+		$technicalUnitSql = '';
+		$countrySql = '';
 
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:

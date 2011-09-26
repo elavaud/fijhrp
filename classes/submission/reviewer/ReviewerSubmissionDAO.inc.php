@@ -283,6 +283,8 @@ class ReviewerSubmissionDAO extends DAO {
 				$journalId,
 				$reviewerId);
 		$searchSql = '';
+		$technicalUnitSql = '';
+		$countrySql = '';
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {

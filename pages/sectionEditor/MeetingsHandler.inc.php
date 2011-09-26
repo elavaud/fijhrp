@@ -281,7 +281,7 @@ class MeetingsHandler extends Handler {
 			$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
 			$submissions = array();
-			foreach($selectedProposals as $submission) {``
+			foreach($selectedProposals as $submission) {
 				$submissions[$submission] = $articleDao->getArticle($submission, $journalId, false);
 			}
 			
