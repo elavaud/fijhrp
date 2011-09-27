@@ -16,7 +16,7 @@
 	<message key="editor.article.reviewForms">Review Forms</message>
 	<message key="editor.article.selectReviewForm">Select Review Form</message>
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>
-	<message key="editor.home">Editor Home</message>
+	<message key="editor.home">STO Home</message> /*editor to STO*/
 	 <message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
 	<message key="editor.submissionsAndPublishing">Submissions and Publishing</message>
 	<message key="editor.submissionQueue">Submission Queue</message>
@@ -391,4 +391,5 @@
 	<message key="editor.minutes.noProposalsForContinuingReview">No proposals are assigned for continuing ERC Review.</message>
 	<message key="editor.minutes.uploadContinuingReviews">Upload Continuing Reviews</message>
 	<message key="editor.minutes.completeContinuingReviews">Complete Continuing Reviews</message>
+	<message key="editor.submission.dateOfApproval">Date of Approval</message>
 </locale>

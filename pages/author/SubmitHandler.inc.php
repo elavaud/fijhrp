@@ -73,7 +73,6 @@ class SubmitHandler extends AuthorHandler {
 	 * @param $args array optional, if set the first parameter is the step to display
 	 */
 	function submit($args, $request) {
-                
 		$step = isset($args[0]) ? (int) $args[0] : 0;
 		$articleId = $request->getUserVar('articleId');
                 $journal =& $request->getJournal();

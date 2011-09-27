@@ -10,6 +10,9 @@
 
 <proposaltypes>
     <proposaltype name="Clinical Trial with Human Subjects" code="CWHS" />
+    <proposaltype name="Health System and Policy Research" code="HSPR" />
+    <proposaltype name="Population-Based Survey" code="PBS" />
     <proposaltype name="Proposal with Human Subjects" code="PWHS" />
     <proposaltype name="Proposal without Human Subjects" code="PNHS" />
+    <proposaltype name="Qualitative Study" code="QS" />
 </proposaltypes>

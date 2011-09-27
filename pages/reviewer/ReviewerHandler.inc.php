@@ -58,6 +58,24 @@ class ReviewerHandler extends Handler {
 		$this->validate();
 		$this->setupTemplate();
 
+		/**
+		 * Get user search fields
+		 * Added by: Ayvee Mallare
+		 * Last Updated: Sept 25, 2011
+		 */
+		$searchField = Request::getUserVar('searchField');
+		$dateSearchField = Request::getUserVar('dateSearchField');
+		$searchMatch = Request::getUserVar('searchMatch');
+		$search = Request::getUserVar('search');
+
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+		
+		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$countryField = Request::getUserVar('countryField');
+		
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
 		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
@@ -77,7 +95,8 @@ class ReviewerHandler extends Handler {
 		$sortDirection = Request::getUserVar('sortDirection');
 
 		if ($sort == 'decision') {			
-			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo);
+			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo);
 		
 			// Sort all submissions by status, which is too complex to do in the DB
 			$submissionsArray = $submissions->toArray();
@@ -90,7 +109,8 @@ class ReviewerHandler extends Handler {
 			import('lib.pkp.classes.core.ArrayItemIterator');
 			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		}  else {
-			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active, $rangeInfo, $sort, $sortDirection);
+			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
 		}
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
@@ -100,12 +120,49 @@ class ReviewerHandler extends Handler {
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 
+		/*********************************************************************
+		 * Add search fields to template
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Sept 25, 2011
+         *********************************************************************/
+        $duplicateParameters = array(
+			'searchField', 'searchMatch', 'search',
+			'dateFromMonth', 'dateFromDay', 'dateFromYear',
+			'dateToMonth', 'dateToDay', 'dateToYear',
+			'dateSearchField'
+		);
+		foreach ($duplicateParameters as $param)
+			$templateMgr->assign($param, Request::getUserVar($param));
+                
+        $templateMgr->assign('dateFrom', $fromDate);
+		$templateMgr->assign('dateTo', $toDate);
+		$templateMgr->assign('fieldOptions', Array(
+			SUBMISSION_FIELD_TITLE => 'article.title',
+			SUBMISSION_FIELD_AUTHOR => 'user.role.author',
+			SUBMISSION_FIELD_EDITOR => 'user.role.editor'
+		));
+		$templateMgr->assign('dateFieldOptions', Array(
+			SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
+		));
+		
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+        
+        
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
 		$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
 		$templateMgr->assign('helpTopicId', 'editorial.reviewersRole.submissions');
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		// Added by igm 9/24/11
+		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+		$templateMgr->assign('countryField', $countryField);
 		$templateMgr->display('reviewer/submissionsIndex.tpl');
 	}
 	

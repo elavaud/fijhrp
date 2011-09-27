@@ -212,6 +212,8 @@ class EditorSubmissionDAO extends DAO {
 			$journalId
 		);
 		$searchSql = '';
+		$technicalUnitSql = '';
+		$countrySql = '';
 
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
@@ -256,7 +258,7 @@ class EditorSubmissionDAO extends DAO {
 				break;
 			case SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE:
 				if (!empty($dateFrom)) {
-					$searchSql .= ' AND sfc.date_completed >= ' . $this->datetimeToDB($dateFrom);
+					$searchSql .= ' AND scf.date_completed >= ' . $this->datetimeToDB($dateFrom);
 				}
 				if (!empty($dateTo)) {
 					$searchSql .= ' AND scf.date_completed <= ' . $this->datetimeToDB($dateTo);
@@ -392,8 +394,8 @@ class EditorSubmissionDAO extends DAO {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, null, null,
-			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NULL',
+			$dateField, $dateFrom, $dateTo,
+			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NULL AND a.submission_progress = 0 ', //and not draft aglet 9/26/2011
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
@@ -528,7 +530,7 @@ class EditorSubmissionDAO extends DAO {
 				LEFT JOIN edit_assignments e ON (a.article_id = e.article_id)
 				LEFT JOIN edit_assignments e2 ON (a.article_id = e2.article_id AND e.edit_id < e2.edit_id)
 			WHERE	a.journal_id = ? ".
-				//AND a.submission_progress = 0 aglet 6/27/2011
+				"AND a.submission_progress = 0 ".//aglet 6/27/2011 -- drafts. NOTE: what about proposals for resubmission?
 				"AND a.status = " . STATUS_QUEUED . "
 				AND e2.edit_id IS NULL
 				AND e.edit_id IS NULL",
