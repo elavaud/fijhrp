@@ -75,9 +75,17 @@ class LayoutEditorHandler extends Handler {
 		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+		
+		/**
+		 * Get user's search conditions for technical unit and RTO
+		 * Added by: Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+		 */
+		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$countryField = Request::getUserVar('countryField');
 
 		$rangeInfo = Handler::getRangeInfo('submissions');
-		$submissions = $layoutEditorSubmissionDao->getSubmissions($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $active, $rangeInfo, $sort, $sortDirection);
+		$submissions = $layoutEditorSubmissionDao->getSubmissions($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $technicalUnitField, $countryField, $active, $rangeInfo, $sort, $sortDirection);
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
@@ -106,6 +114,20 @@ class LayoutEditorHandler extends Handler {
 			SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
 			SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		));
+		
+		/*********************************************************************
+		 * Get list of WHO technical units from the XML file and get all countries
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+         *********************************************************************/
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+        
 
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
@@ -113,6 +135,10 @@ class LayoutEditorHandler extends Handler {
 		$templateMgr->assign('helpTopicId', 'editorial.layoutEditorsRole.submissions');
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		// Added by igm 9/24/11
+		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+		$templateMgr->assign('countryField', $countryField);
+		
 		$templateMgr->display('layoutEditor/submissions.tpl');
 	}
 

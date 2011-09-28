@@ -369,7 +369,7 @@
 	<message key="submissions.proposal.returned">Incomplete</message>
 	<message key="submissions.proposal.checked">Complete</message>
 	<message key="submissions.proposal.exempted">Exempted From Review</message>
-	<message key="submissions.proposal.assigned">For Normal Review</message>
+	<message key="submissions.proposal.assigned">For Full Review</message>
 	<message key="submissions.proposal.expedited">For Expedited Review</message>
 	<message key="submissions.proposal.reviewed">Reviewed</message>
 	<message key="submissions.proposal.expired">Expired</message>
@@ -381,6 +381,7 @@
         <message key="submissions.proposal.approved">Approved</message>
         <message key="submissions.proposal.completed">Completed</message>
         <message key="submissions.proposal.extensionrequested">Extension Requested</message>
+        <message key="submissions.proposal.forContinuingReview">For Continuing Review</message>
 
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Submit</message>

@@ -16,7 +16,7 @@
 	<message key="editor.article.reviewForms">Review Forms</message>
 	<message key="editor.article.selectReviewForm">Select Review Form</message>
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>
-	<message key="editor.home">Editor Home</message>
+	<message key="editor.home">STO Home</message> /*editor to STO*/
 	 <message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
 	<message key="editor.submissionsAndPublishing">Submissions and Publishing</message>
 	<message key="editor.submissionQueue">Submission Queue</message>
@@ -136,6 +136,8 @@
 	<message key="editor.article.reviewersSeeAuthorsVersion">Reviewers to see author version</message>
 	<message key="editor.article.designateDueDate">Designate a Due Date</message>
 	<message key="editor.article.designateDueDateDescription">Enter the date or number of weeks for the new due date.</message>
+	<message key="editor.article.designateMeetingDate">Designate Date and Time </message>
+	<message key="editor.article.designateMeetingDateDescription">Pick a date and time for the meeting.</message>
 	<message key="editor.article.todaysDate">Today's Date</message>
 	<message key="editor.article.requestedByDate">Requested By Date</message>
 	<message key="editor.article.dueDateFormat">Format: YYYY-MM-DD</message>
@@ -176,27 +178,43 @@
 	<message key="editor.article.decision.incomplete">Incomplete</message>
 	<message key="editor.article.decision.exempted">Exempt From Review</message>
 	<message key="editor.article.decision.expedited">For Expedited Review</message>
-	<message key="editor.article.decision.assigned">For ERC Review</message>
+	<message key="editor.article.decision.assigned">For Full Review</message>
 	<message key="editor.article.selectInitialReview">Select Initial Review</message>
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
 	<message key="editor.submissionReview.confirmExemption">Are you sure you wish to record this decision?</message>
-	<message key="editor.submissionReview.confirmExempted">Are you sure you wish to exempt this proposal from review?</message>
-	<message key="editor.submissionReview.confirmAssigned">Are you sure you wish to assign this proposal for review?</message>
+	<message key="editor.submissionReview.confirmReviewSelection">Are you sure you wish to record this decision?</message>
 	<message key="editor.article.record">Submit</message>
 	<message key="editor.article.finalDecision">Final Decision</message>
 	<message key="editor.article.proposalResubmitted">(Resubmitted proposal)</message>
 	<message key="editor.article.waitingForResubmission">Waiting for resubmission of proposal</message>
 	<message key="editor.article.submissionStatus">Submission Status</message>
 	<message key="editor.article.reasonsForExemption">Reasons for Exemption</message>
+	<message key="editor.article.selectContinuingReview">Select Type of Continuing Review</message>
 	<message key="editor.article.exemption.instructions">(Please check all that apply)</message>
 	<message key="editor.article.exemption.noHumanParticipants">The research does not involve human participants.</message>	
 	<message key="editor.article.exemption.alreadyExists">The data (including health-care records and specimens) being studied already exist and are either publicly available or are recorded by the investigator in such a manner as to be unidentifiable.</message>
 	<message key="editor.article.exemption.publicOfficials">Public officials are interviewed in their official capacity on issues that are in the public domain.</message>
 	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
-	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations’s Ethics Review Committee (WHOERC).</message>
-		
+	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations's Ethics Review Committee (WHOERC).</message>
+	<message key="editor.minutes.minutes">Minutes</message>
+	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
+	<message key="editor.minutes.attendance">Attendance</message>
+	<message key="editor.minutes.announcements">Announcements</message>
+	<message key="editor.minutes.initialReview">Initial Review</message>
+	<message key="editor.minutes.initialReviews">Initial Reviews</message>
+	<message key="editor.minutes.continuingReview">Continuing Review</message>
+	<message key="editor.minutes.continuingReviews">Continuing Reviews</message>
+	<message key="editor.minutes.rereview">Continuing Review or Re-review</message>
+	<message key="editor.minutes.rereviews">Continuing Review or Re-reviews</message>
+	<message key="editor.minutes.amendment">Amendment</message>
+	<message key="editor.minutes.amendments">Amendments</message>
+	<message key="editor.minutes.adverseEvent">Adverse Event</message>
+	<message key="editor.minutes.adverseEvents">Adverse Events</message>
+	<message key="editor.minutes.informationItems">Information Items</message>
+	<message key="editor.minutes.announcementsRequired">Please enter announcements.</message>
+			
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
 	<message key="editor.article.replaceLayoutEditor">Replace Layout Editor</message>
 	<message key="editor.article.reviewSubmission">Review Submission</message>
@@ -239,4 +257,139 @@
 	<message key="editor.article.removeCoverPage">Remove cover image?</message>
 	<message key="editor.article.remove">Remove</message>
 	<message key="editor.issues.invalidAccessDate">Access date is not valid.</message>
+	
+	<!-- *********************************************
+	 * Additional key for review due date
+	 * Added by ayveemallare
+	 * Last Update: 6/29/2011
+	********************************************** -->
+	<message key="editor.article.meetingDate">Date and Time</message>
+	
+	<!-- *********************************************
+	 * Additional keys for meetings
+	 * Added by ayveemallare
+	 * Last Update: 7/5/2011
+	********************************************** -->
+	<message key="editor.meetings">Meetings</message>
+	<message key="editor.meetings.setMeeting">Set a Meeting</message>
+	<message key="editor.meetings.viewMeeting">Meeting Details</message>
+	<message key="editor.meetings.meetingId">Meeting ID</message>
+	<message key="editor.meetings.reviewers">Reviewers</message>
+	<message key="editor.meetings.status">Status</message>
+	<message key="editor.meetings.isFinal">Is Final</message>
+	<message key="editor.meetings.scheduleStatus">Schedule Status</message>
+	<message key="editor.meetings.meetingDate">Schedule</message>
+	<message key="editor.meetings.noMeetings">No scheduled meetings</message>
+	<message key="editor.meetings.meetingsCount">meeting(s) scheduled</message>
+	<message key="editor.meetings.setNewMeeting">SET A NEW MEETING</message>
+	<message key="editor.meetings.clickHere">CLICK HERE</message>
+	<message key="editor.meetings.toSetNewMeeting"> to set a new meeting.</message>
+	<message key="editor.meetings.uploadMinutes">Upload Minutes</message>
+	<message key="editor.meetings.addProposalsToDiscuss">Add/Remove proposals to discuss</message>
+	<message key="editor.meetings.submissions">Submissions to be discussed</message>
+	
+	<message key="editor.meetings.reviewer.name">Name</message>
+	<message key="editor.meetings.reviewer.replyStatus">Reply Status</message>
+	<message key="editor.meetings.reviewer.reply">Remarks</message>
+	<message key="editor.meetings.reviewer.noReviewers">No reviewers</message>
+	<message key="editor.meetings.attendingReviewers">Attending Reviewers</message>
+	<message key="editor.meetings.numberOfAttendingReviewers">Total Number of Attending Reviewers</message>
+	<message key="editor.meetings.numberOfNotAttendingReviewers">Total Number of NOT Attending Reviewers</message>
+	<message key="editor.meetings.numberOfUndecidedReviewers">Total Number of Undecided Reviewers</message>
+	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>
+	<message key="editor.meetings.form.selectAtleastOneProposal">Select at least one (1) proposal to discuss</message>
+	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
+	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
+
+	<message key="editor.minutes.adjourned">Meeting was adjourned at</message>
+	<message key="editor.minutes.adjournedRequired">Please indicate the time when meeting was adjourned</message>
+	<message key="editor.minutes.venue">Venue of Meeting</message>
+	<message key="editor.minutes.venueRequired">Please enter venue of meeting</message>
+	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</message>
+	<message key="editor.minutes.fillupCommitteeAttendance">Indicate attendance of committee members in meeting</message>
+	<message key="editor.minutes.fillupGuests">Indicate guests who attended the meeting</message>
+	<message key="editor.minutes.reasonOfAbsence">Reason of Absence</message>
+	<message key="editor.minutes.present">Present</message>
+	<message key="editor.minutes.absent">Absent</message>
+	<message key="editor.minutes.nameOfMember">Name of Member</message>
+	<message key="editor.minutes.affiliationOfMember">Affiliation of Member</message>
+	<message key="editor.reviewer.wproAffiliated">WPRO-affiliated</message>
+	<message key="editor.reviewer.nonWpro">non-WPRO</message>
+	<message key="editor.reviewer.healthAffiliated">Health-affiliated</message>
+	<message key="editor.reviewer.nonHealth">non-Health</message>
+	<message key="editor.minutes.uploadAttendance">Upload Attendance</message>
+	<message key="editor.minutes.uploadInitialReviews">Upload Initial Reviews</message>
+	<message key="editor.minutes.completeInitialReviews">Complete Initial Reviews</message>
+	<message key="editor.minutes.complete">Complete</message>
+	<message key="editor.minutes.incomplete">Incomplete</message>
+	<message key="editor.meetingStatus">Meeting Status</message>
+	<message key="editor.minutesStatus">Minutes Status</message>
+
+	<message key="editor.minutes.uploadAttendance.checkReasonOfAbsence"></message>
+	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
+	<message key="editor.minutes.uploadAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
+	<message key="editor.minutes.minutesOfLastMeeting">Minutes of Last Meeting</message>
+	<message key="editor.minutes.selectProposal">Select proposal</message>
+	<message key="editor.minutes.selectProposalRequired">Please select a proposal to review.</message>
+	<message key="editor.minutes.proposal.initialReview">Initial Review for Proposal</message>
+	<message key="editor.minutes.proposal.continuingReview">Continuing Review for Proposal</message>
+	<message key="editor.minutes.initialReview.scientificDesign">Scientific Design and Institute Review</message>
+	<message key="editor.minutes.initialReview.risks">Level of Risk</message>	
+	<message key="editor.minutes.initialReview.benefits">Benefit Category</message>
+	<message key="editor.minutes.initialReview.populationSelect">Subject Selection and Recruitment Plan</message>
+	<message key="editor.minutes.initialReview.safeguards">Additional safeguards for vulnerable subjects</message>
+	<message key="editor.minutes.initialReview.minimizations">Minimizations of Risks to Subjects</message>
+	<message key="editor.minutes.initialReview.confidentiality">Privacy and Confidentiality</message>
+	<message key="editor.minutes.initialReview.consentDocument">Consent Document</message>
+	<message key="editor.minutes.initialReview.otherConsiderations">Additional Considerations</message>
+	<message key="editor.minutes.initialReview.localIrbApproval">Local IRB/ERC Approval</message>
+	<message key="editor.minutes.initialReview.other">Other</message>
+	<message key="editor.minutes.addDiscussionItem">Add a Discussion Item</message>
+	<message key="editor.minutes.addItem">Add Item</message>
+	<message key="editor.minutes.specify">(Specify if other)</message>
+	<message key="editor.minutes.protocolTitle">Protocol Title</message>
+	<message key="editor.minutes.whoId">WHO ID</message>
+	<message key="editor.minutes.pi">Principal Investigator (PI)</message>
+	<message key="editor.minutes.responsibleRto">Responsible WPRO Staff member</message>
+	<message key="editor.minutes.summary">Protocol Summary</message>
+	<message key="editor.minutes.discussion">(a) DISCUSSION</message>
+	<message key="editor.minutes.generalDiscussion">General Discussion</message>
+	<message key="editor.minutes.specificDiscussion">Specific Discussion</message>
+	<message key="editor.minutes.generalDiscussionRequired">Please enter general discussions</message>
+	<message key="editor.minutes.attendanceAnnouncements">Attendance and Announcements for Meeting #</message>
+	<message key="editor.minutes.stipulations">(b) STIPULATIONS / CONDITIONS</message>	
+	<message key="editor.minutes.recommendations">(c) RECOMMENDATIONS</message>
+	<message key="editor.minutes.decision">(d) IRB Decision</message>
+	<message key="editor.minutes.decisionRequired">Please choose a decision</message>
+	<message key="editor.minutes.unanimous">Is decision unanimous?</message>
+	<message key="editor.minutes.unanimousRequired">Please indicate if decision is unanimous or not</message>
+	<message key="editor.minutes.abstain">IRB Decision</message>
+	<message key="editor.minutes.approveCount">No. of Approvals</message>
+	<message key="editor.minutes.notApproveCount">No. of Disapprovals</message>
+	<message key="editor.minutes.abstainCount">No. of Abstain</message>
+	<message key="editor.minutes.minorityReasons">Reasons for Minority Opinions</message>
+	<message key="editor.minutes.votes">IRB Votes</message>
+	<message key="editor.minutes.approveCountRequired">Please enter how many members voted for</message>
+	<message key="editor.minutes.notApproveCountRequired">Please enter how many members voted against</message>
+	<message key="editor.minutes.abstainCountRequired">Please enter how many members abstained</message>
+	<message key="editor.minutes.minorityReasonRequired">Please enter reasons for minority options</message>
+	<message key="editor.minutes.chairReview">Remarks if to be reviewed by Chair and Secretariat</message>
+	<message key="editor.minutes.chairReviewRequired">Please enter remarks if to be reviewed by Chair and Secretariat</message>
+	<message key="editor.minutes.wproRole">WPRO Role in Research</message>
+	<message key="editor.minutes.wproRoleRequired">Please indicate WPRO Role in Research</message>
+	<message key="editor.minutes.summaryRequired">Please enter protocol summary</message>
+	<message key="editor.minutes.downloadAttendance">Download Attendance</message>
+	<message key="editor.minutes.downloadInitialReviews">Download Initial Reviews</message>
+	<message key="editor.minutes.downloadMinutes">Download Minutes</message>
+	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
+	<message key="editor.minutes.confirmAttendance">This cannot be undone. Are you sure you want to submit this attendance?</message>
+	<message key="editor.minutes.confirmContinuingReview">This cannot be undone. Are you sure you want to submit this review?</message>
+	<message key="editor.minutes.confirmInitialReview">This cannot be undone. Are you sure you want to submit this review?</message>
+	<message key="editor.minutes.proposalsForInitialReview">Proposals for Initial Review</message>
+	<message key="editor.minutes.noProposalsForInitialReview">No proposals are assigned for initial ERC Review.</message>
+	<message key="editor.minutes.proposalsForContinuingReview">Proposals for Continuing Review</message>
+	<message key="editor.minutes.noProposalsForContinuingReview">No proposals are assigned for continuing ERC Review.</message>
+	<message key="editor.minutes.uploadContinuingReviews">Upload Continuing Reviews</message>
+	<message key="editor.minutes.completeContinuingReviews">Complete Continuing Reviews</message>
+	<message key="editor.submission.dateOfApproval">Date of Approval</message>
 </locale>

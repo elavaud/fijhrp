@@ -61,7 +61,14 @@ class SectionEditorHandler extends Handler {
 		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
-
+		/**
+		 * Get user's search conditions for technical unit and RTO
+		 * Added by: Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+		 */
+		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$countryField = Request::getUserVar('countryField');
+		
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 
@@ -117,6 +124,8 @@ class SectionEditorHandler extends Handler {
 			$dateSearchField,
 			$fromDate,
 			$toDate,
+			$technicalUnitField,
+			$countryField,
 			$rangeInfo,
 			$sort,
 			$sortDirection
@@ -153,12 +162,28 @@ class SectionEditorHandler extends Handler {
 			SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
 			SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		));
-
+		/*********************************************************************
+		 * Get list of WHO technical units from the XML file and get all countries
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+         *********************************************************************/
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+        
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
 		$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		
+		// Added by igm 9/24/11
+		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+		$templateMgr->assign('countryField', $countryField);
 
 		$templateMgr->display('sectionEditor/index.tpl');
 	}

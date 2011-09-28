@@ -14,7 +14,7 @@
 	<tr valign="bottom" class="heading">
 		<td width="5%">WHO Proposal ID</td>
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>
+		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> Commented out by MSB , Sept25,2011 -->
 		<td width="23%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="32%">{sort_heading key="article.title" sort="title"}</td>
 		{if $statViews}<td width="5%">{sort_heading key="submission.views" sort="views"}</td>{/if}
@@ -28,18 +28,18 @@
 	<tr valign="top">
 		<td>{$whoId|escape}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
-		<td>{$submission->getSectionAbbrev()|escape}</td>
-		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
-		<td><a href="{url op="submissionEditing" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sep25, 2011  --> 
+		<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB -->
+	   	<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+      	<td><a href="{url op="submissionReview" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
 		<td align="right">
 			{assign var="status" value=$submission->getSubmissionStatus()}
-			{if $status == PROPOSAL_STATUS_WITHDRAWN}
-				{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
-				{translate key=$proposalStatusKey}
-			{elseif $status == PROPOSAL_STATUS_ARCHIVED}
-				{assign var="editorDecisionKey" value=$submission->getEditorDecisionKey()}
-				{translate key=$editorDecisionKey}
+			{if $status == PROPOSAL_STATUS_ARCHIVED}
+				{assign var="statusKey" value=$submission->getEditorDecisionKey()}				
+			{else}
+				{assign var="statusKey" value=$submission->getProposalStatusKey()}			
 			{/if}
+			{translate key=$statusKey}
 		</td>
 	</tr>
 	<tr>

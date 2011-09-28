@@ -56,7 +56,8 @@ class ArticleDAO extends DAO {
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
                         'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
-                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption','withdrawReason', 'withdrawComments'
+                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption','withdrawReason', 'withdrawComments',
+						'approvalDate'
                         );
 	}
 
@@ -859,6 +860,32 @@ class ArticleDAO extends DAO {
 
             $this->flushCache();
         }
+        
+	/**
+	 * Insert approvalDate in article_settings
+	 * @return articleId int
+	 * Added by aglet
+	 * Last Update: 7/21/2011
+	 */
+	function insertApprovalDate($article, $approvalDate) {
+		$result =& $this->retrieve('SELECT setting_value FROM article_settings WHERE article_id = ? and setting_name = ? and locale = ? LIMIT 1', array($article->getId(), 'approvalDate', $article->getLocale()));
+		$row = $result->FetchRow();
+		$existing = ($row['setting_value'] != null ? true : false);
+		if(!$existing) {
+			$this->update(sprintf('INSERT INTO article_settings 
+			(article_id, locale, setting_name, setting_value, setting_type) 
+			values (?, ?, ?, %s, ?)',$this->datetimeToDB($approvalDate)), array($article->getId(), $article->getLocale(), 'approvalDate', 'string')
+			);
+		}
+		else {
+			$this->update(sprintf('UPDATE article_settings SET setting_value = %s WHERE 
+			article_id = ? and locale = ? and setting_name = ?',
+			$this->datetimeToDB($approvalDate)), array($article->getId(), $article->getLocale(), 'approvalDate')
+			);
+		}
+		$this->flushCache();
+		return $article->getId();
+	}
 }
 
 ?>

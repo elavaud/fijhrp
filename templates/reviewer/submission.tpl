@@ -28,8 +28,14 @@ function confirmSubmissionCheck() {
 	}
 	return confirm('{/literal}{translate|escape:"javascript" key="reviewer.article.confirmDecision"}{literal}');
 }
+
+$(document).ready(function() {
+	$( "#proposedDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
+});
 // -->
 {/literal}
+
+
 </script>
 <div id="submissionToBeReviewed">
 <h3>{translate key="reviewer.article.submissionToBeReviewed"}</h3>
@@ -80,8 +86,10 @@ function confirmSubmissionCheck() {
 </table>
 </div>
 <div class="separator"></div>
+
 <div id="reviewSchedule">
 <h3>{translate key="reviewer.article.reviewSchedule"}</h3>
+<form method="post" action="{url op="reviewMeetingSchedule" }" >
 <table width="100%" class="data">
 <tr valign="top">
 	<td class="label" width="20%">{translate key="reviewer.article.schedule.request"}</td>
@@ -99,8 +107,36 @@ function confirmSubmissionCheck() {
 	<td class="label">{translate key="reviewer.article.schedule.due"}</td>
 	<td class="value">{if $submission->getDateDue()}{$submission->getDateDue()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
 </tr>
+{**<tr valign="top">
+	<td class="label">{translate key="reviewer.article.schedule.dateOfMeeting"}</td>
+	<td class="value">{if $submission->getDateOfMeeting()}{$submission->getDateOfMeeting()|date_format:$datetimeFormatLong}{else}&mdash;{/if}</td>
+</tr>
+
+<tr valign="top">
+	<td class="label">{translate key="reviewer.article.schedule.isAttending"} </td>
+	<td class="value">	
+		<input type="radio" name="isAttending" id="acceptMeetingSchedule" value="1" {if  $submission->getIsAttending() == 1 } checked="checked"{/if} > </input> Yes
+		<input type="radio" name="isAttending" id="regretMeetingSchedule" value="0" {if  $submission->getIsAttending() == 0 } checked="checked"{/if} > </input> No
+	</td>
+</tr> 
+<tr>
+	<td class="label">{translate key="reviewer.article.schedule.remarks"} </td>
+	<td class="value">
+		<textarea class="textArea" name="remarks" id="proposedDate" rows="5" cols="40" />{$submission->getRemarks()|escape}</textarea>
+	</td>
+</tr>
+<tr>
+	<td class="label"></td>
+	<td class="value">
+		<input type="hidden" id="reviewId" name="reviewId" value={$reviewId}> </input>
+		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="user" escape=false}'" />
+	</td>
+</tr>**}
 </table>
+</form>
 </div>
+
+
 <div class="separator"></div>
 
 <div id="reviewSteps">

@@ -17,6 +17,7 @@ define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 
 import('pages.sectionEditor.SectionEditorHandler');
+import('pages.sectionEditor.SubmissionCommentsHandler');
 
 class SubmissionEditHandler extends SectionEditorHandler {
 	/** submission associated with the request **/
@@ -271,6 +272,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
+		$templateMgr->assign('continuingReviewOptions',SectionEditorSubmission::getContinuingReviewOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
 		$templateMgr->assign('lastDecisionArray', $lastDecision);
 		$templateMgr->assign('reasonsForExemption', $reasons);
@@ -411,13 +413,11 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'submission', $articleId);
 	}
 
-	/***************************************************************************
-	 *
+	/**	 
 	 * Record editor decision (Added additional editor decision cases)
 	 * Edited by aglet
 	 * Last Update: 5/5/2011
-	 *
-	 ***************************************************************************/
+	 */
 
 	function recordDecision() {
 		$articleId = Request::getUserVar('articleId');
@@ -425,10 +425,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$submission =& $this->submission;
 
 		$decision = Request::getUserVar('decision');
-		$resubmitCount = Request::getUserVar('resubmitCount');
+		$articleDao =& DAORegistry::getDAO("ArticleDAO");
+		$previousDecision =& $articleDao->getLastEditorDecision($articleId);
+		$resubmitCount = $previousDecision['resubmitCount'];
 		//pass lastDecisionId of this article to update existing row in edit_decisions
-		$lastDecisionId = Request::getUserVar('lastDecisionId');
-
+		$lastDecisionId = $previousDecision['editDecisionId'];
+		 
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
@@ -442,11 +444,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				break;
 		}
 
-		/*
-		 * Confirm if this is still necessary
-		 * Edited by aglet 6/8/2011
-		 */
-		/*if submitted decision is RESUBMIT, start a new round of review
+		
+		/*Do not start new round of review
 		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
 			SectionEditorAction::initiateNewReviewRound($submission);
 		}*/
@@ -460,13 +459,17 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
-				SectionEditorAction::emailEditorDecisionComment($submission, 'Send');
+				SubmissionCommentsHandler::emailEditorDecisionComment($articleId);
 				break;
+			/*default:
+				Request::redirect(null, null, 'submissionReview', $articleId);
+				break;
+			*/
 		}
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 	
-	/*
+	/**
 	 * If proposal is exempted, record reasons for exemption
 	 */
 	function recordReasonsForExemption($args, $request) {
@@ -860,8 +863,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reviewId = isset($args[1]) ? $args[1] : 0;
 		$dueDate = Request::getUserVar('dueDate');
 		$numWeeks = Request::getUserVar('numWeeks');
+//		$meetingDate = Request::getUserVar('meetingDate');
 
-		if ($dueDate != null || $numWeeks != null) {
+		if ($dueDate != null || $numWeeks != null ) {
 			SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks);
 			Request::redirect(null, null, 'submissionReview', $articleId);
 
@@ -880,7 +884,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			if ($reviewAssignment->getDateDue() != null) {
 				$templateMgr->assign('dueDate', $reviewAssignment->getDateDue());
 			}
-
+//			/** Added by ayveemallare 6/28/2011 */
+//			if ($reviewAssignment->getDateOfMeeting() !=null) {
+//				$templateMgr->assign('meetingDate', $reviewAssignment->getDateOfMeeting());
+//			}
+//			/*************************************/
+			
 			$numWeeksPerReview = $settings['numWeeksPerReview'] == null ? 0 : $settings['numWeeksPerReview'];
 
 			$templateMgr->assign('articleId', $articleId);

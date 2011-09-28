@@ -147,6 +147,7 @@ class SectionEditorSubmission extends Article {
 		return STATUS_QUEUED_REVIEW;
 	}
 	*/
+	
 	/**
 	 * Get the submission status. Returns one of the defined constants
          * PROPOSAL_STATUS_DRAFT, PROPOSAL_STATUS_WITHDRAWN, PROPOSAL_STATUS_SUBMITTED,
@@ -165,23 +166,12 @@ class SectionEditorSubmission extends Article {
                 //Withdrawn status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
 
+                if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
+                
                 //Archived status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
 
                 $status = $this->getProposalStatus();
-                $articleDao = DAORegistry::getDAO('ArticleDAO');
-                $decision = $articleDao->getLastEditorDecision($this->getId());
-                if($status == PROPOSAL_STATUS_REVIEWED && $decision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT) {
-                	$dateDecidedStr = explode("-", substr($decision['dateDecided'], 0, 10));
-					if(checkdate($dateDecidedStr[1], $dateDecidedStr[2], $dateDecidedStr[0]+1)) {		
-						$due = mktime(0, 0, 0, $dateDecidedStr[1], $dateDecidedStr[2], $dateDecidedStr[0]+1);
-						$today = getDate();
-						$today = mktime(0, 0, 0, $today['mon'], $today['mday'], $today['year']);
-						if($today >= $due) {
-							return PROPOSAL_STATUS_EXPIRED;
-						}
-					}							
-                }
                 
                 /*if($status == PROPOSAL_STATUS_RETURNED) {
                     $articleDao = DAORegistry::getDAO('ArticleDAO');
@@ -194,6 +184,16 @@ class SectionEditorSubmission extends Article {
                 //For all other statuses
                 return $status;
 	}
+	
+	
+	function isSubmissionDue() {         
+        $today = time();
+        $startdate = strtotime($this->getStartDate($this->getLocale()));
+        $dueDate = strtotime ('+1 year', $startdate) ;
+    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
+        $approvalDue = strtotime ('+1 year', $approvalDate) ;
+    	return ($today >= $dueDate && $today >= $approvalDue);
+    }
 	
 	/*
 	 * Override getProposalStatusKey in Submission.inc.php
@@ -549,7 +549,7 @@ class SectionEditorSubmission extends Article {
 	}
 
 	/********************************************
-	 * Return array mapping exemption options to their locale strings
+	 * Return array mapping of exemption options to their locale strings
 	 * Added by aglet
 	 * Last Update: 5/28/2011
 	********************************************/
@@ -562,6 +562,21 @@ class SectionEditorSubmission extends Article {
 			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
 		);
 		return $exemptionOptions;
+	}
+	
+	/********************************************
+	 * Return array mapping of continuing review options to their locale strings
+	 * Added by aglet
+	 * Last Update: 5/28/2011
+	********************************************/
+	
+	function &getContinuingReviewOptions() {
+		static $continuingReviewOptions = array(
+			'' => 'common.chooseOne',
+			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
+			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
+		);
+		return $continuingReviewOptions;
 	}
 	
 	/**
@@ -833,6 +848,18 @@ class SectionEditorSubmission extends Article {
 			}
 		}
 		return null;
+	}
+	
+	function getSummaryFile() {
+		$summaryFile = null;
+		$suppFiles = $this->getSuppFiles();
+		foreach($suppFiles as $file) {
+			if($file->getType()=="Summary") {
+				$summaryFile = $file->getSuppFileTitle();
+				break;
+			}
+		}
+		return $summaryFile;
 	}
 }
 

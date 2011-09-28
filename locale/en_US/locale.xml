@@ -116,7 +116,7 @@
 	<message key="article.articles">Articles</message>
 	<message key="article.submissionId">Submission ID</message>
 	<message key="article.title">Title</message>
-	<message key="article.authors">Authors</message>
+	<message key="article.authors">RTO</message> /*Replaced "Authors" with "RTO"*/
 	<message key="article.indexingInformation">Indexing Information</message>
 	<message key="article.metadata">Metadata</message>
 	<message key="article.journalSection">Journal Section</message>
@@ -133,8 +133,8 @@
 	<message key="article.coverageSample"> Research sample characteristics</message>
 	<message key="article.type">Type, method or approach</message>
 	<message key="article.language">Language</message>
-	<message key="article.sectionEditor">SE</message>
-	<message key="article.commentsToEditor">Author comments</message>
+	<message key="article.sectionEditor">STO</message> /*replace section editor with STO */
+	<message key="article.commentsToEditor">RTO comments</message> /*Author to RTO */
 	<message key="article.submission">Submission</message>
 	<message key="article.submissions">Submissions</message>
 	<message key="article.details">Details</message>
@@ -185,21 +185,21 @@
 	 * Last Update: 5/3/2011
 	 *
 	************************************* -->
-	<message key="submission.editorDecision">STO Decision and Review</message>
+	<message key="submission.editorDecision">ERC Decision and Review</message>/*Editor decision to ERC decision*/
 	<message key="submission.proposalStatus">Proposal Status</message>
 	<message key="submission.submissionEditing">Submission Editing</message>
 	<message key="submission.changeSection">Change to</message>
 	<message key="submission.sent">Sent</message>
 	<message key="submission.round">Round&amp;nbsp;{$round}</message>
-	<message key="submission.editorReview">Editor Review</message>
-	<message key="submission.notifyAuthor">Notify Author</message>
-	<message key="submission.notifyEditor">Notify Editor</message>
-	<message key="submission.editorAuthorRecord">Editor/Author Email Record</message>
+	<message key="submission.editorReview">STO Review</message> /*editor to STO*/
+	<message key="submission.notifyAuthor">Notify RTO</message> /*Author to RTO */
+	<message key="submission.notifyEditor">Notify STO</message> /*editor to STO*/
+	<message key="submission.editorAuthorRecord">STO/RTO Email Record</message> /*editor to STO and author to RTo*/
 	<message key="submission.reviewersVersion">Reviewer's annotated version of file</message>
 	<message key="submission.postReviewVersion">Post-review version of file</message>
-	<message key="submission.editorVersion">Editor Version</message>
-	<message key="submission.authorsRevisedVersion">Author's revised version of file</message>
-	<message key="submission.authorVersion">Author Version</message>
+	<message key="submission.editorVersion">STO Version</message> /*editor to STO*/
+	<message key="submission.authorsRevisedVersion">RTO's revised version of file</message> /*author to RTO*/
+	<message key="submission.authorVersion">RTO Version</message>/*author to RTO*/
 	<message key="submission.copyediting">Copyediting</message>
 	<message key="submission.copyedit">Copyedit</message>
 	<message key="submission.proofreading">Proofreading</message>
@@ -218,7 +218,7 @@
 	<message key="submissions.postAuthor">Post-Author</message>
 	<message key="submissions.reviewRound">Review Round</message>
 	<message key="submissions.proof">Proof</message>
-	<message key="submissions.editorDecision">Editor Decision</message>
+	<message key="submissions.editorDecision">ERC Decision</message> /*Editor decision to ERC Decision*/
 	<message key="submissions.editorRuling">Editor Ruling</message>
 	<message key="submission.eventLog">Event Log</message>
 
@@ -249,21 +249,21 @@
 	<message key="user.noRoles.regReviewerClosed">Register as a Reviewer: Reviewer registration is currently disabled.</message>
 
 	<!-- Roles -->
-	<message key="user.role.manager">Journal Manager</message>
-	<message key="user.role.editor">Editor</message>
-	<message key="user.role.sectionEditor">Section Editor</message>
+	<message key="user.role.manager">ERC Admin</message> /* Replaced Journal Manager to ERC Admin - spf */
+	<message key="user.role.editor">STO</message> /*Editor to STO*/
+	<message key="user.role.sectionEditor">STO</message> /*SectionEditor to STO*/
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>
 	<message key="user.role.proofreader">Proofreader</message>
 	<message key="user.role.author">Author</message>
 	<message key="user.role.subscriptionManager">Subscription Manager</message>
-	<message key="user.role.managers">Journal Managers</message>
-	<message key="user.role.editors">Editors</message>
-	<message key="user.role.sectionEditors">Section Editors</message>
+	<message key="user.role.managers">ERC Admins</message> /* Replaced Journal Managers with ERC Admins - spf */
+	<message key="user.role.editors">STO</message> /*Editor to STO*/
+	<message key="user.role.sectionEditors">STO</message> /* sectionEditor to STO*/
 	<message key="user.role.layoutEditors">Layout Editors</message>
 	<message key="user.role.copyeditors">Copyeditors</message>
 	<message key="user.role.proofreaders">Proofreaders</message>
-	<message key="user.role.authors">Authors</message>
+	<message key="user.role.authors">RTOs</message> /* Replaced Authors with RTOs - spf */
 	<message key="user.role.subscriptionManagers">Subscription Managers</message>
 	
 	<!-- Common Issue Terms -->
@@ -322,9 +322,9 @@
 	<message key="submission.event.general.issueAssigned">Submission assigned to issue</message>
 	<message key="submission.event.general.articlePublished">Article published</message>
 
-	<message key="submission.event.author.authorRevision">Author revision submitted</message>
+	<message key="submission.event.author.authorRevision">RTO revision submitted</message>
 
-	<message key="submission.event.general.authorRevision">Author revision file updated</message>
+	<message key="submission.event.general.authorRevision">RTO revision file updated</message>
 	
 	<message key="submission.event.editor.editorAssigned">Editor assigned to submission</message>
 	<message key="submission.event.editor.editorUnassigned">Editor unassigned from submission</message>
@@ -594,6 +594,26 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="submission.layout.imageInvalid">Invalid image format. Accepted formats are .gif, .jpg, and .png.</message>
 	
 	<!-- Reviewer -->
+	<message key="reviewer.home">Reviewer Home</message>
+	<message key="reviewer.submissions">Submissions</message>
+	<message key="reviewer.meeting">Meeting</message>
+	<message key="reviewer.meetings">Meetings</message>
+	<message key="reviewer.meetings.submissions">Submissions to be Discussed</message>
+	<message key="reviewer.meetings.noSubmissions">No Submissions</message>
+	<message key="reviewer.meetings.replyStatus">Reply Status</message>
+	<message key="reviewer.meetings.editor">Editor/Moderator</message>
+	<message key="reviewer.meetings.scheduleStatus">Schedule Status</message>
+	<message key="reviewer.meetings.details">Details</message>
+	<message key="reviewer.meetings.reply">Reply</message>
+	<message key="reviewer.meetings.replyStatus.attending">Attending</message>
+	<message key="reviewer.meetings.replyStatus.notAttending">Not Attending</message>
+	<message key="reviewer.meetings.replyStatus.awaitingReply">Awaiting Reply</message>
+	<message key="reviewer.meetings.scheduleStatus.final">Final</message>
+	<message key="reviewer.meetings.scheduleStatus.new">New</message>
+	<message key="reviewer.meetings.scheduleStatus.rescheduled">Rescheduled</message>
+	<message key="reviewer.meetings.scheduleStatus.cancelled">Cancelled</message>
+	
+	
 	<message key="reviewer.pendingReviews">Articles Pending Review</message>
 	<message key="reviewer.completedReviews">Done</message>
 	<message key="reviewer.averageQuality">Rating</message>
@@ -619,6 +639,16 @@ Active is how many reviews are currently being considered or underway.]]></messa
         <message key="reviewer.article.schedule.response">Your Response</message>
         <message key="reviewer.article.schedule.submitted">Review Submitted</message>
         <message key="reviewer.article.schedule.due">Review Due</message>
+   
+   	<!-- *************************************** -->
+   	<!-- Keys added for reviewer submission page -->
+	<!-- Added by: ayveemallare 7/5/2011         -->
+   	<!-- *************************************** -->
+	
+	<message key="reviewer.article.schedule.dateOfMeeting">Proposed Date of Meeting</message>
+	<message key="reviewer.article.schedule.isAttending">Are you going to attend the meeting?</message>
+	<message key="reviewer.article.schedule.remarks">Remarks</message>
+	
 
 	<!--****************************************************************************
 		Reviewer recommendation should match editor decisions
@@ -673,12 +703,12 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	
 	<!-- Article Submission Step 3 -->
 	<message key="author.submit.uploadInstructions"><![CDATA[
-<p>To upload a manuscript to this journal, complete the following steps.</p>
+<p>To upload a draft proposal for review, complete the following steps.</p>
 <ol>
 <li>On this page, click Browse (or Choose File) which opens a Choose File window for locating the file on the hard drive of your computer.</li>
 <li>Locate the file you wish to submit and highlight it.</li>
 <li>Click Open on the Choose File window, which places the name of the file on this page.</li>
-<li>Click Upload on this page, which uploads the file from the computer to the journal's web site and renames it following the journal's conventions.</li>
+<li>Click Upload on this page, which uploads the file from the computer to the web site and renames it following the WPRO naming conventions.</li>
 <li>Once the submission is uploaded, click Save and Continue at the bottom of this page.</li>
 </ol>]]></message>
 
@@ -735,15 +765,17 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<!-- Submission Email Log -->
 	
 	<!-- Submission Comments -->
-	<message key="submission.comments.editorAuthorCorrespondence">Editor/Author Correspondence</message>
+	<message key="submission.comments.editorAuthorCorrespondence">STO/RTO Correspondence</message> /*STO, RTO*/
 	<message key="submission.comments.copyeditComments">Copyedit Comments</message>
 	<message key="submission.comments.viewableDescription"><![CDATA[These comments can be shared with the author.<br />
 (After saving, further comments can be added.)]]></message>
-	<message key="submission.comments.canShareWithAuthor">For author and editor</message>
-	<message key="submission.comments.cannotShareWithAuthor">For editor</message>
+	<!-- Edited by ayveemallare 7/19/2011 -->
+	<!-- Changed Editor to ERC, Author to RTO -->
+	<message key="submission.comments.canShareWithAuthor">For RTO and ERC</message>
+	<message key="submission.comments.cannotShareWithAuthor">For ERC</message>
 	<message key="submission.comments.blindCcReviewers">After sending, present an editable BCC copy to send to reviewers.</message>
-	<message key="submission.comments.forAuthorEditor">For author and editor</message>
-	<message key="submission.comments.forEditor">For editor</message>
+	<message key="submission.comments.forAuthorEditor">For RTO and ERC</message>
+	<message key="submission.comments.forEditor">For ERC</message>
 	<message key="submission.comments.saveAndEmailAuthor">Save and Email Author</message>
 	<message key="submission.comments.saveAndEmailEditor">Save and Email Editor</message>
 	

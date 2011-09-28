@@ -177,16 +177,32 @@ switch ($op) {
 	case 'minutes':
 	case 'createMinutes':
 	case 'uploadMinutes':
-	case 'uploadAnnouncements':
-	case 'submitAnnouncements':
-	case 'uploadAttendance':
-	case 'submitAttendance':
+	case 'viewMinutes':
+	case 'downloadMinutes':
+	case 'uploadAttendance':	
 	case 'selectInitialReview':
 	case 'uploadInitialReview':
-	case 'submitInitialReview':
-	case 'completeInitialReview':
+	case 'completeInitialReviews':	
+	case 'selectContinuingReview':
+	case 'uploadContinuingReview':
+	case 'completeContinuingReviews':
+	case 'setMinutesFinal':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
+		break;
+	case 'meetings':
+	case 'setMeeting':
+	case 'saveMeeting':
+	case 'viewMeeting':
+	case 'cancelMeeting':
+	case 'setMeetingFinal':
+	case 'notifyReviewersNewMeeting':
+	case 'notifyReviewersChangeMeeting':
+	case 'notifyReviewersFinalMeeting':
+	case 'notifyReviewersCancelMeeting':
+	case 'remindReviewersMeeting':
+		define('HANDLER_CLASS', 'MeetingsHandler');
+		import('pages.sectionEditor.MeetingsHandler');
 		break;
 }
 

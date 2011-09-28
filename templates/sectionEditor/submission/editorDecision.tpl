@@ -49,7 +49,7 @@
 
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
-	<td width="80%" class="value">{translate key=$proposalStatusKey}</td>
+	<td width="80%" class="value">{if $submission->isSubmissionDue()} {translate key="submissions.proposal.forContinuingReview"} {else} {translate key=$proposalStatusKey}  {/if}</td>
 </tr>
  <!-- 
 {*******************************************************
@@ -94,6 +94,30 @@
 					{html_options_translate options=$exemptionOptions selected=1}
 				</select>
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmExemption"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
+			</form>
+		</td>
+<!-- 
+{*******************************************************
+ *
+ * Continuing Review
+ * Added by aglet
+ * Last Update: 7/12/2011
+ *
+ *******************************************************}
+ -->
+		
+
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $submission->isSubmissionDue()}
+		<td class="label" width="20%">{translate key="editor.article.selectContinuingReview"}</td>
+		<td width="80%" class="value">
+			<form method="post" action="{url op="recordDecision"}">
+				<input type="hidden" name="articleId" value="{$submission->getId()}" />
+				<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+				<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
+				<select name="decision" size="1" class="selectMenu">
+					{html_options_translate options=$continuingReviewOptions selected=1}
+				</select>
+				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmReviewSelection"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 			</form>
 		</td>
 <!-- 
@@ -154,9 +178,10 @@
 <tr valign="top">
 	<td class="label">{translate key="editor.article.finalDecision"}</td>
 	<td class="value">
-		{if $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+		{if !$submission->isSubmissionDue() && $proposalStatus == PROPOSAL_STATUS_REVIEWED || $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
 			{assign var="decision" value=$submission->getEditorDecisionKey()}
 			{translate key=$decision}
+			{if $submission->isSubmissionDue()}&nbsp;(Due)&nbsp;{/if}
 			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
 		{else}
 				{translate key="common.none"}

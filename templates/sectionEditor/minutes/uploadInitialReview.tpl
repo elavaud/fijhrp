@@ -1,214 +1,184 @@
-{strip}
-{assign var="pageTitle" value="common.queue.long.minutes"}
-{url|assign:"currentUrl" page="sectionEditor"}
-{include file="common/header.tpl"}
-{/strip}
-
-<ul class="menu">
-	<li><a href="{url op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
-	<li class="current"><a href="{url op="minutes"}">Upload Minutes</a></li>
-	<li><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
-</ul>
-<br/>
-
+{include file="sectionEditor/minutes/menu.tpl"}
 {literal}
 <script type="text/javascript">
-<!--
-	var meetingDate = "sige nga";
-	var rtoDate = "{/literal}{$submission->getLocalizedStartDate()|date_format:$dateFormatShort}{literal}";
-	
-	$(document).ready(function() {
-			meetingDate = $("#startDate").val();
-			$("#startDateRow").hide();
-			$("#decision").change(function (){
-				$("#decision option:selected").each( function () {
-					var selectVal = $(this).val();
-					if(selectVal == '1') {
-						$("#startDateRow").show();					
-					}
-					else {
-						$("#startDateRow").hide();
-					}
-				});		
-			});
-			$("#useRtoDate").click(function(){				
-				$('#useRtoDate').is(':checked') ? $("#startDate").val(rtoDate) : $("#startDate").val(meetingDate);
-				$('#useRtoDate').is(':checked') ? $("#useRtoDate").val("1") : $("#useRtoDate").val("0");
-			});
+	$(document).ready(function() {			
+		var quantity = $("#discussions").length;
+		   $(".discussionType").change(
+				function() {
+						var elemId = $(this).attr('id').substring(15);
+						var elemVal = $("#discussionType-"+elemId).val();
+						if(elemVal == 0){
+							$("#typeOther-"+elemId).show();
+						}else{
+							$("#typeOther-"+elemId).hide();
+						}
+				}
+			);
+			$("#addDiscussion").click(
+					function() {
+						var clone = $("#discussions tr:last").clone(true);
+							 clone.find('div').attr('id', 'typeOther-'+quantity);
+							 clone.find('select').attr('id', 'discussionType-'+quantity);
+							 clone.find('select').val(1);
+							 clone.find('div').attr('style','display:none');
+							 $("#discussions tr:last").after(clone);
+							 quantity = quantity + 1;
+						}
+			);
 	});
--->
+	
 </script>
 {/literal}
 <div id="submissions">
-<form method="post" action="{url op="submitInitialReview"}">
-	<input type="hidden" name="meetingId" value="{$meeting->getId()}" />
+<form method="post" action="{url op="uploadInitialReview" path=$meeting->getId()|to_array:$submission->getId()}">
 	<input type="hidden" name="articleId" value="{$submission->getId()}" />
 	<input type="hidden" name="lastDecisionId" value="{$lastDecision.editDecisionId}" />
 	<input type="hidden" name="resubmitCount" value="{$lastDecision.resubmitCount}" />
-<h4>Create Initial Review For Proposal {$submission->getLocalizedWhoId()}</h4>
+<h4>{translate key="editor.minutes.proposal.initialReview"}&nbsp;{$submission->getLocalizedWhoId()}</h4>
 <br/>	
-	<table class="listing" width="100%">
+	<table class="data" width="100%">
 		<tr>
-			<td class="label" width="10%">Protocol Title</td>
-			<td class="value">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</td>
+			<td class="label" width="20%">{translate key="editor.minutes.protocolTitle"}</td>
+			<td class="value" width="80%">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</td>
 		</tr>
 		<tr>
-			<td class="label" width="10%">Principal Investigator</td>
-			<td class="value">{$submission->getAuthorString()|strip_unsafe_html|truncate:40:"..."}</td>
+			<td class="label" width="20%">{translate key="editor.minutes.whoId"}</td>
+			<td class="value" width="80%">{$submission->getLocalizedWhoId()}</td>
 		</tr>
 		<tr>
-			<td width="10%">Protocol Summary<br/><br/></td>
-			<td class="value">					
-				{foreach from=$submission->getSuppFiles() item=suppFile}
-					{if $suppFile->getType() == 'Summary'}
-							Supplementary File: {$suppFile->getSuppFileTitle()}
-					{/if}														
-				{/foreach}
+			<td class="label" width="20%">{translate key="editor.minutes.pi"}</td>
+			<td class="value">{$submission->getAuthorString()|strip_unsafe_html|truncate:100:"..."}</td>
+		</tr>
+		<tr>
+			<td class="label" width="20%">{translate key="editor.minutes.responsibleRto"}</td>
+			<td class="value">
+				{assign var="submitter" value=$submission->getUser()}
+				{$submitter->getFullName()|escape|strip_unsafe_html|truncate:100:"..."}
+			</td>
+		</tr>
+		<tr>
+			<td width="20%">{fieldLabel name="summary" required="true" key="editor.minutes.summary"}<br/><br/></td>
+			<td class="value">
+				{assign var="summaryFile" value=$submission->getSummaryFile()}
+				{if $summaryFile!=null}
+					Summary in Supplementary File: {$summaryFile}
+				{else}
+					<textarea name="summary" id="summary" class="textArea" rows="10" cols="43" >{$summary}</textarea>
+				{/if}
 			<br/><br/>
 			</td>
 		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
+		<tr>
+			<td width="20%">{fieldLabel name="wproRole" required="true" key="editor.minutes.wproRole"}<br/><br/></td>
+			<td class="value">
+				<textarea name="wproRole" class="textArea" rows="10" cols="43" >{$wproRole}</textarea>
+			</td>
+		</tr>
+	</table>
+	<div class="separator"></div>
+	<table class="data" width="100%" id="discussions">
 		<tr class="heading" valign="bottom">
-			<td width="10%" colspan="6"><br/>(a) DISCUSSION</td>			
+			<td width="20%" colspan="6"><br/>{translate key="editor.minutes.discussion"}</td>			
 		</tr>
 		<tr>
-			<td width="10%">General Discussion</td>
-			<td class="value"><textarea name="generalDiscussion" id="generalDiscussion" class="textArea" rows="10" cols="40" ></textarea></td>
+			<td width="20%">{fieldLabel name="generalDiscussion" required="true" key="editor.minutes.generalDiscussion"}</td>
+			<td class="value"><textarea name="generalDiscussion" class="textArea" rows="10" cols="43" >{$generalDiscussion}</textarea></td>
 		</tr>		
 		<tr>
-			<td width="10%">Specific Discussion</td>
-			<td class="value"><textarea name="specificDiscussion" id="specificDiscussion" class="textArea" rows="10" cols="40" ></textarea></td>
+			<td width="20%"><br/>{fieldLabel name="discussionType" required="true"  key="editor.minutes.specificDiscussion"}&nbsp;&nbsp;<input type="button" id="addDiscussion" value="+"/></td>
+			<td width="80%"></td>
 		</tr>
+		{foreach from=$discussionText key=idx item=discussion}
+			{if $discussion!=null}
+			<tr>
+				<td width="20%" class="label"></td>
+				<td width="80%" class="value">
+					{html_options_translate name="discussionType[]" class="discussionType" id="discussionType-$idx" options=$discussionTypes selected=$discussionType[$idx]}<br/>
+					<div id="typeOther-$idx"  {if $discussionType[$idx] != 0 } style="display:none" {/if}>
+					Please specify *
+					<input type="text"  class="textField" size="30" name="typeOther[]" id="typeOther-$idx" value="{$typeOther[$idx]}"/>
+					</div>
+					<br/>
+					<textarea name="discussionText[]" class="textArea" rows="10" cols="43" >{$discussion}</textarea>
+				</td>
+			</tr>
+			{/if}
+		{/foreach}
 		<tr>
-			<td width="10%">Scientific design (discuss and note that institute pre-scientific review has been done)</td>
-			<td class="value"><textarea name="scientificDesign" id="scientificDesign" class="textArea" rows="5" cols="40" ></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Subject selection (discuss populations to be studied & recruitment)
-			<td class="value"><textarea name="subjectSelection" id="subjectSelection" class="textArea" rows="5" cols="40" ></textarea><br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr class="heading">
-			<td colspan="6"><br/>LEVEL OF RISK</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="1" align="right"/></td>
-			<td class="value" colspan="30">The research involves no more than minimal risk to subject.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="2"/></td>
-			<td class="value" colspan="30">The research involves more than minimal risk to subjects. The risk(s) represents more than a minor increase over
-minimal risk.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="levelOfRisk" id="levelOfRisk" value="3"/><br/><br/></td>
-			<td class="value" colspan="30">The research involves more than minimal risk to subjects. The risk(s) represents a minor increase over minimal risk.<br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr class="heading">
-			<td class="value" colspan="6"><br/>BENEFIT CATEGORY</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/></td>
-			<td class="value" colspan="30">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge about the participants’ disorder
-or condition.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/></td>
-			<td class="value" colspan="30">No prospect of direct benefit to individual participants, but likely to yield generalizable knowledge to further society’s understanding or the disorder or condition under study.</td>
-		</tr>
-		<tr>
-			<td width="5%"><input type="radio" name="benefitCategory" id="benefitCategory" value="1"/><br/><br/></td>
-			<td class="value" colspan="30">The research involves the prospect of direct benefit to individual participants.<br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr>
-			<td width="10%"><br/>Additional Safeguards for Vulnerable Subjects</td>
-			<td class="value"><br/><textarea name="additionalSafeguards" id="additionalSafeguards" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Minimization of Risks to Subjects</td>
-			<td class="value"><textarea name="minimization" id="minimization" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Privacy and Confidentiality</td>
-			<td class="value"><textarea name="confidentiality" id="confidentiality" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Consent Document (document that all required elements are present)</td>
-			<td><textarea name="consentDocument" id="consentDocument" class="textArea" rows="5" cols="40"></textarea></td>
-		</tr>
-		<tr>
-			<td width="10%">Additional Considerations (e.g. multi-center research; collaborative research; nested study. State if these considerations do not apply)<br/><br/></td>
-			<td class="value"><textarea name="additionalConsiderations" id="additionalConsiderations" class="textArea" rows="5" cols="40"></textarea>
-				<input type="checkbox" name="additionalConsiderationsNA" id="additionalConsiderationsNA" value="1" /><label for="additionalConsiderationsNA">Does not apply</label>
-				<br/><br/>
+			<td width="20%" class="label"></td>
+			<td width="80%" class="value">
+				{html_options_translate name="discussionType[]" class="discussionType" id="discussionType-0" options=$discussionTypes }<br/>
+				<div id="typeOther-0" style="display:none" >
+				Please specify *
+				<input type="text"  class="textField"  size="30" name="typeOther[]" value=""><br/>
+				</div>
+				<textarea name="discussionText[]" class="textArea" rows="10" cols="43" ></textarea>
 			</td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr class="heading">
-			<td colspan="6">(b) STIPULATIONS</td>
-		</tr>
+		</tr>				
+	</table>
+		<br/>
+		<div class="separator"></div>
+		<br/>
+	<table class="data" width="100%" id="stipulationsRecommendations">		
 		<tr>
-			<td class="label" width="10%" align="right">No. of stipulations<br/><br/></td>
-			<td class="value"><input type="text" name="stipulations" id="stipulations" size="5" class="textField"/><br/><br/></td>
+			<td class="label" width="20%">{translate key="editor.minutes.stipulations"}</td>
+			<td><textarea name="stipulations" class="textArea" rows="10" cols="60">{$stipulations}</textarea></td>
 		</tr>
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+		<tr>
+			<td class="label" width="20%">{translate key="editor.minutes.recommendations"}</td>
+			<td><textarea name="recommendations" class="textArea" rows="10" cols="60">{$recommendations}</textarea></td>
+		</tr>
+	</table>
+	<br/>
+	<div class="separator"></div>
+	<br/>
+	<table class="data" width="100%" id="decisionTable">		
 		<tr class="heading">
-			<td width="10%">(c) RECOMMENDATIONS</td>
+			<td colspan="6">{translate key="editor.minutes.decision"}</td>
 		</tr>
 		<tr>
-			<td class="label" width="10%" align="right">No. of Recommendations<br/><br/></td>
-			<td class="value"><input type="text" name="recommendations" id="recommendations" size="5" class="textField"/><br/><br/></td>
-		</tr>
-		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
-		<tr class="heading">
-			<td colspan="6">(d) IRB DECISION </td>				
-		</tr>
-		<tr>
-			<td class="label" width="20%" align="right">Select Decision</td>
+			<td class="label" width="20%" align="right">{fieldLabel name="decision" required="true" key="editor.article.selectDecision"}</td>
 			<td width="80%" class="value">
 					<select name="decision" id="decision" size="1" class="selectMenu">
-						{html_options_translate options=$submission->getEditorDecisionOptions()}
-					</select>						
-					<input type="checkbox" name="unanimous" id="unanimous" value="1" /><label for="unanimous">Decision is unanimous</label>											
+						{html_options_translate options=$submission->getEditorDecisionOptions() selected=$decision}
+					</select>																						
 			</td>			
 		</tr>
-		<tr id="startDateRow">
-			<td class="label" align="right">Start Date (if approved)<br/><br/></td>
+		<tr>
+			<td class="label" width="20%" align="right">{fieldLabel name="unanimous" required="true" key="editor.minutes.unanimous"}</td>
 			<td width="80%" class="value">
-				<input type="text" name="startDate" id="startDate" size="17" class="textField" value="{$meeting->getDate()|date_format:$dateFormatShort}">
-				<input type="checkbox" name="useRtoDate" id="useRtoDate"/><label for="useRtoDate">Use start date proposed by RTO</label>
-				<br/><br/>
+				<input type="radio" class="unanimous" name="unanimous" id="unanimousYes" value="Yes" {if $unanimous=="Yes"}checked="checked"{/if}/><label for="unanimousYes">Yes</label>
+				<input type="radio" class="unanimous" name="unanimous" id="unanimousNo" value="No" {if $unanimous=="No"}checked="checked"{/if}/><label for="unanimousNo">No</label>
 			</td>
-		</tr>
+		</tr>		
 		<tr><td colspan="6" class="headseparator"><br/>&nbsp;<br/></td></tr>
 		<tr class="heading">
-			<td colspan="6"> IRB VOTES </td>				
+			<td colspan="6">{fieldLabel name="votes" key="editor.minutes.votes"}</td>				
+		</tr>
+		<tr >
+			<td class="label" align="right">{fieldLabel name="votesApprove" key="editor.minutes.approveCount"}</td>
+			<td class="value"><input type="text" name="votesApprove" size="17" class="textField" value="{$votesApprove}"/></td>
+		</tr>
+		<tr >
+			<td class="label" align="right">{fieldLabel name="votesNotApprove" key="editor.minutes.notApproveCount"}</td>
+			<td class="value"><input type="text" name="votesNotApprove" size="17" class="textField" value="{$votesNotApprove}"/></td>
+		</tr>
+		<tr >
+			<td class="label" align="right">{fieldLabel name="votesAbstain" key="editor.minutes.abstainCount"}</td>
+			<td class="value"><input type="text" name="votesAbstain" size="17" class="textField" value="{$votesAbstain}"/></td>
 		</tr>
 		<tr>
-			<td class="label" align="right">No. of approvals</td>
-			<td class="value"><input type="text" name="votesApproved" id="votesApproved" size="5" class="textField"/></td>			
+			<td width="20%" class="label">{fieldLabel name="minorityReason" key="editor.minutes.minorityReasons"}</td>
+			<td class="value"><textarea name="minorityReason" class="textArea" rows="10" cols="40">{$minorityReason}</textarea></td>
 		</tr>
 		<tr>
-			<td class="label" align="right">No. of disapprovals</td>
-			<td class="value"><input type="text" name="votesNotApproved" id="votesNotApproved" size="5" class="textField"/></td>			
+			<td width="20%" class="label">{fieldLabel name="chairReview" key="editor.minutes.chairReview"}</td>
+			<td class="value"><textarea name="chairReview" class="textArea" rows="10" cols="40" >{$chairReview}</textarea></td>
 		</tr>
-		<tr>
-			<td class="label" align="right">No. of abstain votes</td>
-			<td class="value"><input type="text" name="votesAbstain" id="votesAbstain" size="5" class="textField"/></td>			
-		</tr>
-		<tr>
-			<td width="10%" class="label">Reasons for Minority Options</td>
-			<td class="value"><textarea name="minorityReasons" id="minorityReasons" class="textArea" rows="5" cols="30"></textarea></td>
-		</tr>
-		<tr>
-			<td>* Required fields</td>
-		</tr>							
-	</table>
-	<p><div class="separator"></div></p><br/>
-  
- 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitInitialReview"}')" name="submit" value="Submit Initial Review"  class="button" />
- 	&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="selectInitialReview" path=$meeting->getId()}">Back to selection</a>
+	</table>	
+  	<br/>
+ 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="minutes.confirm.submitInitialReview"}')" name="submitInitialReview" value="Submit Initial Review"  class="button defaultButton" />
+ 	<input type="button" class="button" onclick="document.location.href='{url op="selectInitialReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
  	</form>
 </div>

@@ -342,7 +342,8 @@ class SectionEditorSubmissionDAO extends DAO {
 	/**
 	 * Retrieve unfiltered section editor submissions
 	 */
-	function &_getUnfilteredSectionEditorSubmissions($sectionEditorId, $journalId, $sectionId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $additionalWhereSql = '', $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &_getUnfilteredSectionEditorSubmissions($sectionEditorId, $journalId, $sectionId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null,
+	 												 $technicalUnitField = null, $countryField = null, $additionalWhereSql = '', $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 
@@ -364,11 +365,19 @@ class SectionEditorSubmissionDAO extends DAO {
 			'cleanTitle', // Article title
 			'cleanTitle',
 			$locale,
+			'technicalUnit',
+			'technicalUnit',
+			$locale,
+			'proposalCountry',
+			'proposalCountry',
+			$locale,
 			$journalId,
 			$sectionEditorId
 		);
 
 		$searchSql = '';
+		$technicalUnitSql = '';
+		$countrySql = '';
 
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
@@ -452,6 +461,18 @@ class SectionEditorSubmissionDAO extends DAO {
 				}
 				break;
 		}
+	 	/** 
+		 * Added technical unit and country filter fields
+		 * Last updated by igm 9/24/2011
+		 */
+		
+		if (!empty($technicalUnitField)) {
+			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+		}
+											  	
+		if (!empty($countryField)) {
+			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+		}
 
 		$sql = 'SELECT DISTINCT
 				a.*,
@@ -483,6 +504,10 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
 				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
+				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
+				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
 				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	a.journal_id = ?
@@ -496,7 +521,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$searchSql .= ' AND a.section_id = ?';
 		}
 
-		$result =& $this->retrieveRange($sql . ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+		$result =& $this->retrieveRange($sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 			$params,
 			$rangeInfo
 		);
@@ -517,11 +542,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInReviewIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInReviewIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision IS NULL OR edec.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -542,11 +567,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsInEditingIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInEditingIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_edit = 1 AND edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -567,11 +592,11 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getSectionEditorSubmissionsArchivesIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsArchivesIterator($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result = $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status <> ' . STATUS_QUEUED,
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -721,7 +746,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo RangeInfo optional
 	 * @return DAOResultFactory containing matching Users
 	 */
-	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getReviewersForArticleIterator($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
 		$searchSql = '';
 
@@ -1247,7 +1272,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1263,12 +1288,12 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $sectionEditorSubmissions;
 	}
 	
-	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsInReview($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$sectionEditorSubmissions = array();
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1285,12 +1310,12 @@ class SectionEditorSubmissionDAO extends DAO {
 	}
 	
 
-	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsArchives($sectionEditorId, $journalId, $sectionId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$sectionEditorSubmissions = array();
 		$result = $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionEditorId, $journalId, $sectionId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'(a.status <> ' . STATUS_QUEUED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -1304,6 +1329,116 @@ class SectionEditorSubmissionDAO extends DAO {
 
 		return $sectionEditorSubmissions;
 		
+	}
+	
+	function &getSectionEditorSubmissionsApproved($sectionEditorId, $journalId, $sectionId) {
+		$sectionEditorSubmissions = array();
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionEditorId, $journalId, $sectionId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
+			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		while (!$result->EOF) {
+			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $sectionEditorSubmissions;
+	}
+	
+/**
+	 * Retrieve a list of all reviewers along with information about their current status with respect to an article's current round.
+	 * @param $journalId int
+	 * @param $articleId int
+	 * @param $round int
+	 * @param $searchType int USER_FIELD_...
+	 * @param $search string
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $rangeInfo RangeInfo optional
+	 * @return DAOResultFactory containing matching Users
+	 */
+	function &getReviewersForArticle($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$reviewers = array();
+		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
+		$searchSql = '';
+
+		$searchTypeMap = array(
+			USER_FIELD_FIRSTNAME => 'u.first_name',
+			USER_FIELD_LASTNAME => 'u.last_name',
+			USER_FIELD_USERNAME => 'u.username',
+			USER_FIELD_EMAIL => 'u.email',
+			USER_FIELD_INTERESTS => 'cves.setting_value'
+			);
+
+		if (isset($search) && isset($searchTypeMap[$searchType])) {
+			$fieldName = $searchTypeMap[$searchType];
+			switch ($searchMatch) {
+				case 'is':
+					$searchSql = "AND LOWER($fieldName) = LOWER(?)";
+					$paramArray[] = $search;
+					break;
+				case 'contains':
+					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
+					$paramArray[] = '%' . $search . '%';
+					break;
+				case 'startsWith':
+					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
+					$paramArray[] = $search . '%';
+					break;
+			}
+		} elseif (isset($search)) switch ($searchType) {
+			case USER_FIELD_USERID:
+				$searchSql = 'AND user_id=?';
+				$paramArray[] = $search;
+				break;
+			case USER_FIELD_INITIAL:
+				$searchSql = 'AND (LOWER(last_name) LIKE LOWER(?) OR LOWER(username) LIKE LOWER(?))';
+				$paramArray[] = $search . '%';
+				$paramArray[] = $search . '%';
+				break;
+		}
+
+		$result =& $this->retrieveRange(
+			'SELECT DISTINCT
+				u.user_id,
+				u.last_name,
+				ar.review_id,
+				AVG(ra.quality) AS average_quality,
+				COUNT(ac.review_id) AS completed,
+				COUNT(ai.review_id) AS incomplete,
+				MAX(ac.date_notified) AS latest,
+				AVG(ac.date_completed-ac.date_notified) AS average
+			FROM	users u
+			  LEFT JOIN review_assignments ra ON (ra.reviewer_id = u.user_id)
+				LEFT JOIN review_assignments ac ON (ac.reviewer_id = u.user_id AND ac.date_completed IS NOT NULL)
+				LEFT JOIN review_assignments ai ON (ai.reviewer_id = u.user_id AND ai.date_completed IS NULL)
+				LEFT JOIN review_assignments ar ON (ar.reviewer_id = u.user_id AND ar.cancelled = 0 AND ar.submission_id = ? AND ar.round = ?)
+				LEFT JOIN roles r ON (r.user_id = u.user_id)
+				LEFT JOIN articles a ON (ra.submission_id = a.article_id)
+				LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
+				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
+				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id)
+			WHERE u.user_id = r.user_id AND
+				r.journal_id = ? AND
+				r.role_id = ? ' . $searchSql . 'GROUP BY u.user_id, u.last_name, ar.review_id' .
+			($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+			$paramArray, $rangeInfo
+		);
+		
+		while (!$result->EOF) {
+			$reviewers[] =& $this->_returnReviewerUserFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+		return $reviewers;				
 	}
 		
 }
