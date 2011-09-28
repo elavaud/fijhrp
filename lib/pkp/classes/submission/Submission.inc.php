@@ -34,7 +34,18 @@ class Submission extends DataObject {
 
 	/** @var array IDs of Authors removed from this submission */
 	var $removedAuthors;
-
+	
+	/** @var DAO for proposal countries */
+	/* Added by igm 9/28/11 */
+	var $countryDAO;
+	
+	/** @var DAO for technical units */
+	/* Added by igm 9/28/11 */
+	var $technicalUnitDAO;
+	
+	/** @var DAO for article */
+	/* Added by igm 9/28/11 */
+	var $articleDAO;
 	/**
 	 * Constructor.
 	 */
@@ -42,6 +53,10 @@ class Submission extends DataObject {
 		parent::DataObject();
 		$this->authors = array();
 		$this->removedAuthors = array();
+        $this->countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $this->technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+        $this->articleDAO =& DAORegistry::getDAO('ArticleDAO');
+        
 	}
 
 	/**
@@ -1097,14 +1112,21 @@ class Submission extends DataObject {
 		return $this->setData('fundsRequired', $fundsRequired, $locale);
 	}
 
-
-
-        /**
+    /**
 	 * Get "localized" proposal country (if applicable).
 	 * @return string
 	 */
 	function getLocalizedProposalCountry() {
 		return $this->getLocalizedData('proposalCountry');
+	}
+	
+    /**
+	 * Get "localized" proposal country's full text.
+	 * Added by igm 9/28/11
+	 * @return string
+	 */
+	function getLocalizedProposalCountryText() {
+		return $this->countryDAO->getAsiaPacificCountry($this->getLocalizedProposalCountry());
 	}
 
 	/**
@@ -1127,7 +1149,7 @@ class Submission extends DataObject {
 
 
 
-        /**
+    /**
 	 * Get "localized" technical unit (if applicable).
 	 * @return string
 	 */
@@ -1135,6 +1157,16 @@ class Submission extends DataObject {
 		return $this->getLocalizedData('technicalUnit');
 	}
 
+
+	/**
+	 * Get "localized" technical unit's full text.
+	 * Added by igm 9/28/11
+	 * @return string
+	 */
+	function getLocalizedTechnicalUnitText() {
+		return $this->technicalUnitDAO->getTechnicalUnit($this->getLocalizedTechnicalUnit());
+	}
+	
 	/**
 	 * Get technical unit.
 	 * @param $locale
@@ -1143,7 +1175,7 @@ class Submission extends DataObject {
 	function getTechnicalUnit($locale) {
 		return $this->getData('technicalUnit', $locale);
 	}
-
+	
 	/**
 	 * Set technical unit.
 	 * @param $technicalUnit string
@@ -1161,6 +1193,15 @@ class Submission extends DataObject {
 	 */
 	function getLocalizedProposalType() {
 		return $this->getLocalizedData('proposalType');
+	}
+	
+	/**
+	 * Get "localized" proposal type's full text.
+	 * Added by igm 9/28/11
+	 * @return string
+	 */
+	function getLocalizedProposalTypeText() {
+		return $this->articleDAO->getProposalType($this->getLocalizedProposalType());
 	}
 
 	/**
