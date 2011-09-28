@@ -289,7 +289,6 @@ class EditorSubmissionDAO extends DAO {
 		if (!empty($technicalUnitField)) {
 			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
 		}
-											  	
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
 		}
@@ -390,11 +389,11 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsUnassigned($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsUnassigned($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NULL AND a.submission_progress = 0 ', //and not draft aglet 9/26/2011
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -416,11 +415,11 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsInReviewIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInReviewIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, null, null,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NOT NULL AND (edec.decision IS NULL OR edec.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -442,11 +441,11 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsInEditingIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInEditingIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, null, null,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NOT NULL AND edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -757,12 +756,12 @@ function &getEditorSubmissionsForErcReview($editorId, $journalId, $Id) {
 		return $editorSubmissions;
 	}
 	
-	function &getEditorSubmissionsInReview($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInReview($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$editorSubmissions = array();
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$editorId, $journalId, $Id,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, null, null,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
 			$rangeInfo, $sortBy, $sortDirection
 		);
@@ -779,12 +778,12 @@ function &getEditorSubmissionsForErcReview($editorId, $journalId, $Id) {
 	}
 	
 
-	function &getEditorSubmissionsArchives($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsArchives($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$editorSubmissions = array();
 		$result = $this->_getUnfilteredEditorSubmissions(
 			$editorId, $journalId, $Id,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, null, null,
+			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
 			'(a.status <> ' . STATUS_QUEUED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);

@@ -219,6 +219,15 @@ class EditorHandler extends SectionEditorHandler {
 		$dateSearchField = Request::getUserVar('dateSearchField');
 		$searchMatch = Request::getUserVar('searchMatch');
 		$search = Request::getUserVar('search');
+		
+		
+		/**
+		 * Get user's search conditions for technical unit and RTO
+		 * Added by: Ayvee Mallare
+		 * Last Updated: Sept 24, 2011
+		 */
+		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$countryField = Request::getUserVar('countryField');
 
 		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
 		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
@@ -284,6 +293,8 @@ class EditorHandler extends SectionEditorHandler {
 			$dateSearchField,
 			$fromDate,
 			$toDate,
+			$technicalUnitField,
+			$countryField,
 			$rangeInfo,
 			$sort,
 			$sortDirection
@@ -316,6 +327,10 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('helpTopicId', $helpTopicId);
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
+		// Added by igm 9/24/11
+		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+		$templateMgr->assign('countryField', $countryField);
+		
 		$templateMgr->display('editor/submissions.tpl');
 	}
 
