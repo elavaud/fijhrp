@@ -1,4 +1,4 @@
-<?php /* Smarty version 2.6.26, created on 2011-09-28 12:27:29
+<?php /* Smarty version 2.6.26, created on 2011-09-28 12:43:52
          compiled from author/active.tpl */ ?>
 <?php require_once(SMARTY_CORE_DIR . 'core.load_plugins.php');
 smarty_core_load_plugins(array('plugins' => array(array('function', 'translate', 'author/active.tpl', 18, false),array('function', 'sort_heading', 'author/active.tpl', 18, false),array('function', 'url', 'author/active.tpl', 45, false),array('block', 'iterate', 'author/active.tpl', 27, false),array('modifier', 'escape', 'author/active.tpl', 37, false),array('modifier', 'date_format', 'author/active.tpl', 38, false),array('modifier', 'truncate', 'author/active.tpl', 41, false),array('modifier', 'strip_unsafe_html', 'author/active.tpl', 45, false),)), $this); ?>
@@ -189,7 +189,7 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 " class="action"><?php if ($this->_tpl_vars['submission']->getLocalizedTitle()): ?><?php echo ((is_array($_tmp=((is_array($_tmp=$this->_tpl_vars['submission']->getLocalizedTitle())) ? $this->_run_mod_handler('strip_unsafe_html', true, $_tmp) : String::stripUnsafeHtml($_tmp)))) ? $this->_run_mod_handler('truncate', true, $_tmp, 60, "...") : $this->_plugins['modifier']['truncate'][0][0]->smartyTruncate($_tmp, 60, "...")); ?>
 <?php else: ?><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.untitled"), $this);?>
 <?php endif; ?></a></td>
-                <td align="right">
+                <td>
                     <?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "submissions.proposal.approved"), $this);?>
 <?php if ($this->_tpl_vars['submission']->isSubmissionDue()): ?>&nbsp;(For Continuing Review)<?php endif; ?><br />
                     <?php if ($this->_tpl_vars['submission']->isSubmissionDue()): ?><a href="<?php echo $this->_plugins['function']['url'][0][0]->smartyUrl(array('op' => 'addExtensionRequest','path' => $this->_tpl_vars['articleId']), $this);?>
@@ -202,6 +202,8 @@ smarty_core_load_plugins(array('plugins' => array(array('function', 'translate',
 " class="action"><?php echo $this->_plugins['function']['translate'][0][0]->smartyTranslate(array('key' => "common.withdraw"), $this);?>
 </a><br />
                  </td>
+                 <td align="center"><?php echo $this->_tpl_vars['submission']->getApprovalDate($this->_tpl_vars['submission']->getLocale()); ?>
+</td>
             </tr>
             <tr>
                     <td colspan="6" class="<?php if ($this->_tpl_vars['submissions2']->eof()): ?>end<?php endif; ?>separator">&nbsp;</td>

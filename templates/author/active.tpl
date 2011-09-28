@@ -151,7 +151,7 @@
                     <a href="{url op="addCompletionReport" path=$articleId}" class="action">Complete</a><br />
                     <a href="{url op="withdrawSubmission" path=$articleId}" class="action">{translate key="common.withdraw"}</a><br />
                  </td>
-                 <td>{$submission->getApprovalDate()}</td>
+                 <td align="center">{$submission->getApprovalDate($submission->getLocale())}</td>
             </tr>
             <tr>
                     <td colspan="6" class="{if $submissions2->eof()}end{/if}separator">&nbsp;</td>
