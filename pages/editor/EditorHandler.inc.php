@@ -224,7 +224,7 @@ class EditorHandler extends SectionEditorHandler {
 		/**
 		 * Get user's search conditions for technical unit and RTO
 		 * Added by: Ayvee Mallare
-		 * Last Updated: Sept 24, 2011
+		 * Last Updated: Sept 28, 2011
 		 */
 		$technicalUnitField = Request::getUserVar('technicalUnitField');
 		$countryField = Request::getUserVar('countryField');
@@ -327,7 +327,7 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('helpTopicId', $helpTopicId);
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
-		// Added by igm 9/24/11
+		// Added by igm 9/28/11
 		$templateMgr->assign('technicalUnitField', $technicalUnitField);
 		$templateMgr->assign('countryField', $countryField);
 		
