@@ -319,6 +319,20 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('dateTo', $toDate);
 		$templateMgr->assign('fieldOptions', $this->getSearchFieldOptions());
 		$templateMgr->assign('dateFieldOptions', $this->getDateFieldOptions());
+		
+		/*********************************************************************
+		 * Get list of WHO technical units from the XML file and get all countries
+		 * Added by:  Ayvee Mallare
+		 * Last Updated: Oct 8, 2011
+         *********************************************************************/
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        $countries =& $countryDAO->getAsiaPacificCountries();
+       
+		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+        $templateMgr->assign_by_ref('countries', $countries);
+        
 
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
