@@ -242,7 +242,7 @@ class EditorHandler extends SectionEditorHandler {
 				$helpTopicId = 'editorial.editorsRole.submissions.unassigned';
 				break;
 			case 'submissionsInEditing':
-				$functionName = 'getEditorSubmissionsInEditing';
+				$functionName = 'getEditorSubmissionsInEditingIterator';
 				$helpTopicId = 'editorial.editorsRole.submissions.inEditing';
 				break;
 			case 'submissionsArchives':
