@@ -236,6 +236,11 @@ switch ($op) {
 		define('HANDLER_CLASS', 'MeetingsHandler');
 		import('pages.sectionEditor.MeetingsHandler');
 		break;	
+	case 'meetingAttendanceReport':
+	case 'previewMeetingAttendanceReport':
+		define('HANDLER_CLASS', 'ReportsHandler');
+		import('pages.sectionEditor.ReportsHandler');
+		break;
 }
 
 ?>

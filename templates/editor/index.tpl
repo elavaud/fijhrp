@@ -49,7 +49,7 @@
 <h3>Report Generation</h3>
 <ul class="plain">
 	<li>&#187; <a href="{url op="submissionsReport"}">Submissions</a>
-	<li>&#187; <a href="{url op="meetingsReport"}">ERC Meeting Attendance</a>
+	<li>&#187; <a href="{url op="meetingAttendanceReport"}">ERC Meeting Attendance</a>
 </ul>
 </div>
 

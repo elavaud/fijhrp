@@ -18,7 +18,6 @@
 import('lib.pkp.classes.form.Form');
 
 class MeetingAttendanceReportForm extends Form {
-
 	/**
 	 * Constructor.
 	 */
@@ -29,7 +28,7 @@ class MeetingAttendanceReportForm extends Form {
 		
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorPost($this));
-		$this->addCheck(new FormValidator($this,'ercMembers', 'required', 'editor.reports.form.selectAtLeastOneMember'));
+		$this->addCheck(new FormValidator($this,'ercMembers', 'required', 'editor.reports.ercMemberRequired'));
 	}
 	
 	/**
@@ -37,9 +36,7 @@ class MeetingAttendanceReportForm extends Form {
 	 */
 	function readInputData() {
 		$this->readUserVars(array(
-			'ercMembers',
-			'dateFrom',
-			'dateTo'
+			'ercMembers'
 		));
 	
 	}
@@ -55,10 +52,16 @@ class MeetingAttendanceReportForm extends Form {
 		$user =& Request::getUser();
 
 		$userDao =& DAORegistry::getDAO('UserDAO');		
-		$reviewers =& $userDao->getUsersWithReviewerRole($journalId);
+		$ercMembers =& $userDao->getUsersWithReviewerRole($journalId);
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
 		
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign_by_ref('reviewers', $reviewers);
+		$templateMgr->assign_by_ref('members', $ercMembers);
+		$templateMgr->assign('dateFrom', $fromDate);
+		$templateMgr->assign('dateTo', $toDate);
 		parent::display();
 	}
 

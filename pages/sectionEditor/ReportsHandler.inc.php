@@ -10,14 +10,12 @@ define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 // Filter section
 define('FILTER_SECTION_ALL', 0);
 
-import('classes.submission.sectionEditor.SectionEditorAction');
 import('classes.handler.Handler');
 
 class ReportsHandler extends Handler {
 	/**
 	* Constructor
 	**/
-		
 	function ReportsHandler() {
 		parent::Handler();
 		
@@ -57,35 +55,51 @@ class ReportsHandler extends Handler {
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
 
-	function meetingReports($args) {
-		$this->validate(0, true);
-		$this->setupTemplate(false);
-		$journal =& Request::getJournal();
-		$journalId = $journal->getId();
-		$user =& Request::getUser();
-		$userId = $user->getId();
+	
+	/**
+	* Added by igmallare 10/10/2011
+	* Display the meeting attendance report form
+	* @param $args (type)
+	*/
+	function meetingAttendanceReport($args, &$request){
+		import ('lib.pkp.classes.who.form.MeetingAttendanceReportForm');
+		parent::validate();
+		$this->setupTemplate();
+		$meetingAttendanceReportForm= new MeetingAttendanceReportForm($args, $request);
+		$isSubmit = Request::getUserVar('previewMeetingAttendance') != null ? true : false;
 		
-		
-		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
+		if ($isSubmit) {
+			$meetingAttendanceReportForm->readInputData();
+			if($meetingAttendanceReportForm->validate()){	
+					$this->previewMeetingAttendanceReport($args);
+			}else{
+				if ($meetingAttendanceReportForm->isLocaleResubmit()) {
+					$meetingAttendanceReportForm->readInputData();
+				}
+				$meetingAttendanceReportForm->display($args);
+			}
+		}else {
+			$meetingAttendanceReportForm->display($args);
+		}
+	}
+	
+	function meetingAttendanceReportSubmit($form, $args) {
+		$form->display($args);
+	}
+	
+	function previewMeetingAttendanceReport($args) {
+		parent::validate();
+		$this->setupTemplate();
+		$ercMembers = Request::getUserVar('ercMembers');
+		if(count($ercMembers) > 0) {
+			echo count($ercMembers);
+		}
 		
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign('sectionEditor', $user->getFullName());
-		$templateMgr->assign('dateFrom', $fromDate);
-		$templateMgr->assign('dateTo', $toDate);
-		
-		// Set search parameters
-		$duplicateParameters = array(
-			'dateFromMonth', 'dateFromDay', 'dateFromYear',
-			'dateToMonth', 'dateToDay', 'dateToYear'
-		);
-		foreach ($duplicateParameters as $param)
-			$templateMgr->assign($param, Request::getUserVar($param));
-		
-		$templateMgr->display('sectionEditor/reports/meetingAttendance.tpl');
+		$templateMgr->display('sectionEditor/reports/previewMeetingAttendance.tpl');
 	}
+	
+	
 
 }
 
