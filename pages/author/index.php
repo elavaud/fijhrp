@@ -27,8 +27,9 @@ switch ($op) {
 	case 'submitSuppFile':
 	case 'saveSubmitSuppFile':
 	case 'deleteSubmitSuppFile':
+		case 'renameSubmittedFiles': //Added by MSB, Sept 29, 2011
 	case 'expediteSubmission':
-        case 'resubmit':   //Added by AIM, May 18, 2011
+	    case 'resubmit':   //Added by AIM, May 18, 2011
 		define('HANDLER_CLASS', 'SubmitHandler');
 		import('pages.author.SubmitHandler');
 		break;
