@@ -40,7 +40,18 @@
 </ul>
 </div>
 
-
+{**
+ * Added section for report generation
+ * Last Updated: ayveemallare 10/9/2011
+ *}
+<div class="separator">&nbsp;</div>
+<div id="reports">
+<h3>Report Generation</h3>
+<ul class="plain">
+	<li>&#187; <a href="{url op="submissionsReport"}">Submissions</a>
+	<li>&#187; <a href="{url op="meetingsReport"}">ERC Meeting Attendance</a>
+</ul>
+</div>
 
 <div class="separator">&nbsp;</div>
 
