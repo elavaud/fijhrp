@@ -33,7 +33,7 @@ class ReportsHandler extends Handler {
 	* Setup common template variables.
 	* @param $subclass boolean set to true if caller is below this handler in the hierarchy
 	*/
-	function setupTemplate($subclass = false, $parentPage = null, $showSidebar = true) {
+	function setupTemplate() {
 		parent::setupTemplate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
 		$templateMgr =& TemplateManager::getManager();
@@ -48,9 +48,7 @@ class ReportsHandler extends Handler {
 		
 		$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
 		$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
-		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, 'reports'), 'editor.reports'))
-		: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
-		
+		$pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, ''), 'editor.reports.reportGenerator'));
 		
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
@@ -66,12 +64,12 @@ class ReportsHandler extends Handler {
 		parent::validate();
 		$this->setupTemplate();
 		$meetingAttendanceReportForm= new MeetingAttendanceReportForm($args, $request);
-		$isSubmit = Request::getUserVar('previewMeetingAttendance') != null ? true : false;
+		$isSubmit = Request::getUserVar('generateMeetingAttendance') != null ? true : false;
 		
 		if ($isSubmit) {
 			$meetingAttendanceReportForm->readInputData();
 			if($meetingAttendanceReportForm->validate()){	
-					$this->previewMeetingAttendanceReport($args);
+					$this->generateMeetingAttendanceReport($args);
 			}else{
 				if ($meetingAttendanceReportForm->isLocaleResubmit()) {
 					$meetingAttendanceReportForm->readInputData();
@@ -83,20 +81,63 @@ class ReportsHandler extends Handler {
 		}
 	}
 	
-	function meetingAttendanceReportSubmit($form, $args) {
-		$form->display($args);
-	}
-	
-	function previewMeetingAttendanceReport($args) {
+	/**
+	* Added by igmallare 10/11/2011
+	* Generate csv file for the meeting attendance report
+	* @param $args (type)
+	*/
+	function generateMeetingAttendanceReport($args) {
 		parent::validate();
 		$this->setupTemplate();
 		$ercMembers = Request::getUserVar('ercMembers');
-		if(count($ercMembers) > 0) {
-			echo count($ercMembers);
-		}
 		
-		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->display('sectionEditor/reports/previewMeetingAttendance.tpl');
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
+		$meetingDao = DAORegistry::getDAO('MeetingDAO');
+		$userDao = DAORegistry::getDAO('UserDAO');
+		
+		header('content-type: text/comma-separated-values');
+		header('content-disposition: attachment; filename=meetingAttendanceReport-' . date('Ymd') . '.csv');
+		
+		$columns = array(
+		'lastname' => Locale::translate('user.lastName'),
+		'firstname' => Locale::translate('user.firstName'),
+		'middlename' => Locale::translate('user.middleName'),
+		'meeting_date' => Locale::translate('editor.reports.meetingDate'),
+		'present' => Locale::translate('editor.reports.isPresent'),
+		'reason_for_absence' => Locale::translate('editor.reports.reason')
+		);
+		$yesNoArray = array('present');
+		$yesnoMessages = array( 0 => Locale::translate('common.no'), 1 => Locale::translate('common.yes'));
+		$fp = fopen('php://output', 'wt');
+		String::fputcsv($fp, array_values($columns));
+		
+		foreach ($ercMembers as $member) {
+			$user = $userDao->getUser($member);
+			list($meetingsIterator) =  $meetingDao->getMeetingReportByReviewerId($member, $fromDate, $toDate);
+		
+			$meetings = array();
+			while ($row =& $meetingsIterator->next()) {
+				foreach ($columns as $index => $junk) {
+					if (in_array($index, $yesNoArray)) {
+						$columns[$index] = $yesnoMessages[$row[$index]];
+					} elseif ($index == "lastname") {
+						$columns[$index] = $user->getLastName();
+					} elseif ($index == "firstname") {
+						$columns[$index] = $user->getFirstName();
+					} elseif ($index == "middlename") {
+						$columns[$index] = $user->getMiddleName();
+					} else {
+						$columns[$index] = $row[$index];
+					}
+				}
+				String::fputcsv($fp, $columns);
+				unset($row);
+			}
+		}
+		fclose($fp);
 	}
 	
 	

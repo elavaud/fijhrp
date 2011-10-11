@@ -65,7 +65,7 @@
 	<input type="hidden" name="dateToSecond" value="59" />
 	<input type="hidden" id="isValid" name="isValid" value="{$isValid}" />
 	<br/><br/>
-	<input type="submit" name="previewMeetingAttendance" value="{translate key="common.preview"}" class="button defaultButton" />
+	<input type="submit" name="generateMeetingAttendance" value="{translate key="editor.reports.generateReport"}" class="button defaultButton" />
 	<input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" />
 </form>
 </div>

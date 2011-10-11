@@ -5,13 +5,13 @@
  */
 
 /**
- * @file lib/pkp/classes/who/SetMeetingForm.inc.php
+ * @file lib/pkp/classes/who/MeetingAttendanceReportForm.inc.php
  *
- * Added by MSB. Last Updated: July 14, 2011
- * @class SetMeetingForm
+ * Added by igmallare. Last Updated: Oct 11, 2011
+ * @class MeetingAttendanceReportForm
  * @ingroup sectionEditor_form
  *
- * @brief Form for section editors to create meeting.
+ * @brief Form for section editors to generate meeting attendance report form.
  */
 
 

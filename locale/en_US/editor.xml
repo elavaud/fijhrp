@@ -400,6 +400,8 @@
 	 * Last Update: 10/10/2011
 	********************************************** -->
 	<message key="editor.reports.reportGenerator">Report Generator</message>
+	<message key="editor.reports.generateReport">Generate Report</message>
+	<message key="editor.reports.submissions">Submissions</message>
 	<message key="editor.reports.meetingAttendance">Meeting Attendance</message>
 	<message key="editor.reports.submissions">Submissions</message>
 	<message key="editor.reports.ercMemberRequired">Select at least one (1) ERC member</message>
@@ -407,5 +409,8 @@
 	<message key="editor.reports.dateRange">Pick a date range for the report (optional)</message>
 	<message key="editor.reports.preview">Preview</message>
 	<message key="editor.reports.previewReport">Preview Report</message>
+	<message key="editor.reports.meetingDate">Meeting schedule</message>
+	<message key="editor.reports.isPresent">Is present?</message>
+	<message key="editor.reports.reason">Reason (if absent)</message>
 	
 </locale>
