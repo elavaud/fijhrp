@@ -15,7 +15,7 @@
 {/if}
 
 <div id="authors">
-<h4>{translate key="article.authors"}</h4>
+<h4>{*translate key="article.authors"*}Primary Investigators</h4>
 	
 <table width="100%" class="data">
 	{foreach name=authors from=$submission->getAuthors() item=author}
@@ -87,6 +87,8 @@
 </table>
 </div>
 
+<!-- by AIM, 10.13.2011
+{*
 <div id="indexing">
 <h4>{translate key="submission.indexing"}</h4>
 	
@@ -184,4 +186,7 @@
 {/if}
 
 </div><!-- metadata -->
+
+*}
+-->
 

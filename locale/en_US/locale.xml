@@ -255,7 +255,7 @@
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>
 	<message key="user.role.proofreader">Proofreader</message>
-	<message key="user.role.author">Author</message>
+	<message key="user.role.author">RTO</message> /*Author to RTO */
 	<message key="user.role.subscriptionManager">Subscription Manager</message>
 	<message key="user.role.managers">ERC Admins</message> /* Replaced Journal Managers with ERC Admins - spf */
 	<message key="user.role.editors">STO</message> /*Editor to STO*/
