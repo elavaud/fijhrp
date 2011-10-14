@@ -1,6 +1,7 @@
 <?php
 
 import('lib.pkp.classes.who.Meeting');
+import('lib.pkp.classes.db.DBRowIterator');
 
 class MeetingDAO extends DAO {
 	/**
@@ -111,6 +112,38 @@ class MeetingDAO extends DAO {
 		return $returner;
 	}
 	
+	
+	function getMeetingReportByReviewerId($reviewerId, $dateFrom=null, $dateTo=null)  {
+		$sql = 
+			'SELECT * 
+			FROM meetings a INNER JOIN meeting_reviewers b
+			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
+		
+		$searchSql = '';
+		
+		if (!empty($dateFrom) || !empty($dateTo)) {
+			if (!empty($dateFrom)) {
+				$searchSql .= ' AND meeting_date >= ' . $this->datetimeToDB($dateFrom);
+			}
+			if (!empty($dateTo)) {
+				$searchSql .= ' AND meeting_date <= ' . $this->datetimeToDB($dateTo);
+			}
+		}
+		if(!empty($status)) {
+			$searchSql .= ' AND status = ' . $status;
+		}
+		if(!empty($replyStatus)) {
+			$searchSql .= ' AND attending = ' . $replyStatus;
+		}
+		
+		$result =& $this->retrieveRange(
+			$sql. ' ' . $searchSql .  ' ORDER BY ' .$this->getSortMapping('meetingDate') . ' ' .$this->getDirectionMapping(SORT_DIRECTION_ASC), 
+			(int) $reviewerId, $rangeInfo );
+		
+		$meetingsReturner = new DBRowIterator($result);
+
+		return array($meetingsReturner);
+	}
 	/**
 	 * Get meeting by meetingId and reviewerId
 	 * Added by ayveemallare 7/6/2011
@@ -153,6 +186,8 @@ class MeetingDAO extends DAO {
 		$meeting->setIsAttending($row['attending']);
 		$meeting->setRemarks($row['remarks']);
 		$meeting->setStatus($row['status']);
+		$meeting->setIsPresent($row['present']);
+		$meeting->setReasonForAbsence($row['reason_for_absence']);
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
 	}
@@ -202,7 +237,6 @@ class MeetingDAO extends DAO {
 	 * @param Meeting $meeting
 	 */
 	function updateMinutesStatus($meeting) {
-		echo $meeting->getMinuteStatus;
 		$this->update(
 			'UPDATE meetings SET minutes_status = ? where meeting_id = ?',
 			array($meeting->getMinutesStatus(), $meeting->getId())

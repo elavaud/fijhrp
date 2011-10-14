@@ -127,15 +127,15 @@
 	</tr>
 	<tr>
 		<td class="label">Country</td>
-		<td class="value">{$submission->getLocalizedProposalCountry()|strip_unsafe_html}</td>
+		<td class="value">{$submission->getLocalizedProposalCountryText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
 	</tr>
 	<tr>
 		<td class="label">Technical Unit</td>
-		<td class="value">{$submission->getLocalizedTechnicalUnit()|strip_unsafe_html}</td>
+		<td class="value">{$submission->getLocalizedTechnicalUnitText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
 	</tr>
 	<tr>
 		<td class="label">Proposal Type</td>
-		<td class="value">{$submission->getLocalizedProposalType()|strip_unsafe_html}</td>
+		<td class="value">{$submission->getLocalizedProposalTypeText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
 	</tr>
 	<tr>
 		<td class="label">Conflict Of Interest</td>
