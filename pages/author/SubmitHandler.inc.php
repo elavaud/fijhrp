@@ -66,6 +66,30 @@ class SubmitHandler extends AuthorHandler {
                 Request::redirect(null, 'author', '');
             }
         }
+        
+     /**
+      * Added by MSB, Sept 29, 2011
+      * Rename all the submitted files 
+      * Enter description here ...
+      */
+    function renameSubmittedFiles(){
+    	import('classes.file.ArticleFileManager');
+    	
+    	$article =& $this->article;
+    	$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
+    	$articleFiles =& $articleFileDao->getArticleFilesByArticle($article->getId());
+    	$articleId = $article->getId();
+
+    	$articleFileManager = new ArticleFileManager($articleId);
+    	
+    	$suppFileCounter = 0;
+    	$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
+    	 
+    	/*Rename each uploaded file*/
+    	foreach  ($articleFiles as $file){
+    		$suppFileCounter = $articleFileManager->renameFile($file->getFileId(),$file->getRevision(),$file->getType(),$suppFileCounter);
+    	}
+    }
 
 	/**
 	 * Display journal author article submission.
@@ -197,6 +221,10 @@ class SubmitHandler extends AuthorHandler {
 				HookRegistry::call('Author::SubmitHandler::saveSubmit', array(&$step, &$article, &$submitForm));
                                 
 				if ($step == 5) {
+					
+					// Rename uploaded files
+					$this->renameSubmittedFiles(); /*Added by MSB, Sept29, 2011*/
+								
 					// Send a notification to associated users
 					import('lib.pkp.classes.notification.NotificationManager');
 					$notificationManager = new NotificationManager();
@@ -226,7 +254,7 @@ class SubmitHandler extends AuthorHandler {
 					$templateMgr->assign('articleId', $articleId);
 					$templateMgr->assign('helpTopicId','submission.index');
 					$templateMgr->display('author/submit/complete.tpl');
-
+					
 				} else {
 					$request->redirect(null, null, 'submit', $step+1, array('articleId' => $articleId));
 				}

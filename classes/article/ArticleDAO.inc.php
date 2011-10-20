@@ -652,6 +652,20 @@ class ArticleDAO extends DAO {
 		return $proposalTypes;
 
 	}
+	
+	/**********************************************************************
+	 * Get proposal type by code
+	 * Added by igm 9/28/11
+	 ***********************************************************************/
+	function getProposalType($code) {
+		$proposalTypes = $this->getProposalTypes();
+		
+		foreach($proposalTypes as $pt) {
+			if($pt['code'] == $code) {
+				return $pt['name'];
+			}
+		}
+	}
 
 	/**********************************************************************
 	 *

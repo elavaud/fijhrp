@@ -28,15 +28,15 @@
 import('lib.pkp.classes.file.FileManager');
 
 /* File type suffixes */
-define('ARTICLE_FILE_SUBMISSION',	'SM');
-define('ARTICLE_FILE_REVIEW',		'RV');
-define('ARTICLE_FILE_EDITOR',		'ED');
-define('ARTICLE_FILE_COPYEDIT',		'CE');
-define('ARTICLE_FILE_LAYOUT',		'LE');
-define('ARTICLE_FILE_PUBLIC',		'PB');
-define('ARTICLE_FILE_SUPP',		'SP');
-define('ARTICLE_FILE_NOTE',		'NT');
-define('ARTICLE_FILE_ATTACHMENT',	'AT');
+define('ARTICLE_FILE_SUBMISSION',	'MainProposal'); 	/*MSB replaced "SM" with "MainProposal, Sept29, 2011*/
+define('ARTICLE_FILE_REVIEW',		'ReviewFile');   	/*MSB replaced "RV" with "ReviewFile", Sept29, 2011*/
+define('ARTICLE_FILE_EDITOR',		'Editor'); 			/*MSB replaced "ED" with "Editor", Sept29, 2011*/
+define('ARTICLE_FILE_COPYEDIT',		'CopyEdit');		/*MSB replaced "CE" with "CopyEdit", Sept29, 2011*/
+define('ARTICLE_FILE_LAYOUT',		'Layout');			/*MSB replaced "LE" with "Layout", Sept29, 2011*/
+define('ARTICLE_FILE_PUBLIC',		'PublicFile'); 		 /*MSB replaced "PB" with "PublicFile", Sept29, 2011*/
+define('ARTICLE_FILE_SUPP',			'SupplementaryFile');/*MSB replaced "SP" with "Supplementary", Sept29, 2011*/
+define('ARTICLE_FILE_NOTE',			'FileNote');		 /*MSB replaced "NT" with "FileNote", Sept29, 2011*/
+define('ARTICLE_FILE_ATTACHMENT',	'Attachment');		 /*MSB replaced "AT" with "Attachment", Sept29, 2011*/
 
 class ArticleFileManager extends FileManager {
 
@@ -348,7 +348,7 @@ class ArticleFileManager extends FileManager {
 	function typeToPath($type) {
                 /* This determines the directory path where the file will be saved.  This is also the "type" column in article_files */
 
-                switch ($type) {
+            switch ($type) {
 			case ARTICLE_FILE_PUBLIC: return 'public';
 			case ARTICLE_FILE_SUPP: return 'supp';
 			case ARTICLE_FILE_NOTE: return 'note';
@@ -361,6 +361,64 @@ class ArticleFileManager extends FileManager {
 		}
 	}
 
+	/**
+	 * Added by MSB, Sept 29, 2011
+	 * Return type code associated with the type path
+	 * @param String $path
+	 */
+	function pathToType($path){
+		switch ($path) {
+			case "public": return ARTICLE_FILE_PUBLIC;
+			case "supp": return ARTICLE_FILE_SUPP;
+			case "note": return ARTICLE_FILE_NOTE;
+			case "submission/review": return ARTICLE_FILE_REVIEW;
+			case "submission/editor": return ARTICLE_FILE_EDITOR;
+			case "submission/copyedit": return ARTICLE_FILE_COPYEDIT;
+			case "submission/layout": return ARTICLE_FILE_LAYOUT;
+			case "attachment": return ARTICLE_FILE_ATTACHMENT;
+			case "submission/original": default: return ARTICLE_FILE_SUBMISSION;
+		}
+	}
+	
+	/**
+	* Added by MSB, Sept 29, 2011
+	* Rename an existing ArticleFile
+	* @param fileId int
+	* @param revision int
+	* @param path string
+	* @param suppFileCounter  int
+	*/
+	function renameFile($fileId, $revision, $path, $suppFileCounter){
+		if (HookRegistry::call('ArticleFileManager::renameFile', array(&$fileId, &$revision, &$path, $suppFileCounter, &$result))) return $result;
+	
+		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
+	
+		$sourceDir = $this->filesDir . $path . "/";
+		$sourceArticleFile = $articleFileDao->getArticleFile($fileId, $revision, $this->articleId);
+	
+		$type = $this->pathToType($path);
+	
+		if($type == ARTICLE_FILE_SUPP ){
+			  $suppFileCounter = $suppFileCounter + 1;
+			  $type = $type.$suppFileCounter;
+		}
+		
+		
+		$fileExtension = $this->parseFileExtension($sourceArticleFile->getFileName());
+		
+		$date = new DateTime($sourceArticleFile->getDateUploaded());
+		$dateUploaded = $date->format('MdY-g:ia');
+		
+		$newFileName = $this->article->getWhoId($this->article->getLocale()).".".$type.".".$revision.'.'.$dateUploaded.'.'.$fileExtension;
+
+		//rename file
+		rename($sourceDir.$sourceArticleFile->getFileName(), $sourceDir.$newFileName);
+	
+		$sourceArticleFile->setFileName($newFileName);
+		$articleFileDao->updateArticleFile($sourceArticleFile);
+		return $suppFileCounter;
+	}
+	
 	/**
 	 * Copies an existing ArticleFile and renames it.
 	 * @param $sourceFileId int
@@ -473,7 +531,25 @@ class ArticleFileManager extends FileManager {
 	 */
 	function generateFilename(&$articleFile, $type, $originalName) {
 		$extension = $this->parseFileExtension($originalName);
-		$newFileName = $articleFile->getArticleId().'-'.$articleFile->getFileId().'-'.$articleFile->getRevision().'-'.$type.'.'.$extension;
+		/** Start edit, MSB Sept29, 2011
+		 *  If whoId is already created, use it in naming the file (whoId.type.revision.dateuploaded.extension)
+		 *  Else, use the default naming scheme (articleId.fileId.revision.type.extension)
+		 **/
+		$whoId = $this->article->getWhoId($this->article->getLocale());
+		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
+		 
+		if($whoId!=null || $whoId!=''){
+			
+			$date = new DateTime($articleFile->getDateUploaded());
+			$dateUploaded = $date->format('MdY-g:ia');
+			$newFileName = $whoId.'.'.$type.'.'.$articleFile->getRevision().'.'.$dateUploaded.'.'.$extension;
+			
+		}else{
+			$newFileName = $articleFile->getArticleId().'-'.$articleFile->getFileId().'-'.$articleFile->getRevision().'-'.$type.'.'.$extension;
+		}	
+		/**
+		 * End of edit, MSB
+		 */
 		$articleFile->setFileName($newFileName);
 		return $newFileName;
 	}

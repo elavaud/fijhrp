@@ -40,7 +40,18 @@
 </ul>
 </div>
 
-
+{**
+ * Added section for report generation
+ * Last Updated: ayveemallare 10/9/2011
+ *}
+<div class="separator">&nbsp;</div>
+<div id="reports">
+<h3>{translate key="editor.reports.reportGenerator"}</h3>
+<ul class="plain">
+	<li>&#187; <a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a>
+	<li>&#187; <a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a>
+</ul>
+</div>
 
 <div class="separator">&nbsp;</div>
 

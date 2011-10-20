@@ -17,7 +17,7 @@
 	<message key="editor.article.selectReviewForm">Select Review Form</message>
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>
 	<message key="editor.home">STO Home</message> /*editor to STO*/
-	 <message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
+	<message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
 	<message key="editor.submissionsAndPublishing">Submissions and Publishing</message>
 	<message key="editor.submissionQueue">Submission Queue</message>
 	<message key="editor.submissionArchive">Submission Archive</message>
@@ -392,4 +392,37 @@
 	<message key="editor.minutes.uploadContinuingReviews">Upload Continuing Reviews</message>
 	<message key="editor.minutes.completeContinuingReviews">Complete Continuing Reviews</message>
 	<message key="editor.submission.dateOfApproval">Date of Approval</message>
+	
+	<!-- *********************************************
+	 * Additional keys for meeting attendance report
+	 * Added by igmallare
+	 * Last Update: 10/10/2011
+	********************************************** -->
+	<message key="editor.reports.reportGenerator">Report Generator</message>
+	<message key="editor.reports.generateReport">Generate Report</message>
+	<message key="editor.reports.submissions">Submissions</message>
+	<message key="editor.reports.meetingAttendance">Meeting Attendance</message>
+	<message key="editor.reports.submissions">Submissions</message>
+	<message key="editor.reports.ercMemberRequired">Select at least one (1) ERC member</message>
+	<message key="editor.reports.selectAtLeastOneErcMember">Select at least one (1) ERC member for the report</message>
+	<message key="editor.reports.dateRange">Pick a date range for the report (optional)</message>
+	<message key="editor.reports.preview">Preview</message>
+	<message key="editor.reports.previewReport">Preview Report</message>
+	<message key="editor.reports.meetingDate">Meeting schedule</message>
+	<message key="editor.reports.isPresent">Is present?</message>
+	<message key="editor.reports.reason">Reason (if absent)</message>
+	
+	<!-- *********************************************
+	* Additional keys for submissions report
+	* Added by MSB, Oct11,2011
+	*
+	********************************************* -->
+	<message key="editor.reports.whoId">WHO ID</message>
+	<message key="editor.reports.author">Author</message>
+	<message key="editor.reports.submitDate">Date Submitted</message>
+	<message key="editor.reports.title">Title</message>
+	<message key="editor.reports.country">Country</message>
+	<message key="editor.reports.decision">Decision</message>
+	<message key="editor.reports.technicalUnit">Technical Unit</message>
+
 </locale>
