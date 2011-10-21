@@ -33,7 +33,7 @@
 <p>{translate key="manager.setup.authorGuidelinesDescription"}</p>
 
 <p>
-	<textarea name="authorGuidelines[{$formLocale|escape}]" id="authorGuidelines" rows="12" cols="60" class="textArea">{$authorGuidelines[$formLocale]|escape}</textarea>
+	<textarea name="authorGuidelines[{$formLocale|escape}]" id="authorGuidelines" rows="12" cols="50" class="textArea">{$authorGuidelines[$formLocale]|escape}</textarea>
 </p>
 
 </div>
@@ -75,7 +75,7 @@
 {url|assign:"sampleCopyrightWordingUrl" page="information" op="sampleCopyrightWording"}
 <p>{translate key="manager.setup.authorCopyrightNoticeDescription" sampleCopyrightWordingUrl=$sampleCopyrightWordingUrl}</p>
 
-<p><textarea name="copyrightNotice[{$formLocale|escape}]" id="copyrightNotice" rows="12" cols="60" class="textArea">{$copyrightNotice[$formLocale]|escape}</textarea></p>
+<p><textarea name="copyrightNotice[{$formLocale|escape}]" id="copyrightNotice" rows="12" cols="50" class="textArea">{$copyrightNotice[$formLocale]|escape}</textarea></p>
 
 <table width="100%" class="data">
 	<tr valign="top">
@@ -122,7 +122,7 @@
 </table>
 
 <h4>{translate key="manager.setup.competingInterests.guidelines"}</h4>
-<p><textarea name="competingInterestGuidelines[{$formLocale|escape}]" id="competingInterestGuidelines" rows="12" cols="60" class="textArea">{$competingInterestGuidelines[$formLocale]|escape}</textarea></p>
+<p><textarea name="competingInterestGuidelines[{$formLocale|escape}]" id="competingInterestGuidelines" rows="12" cols="50" class="textArea">{$competingInterestGuidelines[$formLocale]|escape}</textarea></p>
 </div>
 
 <div class="separator"></div>
@@ -145,7 +145,7 @@
 			<span class="instruct">{translate key="manager.setup.disciplineDescription"}</span><br/>
 			<span class="instruct">{translate key="manager.setup.disciplineProvideExamples"}:</span>
 			<br />
-			<input type="text" name="metaDisciplineExamples[{$formLocale|escape}]" id="metaDisciplineExamples" value="{$metaDisciplineExamples[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="metaDisciplineExamples[{$formLocale|escape}]" id="metaDisciplineExamples" value="{$metaDisciplineExamples[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="manager.setup.disciplineExamples"}</span>
 		</td>
@@ -193,7 +193,7 @@
 		<td class="value">
 			<span class="instruct">{translate key="manager.setup.subjectProvideExamples"}:</span>
 			<br />
-			<input type="text" name="metaSubjectExamples[{$formLocale|escape}]" id="metaSubjectExamples" value="{$metaSubjectExamples[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="metaSubjectExamples[{$formLocale|escape}]" id="metaSubjectExamples" value="{$metaSubjectExamples[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="manager.setup.subjectExamples"}</span>
 		</td>
@@ -218,7 +218,7 @@
 			<span class="instruct">{translate key="manager.setup.coverageDescription"}</span><br/>
 			<span class="instruct">{translate key="manager.setup.coverageGeoProvideExamples"}:</span>
 			<br />
-			<input type="text" name="metaCoverageGeoExamples[{$formLocale|escape}]" id="metaCoverageGeoExamples" value="{$metaCoverageGeoExamples[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="metaCoverageGeoExamples[{$formLocale|escape}]" id="metaCoverageGeoExamples" value="{$metaCoverageGeoExamples[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="manager.setup.coverageGeoExamples"}</span>
 		</td>
@@ -231,7 +231,7 @@
 		<td class="value">
 			<span class="instruct">{translate key="manager.setup.coverageChronProvideExamples"}:</span>
 			<br />
-			<input type="text" name="metaCoverageChronExamples[{$formLocale|escape}]" id="metaCoverageChronExamples" value="{$metaCoverageChronExamples[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="metaCoverageChronExamples[{$formLocale|escape}]" id="metaCoverageChronExamples" value="{$metaCoverageChronExamples[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="manager.setup.coverageChronExamples"}</span>
 		</td>
@@ -244,7 +244,7 @@
 		<td class="value">
 			<span class="instruct">{translate key="manager.setup.coverageResearchSampleProvideExamples"}:</span>
 			<br />
-			<input type="text" name="metaCoverageResearchSampleExamples[{$formLocale|escape}]" id="metaCoverageResearchSampleExamples" value="{$metaCoverageResearchSampleExamples[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="metaCoverageResearchSampleExamples[{$formLocale|escape}]" id="metaCoverageResearchSampleExamples" value="{$metaCoverageResearchSampleExamples[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="manager.setup.coverageResearchSampleExamples"}</span>
 		</td>
@@ -265,7 +265,7 @@
 		<td class="value">
 			<span class="instruct">{translate key="manager.setup.typeProvideExamples"}:</span>
 			<br />
-			<input type="text" name="metaTypeExamples[{$formLocale|escape}]" id="metaTypeExamples" value="{$metaTypeExamples[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="metaTypeExamples[{$formLocale|escape}]" id="metaTypeExamples" value="{$metaTypeExamples[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="manager.setup.typeExamples"}</span>
 		</td>

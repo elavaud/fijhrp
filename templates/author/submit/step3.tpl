@@ -244,22 +244,22 @@ $(document).ready(function() {
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="title" required="true" key="proposal.title"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 
 <tr valign="top">
 	<td width="20%" class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" key="proposal.abstract" required="true"}{else}{fieldLabel name="abstract" key="proposal.abstract"}{/if}</td>
-	<td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="60">{$abstract[$formLocale]|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="50">{$abstract[$formLocale]|escape}</textarea></td>
 </tr>
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="objectives" required="true" key="proposal.objectives"}</td>
-	<td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="60">{$objectives[$formLocale]|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="50">{$objectives[$formLocale]|escape}</textarea></td>
 </tr>
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 
 <tr valign="top">
@@ -484,7 +484,7 @@ $(document).ready(function() {
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="sponsor" key="submission.agencies"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="sponsor[{$formLocale|escape}]" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="sponsor[{$formLocale|escape}]" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 </table>
 </div>
@@ -501,7 +501,7 @@ $(document).ready(function() {
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="citations" key="submission.citations"}</td>
-	<td width="80%" class="value"><textarea name="citations" id="citations" class="textArea" rows="15" cols="60">{$citations|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="citations" id="citations" class="textArea" rows="15" cols="50">{$citations|escape}</textarea></td>
 </tr>
 </table>
 

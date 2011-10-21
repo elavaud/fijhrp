@@ -39,7 +39,12 @@ Content-Transfer-Encoding: quoted-printable
 		{foreach from=$stylesheets item=cssUrl}
 		<link rel="stylesheet" href="{$cssUrl}" type="text/css" />
 		{/foreach}
-		</head>
+
+	{*MSB added custom stylesheet for pop-up windows, Oct19, 2011 *}
+	<link rel="stylesheet" href="{$baseUrl}/plugins/themes/whorrp/popup.css" type="text/css" />
+	{*End of custom code*}
+
+	</head>
 	<body>
 
 	<p>{$body|escape|nl2br}</p>
