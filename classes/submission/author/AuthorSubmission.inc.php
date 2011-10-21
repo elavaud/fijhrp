@@ -164,11 +164,14 @@ class AuthorSubmission extends Article {
                 //Withdrawn status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
 
-                //Withdrawn status is reflected in table articles field status
+                //Completed status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
 
                 //Archived status is reflected in table articles field status
                 if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
+
+                //Extension Requested status is reflected in table articles field status
+                //if($this->getStatus() == PROPOSAL_STATUS_EXTENSION) return PROPOSAL_STATUS_EXTENSION;
 
                 $status = $this->getProposalStatus();
                 if($status == PROPOSAL_STATUS_RETURNED) {
@@ -192,6 +195,7 @@ class AuthorSubmission extends Article {
                 }
 
                 //For all other statuses
+                
                 return $status;
 	}	
 

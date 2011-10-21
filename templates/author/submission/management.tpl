@@ -13,7 +13,7 @@
 <table width="100%" class="data">
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="article.authors"}</td>
-		<td width="80%" colspan="2" class="data">{$submission->getAuthorString(false)|escape}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getFirstAuthor()|escape}</td>
 	</tr>
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="article.title"}</td>
