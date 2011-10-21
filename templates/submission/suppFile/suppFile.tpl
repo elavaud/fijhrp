@@ -71,7 +71,7 @@
 <table width="100%" class="data">
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="title" required="true" key="common.title"}</td>
-		<td width="80%" class="value"><input type="text" id="title" name="title[{$formLocale|escape}]" value="{$title[$formLocale]|escape}" size="60" maxlength="255" class="textField" /></td>
+		<td width="80%" class="value"><input type="text" id="title" name="title[{$formLocale|escape}]" value="{$title[$formLocale]|escape}" size="50" maxlength="255" class="textField" /></td>
 	</tr>
 	{if $enablePublicSuppFileId}
 	<tr valign="top">
@@ -81,11 +81,11 @@
 	{/if}
 	<tr valign="top">
 		<td class="label">{fieldLabel name="creator" key="author.submit.suppFile.createrOrOwner"}</td>
-		<td class="value"><input type="text" id="creator" name="creator[{$formLocale|escape}]" value="{$creator[$formLocale]|escape}" size="60" maxlength="255" class="textField" /></td>
+		<td class="value"><input type="text" id="creator" name="creator[{$formLocale|escape}]" value="{$creator[$formLocale]|escape}" size="50" maxlength="255" class="textField" /></td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="subject" key="common.subject"}</td>
-		<td class="value"><input type="text" name="subject[{$formLocale|escape}]" id="subject" value="{$subject[$formLocale]|escape}" size="60" maxlength="255" class="textField" /></td>
+		<td class="value"><input type="text" name="subject[{$formLocale|escape}]" id="subject" value="{$subject[$formLocale]|escape}" size="50" maxlength="255" class="textField" /></td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="type" key="common.type"}</td>
@@ -93,19 +93,19 @@
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="description" key="author.submit.suppFile.briefDescription"}</td>
-		<td class="value"><textarea name="description[{$formLocale|escape}]" id="description" rows="5" cols="60" class="textArea">{$description[$formLocale]|escape}</textarea></td>
+		<td class="value"><textarea name="description[{$formLocale|escape}]" id="description" rows="5" cols="50" class="textArea">{$description[$formLocale]|escape}</textarea></td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="publisher" key="common.publisher"}</td>
 		<td class="value">
-			<input type="text" name="publisher[{$formLocale|escape}]" id="publisher" value="{$publisher[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="publisher[{$formLocale|escape}]" id="publisher" value="{$publisher[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="author.submit.suppFile.publisherDescription"}</span>
 		</td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="sponsor" key="author.submit.suppFile.contributorOrSponsor"}</td>
-		<td class="value"><input id="sponsor" type="text" name="sponsor[{$formLocale|escape}]" value="{$sponsor[$formLocale]|escape}" size="60" maxlength="255" class="textField" /></td>
+		<td class="value"><input id="sponsor" type="text" name="sponsor[{$formLocale|escape}]" value="{$sponsor[$formLocale]|escape}" size="50" maxlength="255" class="textField" /></td>
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel name="dateCreated" key="common.date"}</td>
@@ -118,7 +118,7 @@
 	<tr valign="top">
 		<td class="label">{fieldLabel name="source" key="common.source"}</td>
 		<td class="value">
-			<input type="text" id="source" name="source[{$formLocale|escape}]" value="{$source[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" id="source" name="source[{$formLocale|escape}]" value="{$source[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 			<br />
 			<span class="instruct">{translate key="author.submit.suppFile.sourceDescription"}</span>
 		</td>

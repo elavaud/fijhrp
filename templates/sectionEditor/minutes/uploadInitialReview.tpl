@@ -122,12 +122,12 @@
 	<table class="data" width="100%" id="stipulationsRecommendations">		
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.stipulations"}</td>
-			<td><textarea name="stipulations" class="textArea" rows="10" cols="60">{$stipulations}</textarea></td>
+			<td><textarea name="stipulations" class="textArea" rows="10" cols="50">{$stipulations}</textarea></td>
 		</tr>
 		<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.recommendations"}</td>
-			<td><textarea name="recommendations" class="textArea" rows="10" cols="60">{$recommendations}</textarea></td>
+			<td><textarea name="recommendations" class="textArea" rows="10" cols="50">{$recommendations}</textarea></td>
 		</tr>
 	</table>
 	<br/>

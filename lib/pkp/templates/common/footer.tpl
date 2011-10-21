@@ -7,18 +7,22 @@
  * Common site footer.
  *
  *}
-{if $displayCreativeCommons}
-{translate key="common.ccLicense"}
-{/if}
-{if $pageFooter}
-<br /><br />
-{$pageFooter}
-{/if}
+
 {call_hook name="Templates::Common::Footer::PageFooter"}
 </div><!-- content -->
 </div><!-- main -->
 </div><!-- body -->
-
+{*MSB placed the creativecommons and pagefooter in a div *}
+<div id="footer">
+{if $displayCreativeCommons}
+{translate key="common.ccLicense"}
+{/if}
+{if $pageFooter}
+<br />
+{$pageFooter}
+{/if}
+</div>
+{*End of custom code*}
 {get_debug_info}
 {if $enableDebugStats}{include file=$pqpTemplate}{/if}
 

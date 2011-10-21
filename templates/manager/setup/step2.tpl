@@ -32,7 +32,7 @@
 <h3>2.1 {translate key="manager.setup.focusAndScopeOfJournal"}</h3>
 <p>{translate key="manager.setup.focusAndScopeDescription"}</p>
 <p>
-	<textarea name="focusScopeDesc[{$formLocale|escape}]" id="focusScopeDesc" rows="12" cols="60" class="textArea">{$focusScopeDesc[$formLocale]|escape}</textarea>
+	<textarea name="focusScopeDesc[{$formLocale|escape}]" id="focusScopeDesc" rows="12" cols="50" class="textArea">{$focusScopeDesc[$formLocale]|escape}</textarea>
 </p>
 </div>
 
@@ -45,7 +45,7 @@
 
 <h4>{translate key="manager.setup.reviewPolicy"}</h4>
 
-<p><textarea name="reviewPolicy[{$formLocale|escape}]" id="reviewPolicy" rows="12" cols="60" class="textArea">{$reviewPolicy[$formLocale]|escape}</textarea></p>
+<p><textarea name="reviewPolicy[{$formLocale|escape}]" id="reviewPolicy" rows="12" cols="50" class="textArea">{$reviewPolicy[$formLocale]|escape}</textarea></p>
 </div>
 <div id="reviewGuidelinesInfo">
 
@@ -54,7 +54,7 @@
 {url|assign:"reviewFormsUrl" op="reviewForms"}
 <p>{translate key="manager.setup.reviewGuidelinesDescription" reviewFormsUrl=$reviewFormsUrl}</p>
 
-<p><textarea name="reviewGuidelines[{$formLocale|escape}]" id="reviewGuidelines" rows="12" cols="60" class="textArea">{$reviewGuidelines[$formLocale]|escape}</textarea></p>
+<p><textarea name="reviewGuidelines[{$formLocale|escape}]" id="reviewGuidelines" rows="12" cols="50" class="textArea">{$reviewGuidelines[$formLocale]|escape}</textarea></p>
 </div>
 <div id="reviewProcess">
 <h4>{translate key="manager.setup.reviewProcess"}</h4>
@@ -163,7 +163,7 @@
 <div id="privacyStatementInfo">
 <h3>2.3 {translate key="manager.setup.privacyStatement"}</h3>
 
-<p><textarea name="privacyStatement[{$formLocale|escape}]" id="privacyStatement" rows="12" cols="60" class="textArea">{$privacyStatement[$formLocale]|escape}</textarea></p>
+<p><textarea name="privacyStatement[{$formLocale|escape}]" id="privacyStatement" rows="12" cols="50" class="textArea">{$privacyStatement[$formLocale]|escape}</textarea></p>
 </div>
 
 <div class="separator"></div>
@@ -222,7 +222,7 @@
 <p><input type="checkbox" name="enableLockss" id="enableLockss" value="1"{if $enableLockss} checked="checked"{/if} /> <label for="enableLockss">{translate key="manager.setup.lockssEnable" lockssUrl=$lockssUrl}</label></p>
 
 <p>
-	<textarea name="lockssLicense[{$formLocale|escape}]" id="lockssLicense" rows="6" cols="60" class="textArea">{$lockssLicense[$formLocale]|escape}</textarea>
+	<textarea name="lockssLicense[{$formLocale|escape}]" id="lockssLicense" rows="6" cols="50" class="textArea">{$lockssLicense[$formLocale]|escape}</textarea>
 	<br />
 	<span class="instruct">{translate key="manager.setup.lockssLicenses"}</span>
 </p>

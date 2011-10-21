@@ -23,6 +23,10 @@
 		<link rel="stylesheet" href="{$cssUrl}" type="text/css" />
 	{/foreach}
 
+	{*MSB added custom stylesheet for pop-up windows, Oct19, 2011 *}
+	<link rel="stylesheet" href="{$baseUrl}/plugins/themes/whorrp/popup.css" type="text/css" />
+	{*End of custom code*}
+
 	<!-- Base Jquery -->
 	{if $allowCDN}<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 	<script type="text/javascript">{literal}

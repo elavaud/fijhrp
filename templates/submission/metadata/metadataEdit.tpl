@@ -205,7 +205,7 @@ function moveAuthor(dir, authorIndex) {
 <table width="100%" class="data">
 	<tr>
 		<td width="20%" class="label">{fieldLabel name="title" required="true" key="article.title"}</td>
-		<td width="80%" class="value"><input type="text" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="60" maxlength="255" class="textField" /></td>
+		<td width="80%" class="value"><input type="text" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="50" maxlength="255" class="textField" /></td>
 	</tr>
 
 	<tr>
@@ -213,7 +213,7 @@ function moveAuthor(dir, authorIndex) {
 	</tr>
 	<tr valign="top">
 		<td class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" required="true" key="article.abstract"}{else}{fieldLabel name="abstract" key="article.abstract"}{/if}</td>
-		<td class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" rows="15" cols="60" class="textArea">{$abstract[$formLocale]|escape}</textarea></td>
+		<td class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" rows="15" cols="50" class="textArea">{$abstract[$formLocale]|escape}</textarea></td>
 	</tr>
 </table>
 </div>
@@ -381,7 +381,7 @@ function moveAuthor(dir, authorIndex) {
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="sponsor" key="submission.agencies"}</td>
 		<td width="80%" class="value">
-			<input type="text" name="sponsor[{$formLocale|escape}]" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="sponsor[{$formLocale|escape}]" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="50" maxlength="255" class="textField" />
 		</td>
 	</tr>
 </table>
@@ -400,7 +400,7 @@ function moveAuthor(dir, authorIndex) {
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="citations" key="submission.citations"}</td>
-	<td width="80%" class="value"><textarea name="citations" id="citations" class="textArea" rows="15" cols="60">{$citations|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="citations" id="citations" class="textArea" rows="15" cols="50">{$citations|escape}</textarea></td>
 </tr>
 </table>
 </div>

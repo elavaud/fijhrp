@@ -142,11 +142,11 @@ function deleteAttachment(fileId) {
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="subject" key="email.subject"}</td>
-	<td width="80%" class="value"><input type="text" id="subject" name="subject" value="{$subject|escape}" size="60" maxlength="120" class="textField" /></td>
+	<td width="80%" class="value"><input type="text" id="subject" name="subject" value="{$subject|escape}" size="50" maxlength="120" class="textField" /></td>
 </tr>
 <tr valign="top">
 	<td class="label">{fieldLabel name="body" key="email.body"}</td>
-	<td class="value"><textarea name="body" cols="60" rows="15" class="textArea">{$body|escape}</textarea></td>
+	<td class="value"><textarea name="body" cols="50" rows="15" class="textArea">{$body|escape}</textarea></td>
 </tr>
 </table>
 

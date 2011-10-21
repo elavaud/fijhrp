@@ -26,16 +26,16 @@
 <table class="data" width="100%">
 	<tr valign="top">
 		<td class="label" width="20%"><label for="title">{translate key="rt.context.title"}</label></td>
-		<td class="value" width="80%"><input type="text" class="textField" name="title" id="title" value="{$title|escape}" size="60" /></td>
+		<td class="value" width="80%"><input type="text" class="textField" name="title" id="title" value="{$title|escape}" size="50" /></td>
 	</tr>
 	<tr valign="top">
 		<td class="label"><label for="abbrev">{translate key="rt.context.abbrev"}</label></td>
-		<td class="value"><input type="text" class="textField" name="abbrev" id="abbrev" value="{$abbrev|escape}" size="60" /></td>
+		<td class="value"><input type="text" class="textField" name="abbrev" id="abbrev" value="{$abbrev|escape}" size="50" /></td>
 	</tr>
 	<tr valign="top">
 		<td class="label"><label for="description">{translate key="rt.context.description"}</label></td>
 		<td class="value">
-			<textarea class="textArea" name="description" id="description" rows="5" cols="60">{$description|escape}</textarea>
+			<textarea class="textArea" name="description" id="description" rows="5" cols="50">{$description|escape}</textarea>
 		</td>
 	</tr>
 	<tr valign="top">
