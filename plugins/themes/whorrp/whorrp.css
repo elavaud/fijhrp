@@ -45,7 +45,7 @@ a:hover {
 
 /*HEADER*/
 #header {
-	background-image: url(images/wpro_banner.gif);
+	background-image: url(images/wpro_banner2.png);
 	background-repeat: no-repeat;
 	background-color: transparent;
 	width: 950px;
@@ -145,7 +145,7 @@ a:hover {
 	background-repeat: no-repeat;
 	width: 149px;
 	float: left;
-	margin-top: 31px; 
+	margin-top: 32px; 
 	text-transform: capitalize;
 	font-size: 16px;
 }
