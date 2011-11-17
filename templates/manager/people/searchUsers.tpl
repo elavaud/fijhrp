@@ -81,7 +81,7 @@ function toggleChecked() {
 		<option value="{$smarty.const.ROLE_ID_REVIEWER}">{translate key="user.role.reviewer"}</option>
 		<option value="{$smarty.const.ROLE_ID_AUTHOR}">{translate key="user.role.author"}</option>
 		<option value="{$smarty.const.ROLE_ID_READER}">{translate key="user.role.reader"}</option>
-		<option value="{$smarty.const.ROLE_ID_SUBSCRIPTION_MANAGER}">{translate key="user.role.subscriptionManager"}</option>
+	<!--	<option value="{$smarty.const.ROLE_ID_SUBSCRIPTION_MANAGER}">{translate key="user.role.subscriptionManager"}</option> Edited by MSB, Nov17, 2011-->
 
 	</select>
 	</p>
