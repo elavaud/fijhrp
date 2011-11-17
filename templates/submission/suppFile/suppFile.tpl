@@ -19,6 +19,8 @@
             {assign var="pageTitle" value="author.submit.addProgressReport"}
         {elseif $type == "Completion Report"}
             {assign var="pageTitle" value="author.submit.addCompletionReport"}
+        {elseif $type == "Extension Request"}
+            {assign var="pageTitle" value="author.submit.addExtensionRequest"}
         {else}
             {assign var="pageTitle" value="author.submit.addSupplementaryFile"}
         {/if}
@@ -32,6 +34,8 @@
     {assign var="pageCrumbTitle" value="submission.progressReports"}
 {elseif $type == "Completion Report"}
     {assign var="pageCrumbTitle" value="submission.completionReports"}
+{elseif $type == "Extension Request"}
+    {assign var="pageCrumbTitle" value="submission.extensionRequest"}
 {else}
     {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
 {/if}
@@ -147,6 +151,8 @@
 <h3>{translate key="submission.progressReports"}</h3>
 {elseif $type == "Completion Report"}
 <h3>{translate key="submission.completionReports"}</h3>
+{elseif $type == "Extension Request"}
+<h3>{translate key="submission.extensionRequest"}</h3>
 {else}
     {$type|escape}
     <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>

@@ -104,6 +104,7 @@
 
         <message key="author.submit.addProgressReport">Upload Progress Report</message>
         <message key="author.submit.addCompletionReport">Upload Completion Report</message>
+        <message key="author.submit.addExtensionRequest">Submit Extension Request</message>
         <message key="author.submit.addWithdrawReport">Reason for Withdrawal</message>
 
 
