@@ -102,8 +102,8 @@ class UserManagementForm extends Form {
 		$activeRoles = array_merge($activeRoles,array(
 					'reviewer'=>'user.role.reviewer',
 					'author'=>'user.role.author',
-					'reader'=>'user.role.reader',
-					'subscriptionManager' => 'user.role.subscriptionManager'
+					'reader'=>'user.role.reader' /*, Edited by MSB, Nov17,2011 */
+					/*'subscriptionManager' => 'user.role.subscriptionManager' End edit*/
 					)
 				);
 
