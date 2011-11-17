@@ -45,7 +45,7 @@ a:hover {
 
 /*HEADER*/
 #header {
-	background-image: url(images/wpro_banner.gif);
+	background-image: url(images/wpro_banner2.png);
 	background-repeat: no-repeat;
 	background-color: transparent;
 	width: 950px;
@@ -61,6 +61,7 @@ a:hover {
 	min-width: 900px;
 	width: 950px;
 	position: relative;
+	min-height: 600px;
 }
 
 #main {
@@ -145,7 +146,7 @@ a:hover {
 	background-repeat: no-repeat;
 	width: 149px;
 	float: left;
-	margin-top: 31px; 
+	margin-top: 32px; 
 	text-transform: capitalize;
 	font-size: 16px;
 }
@@ -279,7 +280,17 @@ table.data, table.listing, table.info {
 }
 
 table.data td.label{
-	padding-top: 11px;
+	height: 30px;
+	vertical-align:middle;
+	font: 11px;
+}
+
+table.data td.value{
+	height: 30px;
+	vertical-align:middle;
+	padding-top: 5px;
+	font: 11px;
+
 }
 
 ul.tagit {

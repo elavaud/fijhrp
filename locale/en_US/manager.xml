@@ -510,7 +510,7 @@
 	<message key="manager.statistics.statistics.registeredReaders">Registered readers</message>
 	<message key="manager.statistics.statistics.registeredUsers">Registered users</message>
 	<message key="manager.statistics.statistics.reviewerCount">No. assigned</message>
-	<message key="manager.statistics.statistics.reviewers">Reviewers</message>
+	<message key="manager.statistics.statistics.reviewers">ERC Members</message> /*MSB replaced "Reviewers"  to ""ERC Admin" Nov 17 */
 	<message key="manager.statistics.statistics.reviewerScore">Editor score</message>
 	<message key="manager.statistics.statistics.reviewsPerReviewer">No. of reviews</message>
 	<message key="manager.statistics.statistics.selectSections">Select the sections for calculating this journal's peer-reviewed statistics.</message>
