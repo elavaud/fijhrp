@@ -15,4 +15,6 @@
     <proposaltype name="Proposal with Human Subjects" code="PWHS" />
     <proposaltype name="Proposal without Human Subjects" code="PNHS" />
     <proposaltype name="Qualitative Study" code="QS" />
+    <proposaltype name="Intervention Evalutation Research" code="IER" />
+    <proposaltype name="Operation Research" code="OR" />
 </proposaltypes>

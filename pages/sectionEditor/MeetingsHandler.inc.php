@@ -179,69 +179,6 @@ class MeetingsHandler extends Handler {
 	
 	function saveMeeting($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$journal =& Request::getJournal();
-		$user =& Request::getUser();
-		$userId = $user->getId();
-		
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
-		
-		/**
-		 * Parse $meetingDate
-		 * TODO: Mas ok ata ilagay 'to sa isang Action class. Pero dito muna for the mean time.XD
-		 * Last Updated 7/7/2011 by ayveemallare
-		 */
-		if ($meetingDate != null) {
-			$meetingDateParts = explode('-', $meetingDate);
-			$tmp = explode(' ', $meetingDateParts[2]);
-			$meetingTime = $tmp[1];
-			$meetingTimeMarker = $tmp[2];
-			$meetingTimeParts = explode(':', $meetingTime);
-				
-			if(strcasecmp($meetingTimeMarker, 'pm'))
-				$hour = intval($meetingTimeParts[0]) + 12;
-			else 
-				$hour = intval($meetingTimeParts[0]);
-			$meetingDate = mktime($hour, $meetingTimeParts[1], 0, $meetingDateParts[1], $meetingDateParts[2], $meetingDateParts[0]);
-		}
-		else {
-			$meetingDate = Core::getCurrentDate();
-		}
-		/************************************************************/
-		
-		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		if($meetingId == null) {
-		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');			
-		if($meetingId == 0) {
-			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-			$meetingId = $meetingDao->createMeeting($userId,$meetingDate,$status = 0);
-			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
-			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');		
-
-			$count = 0;
-			foreach($reviewers as $reviewer) {
-					$reviewerId = $reviewer->getId();
-					$meetingReviewerDao->insertMeetingReviewer($meetingId,$reviewerId);
-			}		
-		}
-		}else{
-			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
-			 $meeting = $meetingDao->getMeetingById($meetingId);
-			 $meeting->setDate($meetingDate);
-			 $meetingDao->updateMeetingDate($meeting);
-			 $meetingSubmissionDao->deleteMeetingSubmissionsByMeetingId($meetingId);
-		}
-
-
-		if (count($selectedProposals) > 0) {
-			for ($i=0;$i<count($selectedProposals);$i++) {
-				/*Set submissions to be discussed in the meeting*/
-				$selectedProposals[$i];
-				$meetingSubmissionDao->insertMeetingSubmission($meetingId,$selectedProposals[$i]);
-			}
-		}
-		
-			Request::redirect(null, null, 'viewMeeting', array($meetingId));
 		$this->validate($meetingId, false, true);
 		$selectedSubmissions = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
