@@ -38,7 +38,7 @@
 					<option value="copyeditor">{translate key="user.role.copyeditor"}</option>
 					<option value="proofreader">{translate key="user.role.proofreader"}</option>
 					<option value="author">{translate key="user.role.author"}</option>
-					<option value="reader">{translate key="user.role.reader"}</option>
+				<!--	<option value="reader">{translate key="user.role.reader"}</option> Edited by MSB, Nov17, 2011-->
 				<!--	<option value="subscriptionManager">{translate key="user.role.subscriptionManager"}</option> Edited by MSB, Nov17, 2011-->
 				</select>
 			{/if}
