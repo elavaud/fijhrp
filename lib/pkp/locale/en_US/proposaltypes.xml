@@ -6,6 +6,7 @@
     Author     : anne
     Description:
         {Proposal Types.
+    Updated    : 18 Nov 2011 - added Intervention Evaluation Research and Operation Research types
 -->
 
 <proposaltypes>
@@ -15,4 +16,6 @@
     <proposaltype name="Proposal with Human Subjects" code="PWHS" />
     <proposaltype name="Proposal without Human Subjects" code="PNHS" />
     <proposaltype name="Qualitative Study" code="QS" />
+    <proposaltype name="Intervention Evaluation Research" code="IER" />
+    <proposaltype name="Operation Research" code="OR" />
 </proposaltypes>
