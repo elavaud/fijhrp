@@ -92,7 +92,8 @@ $(document).ready(function() {
 {/if}
 
 <div id="authors">
-<h3>{*translate key="article.authors" *} Primary Investigator</h3>
+<h3>{*translate key="article.authors" *} Regional Technical Officer</h3>
+
 <input type="hidden" name="deletedAuthors" value="{$deletedAuthors|escape}" />
 <input type="hidden" name="moveAuthor" value="0" />
 <input type="hidden" name="moveAuthorDir" value="" />
@@ -105,6 +106,7 @@ $(document).ready(function() {
 <input type="hidden" name="primaryContact" value="{$authorIndex|escape}" />
 {/if}
 
+{if $authorIndex == 1}<h3>Primary Investigators</h3>{/if}
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}</td>
@@ -176,7 +178,11 @@ $(document).ready(function() {
             <div style="display:none">
             <input type="radio" name="primaryContact" value="{$authorIndex|escape}"{if $primaryContact == $authorIndex} checked="checked"{/if} /> <label for="primaryContact">{*translate key="author.submit.selectPrincipalContact"*}</label>
             </div>
-            <input type="submit" name="delAuthor[{$authorIndex|escape}]" value="{*translate key="author.submit.deleteAuthor"*}Delete Primary Investigator" class="button" />
+            {if $authorIndex != 0}
+                <input type="submit" name="delAuthor[{$authorIndex|escape}]" value="{*translate key="author.submit.deleteAuthor"*}Delete Primary Investigator" class="button" />
+            {else}
+                &nbsp;
+            {/if}
         </td>
 </tr>
 <tr>
@@ -244,7 +250,7 @@ $(document).ready(function() {
 </table>
 {/foreach}
 
-<p><input type="submit" class="button" name="addAuthor" value="{*translate key="author.submit.addAuthor"*}Add another Primary Investigator" /></p>
+<p><input type="submit" class="button" name="addAuthor" value="{*translate key="author.submit.addAuthor"*}Add Primary Investigator" /></p>
 </div>
 <div class="separator"></div>
 
