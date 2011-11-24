@@ -92,7 +92,7 @@ $(document).ready(function() {
 {/if}
 
 <div id="authors">
-<h3>{*translate key="article.authors" *} Regional Technical Officer</h3>
+<h3>{*translate key="article.authors" *} Responsible Technical Officer</h3>
 
 <input type="hidden" name="deletedAuthors" value="{$deletedAuthors|escape}" />
 <input type="hidden" name="moveAuthor" value="0" />
