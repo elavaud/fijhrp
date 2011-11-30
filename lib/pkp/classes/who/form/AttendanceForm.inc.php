@@ -172,9 +172,12 @@ class AttendanceForm extends Form {
 			$pdf->ChapterItemVal("None");
 		
 		if(count($guestNames)>0) {		
-			$pdf->ChapterItemKey('Member Participating in Other Capacity', 'BU');
-			foreach($guestNames as $key=>$guest)
-				$pdf->ChapterItemVal("$guest (Affiliation: $guestAffiliations[$key])");
+			if($guest!="" && $guest!=null) {			
+				$pdf->ChapterItemKey('Member Participating in Other Capacity', 'BU');
+				foreach($guestNames as $key=>$guest) {
+						$pdf->ChapterItemVal("$guest (Affiliation: $guestAffiliations[$key])");				
+				}
+			}
 		}
 			
 		$pdf->Ln(10);
