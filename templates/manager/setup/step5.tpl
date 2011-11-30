@@ -182,7 +182,7 @@ function prepBlockFields() {
 
 <p>{translate key="manager.setup.journalDescriptionDescription"}</p>
 
-<p><textarea id="description" name="description[{$formLocale|escape}]" rows="3" cols="60" class="textArea">{$description[$formLocale]|escape}</textarea></p>
+<p><textarea id="description" name="description[{$formLocale|escape}]" rows="3" cols="50" class="textArea">{$description[$formLocale]|escape}</textarea></p>
 </div>
 <div id="homepageImage">
 <h4>{translate key="manager.setup.homepageImage"}</h4>
@@ -229,7 +229,7 @@ function prepBlockFields() {
 
 <p>{translate key="manager.setup.additionalContentDescription"}</p>
 
-<p><textarea name="additionalHomeContent[{$formLocale|escape}]" id="additionalHomeContent" rows="12" cols="60" class="textArea">{$additionalHomeContent[$formLocale]|escape}</textarea></p>
+<p><textarea name="additionalHomeContent[{$formLocale|escape}]" id="additionalHomeContent" rows="12" cols="50" class="textArea">{$additionalHomeContent[$formLocale]|escape}</textarea></p>
 </div>
 </div>
 <div class="separator"></div>
@@ -321,7 +321,7 @@ function prepBlockFields() {
 
 <p>{translate key="manager.setup.alternateHeaderDescription"}</p>
 
-<p><textarea name="journalPageHeader[{$formLocale|escape}]" id="journalPageHeader" rows="12" cols="60" class="textArea">{$journalPageHeader[$formLocale]|escape}</textarea></p>
+<p><textarea name="journalPageHeader[{$formLocale|escape}]" id="journalPageHeader" rows="12" cols="50" class="textArea">{$journalPageHeader[$formLocale]|escape}</textarea></p>
 </div>
 </div>
 <div class="separator"></div>
@@ -331,7 +331,7 @@ function prepBlockFields() {
 
 <p>{translate key="manager.setup.journalPageFooterDescription"}</p>
 
-<p><textarea name="journalPageFooter[{$formLocale|escape}]" id="journalPageFooter" rows="12" cols="60" class="textArea">{$journalPageFooter[$formLocale]|escape}</textarea></p>
+<p><textarea name="journalPageFooter[{$formLocale|escape}]" id="journalPageFooter" rows="12" cols="50" class="textArea">{$journalPageFooter[$formLocale]|escape}</textarea></p>
 </div>
 
 <div class="separator"></div>
@@ -358,7 +358,7 @@ function prepBlockFields() {
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="navItems-$navItemId-url" key="common.url"}</td>
 		<td width="80%" class="value">
-			<input type="text" name="navItems[{$formLocale|escape}][{$navItemId|escape}][url]" id="navItems-{$navItemId|escape}-url" value="{$navItem.url|escape}" size="60" maxlength="255" class="textField" />
+			<input type="text" name="navItems[{$formLocale|escape}][{$navItemId|escape}][url]" id="navItems-{$navItemId|escape}-url" value="{$navItem.url|escape}" size="50" maxlength="255" class="textField" />
 			<table width="100%">
 				<tr valign="top">
 					<td width="5%"><input type="checkbox" name="navItems[{$formLocale|escape}][{$navItemId|escape}][isAbsolute]" id="navItems-{$navItemId|escape}-isAbsolute" value="1"{if $navItem.isAbsolute} checked="checked"{/if} /></td>
@@ -388,7 +388,7 @@ function prepBlockFields() {
 	<tr valign="top">
 		<td width="20%" class="label">{fieldLabel name="navItems-0-url" key="common.url"}</td>
 		<td width="80%" class="value">
-			<input type="text" name="navItems[{$formLocale|escape}][0][url]" id="navItems-0-url" size="60" maxlength="255" class="textField" />
+			<input type="text" name="navItems[{$formLocale|escape}][0][url]" id="navItems-0-url" size="50" maxlength="255" class="textField" />
 			<table width="100%">
 				<tr valign="top">
 					<td width="5%"><input type="checkbox" name="navItems[{$formLocale|escape}][0][isAbsolute]" id="navItems-0-isAbsolute" value="1" /></td>
@@ -496,15 +496,15 @@ function prepBlockFields() {
 
 <div id="infoForReaders"><h4>{translate key="manager.setup.information.forReaders"}</h4>
 
-<p><textarea name="readerInformation[{$formLocale|escape}]" id="readerInformation" rows="12" cols="60" class="textArea">{$readerInformation[$formLocale]|escape}</textarea></p></div>
+<p><textarea name="readerInformation[{$formLocale|escape}]" id="readerInformation" rows="12" cols="50" class="textArea">{$readerInformation[$formLocale]|escape}</textarea></p></div>
 
 <div id="infoForAuth"><h4>{translate key="manager.setup.information.forAuthors"}</h4>
 
-<p><textarea name="authorInformation[{$formLocale|escape}]" id="authorInformation" rows="12" cols="60" class="textArea">{$authorInformation[$formLocale]|escape}</textarea></p></div>
+<p><textarea name="authorInformation[{$formLocale|escape}]" id="authorInformation" rows="12" cols="50" class="textArea">{$authorInformation[$formLocale]|escape}</textarea></p></div>
 
 <div id="infoForLibs"><h4>{translate key="manager.setup.information.forLibrarians"}</h4>
 
-<p><textarea name="librarianInformation[{$formLocale|escape}]" id="librarianInformation" rows="12" cols="60" class="textArea">{$librarianInformation[$formLocale]|escape}</textarea></p></div>
+<p><textarea name="librarianInformation[{$formLocale|escape}]" id="librarianInformation" rows="12" cols="50" class="textArea">{$librarianInformation[$formLocale]|escape}</textarea></p></div>
 </div>
 
 <div class="separator"></div>

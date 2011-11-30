@@ -168,7 +168,7 @@ class AuthorSubmissionDAO extends DAO {
 	 * @param $authorId int
 	 * @return DAOResultFactory continaing AuthorSubmissions
 	 */
-	function &getAuthorSubmissions($authorId, $journalId, $active = true,  $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
+	function &getAuthorSubmissions($authorId, $journalId, $active = true,  $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null,
 											  $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
@@ -194,9 +194,9 @@ class AuthorSubmissionDAO extends DAO {
 				$authorId,
 				$journalId
 		);
+
 		$searchSql = '';
-		$technicalUnitSql = '';
-		$countrySql = '';
+
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {
@@ -239,15 +239,15 @@ class AuthorSubmissionDAO extends DAO {
 				}
 				break;
 		}
-		
+
 		if (!empty($technicalUnitField)) {
 			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
 		}
-											  	
+
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
 		}
-		
+
 		$sql = 'SELECT DISTINCT	a.*,
 				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
 				aa.last_name AS author_name,
@@ -268,8 +268,10 @@ class AuthorSubmissionDAO extends DAO {
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 			WHERE	a.user_id = ? AND a.journal_id = ? AND ' .
-			($active?('a.status = ' . STATUS_QUEUED):('(a.status <> ' . STATUS_QUEUED . ' AND a.submission_progress = 0)'));
-		
+			//($active?('a.status = ' . STATUS_QUEUED):('(a.status <> ' . STATUS_QUEUED . ' AND a.submission_progress = 0)'));
+                        //Edited by AIM, Sep 28, 2011
+                        ($active?('a.status NOT IN (' . PROPOSAL_STATUS_ARCHIVED . ', ' . PROPOSAL_STATUS_WITHDRAWN . ', ' . PROPOSAL_STATUS_COMPLETED . ')'):('(a.status IN (' . PROPOSAL_STATUS_ARCHIVED . ', ' . PROPOSAL_STATUS_WITHDRAWN . ', ' . PROPOSAL_STATUS_COMPLETED . ') AND a.submission_progress = 0)'));
+
 			$result =& $this->retrieveRange(
 				$sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 				count($params)===1?array_shift($params):$params,
@@ -366,7 +368,7 @@ class AuthorSubmissionDAO extends DAO {
 
 		return $submissionsCount;
 	}
-	
+
 	/**
 	 * Map a column heading value to a database value for sorting
 	 * @param string

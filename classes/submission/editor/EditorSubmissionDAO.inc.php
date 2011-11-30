@@ -507,7 +507,7 @@ class EditorSubmissionDAO extends DAO {
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
 		return $returner;
 	}
-
+	
 	/**
 	 * Function used for counting purposes for right nav bar
 	 * Edited: removed AND a.submission_progress = 0				
@@ -731,11 +731,30 @@ class EditorSubmissionDAO extends DAO {
 			case 'subLayout': return 'layout_completed';
 			case 'subProof': return 'proofread_completed';
 			case 'status': return 'a.status';
+			case 'country': return 'appc.setting_value';
+			case 'decision': return 'edec.decision';
+			case 'technicalUnit': return 'atu.setting_value';
 			default: return null;
 		}
 	}
+	
+	/**
+	*Added by MSB, Oct12, 2011
+	**/
+	function getDecisionMapping($decision){
+		switch ($decision){
+			case 'editor.article.decision.accept': 		return SUBMISSION_EDITOR_DECISION_ACCEPT;
+			case 'editor.article.decision.resubmit': 	return SUBMISSION_EDITOR_DECISION_RESUBMIT;
+			case 'editor.article.decision.decline': 	return SUBMISSION_EDITOR_DECISION_DECLINE;
+			case 'editor.article.decision.complete': 	return SUBMISSION_EDITOR_DECISION_COMPLETE;
+			case 'editor.article.decision.incomplete':	return SUBMISSION_EDITOR_DECISION_INCOMPLETE;
+			case 'editor.article.decision.exempted': 	return SUBMISSION_EDITOR_DECISION_EXEMPTED;
+			case 'editor.article.decision.assigned': 	return SUBMISSION_EDITOR_DECISION_ASSIGNED;
+			case 'editor.article.decision.expedited':	return SUBMISSION_EDITOR_DECISION_EXPEDITED;
+		}
+	}
 
-function &getEditorSubmissionsForErcReview($editorId, $journalId, $Id) {
+	function &getEditorSubmissionsForErcReview($editorId, $journalId, $Id) {
 		$editorSubmissions = array();
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$editorId, $journalId, $Id,
@@ -798,6 +817,66 @@ function &getEditorSubmissionsForErcReview($editorId, $journalId, $Id) {
 		return $editorSubmissions;
 		
 	}	
+	
+	
+	/**
+	* Added by MSB, Oct13, 2011
+	* Get all submissions for a report.
+	* @param $journalId int
+	* @param $sectionId int
+	* @param $editorId int
+	* @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	* @param $searchMatch string "is" or "contains" or "startsWith"
+	* @param $search String to look in $searchField for
+	* @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	* @param $dateFrom String date to search from
+	* @param $dateTo String date to search to
+	* @param $countryFields Array of countries
+	* @param $decisionFields Array of decisions
+	* @param $technicalUnitFields Array of technicalUnits
+	* @param $rangeInfo object
+	* @return array EditorSubmission
+	*/
+	function &getEditorSubmissionsReport($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null,$technicalUnitFields = null, $countryFields = null, $decisionFields = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+
+		$sql = "true";
+		if(!empty($countryFields)){
+			$countrySql = "false";
+			foreach ($countryFields as $countryField){
+				if(!empty($countryField)){
+					$countrySql .= " OR LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+				}
+			}   $sql = " (".$countrySql.")";
+		}  
+		if(!empty($decisionFields)){
+			$decisionSql = "false";
+			foreach ($decisionFields as $decisionField){
+				if(!empty($decisionField)){
+					$decisionSql = $decisionSql." OR edec.decision = " . $this->getDecisionMapping($decisionField) . "";
+				}
+			} $sql .= " AND (".$decisionSql.")";
+		}
+		if(!empty($technicalUnitFields)){
+			$technicalUnitSql = "false";
+			foreach ($technicalUnitFields as $technicalUnitField){
+				if(!empty($technicalUnitField)){
+					$technicalUnitSql = $technicalUnitSql." OR LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+				}
+			}$sql .= " AND (".$technicalUnitSql.")";
+		}  
+				
+		$result =& $this->_getUnfilteredEditorSubmissions(
+		$journalId, $sectionId, $editorId,
+		$searchField, $searchMatch, $search,
+		SUBMISSION_FIELD_DATE_SUBMITTED, $dateFrom, $dateTo, null, null,
+		$sql,
+		$rangeInfo, $sortBy, $sortDirection
+		);
+	
+		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
+		return $returner;
+	}
+	
 }
 
 ?>

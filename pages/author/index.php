@@ -27,8 +27,9 @@ switch ($op) {
 	case 'submitSuppFile':
 	case 'saveSubmitSuppFile':
 	case 'deleteSubmitSuppFile':
+		case 'renameSubmittedFiles': //Added by MSB, Sept 29, 2011
 	case 'expediteSubmission':
-        case 'resubmit':   //Added by AIM, May 18, 2011
+	    case 'resubmit':   //Added by AIM, May 18, 2011
 		define('HANDLER_CLASS', 'SubmitHandler');
 		import('pages.author.SubmitHandler');
 		break;
@@ -49,6 +50,7 @@ switch ($op) {
 	case 'addSuppFile':
         case 'addProgressReport':   //Added by AIM, June 15, 2011
         case 'addCompletionReport': //Added by AIM, June 21, 2011
+        case 'addExtensionRequest': //Added by AIM, Jul 18, 2011
 	case 'submissionReview':
 	case 'submissionEditing':
 	case 'uploadRevisedVersion':

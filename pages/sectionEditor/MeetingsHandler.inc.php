@@ -173,19 +173,20 @@ class MeetingsHandler extends Handler {
 	
 	/**
 	* Added by MSB 07/06/11
+        * Revised c/o IGM 11/18/11
 	* Store meeting details such as proposals to discuss and meeting date
 	* @ param $args (type)
 	*/
 	
-	function saveMeeting($args){
+	
+        function saveMeeting($args){
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId, false, true);
 		$selectedSubmissions = Request::getUserVar('selectedProposals');
 		$meetingDate = Request::getUserVar('meetingDate');
 		$meetingId = MeetingAction::saveMeeting($meetingId,$selectedSubmissions,$meetingDate, null);
 		Request::redirect(null, null, 'viewMeeting', array($meetingId));
-	}
-		
+	}	
 
 	/**
 	 * Added by MSB July 07 2011

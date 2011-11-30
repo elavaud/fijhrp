@@ -115,8 +115,8 @@
 	<message key="user.register.usernameRestriction">The username must contain only lowercase letters, numbers, and hyphens/underscores.</message>
 	<message key="user.role.reader">Reader</message>
 	<message key="user.role.readers">Readers</message>
-	<message key="user.role.reviewer">Reviewer</message>
-	<message key="user.role.reviewers">Reviewers</message>
+	<message key="user.role.reviewer">ERC Member</message>/*MSB replaced Reviewers with ERC Member*/)
+	<message key="user.role.reviewers">ERC Members</message> /*From reviewers*/
 	<message key="user.role.siteAdmin">Site Administrator</message>
 	<message key="user.role.siteAdmins">Site Administrators</message>
 	<message key="user.roles">Roles</message>

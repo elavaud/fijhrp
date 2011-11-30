@@ -140,7 +140,115 @@ class ReportsHandler extends Handler {
 		fclose($fp);
 	}
 	
+	/**
+	* Added by MSB 10/11/2011
+	* Generate csv file for the meeting attendance report
+	* @param $args (type)
+	*/
+	function submissionsReport($args) {
+		import ('lib.pkp.classes.who.form.SubmissionsReportForm');
+		parent::validate();
+		$this->setupTemplate();
+		$submissionsReportForm= new SubmissionsReportForm($args, $request);
+		$isSubmit = Request::getUserVar('generateSubmissionsReport') != null ? true : false;
 	
+		if ($isSubmit) {
+			$submissionsReportForm->readInputData();
+			if($submissionsReportForm->validate()){
+				$this->generateSubmissionsReport($args);
+			}else{
+				if ($submissionsReportForm->isLocaleResubmit()) {
+					$submissionsReportForm->readInputData();
+				}
+				$submissionsReportForm->display($args);
+			}
+		}else {
+			$submissionsReportForm->display($args);
+		}
+	}
+	
+	
+	/**
+	 * Added by MSB 10/11/2011
+	 * Generate csv file for the meeting attendance report
+	 * @param $args (type)
+	 */
+	function generateSubmissionsReport($args) {
+		parent::validate();
+		$this->setupTemplate();
+	
+		$journal =& Request::getJournal();
+		$journalId = $journal->getId();
+	
+		$countryField = Request::getUserVar('countries');
+		$countryField = !empty($countryField) ? $countryField : null;
+		$decisionField = Request::getUserVar('decisions');
+		$technicalUnitField = Request::getUserVar('technicalUnits');
+	
+	
+		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
+	
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'id';
+		$sortDirection = Request::getUserVar('sortDirection');
+		$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
+		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
+	
+		$submissions =& $editorSubmissionDao->getEditorSubmissionsReport(
+		$journalId,
+		$sectionId,
+		$editorId,
+		$searchField,
+		$searchMatch,
+		$search,
+		$dateSearchField,
+		$fromDate,
+		$toDate,
+		$technicalUnitField,
+		$countryField,
+		$decisionField,
+		$rangeInfo,
+		$sort,
+		$sortDirection
+		);
+			
+	
+		$submissionsArray = $submissions->toArray();
+	
+		header('content-type: text/comma-separated-values');
+		header('content-disposition: attachment; filename=submissionsReport-' . date('Ymd') . '.csv');
+	
+		$columns = array(
+					'whoId' => Locale::translate("editor.reports.whoId"),
+					'title' => Locale::translate("editor.reports.title"),
+					'author' => Locale::translate("editor.reports.author"),
+					'submitDate' =>  Locale::translate("editor.reports.submitDate"),
+					'country' => Locale::translate("editor.reports.country"),
+					'technicalUnit' =>  Locale::translate("editor.reports.technicalUnit"),
+					'decision' => Locale::translate("editor.reports.decision")
+		);
+		$fp = fopen('php://output', 'wt');
+		String::fputcsv($fp, array_values($columns));
+	
+	
+		foreach ($submissionsArray as $submission) {
+				
+			$row['whoId'] = $submission->getWhoId($submission->getLocale());
+			$row['title'] = $submission->getLocalizedTitle();
+			$row['author'] = $submission->getFirstAuthor(true);
+			$row['submitDate'] = $submission->getDateSubmitted();
+			$row['country'] = $submission->getProposalCountry($submission->getLocale());
+			$row['technicalUnit'] = $submission->getLocalizedTechnicalUnitText();
+			$row['decision'] = Locale::translate($submission->getEditorDecisionKey());
+			String::fputcsv($fp, $row);
+			unset($row);
+		}
+	
+		fclose($fp);
+	}
 
 }
 
