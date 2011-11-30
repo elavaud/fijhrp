@@ -65,12 +65,12 @@
 	 	 	}
 	}
 </script>{/literal}
-<h2>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getId()}</h2>
+<h3>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getId()}</h3>
 <br/>
 <form method="POST" action="{url op="uploadAttendance" path=$meeting->getId()}">
 	
 <div id="announcements">
-	<h2>Details</h2>
+	<h3 style="text-align:left">Details</h3>
 	<div class="separator"></div><br/>
 	<table class="data" width="100%">
 		<tr>
@@ -91,7 +91,7 @@
 </div>
 <br/>
 <div id="attendance">
-	<h2>Review Committee </h2>
+	<h3>Review Committee </h3>
 	<table width="100%" class="listing" name="ercMembers">
 			<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		 	<tr class="heading">
@@ -137,7 +137,7 @@
 	</table> 
 	<br/>
 	<br/>
-	<h2>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h2>
+	<h3>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h3>
 	<div class="separator"></div><br/>
 	<table class="listing" name="guests" id="guests" width="100%">
 	{foreach from=$guestNames key=guestIndex item=guest}
