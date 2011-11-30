@@ -128,6 +128,6 @@
 </div>
 <br />
 
-<h2>{translate key="editor.meetings.setNewMeeting"}</h2>
+<h3>{translate key="editor.meetings.setNewMeeting"}</h3>
 <a href="{url op="setMeeting"}">{translate key="editor.meetings.clickHere"}</a>&nbsp;{translate key="editor.meetings.toSetNewMeeting"}
 {include file="common/footer.tpl"}

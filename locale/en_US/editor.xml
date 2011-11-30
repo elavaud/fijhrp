@@ -424,5 +424,8 @@
 	<message key="editor.reports.country">Country</message>
 	<message key="editor.reports.decision">Decision</message>
 	<message key="editor.reports.technicalUnit">Technical Unit</message>
+	<message key="editor.reports.countryRequired">Select at least one (1) country.</message>
+	<message key="editor.reports.decisionRequired">Select at least one (1) decision.</message>
+	<message key="editor.reports.technicalUnitRequired">Select at least one (1) technical unit.</message>
 
 </locale>

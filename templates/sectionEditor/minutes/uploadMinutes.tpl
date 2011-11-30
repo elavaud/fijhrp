@@ -1,6 +1,6 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 <br/>
-<h2>{translate key="reviewer.meetings.details}</h2>
+<h3>{translate key="reviewer.meetings.details}</h3>
 <div class="separator"></div>
 <div id="details">
 	<table width="100%" class="data">
@@ -27,7 +27,7 @@
 <br/>
 <div id="sections">
 {assign var="statusMap" value=$meeting->getStatusMap()}
-<h2>Sections</h2>
+<h3>Sections</h3>
 <table class="listing" width="100%">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
