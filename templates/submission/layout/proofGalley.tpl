@@ -24,6 +24,10 @@
 		<link rel="stylesheet" href="{$cssUrl}" type="text/css" />
 	{/foreach}
 
+	{*MSB added custom stylesheet for pop-up windows, Oct19, 2011 *}
+	<link rel="stylesheet" href="{$baseUrl}/plugins/themes/whorrp/popup.css" type="text/css" />
+	{*End of custom code*}
+
 	<script type="text/javascript" src="{$baseUrl}/lib/pkp/js/general.js"></script>
 	{$additionalHeadData}
 </head>

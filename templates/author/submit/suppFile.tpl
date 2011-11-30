@@ -39,15 +39,15 @@
 <table class="data" width="100%">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel required="true" name="title" key="common.title"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="creator" key="author.submit.suppFile.createrOrOwner"}</td>
-	<td width="80%" class="value"><input type="text" name="creator[{$formLocale|escape}]" class="textField" id="creator" value="{$creator[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" name="creator[{$formLocale|escape}]" class="textField" id="creator" value="{$creator[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="subject" key="common.keywords"}</td>
-	<td width="80%" class="value"><input type="text" name="subject[{$formLocale|escape}]" class="textField" id="subject" value="{$subject[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" name="subject[{$formLocale|escape}]" class="textField" id="subject" value="{$subject[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="type" key="common.type"}</td>
@@ -55,11 +55,11 @@
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="description" key="author.submit.suppFile.briefDescription"}</td>
-	<td width="80%" class="value"><textarea name="description[{$formLocale|escape}]" class="textArea" id="description" rows="5" cols="60">{$description[$formLocale]|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="description[{$formLocale|escape}]" class="textArea" id="description" rows="5" cols="50">{$description[$formLocale]|escape}</textarea></td>
 </tr>
 <tr valign="top">
-	<td width="20%" class="label">{fieldLabel name="publisher" key="common.publisher"}</td>
-	<td width="80%" class="value"><input type="text" name="publisher[{$formLocale|escape}]" class="textField" id="publisher" value="{$publisher[$formLocale]|escape}" size="60" maxlength="255" />
+	<td width="20%" class="label">{fieldLabel name="publisher" key="common.publishesr"}</td>
+	<td width="80%" class="value"><input type="text" name="publisher[{$formLocale|escape}]" class="textField" id="publisher" value="{$publisher[$formLocale]|escape}" size="50" maxlength="255" />
 	</td>
 </tr>
 <tr valign="top">
@@ -68,7 +68,7 @@
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="sponsor" key="author.submit.suppFile.contributorOrSponsor"}</td>
-	<td width="80%" class="value"><input type="text" name="sponsor[{$formLocale|escape}]" class="textField" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" name="sponsor[{$formLocale|escape}]" class="textField" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="dateCreated" key="common.date"}</td>
@@ -80,7 +80,7 @@
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="source" key="common.source"}</td>
-	<td width="80%" class="value"><input type="text" name="source[{$formLocale|escape}]" class="textField" id="source" value="{$source[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" name="source[{$formLocale|escape}]" class="textField" id="source" value="{$source[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 <tr valign="top">
 	<td>&nbsp;</td>

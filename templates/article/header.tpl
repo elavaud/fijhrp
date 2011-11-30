@@ -27,7 +27,11 @@
 	<link rel="stylesheet" href="{$baseUrl}/lib/pkp/styles/pkp.css" type="text/css" />
 	<link rel="stylesheet" href="{$baseUrl}/lib/pkp/styles/common.css" type="text/css" />
 	<link rel="stylesheet" href="{$baseUrl}/styles/common.css" type="text/css" />
-	<link rel="stylesheet" href="{$baseUrl}/styles/articleView.css" type="text/css" />
+
+	{*MSB commented out this old stylesheet for article *}
+	{*	<link rel="stylesheet" href="{$baseUrl}/styles/articleView.css" type="text/css" /> *}
+	{*End of custom code*}
+
 	{if $journalRt && $journalRt->getEnabled()}
 		<link rel="stylesheet" href="{$baseUrl}/lib/pkp/styles/rtEmbedded.css" type="text/css" />
 	{/if}

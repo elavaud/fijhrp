@@ -56,8 +56,8 @@ $(document).ready(function() {
         }
     });
 
-    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
-    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-6 m'});
+    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
 });
 </script>
 {/literal}
@@ -92,7 +92,8 @@ $(document).ready(function() {
 {/if}
 
 <div id="authors">
-<h3>{translate key="article.authors"}</h3>
+<h3>{*translate key="article.authors" *} Responsible Technical Officer</h3>
+
 <input type="hidden" name="deletedAuthors" value="{$deletedAuthors|escape}" />
 <input type="hidden" name="moveAuthor" value="0" />
 <input type="hidden" name="moveAuthorDir" value="" />
@@ -105,6 +106,7 @@ $(document).ready(function() {
 <input type="hidden" name="primaryContact" value="{$authorIndex|escape}" />
 {/if}
 
+{if $authorIndex == 1}<h3>Primary Investigators</h3>{/if}
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}</td>
@@ -160,19 +162,35 @@ $(document).ready(function() {
 {call_hook name="Templates::Author::Submit::Authors"}
 
 {if $smarty.foreach.authors.total > 1}
+<!--
+{*
 <tr valign="top">
 	<td colspan="2">
-		<a href="javascript:moveAuthor('u', '{$authorIndex|escape}')" class="action">&uarr;</a> <a href="javascript:moveAuthor('d', '{$authorIndex|escape}')" class="action">&darr;</a>
+		<a href="javascript:moveAuthor('u', '{$authorIndex|escape}')" class="action">&uarr;</a>
+                <a href="javascript:moveAuthor('d', '{$authorIndex|escape}')" class="action">&darr;</a>
 		{translate key="author.submit.reorderInstructions"}
 	</td>
 </tr>
+*}
+-->
 <tr valign="top">
-	<td width="80%" class="value" colspan="2"><input type="radio" name="primaryContact" value="{$authorIndex|escape}"{if $primaryContact == $authorIndex} checked="checked"{/if} /> <label for="primaryContact">{translate key="author.submit.selectPrincipalContact"}</label> <input type="submit" name="delAuthor[{$authorIndex|escape}]" value="{translate key="author.submit.deleteAuthor"}" class="button" /></td>
+	<td width="80%" class="value" colspan="2">
+            <div style="display:none">
+            <input type="radio" name="primaryContact" value="{$authorIndex|escape}"{if $primaryContact == $authorIndex} checked="checked"{/if} /> <label for="primaryContact">{*translate key="author.submit.selectPrincipalContact"*}</label>
+            </div>
+            {if $authorIndex != 0}
+                <input type="submit" name="delAuthor[{$authorIndex|escape}]" value="{*translate key="author.submit.deleteAuthor"*}Delete Primary Investigator" class="button" />
+            {else}
+                &nbsp;
+            {/if}
+        </td>
 </tr>
 <tr>
 	<td colspan="2"><br/></td>
 </tr>
 {/if}
+
+
 </table>
 {foreachelse}
 <input type="hidden" name="authors[0][authorId]" value="0" />
@@ -232,7 +250,7 @@ $(document).ready(function() {
 </table>
 {/foreach}
 
-<p><input type="submit" class="button" name="addAuthor" value="{translate key="author.submit.addAuthor"}" /></p>
+<p><input type="submit" class="button" name="addAuthor" value="{*translate key="author.submit.addAuthor"*}Add Primary Investigator" /></p>
 </div>
 <div class="separator"></div>
 
@@ -244,22 +262,22 @@ $(document).ready(function() {
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="title" required="true" key="proposal.title"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 
 <tr valign="top">
 	<td width="20%" class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" key="proposal.abstract" required="true"}{else}{fieldLabel name="abstract" key="proposal.abstract"}{/if}</td>
-	<td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="60">{$abstract[$formLocale]|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="50">{$abstract[$formLocale]|escape}</textarea></td>
 </tr>
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="objectives" required="true" key="proposal.objectives"}</td>
-	<td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="60">{$objectives[$formLocale]|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="50">{$objectives[$formLocale]|escape}</textarea></td>
 </tr>
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 
 <tr valign="top">
@@ -484,7 +502,7 @@ $(document).ready(function() {
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="sponsor" key="submission.agencies"}</td>
-	<td width="80%" class="value"><input type="text" class="textField" name="sponsor[{$formLocale|escape}]" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="60" maxlength="255" /></td>
+	<td width="80%" class="value"><input type="text" class="textField" name="sponsor[{$formLocale|escape}]" id="sponsor" value="{$sponsor[$formLocale]|escape}" size="50" maxlength="255" /></td>
 </tr>
 </table>
 </div>
@@ -501,7 +519,7 @@ $(document).ready(function() {
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="citations" key="submission.citations"}</td>
-	<td width="80%" class="value"><textarea name="citations" id="citations" class="textArea" rows="15" cols="60">{$citations|escape}</textarea></td>
+	<td width="80%" class="value"><textarea name="citations" id="citations" class="textArea" rows="15" cols="50">{$citations|escape}</textarea></td>
 </tr>
 </table>
 

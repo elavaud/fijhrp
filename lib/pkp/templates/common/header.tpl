@@ -6,13 +6,14 @@
  *
  * Common site header.
  *}
-{strip}
+{strip}	
 {if !$pageTitleTranslated}{translate|assign:"pageTitleTranslated" key=$pageTitle}{/if}
 {if $pageCrumbTitle}
 	{translate|assign:"pageCrumbTitleTranslated" key=$pageCrumbTitle}
 {elseif !$pageCrumbTitleTranslated}
 	{assign var="pageCrumbTitleTranslated" value=$pageTitleTranslated}
 {/if}
+
 {/strip}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -115,6 +116,12 @@
 </div>
 
 <div id="body">
+
+{* MSB added this custom code on Aug 12, 2011.
+   A div tag just above the breadcrumbs
+*}
+<div id="pageTitle"></div>
+{* End of custom code *}
 
 {if $leftSidebarCode || $rightSidebarCode}
 	<div id="sidebar">

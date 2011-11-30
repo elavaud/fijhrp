@@ -770,6 +770,7 @@ class TrackSubmissionHandler extends AuthorHandler {
             Request::redirect(null, null, 'index');
         }
 
+
         function setAsWithdrawn($args) {
             $articleId = isset($args[0]) ? $args[0] : 0;
             $this->validate($articleId);
@@ -855,5 +856,40 @@ class TrackSubmissionHandler extends AuthorHandler {
                 
 	}
 
+
+        /**
+         * Submit a request for extension
+         * @param $args array ($articleId)
+         *
+         * Added by: AIM
+         * Last Updated: July 18, 2011
+         */
+
+        function addExtensionRequest($args, $request) {
+		$articleId = (int) array_shift($args);
+		$journal =& $request->getJournal();
+
+		$this->validate($articleId);
+		$authorSubmission =& $this->submission;
+
+
+		$this->setupTemplate(true, $articleId, 'summary');
+
+		import('classes.submission.form.SuppFileForm');
+
+                $submitForm = new SuppFileForm($authorSubmission, $journal);
+
+                //Added by AIM, June 22 2011
+                $submitForm->setData('type', 'Extension Request');
+
+                if ($submitForm->isLocaleResubmit()) {
+                    $submitForm->readInputData();
+		} else {
+                    $submitForm->initData();
+		}
+
+                $submitForm->display();
+
+	}
 }
 ?>

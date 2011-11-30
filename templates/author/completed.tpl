@@ -54,7 +54,6 @@
                             {translate key="submissions.proposal.withdrawn"}
                         {elseif $status==PROPOSAL_STATUS_COMPLETED}
                             {translate key="submissions.proposal.completed"}<br />
-                            <a href="{url op="addCompletionReport" path=$articleId}" class="action">Add Completion Report</a><br />
                         {elseif $status==PROPOSAL_STATUS_ARCHIVED}
                             {assign var="decision" value=$submission->getMostRecentDecision()}
                             {if $decision==SUBMISSION_EDITOR_DECISION_DECLINE}

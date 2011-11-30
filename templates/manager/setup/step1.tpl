@@ -186,7 +186,7 @@
 	<tr valign="top">
 		<td class="label">{fieldLabel name="emailSignature" key="manager.setup.emailSignature"}</td>
 		<td class="value">
-			<textarea name="emailSignature" id="emailSignature" rows="3" cols="60" class="textArea">{$emailSignature|escape}</textarea>
+			<textarea name="emailSignature" id="emailSignature" rows="3" cols="50" class="textArea">{$emailSignature|escape}</textarea>
 		</td>
 	</tr>
 	<tr valign="top"><td colspan="2">&nbsp;</td></tr>
