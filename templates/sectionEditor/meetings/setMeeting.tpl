@@ -25,14 +25,13 @@ $(document).ready(function() {
 <ul class="menu">
 	<li><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li class="current"><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
-	<li><a href="{url op="minutes"}">{translate key="editor.meetings.uploadMinutes"}</a></li>
 </ul>
 
 {include file="common/formErrors.tpl"}
 <div class="separator"></div>
 <br>
 <div id="submissions">
-<h2>{translate key="editor.meetings.submissions"}</h2>
+<h3>{translate key="editor.meetings.submissions"}</h3>
 <form method="post" action="{url op="setMeeting" path=$meetingId }" >
 <p>{fieldLabel name="selectedProposals" required="true" key="editor.meetings.addProposalsToDiscuss"}</p>
 <table class="listing" width="100%">
@@ -100,7 +99,7 @@ $(document).ready(function() {
 *******************************************************************}
 
 <tr valign="top">
-<td colspan="7"><h2>{translate key="editor.article.designateMeetingDate"}</h2></td>
+<td colspan="7"><h3>{translate key="editor.article.designateMeetingDate"}</h3></td>
 </tr>
 <tr valign="top">
 <td colspan="7">{translate key="editor.article.designateMeetingDateDescription"}</td>
