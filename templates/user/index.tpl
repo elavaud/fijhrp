@@ -47,6 +47,7 @@
 		{if $isValid.Editor.$journalId || $isValid.SectionEditor.$journalId || $isValid.LayoutEditor.$journalId || $isValid.Copyeditor.$journalId || $isValid.Proofreader.$journalId}
 			<tr><td class="separator" width="100%" colspan="5">&nbsp;</td></tr>
 		{/if}
+
 		{if $isValid.Editor.$journalId}
 			<tr>
 				{assign var="editorSubmissionsCount" value=$submissionsCount.Editor.$journalId}
@@ -58,14 +59,20 @@
 				<td>{if $editorSubmissionsCount[1]}
 						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInReview"}">{$editorSubmissionsCount[1]} {translate key="common.queue.short.submissionsInReview"}</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
-				</td>
-				<td>{if $editorSubmissionsCount[2]}
-						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInEditing"}">{$editorSubmissionsCount[2]} {translate key="common.queue.short.submissionsInEditing"}</a>
+				</td>				
+{** - Commented out - spf - 1 Dec 2011
+<td>
+					{if $editorSubmissionsCount[2]} 
+ 						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInEditing"}">
+{$editorSubmissionsCount[2]} {translate key="common.queue.short.submissionsInEditing"}</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInEditing"}</span>{/if}
 				</td>
+*}
+{** - Create Issue - Commented out - spf 1 Dec 2011				 
 				<td align="right">[<a href="{url journal=$journalPath page="editor" op="createIssue"}">{translate key="editor.issues.createIssue"}</a>] [<a href="{url journal=$journalPath page="editor" op="notifyUsers"}">{translate key="editor.notifyUsers"}</a>]</td>
-			</tr>
-		{/if}
+*}			</tr>
+		{/if} 
+{** Commented out - spf - 1 Dec 2011
 		{if $isValid.SectionEditor.$journalId}
 			{assign var="sectionEditorSubmissionsCount" value=$submissionsCount.SectionEditor.$journalId}
 			<tr>
@@ -81,7 +88,7 @@
 				</td>
 				<td align="right"></td>
 			</tr>
-		{/if}
+		{/if} *}
 		{if $isValid.LayoutEditor.$journalId}
 			{assign var="layoutEditorSubmissionsCount" value=$submissionsCount.LayoutEditor.$journalId}
 			<tr>

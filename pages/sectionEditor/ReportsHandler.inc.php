@@ -142,7 +142,7 @@ class ReportsHandler extends Handler {
 	
 	/**
 	* Added by MSB 10/11/2011
-	* Generate csv file for the meeting attendance report
+	* Generate csv file for the submission report
 	* @param $args (type)
 	*/
 	function submissionsReport($args) {
@@ -170,7 +170,7 @@ class ReportsHandler extends Handler {
 	
 	/**
 	 * Added by MSB 10/11/2011
-	 * Generate csv file for the meeting attendance report
+	 * Generate csv file for the submission report
 	 * @param $args (type)
 	 */
 	function generateSubmissionsReport($args) {

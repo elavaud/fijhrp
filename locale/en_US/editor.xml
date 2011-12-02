@@ -160,8 +160,8 @@
 	<message key="editor.article.authorProofing">Author Proofing</message>
 	<message key="editor.article.archiveSubmission">Reject and Archive Submission</message>
 	<message key="editor.article.restoreToQueue">Restore to Active List</message>
-	<message key="editor.article.assignSectionEditor">Add Section Editor</message>
-	<message key="editor.article.assignEditor">Add Editor</message>
+	<message key="editor.article.assignSectionEditor">Add Senior Technical Officer</message>
+	<message key="editor.article.assignEditor">Add Senior Technical Officer</message>
 	<message key="editor.article.selectEditor">Select {$roleName}</message>
 
 	<!-- *********************************************
