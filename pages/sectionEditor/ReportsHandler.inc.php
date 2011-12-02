@@ -181,10 +181,19 @@ class ReportsHandler extends Handler {
 		$journalId = $journal->getId();
 	
 		$countryField = Request::getUserVar('countries');
-		$countryField = !empty($countryField) ? $countryField : null;
 		$decisionField = Request::getUserVar('decisions');
 		$technicalUnitField = Request::getUserVar('technicalUnits');
-	
+		
+		if(array_shift(array_values($countryField)) == "0"){
+			$countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+        	$countries =& $countryDAO->getAsiaPacificCountries();
+        	$countryField = array_keys($countries);
+		}
+		if(array_shift(array_values($technicalUnitField)) == "0"){
+			$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+			$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+			$technicalUnitField = array_keys($technicalUnits);
+		} 	 
 	
 		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
 		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);

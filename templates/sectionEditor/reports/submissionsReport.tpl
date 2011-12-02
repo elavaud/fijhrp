@@ -11,13 +11,11 @@
 {include file="common/header.tpl"}
 {/strip}
 
-
 <ul class="menu">
 	<li><a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a></li>
 	<li class="current"><a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a></li>
 </ul>
 <div class="separator"></div>
-
 
 <h2>{translate key="editor.reports.submissions"}</h2>
 {include file="common/formErrors.tpl"}
@@ -37,23 +35,23 @@
     		<h5>FILTER BY </h5>
 			<h5>{translate key="editor.reports.decision"}</h5>
 			<select name="decisions[]" id="decisions" multiple="multiple" size="5" class="selectMenu">
-		 	 	<!--	<option value='' selected="selected" >All Decisions</option> -->
-		 			{html_options_translate options=$decisionsOptions selected=$decisions}
+		 	 	<!--<option value='' selected="selected" >All Decisions</option> -->
+		 		{html_options_translate options=$decisionsOptions selected=$decisions}
 		    </select>	
 		    
 		    <h5>{translate key="editor.reports.country"}</h5>
 			<select name="countries[]" id="countries" multiple="multiple" size="5" class="selectMenu">
-			 	<!-- 	<option value=''  selected="selected" >All Countries</option> -->
-		 			{html_options options=$countriesOptions selected=$countries}
-		    </select>	
-		    
-			<h5>{translate key="editor.reports.technicalUnit"}</h5>
-		 	<select name="technicalUnits[]" id="technicalUnits" multiple="multiple" size="5" class="selectMenu">
-		 	 	<!--	<option value=''  selected="selected" >All Technical Units</option> -->
-		 			{html_options options=$technicalUnitsOptions selected=$technicalUnits}
-		    </select>	
-	
-	<br/>
+		 		<option value="0" selected="selected">{translate key="editor.reports.allCountries"}</option>
+		 		{html_options options=$countriesOptions selected=$countries}
+		    </select>
+		    	
+		    <h5>{translate key="editor.reports.technicalUnit"} </h5>
+		    <select name="technicalUnits[]" id="technicalUnits" multiple="multiple" size="5" class="selectMenu">
+		 		<option value="0" selected="selected">{translate key="editor.reports.allTechnicalUnits"}</option>
+		 		{html_options options=$technicalUnitsOptions selected=$technicalUnits}
+		    </select>
+
+	<br/>			
 	<h5>DATE</h5>
 	{translate key="common.between"}
 	{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
