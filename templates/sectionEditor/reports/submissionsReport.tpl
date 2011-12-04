@@ -9,8 +9,40 @@
 {assign var="pageTitle" value="editor.reports.reportGenerator"}
 {assign var="pageCrumbTitle" value="editor.reports.meetingAttendance"}
 {include file="common/header.tpl"}
-{/strip}
 
+{/strip}
+<script type="text/javascript" src="{$baseUrl|cat:"/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"}"></script>
+{literal}<script type="text/javascript">
+$(document).ready(function() {
+
+		$("#selectAllCountries").click(function() {
+		     $("#countriesTbl input:checkbox").attr('checked',this.checked);
+		});
+
+		$("#selectAllTechnicalUnits").click(function() {
+		     $("#technicalUnitsTbl input:checkbox").attr('checked',this.checked);
+		});
+});
+</script>
+<style type="text/css">
+	.checkboxes tr {
+		height : 30px;
+		width : 700px;
+	 }
+	 .checkboxes input{
+	 	margin-top: 0px;
+		width: 15px;
+    	height: 15px;
+    	float: left;
+	 }
+	 .checkboxes label{
+	 	float: left;
+	 	padding-left: 15px;
+	 	margin-top: 10px;
+	 	font-size: 11px;
+	 } 
+</style>
+{/literal}
 <ul class="menu">
 	<li><a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a></li>
 	<li class="current"><a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a></li>
@@ -40,16 +72,32 @@
 		    </select>	
 		    
 		    <h5>{translate key="editor.reports.country"}</h5>
-			<select name="countries[]" id="countries" multiple="multiple" size="5" class="selectMenu">
-		 		<option value="0" selected="selected">{translate key="editor.reports.allCountries"}</option>
-		 		{html_options options=$countriesOptions selected=$countries}
-		    </select>
-		    	
+		    <input type="checkbox" id="selectAllCountries">&nbsp;&nbsp;<b>{translate key="editor.reports.allCountries"}</b>
+			{assign var="numCols" value="3"}
+			{assign var="col" value="0"}
+			<table id="countriesTbl" class="checkboxes">
+			{foreach from=$countriesOptions item=country key=key}
+			{if $col == $numCols}
+			</tr><tr>{assign var="col" value="0"}
+			{/if}
+			<td><label><input type="checkbox" name="countries[]" class="countries"  value="{$key}">{$country}</label>
+			</td>  {assign var="col" value=$col+1}
+			{/foreach}
+			</table>
+
 		    <h5>{translate key="editor.reports.technicalUnit"} </h5>
-		    <select name="technicalUnits[]" id="technicalUnits" multiple="multiple" size="5" class="selectMenu">
-		 		<option value="0" selected="selected">{translate key="editor.reports.allTechnicalUnits"}</option>
-		 		{html_options options=$technicalUnitsOptions selected=$technicalUnits}
-		    </select>
+		    <input type="checkbox" id="selectAllTechnicalUnits">&nbsp;&nbsp;<b>{translate key="editor.reports.allTechnicalUnits"}</b>
+		    {assign var="numCols" value="2"}
+			{assign var="col" value="0"}
+			<table id="technicalUnitsTbl" class="checkboxes">
+			{foreach from=$technicalUnitsOptions item=technicalUnit key=key}
+			{if $col == $numCols}
+			</tr><tr>{assign var="col" value="0"}
+			{/if}
+			<td><label><input type="checkbox" name="technicalUnits[]" class="technicalUnits" value="{$key}">{$technicalUnit}</label>
+			</td>  {assign var="col" value=$col+1}
+			{/foreach}
+			</table>
 
 	<br/>			
 	<h5>DATE</h5>
