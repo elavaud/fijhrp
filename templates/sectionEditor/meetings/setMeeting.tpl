@@ -116,7 +116,7 @@ $(document).ready(function() {
 	{else}
 		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meetingId }'" />
 	{/if} 
- 	  <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.cancel"}" />
+ 	  <input type="button" class="button" onclick="history.go(-1)" value="{translate key="common.back"}" />
  	  </p>
 </form>
 <p><span class="formRequired">{translate key="common.requiredField"}</span></p>

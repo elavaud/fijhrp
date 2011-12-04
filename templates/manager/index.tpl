@@ -77,8 +77,7 @@
 	{/if}
 	<li>&#187; <a href="{url op="people" path="reviewers"}">{translate key="user.role.reviewers"}</a></li>
 	<li>&#187; <a href="{url op="people" path="authors"}">{translate key="user.role.authors"}</a></li>
-{** Commented out - spf - 1 Dec 2011
-	<li>&#187; <a href="{url op="people" path="readers"}">{translate key="user.role.readers"}</a></li> *}
+	<!-- <li>&#187; <a href="{url op="people" path="readers"}">{translate key="user.role.readers"}</a></li> Edited by MSB, Nov17,2011-->
 	<!-- <li>&#187; <a href="{url op="people" path="subscriptionManagers"}">{translate key="user.role.subscriptionManagers"}</a></li> Edited by MSB, Nov17,2011-->
 	{call_hook name="Templates::Manager::Index::Roles"}
 </ul>
