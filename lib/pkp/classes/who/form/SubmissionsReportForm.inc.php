@@ -5,7 +5,7 @@
  */
 
 /**
- * @file lib/pkp/classes/who/MeetingAttendanceReportForm.inc.php
+ * @file lib/pkp/classes/who/form/SubmissionReportForm.inc.php
  *
  * Added by MSB. Last Updated: Oct 13, 2011
  * @class SubmissionsReportForm
@@ -63,17 +63,17 @@ class SubmissionsReportForm extends Form {
 		$templateMgr->assign('technicalUnitsOptions', $technicalUnits);
 		
 		$countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $countries =& $countryDAO->getAsiaPacificCountries();
-        $templateMgr->assign_by_ref('countriesOptions', $countries);
+                $countries =& $countryDAO->getAsiaPacificCountries();
+                $templateMgr->assign_by_ref('countriesOptions', $countries);
         
-        $fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-        if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-        $toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-        if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
-        $templateMgr->assign('dateFrom', $fromDate);
-        $templateMgr->assign('dateTo', $toDate);
+                $fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+                if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+                $toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+                if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+                $templateMgr->assign('dateFrom', $fromDate);
+                $templateMgr->assign('dateTo', $toDate);
         
-     	parent::display();
+     	        parent::display();
 	}
 
 	

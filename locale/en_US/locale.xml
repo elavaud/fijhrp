@@ -134,7 +134,7 @@
 	<message key="article.type">Type, method or approach</message>
 	<message key="article.language">Language</message>
 	<message key="article.sectionEditor">Secretary</message> /*replace section editor with Secretary */
-	<message key="article.commentsToEditor">RTO comments</message> /*Author to RTO */
+	<message key="article.commentsToEditor">RTO comments</message> /*replace Author to RTO */
 	<message key="article.submission">Submission</message>
 	<message key="article.submissions">Submissions</message>
 	<message key="article.details">Details</message>
@@ -272,7 +272,8 @@
 	<message key="issue.title">Title</message>
 	<message key="issue.volume">Volume</message>
 	<message key="issue.number">Number</message>
-	<message key="issue.vol">Vol</message>
+	<message key="issue.vol">Vol</message>:w
+
 	<message key="issue.no">No</message>
 	<message key="issue.year">Year</message>
 	<message key="issue.noIssues">No Issues</message>
@@ -332,6 +333,7 @@
 	<message key="submission.event.editor.editorFile">Editor file updated</message>
 	<message key="submission.event.editor.submissionArchived">Submission sent to archive</message>
 	<message key="submission.event.editor.submissionRestored">Submission restored from archive</message>
+
 	
 	
 	<message key="submission.event.copyedit.copyeditorAssigned">Copyeditor assigned to submission</message>

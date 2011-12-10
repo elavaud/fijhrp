@@ -67,8 +67,8 @@ function toggleChecked() {
 	{translate key="manager.people.enrollUserAs"} <select name="roleId" size="1"  class="selectMenu">
 		<option value=""></option>
 		<option value="{$smarty.const.ROLE_ID_JOURNAL_MANAGER}">{translate key="user.role.manager"}</option>
-		<option value="{$smarty.const.ROLE_ID_EDITOR}">{translate key="user.role.editor"}</option>
-		<option value="{$smarty.const.ROLE_ID_SECTION_EDITOR}">{translate key="user.role.sectionEditor"}</option>
+		<!-- Commented out - spf - 1 Dec 2011 <option value="{$smarty.const.ROLE_ID_EDITOR}">{translate key="user.role.editor"}</option> -->
+	        <option value="{$smarty.const.ROLE_ID_SECTION_EDITOR}">{translate key="user.role.sectionEditor"}</option> 
 		{if $roleSettings.useLayoutEditors}
 			<option value="{$smarty.const.ROLE_ID_LAYOUT_EDITOR}">{translate key="user.role.layoutEditor"}</option>
 		{/if}
@@ -80,7 +80,7 @@ function toggleChecked() {
 		{/if}
 		<option value="{$smarty.const.ROLE_ID_REVIEWER}">{translate key="user.role.reviewer"}</option>
 		<option value="{$smarty.const.ROLE_ID_AUTHOR}">{translate key="user.role.author"}</option>
-		<option value="{$smarty.const.ROLE_ID_READER}">{translate key="user.role.reader"}</option>
+	<!--	<option value="{$smarty.const.ROLE_ID_READER}">{translate key="user.role.reader"}</option> Edited by MSB, Nov17, 2011-->
 	<!--	<option value="{$smarty.const.ROLE_ID_SUBSCRIPTION_MANAGER}">{translate key="user.role.subscriptionManager"}</option> Edited by MSB, Nov17, 2011-->
 
 	</select>

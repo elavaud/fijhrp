@@ -13,12 +13,12 @@
 
 
 <ul class="menu">
-	<li><a href="{url op="submissionReport"}">{translate key="editor.reports.submissions"}</a></li>
+	<li><a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a></li>
 	<li class="current"><a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a></li>
 </ul>
 <div class="separator"></div>
 
-<h2>{translate key="editor.reports.meetingAttendance"}</h2>
+<h3>{translate key="editor.reports.meetingAttendance"}</h3>
 {include file="common/formErrors.tpl"}
 
 <div id="meetingAttendance">
