@@ -72,7 +72,8 @@
 	{if $roleSettings.useCopyeditors}
 		<li>&#187; <a href="{url op="people" path="copyeditors"}">{translate key="user.role.copyeditors"}</a></li>
 	{/if}
-	{if $roleSettings.useProofreaders}
+
+	{if $roleSettings.useProofreaders} 
 		<li>&#187; <a href="{url op="people" path="proofreaders"}">{translate key="user.role.proofreaders"}</a></li>
 	{/if}
 	<li>&#187; <a href="{url op="people" path="reviewers"}">{translate key="user.role.reviewers"}</a></li>

@@ -194,10 +194,10 @@
 	<message key="submission.editorReview">Secretary Review</message> /*editor to Secretary*/
 	<message key="submission.notifyAuthor">Notify RTO</message> /*Author to RTO */
 	<message key="submission.notifyEditor">Notify Secretary</message> /*editor to Secretary*/
-	<message key="submission.editorAuthorRecord">Secretary/RTO Email Record</message> /*editor to STO and author to RTo*/
+	<message key="submission.editorAuthorRecord">Secretary/RTO Email Record</message> /*editor to Secretary and author to RTo*/
 	<message key="submission.reviewersVersion">Reviewer's annotated version of file</message>
 	<message key="submission.postReviewVersion">Post-review version of file</message>
-	<message key="submission.editorVersion">STO Version</message> /*editor to STO*/
+	<message key="submission.editorVersion">Secretary Version</message> /*editor to Secretary*/
 	<message key="submission.authorsRevisedVersion">RTO's revised version of file</message> /*author to RTO*/
 	<message key="submission.authorVersion">RTO Version</message>/*author to RTO*/
 	<message key="submission.copyediting">Copyediting</message>
@@ -251,15 +251,15 @@
 	<!-- Roles -->
 	<message key="user.role.manager">ERC Admin</message> /* Replaced Journal Manager to ERC Admin - spf */
 	<message key="user.role.editor">Secretary</message> /*Editor to Secretary*/
-	<message key="user.role.sectionEditor">Secretary</message> /*SectionEditor to Secretary */
+	<message key="user.role.sectionEditor">Secretary</message> /*SectionEditor to Secretary*/
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>
 	<message key="user.role.proofreader">Proofreader</message>
 	<message key="user.role.author">RTO</message> /*Author to RTO */
 	<message key="user.role.subscriptionManager">Subscription Manager</message>
 	<message key="user.role.managers">ERC Admins</message> /* Replaced Journal Managers with ERC Admins - spf */
-	<message key="user.role.editors">Secretary</message> /*Editor to STO*/
-	<message key="user.role.sectionEditors">Secretary</message> /* sectionEditor to STO*/
+	<message key="user.role.editors">Secretary</message> /*Editor to Secretary*/
+	<message key="user.role.sectionEditors">Secretary</message> /* sectionEditor to Secretary*/
 	<message key="user.role.layoutEditors">Layout Editors</message>
 	<message key="user.role.copyeditors">Copyeditors</message>
 	<message key="user.role.proofreaders">Proofreaders</message>
@@ -767,7 +767,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<!-- Submission Email Log -->
 	
 	<!-- Submission Comments -->
-	<message key="submission.comments.editorAuthorCorrespondence">Secretary/RTO Correspondence</message> /*STO, RTO*/
+	<message key="submission.comments.editorAuthorCorrespondence">Secretary/RTO Correspondence</message> /*Secretary, RTO*/
 	<message key="submission.comments.copyeditComments">Copyedit Comments</message>
 	<message key="submission.comments.viewableDescription"><![CDATA[These comments can be shared with the author.<br />
 (After saving, further comments can be added.)]]></message>

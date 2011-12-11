@@ -48,8 +48,8 @@ function confirmAndPrompt(userId) {
 	<select name="roleSymbolic" class="selectMenu">
 		<option {if $roleSymbolic=='all'}selected="selected" {/if}value="all">{translate key="manager.people.allUsers"}</option>
 		<option {if $roleSymbolic=='managers'}selected="selected" {/if}value="managers">{translate key="user.role.managers"}</option>
-		<!-- <option {if $roleSymbolic=='editors'}selected="selected" {/if}value="editors">{translate key="user.role.editors"}</option> -->
-		<option {if $roleSymbolic=='sectionEditors'}selected="selected" {/if}value="sectionEditors">{translate key="user.role.sectionEditors"}</option>
+		<option {if $roleSymbolic=='editors'}selected="selected" {/if}value="editors">{translate key="user.role.editors"}</option>
+<!--		<option {if $roleSymbolic=='sectionEditors'}selected="selected" {/if}value="sectionEditors">{translate key="user.role.sectionEditors"}</option> -->
 		{if $roleSettings.useLayoutEditors}
 			<option {if $roleSymbolic=='layoutEditors'}selected="selected" {/if}value="layoutEditors">{translate key="user.role.layoutEditors"}</option>
 		{/if}
@@ -61,7 +61,8 @@ function confirmAndPrompt(userId) {
 		{/if}
 		<option {if $roleSymbolic=='reviewers'}selected="selected" {/if}value="reviewers">{translate key="user.role.reviewers"}</option>
 		<option {if $roleSymbolic=='authors'}selected="selected" {/if}value="authors">{translate key="user.role.authors"}</option>
-		<!-- <option {if $roleSymbolic=='readers'}selected="selected" {/if}value="readers">{translate key="user.role.readers"}</option> Edited by MSB, Nov17,2011-->
+
+<!--		<option {if $roleSymbolic=='readers'}selected="selected" {/if}value="readers">{translate key="user.role.readers"}</option> -->
 		<!-- <option {if $roleSymbolic=='subscriptionManagers'}selected="selected" {/if}value="subscriptionManagers">{translate key="user.role.subscriptionManagers"}</option> Edited by MSB, Nov17,2011-->
 	</select>
 	<select name="searchField" size="1" class="selectMenu">
@@ -80,8 +81,8 @@ function confirmAndPrompt(userId) {
 {if not $roleId}
 <ul>
 	<li><a href="{url path="managers"}">{translate key="user.role.managers"}</a></li>
-	{** Commented out - spf - 1 Dec 2011  <li><a href="{url path="editors"}">{translate key="user.role.editors"}</a></li> *}
-        <li><a href="{url path="sectionEditors"}">{translate key="user.role.sectionEditors"}</a></li> 
+	<li><a href="{url path="editors"}">{translate key="user.role.editors"}</a></li>
+<!--	<li><a href="{url path="sectionEditors"}">{translate key="user.role.sectionEditors"}</a></li> -->
 	{if $roleSettings.useLayoutEditors}
 		<li><a href="{url path="layoutEditors"}">{translate key="user.role.layoutEditors"}</a></li>
 	{/if}
@@ -93,7 +94,7 @@ function confirmAndPrompt(userId) {
 	{/if}
 	<li><a href="{url path="reviewers"}">{translate key="user.role.reviewers"}</a></li>
 	<li><a href="{url path="authors"}">{translate key="user.role.authors"}</a></li>
-	<!-- <li><a href="{url path="readers"}">{translate key="user.role.readers"}</a></li> Edited by MSB, Nov17, 2011-->
+<!--	<li><a href="{url path="readers"}">{translate key="user.role.readers"}</a></li> -->
 	<!-- <li><a href="{url path="subscriptionManagers"}">{translate key="user.role.subscriptionManagers"}</a></li> Edited by MSB, Nov17,2011--> 
 </ul>
 
