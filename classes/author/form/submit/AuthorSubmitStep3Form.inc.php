@@ -212,7 +212,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $templateMgr->assign('proposalTypes', $proposalTypes);
 
                 /*********************************************************************
-                 *  Get list of Asia Pacific countries from the XML file
+                 *  Get list of WPRO countries from the XML file
                  *  Added by:  Anne Ivy Mirasol
                  *  Last Updated: May 3, 2011
                  *********************************************************************/
@@ -223,7 +223,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 
 
                 /*********************************************************************
-                 *  Get list of WHO technical units from the XML file
+                 *  Get list of WPRO technical units from the XML file
                  *  Added by:  Anne Ivy Mirasol
                  *  Last Updated: May 3, 2011
                  *********************************************************************/
