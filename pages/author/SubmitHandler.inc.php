@@ -209,11 +209,13 @@ class SubmitHandler extends AuthorHandler {
 					break;
 
 				case 4:
-					if ($request->getUserVar('submitUploadSuppFile')) {
-						SubmitHandler::submitUploadSuppFile(array(), $request);
-						return;
+                                        if ($request->getUserVar('submitUploadSuppFile') && $request->getUserVar('fileType')) {  //AIM, 12.12.2011
+                                            SubmitHandler::submitUploadSuppFile(array(), $request);
 					}
-					break;
+                                        else {
+                                            Request::redirect(null, null, 'submit', '4', array('articleId' => $articleId));
+                                        }
+                                        break;
 			}
 
 			if (!isset($editData) && $submitForm->validate()) {
@@ -271,6 +273,7 @@ class SubmitHandler extends AuthorHandler {
 		$articleId = $request->getUserVar('articleId');
                 // Start Edit Raf Tan 04/30/2011
                 $fileTypes = $request->getUserVar('fileType');
+
                 // End Edit Raf Tan 04/30/2011
 		$journal =& $request->getJournal();
 

@@ -191,19 +191,18 @@ class AuthorSubmitSuppFileForm extends Form {
 			// Upload file, if file selected.
 			if ($articleFileManager->uploadedFileExists($fileName)) {
 				$fileId = $articleFileManager->uploadSuppFile($fileName);
+
+                                // Insert new supplementary file
+                                $suppFile = new SuppFile();
+                                $suppFile->setArticleId($this->articleId);
+                                $suppFile->setFileId($fileId);
+                                $this->setSuppFileData($suppFile);
+                                $suppFileDao->insertSuppFile($suppFile);
+                                $this->suppFileId = $suppFile->getId();
 			} else {
 				$fileId = 0;
 			}
-
-			// Insert new supplementary file
-			$suppFile = new SuppFile();
-			$suppFile->setArticleId($this->articleId);
-			$suppFile->setFileId($fileId);
-			$this->setSuppFileData($suppFile);
-			$suppFileDao->insertSuppFile($suppFile);
-			$this->suppFileId = $suppFile->getId();
 		}
-
 		return $this->suppFileId;
 	}
 

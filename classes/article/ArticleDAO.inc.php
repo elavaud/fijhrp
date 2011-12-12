@@ -734,6 +734,8 @@ class ArticleDAO extends DAO {
 		$result->Close();
 		unset($result);
 
+                if($last == -1) return null; //AIM, 12.12.2011
+
 		$decision = array("editDecisionId" => $resultArray[$last]['edit_decision_id'], "editorId" => $resultArray[$last]['editor_id'], "decision" => $resultArray[$last]['decision'], "dateDecided" => $resultArray[$last]['date_decided'], "resubmitCount" => $resultArray[$last]['resubmit_count']);
 		return 	$decision;
 	}

@@ -313,7 +313,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 				if (array_key_exists('competingInterests', $authors[$i])) {
 					$author->setCompetingInterests($authors[$i]['competingInterests'], null);
 				}
-				$author->setBiography($authors[$i]['biography'], null);
+				//$author->setBiography($authors[$i]['biography'], null);  //AIM, 12.12.2011
 				$author->setPrimaryContact($this->getData('primaryContact') == $i ? 1 : 0);
 				$author->setSequence($authors[$i]['seq']);
 

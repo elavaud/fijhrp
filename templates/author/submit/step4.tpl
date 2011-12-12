@@ -66,7 +66,7 @@ function confirmForgottenUpload() {
 
 <table class="data" width="100%">
 <tr>
-	<td width="30%" class="label">{fieldLabel name="uploadSuppFile" key="author.submit.uploadSuppFile"}</td>
+	<td width="30%" class="label">{fieldLabel name="uploadSuppFileLabel" key="author.submit.uploadSuppFile"}</td>
 	<td width="70%" class="value">
 		<!--Start Edit Raf Tan 04/30/2011-->
                 <select name="fileType[]" id="fileType" multiple="multiple" size="11" class="selectMenu">
