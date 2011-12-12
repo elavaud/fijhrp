@@ -44,7 +44,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		$user =& Request::getUser();
 		$templateMgr =& TemplateManager::getManager();
 
-		// Get article file for this article
+                // Get article file for this article
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$articleFiles =& $articleFileDao->getArticleFilesByArticle($this->articleId);
 
@@ -215,7 +215,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		import('classes.search.ArticleSearchIndex');
 		ArticleSearchIndex::indexArticleMetadata($article);
 		ArticleSearchIndex::indexArticleFiles($article);
-
+                
 		// Send author notification email
 		import('classes.mail.ArticleMailTemplate');
 		$mail = new ArticleMailTemplate($article, 'SUBMISSION_ACK', null, null, null, false);
@@ -253,7 +253,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		import('classes.article.log.ArticleLog');
 		import('classes.article.log.ArticleEventLogEntry');
 		ArticleLog::logEvent($this->articleId, ARTICLE_LOG_ARTICLE_SUBMIT, ARTICLE_LOG_TYPE_AUTHOR, $user->getId(), 'log.author.submitted', array('submissionId' => $article->getId(), 'authorName' => $user->getFullName()));
-
+                
 		return $this->articleId;
 	}
 
