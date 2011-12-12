@@ -12,7 +12,7 @@
   * $Id$
   -->
 
-<locale name="en_US" full_name = "English">
+<locale>en_US" full_name = "English">
 	<message key="author.submit">New Submission</message>
 	<message key="author.track">Active Submissions</message>
 	<message key="author.competingInterests"><![CDATA[Competing&nbsp;interests <a target="_new" class="action" href="{$competingInterestGuidelinesUrl}">CI&nbsp;Policy</a>]]></message>
@@ -83,9 +83,7 @@
 	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each RTO or PI is required.</message>
 
         <!-- ************************************************************************************************************************
-            Validation error messages
-            Added by: AIM
-            Last Edited: April 25, 2011
+            Added by: AIM, Last Edited: 12.12.2011
         -->
         <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
 	<message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
@@ -107,6 +105,32 @@
         <message key="author.submit.addExtensionRequest">Submit Extension Request</message>
         <message key="author.submit.addWithdrawReport">Reason for Withdrawal</message>
 
+        <message key ="author.proposal.type.CWHS">Clinical Trial with Human Subjects</message>
+        <message key ="author.proposal.type.HSPR">Health System and Policy Research</message>
+        <message key ="author.proposal.type.PBS">Population-Based Survey</message>
+        <message key ="author.proposal.type.PWHS">Proposal with Human Subjects</message>
+        <message key ="author.proposal.type.PNHS">Proposal without Human Subjects</message>
+        <message key ="author.proposal.type.QS">Qualitative Study</message>
+        <message key ="author.proposal.type.IER">Intervention Evaluation Research</message>
+        <message key ="author.proposal.type.OR">Operation Research</message>
+
+        <message key="author.proposal.technicalUnit.EHA">Emergency and Humanitarian Action</message>
+        <message key="author.proposal.technicalUnit.EHH">Environmental Health</message>
+        <message key="author.proposal.technicalUnit.EMT">Essential Medicines and Health Technologies</message>
+        <message key="author.proposal.technicalUnit.EPI">Expanded Programme on Immunization</message>
+        <message key="author.proposal.technicalUnit.ESR">Emerging Disease Surveillance and Response</message>
+        <message key="author.proposal.technicalUnit.FOS">Food Safety</message>
+        <message key="author.proposal.technicalUnit.HCF">Health Care Financing</message>
+        <message key="author.proposal.technicalUnit.HRH">Human Resources for Health</message>
+        <message key="author.proposal.technicalUnit.HSD">Health Services Development</message>
+        <message key="author.proposal.technicalUnit.HSI">HIV/AIDS and STI</message>
+        <message key="author.proposal.technicalUnit.IER">Health Information, Evidence and Research</message>
+        <message key="author.proposal.technicalUnit.MCN">Maternal and Child Health and Nutrition</message>
+        <message key="author.proposal.technicalUnit.MHI">Mental Health and Injury Prevention</message>
+        <message key="author.proposal.technicalUnit.MVP">Malaria, other Vectorborne and Parasitic Diseases</message>
+        <message key="author.proposal.technicalUnit.NHP">Noncommunicable Diseases and Health Promotion</message>
+        <message key="author.proposal.technicalUnit.STB">Stop TB and Leprosy Elimination</message>
+        <message key="author.proposal.technicalUnit.TFI">Tobacco Free Initiative</message>
 
         <!-- ************************************End of Edit ********************************************************************-->
 

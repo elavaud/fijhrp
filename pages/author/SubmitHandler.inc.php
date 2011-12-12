@@ -256,7 +256,9 @@ class SubmitHandler extends AuthorHandler {
 					$templateMgr->assign('articleId', $articleId);
 					$templateMgr->assign('helpTopicId','submission.index');
 
-                                        //Get article details
+                                        //Get article details, AIM, 12.12.2011
+                                        $countryDao =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+
                                         $whoId = $article->getWhoId($article->getLocale());
                                         $title = $article->getTitle($article->getLocale());
                                         $abstract = $article->getAbstract($article->getLocale());
@@ -264,8 +266,9 @@ class SubmitHandler extends AuthorHandler {
                                         $startDate = $article->getStartDate($article->getLocale());
                                         $endDate = $article->getEndDate($article->getLocale());
                                         $fundsRequired = $article->getFundsRequired($article->getLocale());
-                                        $technicalUnit = $article->getTechnicalUnit($article->getLocale());
-                                        $proposalType = $article->getProposalType($article->getLocale());
+                                        $proposalCountry = $countryDao->getAsiaPacificCountry($article->getProposalCountry($article->getLocale()));
+                                        $technicalUnit = 'author.proposal.technicalUnit.'.$article->getTechnicalUnit($article->getLocale());
+                                        $proposalType = 'author.proposal.type.'.$article->getProposalType($article->getLocale());
 
                                         $templateMgr->assign('whoId', $whoId);
                                         $templateMgr->assign('title', $title);
@@ -274,14 +277,14 @@ class SubmitHandler extends AuthorHandler {
                                         $templateMgr->assign('startDate', $startDate);
                                         $templateMgr->assign('endDate', $endDate);
                                         $templateMgr->assign('fundsRequired', $fundsRequired);
+                                        $templateMgr->assign('proposalCountry', $proposalCountry);
                                         $templateMgr->assign('technicalUnit', $technicalUnit);
                                         $templateMgr->assign('proposalType', $proposalType);
 
                                         $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
                                         $articleFiles =& $articleFileDao->getArticleFilesByArticle($articleId);
-
                                         $templateMgr->assign_by_ref('files', $articleFiles);
-
+                                        //End of Edit, AIM, 12.12.2011
 					
 					$templateMgr->display('author/submit/complete.tpl');
 					

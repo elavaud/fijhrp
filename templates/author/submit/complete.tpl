@@ -51,12 +51,16 @@
         <td>{$fundsRequired}</td>
     </tr>
     <tr>
+        <td>Country:</td>
+        <td>{$proposalCountry}</td>
+    </tr>
+    <tr>
         <td>Technical Unit:</td>
-        <td>{$technicalUnit}</td>
+        <td>{translate key=$technicalUnit}</td>
     </tr>
     <tr>
         <td>Proposal Type:</td>
-        <td>{$proposalType}</td>
+        <td>{translate key=$proposalType}</td>
     </tr>
 </table>
 

@@ -7,6 +7,7 @@
     Description:
         {Proposal Types.
     Updated    : 18 Nov 2011 - added Intervention Evaluation Research and Operation Research types
+    Note       : If adding proposal types, also add key to author.xml (author.proposal.type.<code>)
 -->
 
 <proposaltypes>
