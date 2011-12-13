@@ -15,7 +15,7 @@
 
 <div id="submissionComplete">
 
-<p>{translate key="author.submit.submissionComplete" journalTitle=$journal->getLocalizedTitle()}</p>
+<p style="font-size: larger;">{translate key="author.submit.submissionComplete" journalTitle=$journal->getLocalizedTitle()}</p>
 
 <h3>Proposal Details</h3>
 <table class="listing" width="100%">
@@ -27,7 +27,7 @@
         <td style="width: 70%">{$whoId}</td>
     </tr>
     <tr>
-        <td>Proposal Title:</td>
+        <td>Title:</td>
         <td>{$title}</td>
     </tr>
     <tr>
@@ -63,6 +63,7 @@
         <td>{translate key=$proposalType}</td>
     </tr>
 </table>
+<div class="separator"></div>
 
 <br />
 
@@ -97,6 +98,10 @@
 </tr>
 {/foreach}
 </table>
+
+<div class="separator"></div>
+
+<br />
 
 {if $canExpedite}
 	{url|assign:"expediteUrl" op="expediteSubmission" articleId=$articleId}
