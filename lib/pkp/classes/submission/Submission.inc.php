@@ -1186,6 +1186,35 @@ class Submission extends DataObject {
 	}
 
 
+    /**
+	 * Get "localized" withHumanSubjects 
+	 * @return string
+	 */
+	function getLocalizedWithHumanSubjects() {
+		return $this->getLocalizedData('withHumanSubjects');
+	}
+
+	/**
+	 * Get withHumanSubjects.
+	 * @param $locale
+	 * @return string
+	 */
+	function getWithHumanSubjects($locale) {
+		return $this->getData('withHumanSubjects', $locale);
+	}
+
+	/**
+	 * Set withHumanSubjects (yes/no).
+	 * @param $withHumanSubjects string
+	 * @param $locale
+	 */
+	function setWithHumanSubjects($withHumanSubjects, $locale) {
+		return $this->setData('withHumanSubjects', $withHumanSubjects, $locale);
+	}
+
+
+
+
 
         /**
 	 * Get "localized" proposal type (if applicable).

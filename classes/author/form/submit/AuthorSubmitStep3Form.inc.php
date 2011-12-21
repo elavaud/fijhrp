@@ -49,8 +49,11 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
-                $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
-                $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'withHumanSubjects', 'required', 'author.submit.form.withHumanSubjectsRequired', $this->getRequiredLocale()));
+		        
+		        /* $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
+                */
+				$this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'reviewedByOtherErc', 'required', 'author.submit.form.reviewedByOtherErcRequired', $this->getRequiredLocale()));
 
@@ -91,7 +94,8 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                                  'fundsRequired' => $article->getFundsRequired(null),
                                  'proposalCountry' => $article->getProposalCountry(null),
                                  'technicalUnit' => $article->getTechnicalUnit(null),
-                                 'proposalType' => $article->getProposalType(null),
+                                 'withHumanSubjects' => $article->getWithHumanSubjects(null),
+				                 'proposalType' => $article->getProposalType(null),
                                  'submittedAsPi' => $article->getSubmittedAsPi(null),
                                  'conflictOfInterest' => $article->getConflictOfInterest(null),
                                  'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
@@ -156,7 +160,8 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                                  'fundsRequired',
                                  'proposalCountry',
                                  'technicalUnit',
-                                 'proposalType',
+                                 'withHumanSubjects',
+				                 'proposalType',
                                  'submittedAsPi',
                                  'conflictOfInterest',
                                  'reviewedByOtherErc',
@@ -185,7 +190,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                  * Last Updated: May 3, 2011
                  *******************************************************************/
 		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -278,7 +283,8 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
                 $article->setProposalCountry($this->getData('proposalCountry'), null); // Localized
                 $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
-                $article->setProposalType($this->getData('proposalType'), null); // Localized
+                $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
+	            $article->setProposalType($this->getData('proposalType'), null); // Localized
                 $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
                 $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
                 $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
