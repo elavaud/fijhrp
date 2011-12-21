@@ -60,19 +60,19 @@
  
 <div id="submissions">
 <table class="listing" width="100%">
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">{sort_heading key="common.id" sort='id'}</td>
+		<td width="5%">WHO ID</td> <!-- Replaced id with WHO ID, SPF, 21 Dec 2011 -->
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="common.assigned" sort='assignDate'}</td>
 		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
 		<td width="70%">{sort_heading key="article.title" sort='title'}</td>
 		<td width="5%">{sort_heading key="submission.due" sort='dueDate'}</td>
 		<td width="10%">{sort_heading key="submissions.reviewRound" sort='round'}</td>
 	</tr>
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 
 {iterate from=submissions item=submission}
-	{assign var="articleId" value=$submission->getArticleId()}
+	{assign var="articleId" value=$submission->getLocalizedWhoId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
 	<tr valign="top">
 		<td>{$articleId|escape}</td>

@@ -71,7 +71,7 @@
 </table>
 <br/><br/>
 <table class="listing" width="100%">
-        <tr><td colspan="7">APPROVED PROPOSALS (Research Ongoing) a</td></tr>
+        <tr><td colspan="7">APPROVED PROPOSALS (Research Ongoing)</td></tr>
 	<tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO Proposal ID</td>

@@ -57,26 +57,26 @@
 </form>
 <div id="submissions">
 <table class="listing" width="100%">
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">{sort_heading key="common.id" sort="id"}</td>
+		<td width="10%">WHO ID</td>
 		<td width="10%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="common.assigned" sort="assignDate"}</td>
 		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
-		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
+		<td width="40%">{sort_heading key="article.title" sort="title"}</td>
 		<td width="20%">{sort_heading key="submission.review" sort="review"}</td>
 		<td width="20%">{sort_heading key="submission.editorDecision" sort="decision"}</td>
 	</tr>
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 {iterate from=submissions item=submission}
-	{assign var="articleId" value=$submission->getArticleId()}
+	{assign var="articleId" value=$submission->getLocalizedWhoId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
 
 	<tr valign="top">
-		<td>{$articleId|escape}</td>
-		<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
+		<td width="10%">{$articleId|escape}</td>
+		<td width="10%">{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
 		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB,Sept25,2011-->
-		<td>{if !$submission->getDeclined()}<a href="{url op="submission" path=$reviewId}" class="action">{/if}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{if !$submission->getDeclined()}</a>{/if}</td>
-		<td>
+		<td width="40%">{if !$submission->getDeclined()}<a href="{url op="submission" path=$reviewId}" class="action">{/if}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{if !$submission->getDeclined()}</a>{/if}</td>
+		<td width="20%">
 			{if $submission->getDeclined()}
 				{translate key="sectionEditor.regrets"}
 			{else}
@@ -88,7 +88,7 @@
 				{/if}
 			{/if}
 		</td>
-		<td>
+		<td width="20%">
 			{if $submission->getCancelled() || $submission->getDeclined()}
 				&mdash;
 			{else}
@@ -113,15 +113,15 @@
 	</tr>
 
 	<tr>
-		<td colspan="6" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
 {/iterate}
 {if $submissions->wasEmpty()}
 	<tr>
-		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+		<td colspan="5" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
 	<tr>
-		<td colspan="6" class="endseparator">&nbsp;</td>
+		<td colspan="5" class="endseparator">&nbsp;</td>
 	</tr>
 {else}
 	<tr>
