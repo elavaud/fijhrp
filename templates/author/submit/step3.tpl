@@ -33,19 +33,25 @@ function moveAuthor(dir, authorIndex) {
 // -->
 
 $(document).ready(function() {
+
+	if($('input[name^="proposalType"]:selected').val() == null) {
+			$('#proposalTypeField').show();        
+		}
    	// Add filter of proposal types: with Human Subjects vs. without Human Subjects
 	    if($('input[name^="withHumanSubjects"]:checked').val() == "No" || $('input[name^="withHumanSubjects"]:checked').val() == null) {
 	        $('#proposalTypeField').hide();
 	        $('#proposalTypeField').val("PNHS");
 	    } // end if withHumanSubjects
+	    
 	    $('input[name^="withHumanSubjects"]').change(function(){
 	        var answer = $('input[name^="withHumanSubjects"]:checked').val();
 
 	        if(answer == "Yes") {
 	            $('#proposalTypeField').show();
+	            $('#proposalType option[value="PNHS"]').removeAttr('selected');
 	        } else {
 	            $('#proposalTypeField').hide();
-	            $('#proposalTypeField').val("PNHS");
+	            $('#proposalType').val("PNHS");
 	        }
 	    }); // end change function	
 
@@ -347,7 +353,7 @@ $(document).ready(function() {
 	<td width="80%" class="value">
             <select name="proposalType[{$formLocale|escape}]" id="proposalType" class="selectMenu">
 
-                <option value="PNHS" selected="selected"></option> 
+                <option value="PNHS"></option> 
 				{foreach from=$proposalTypes key=id item=ptype}
 				{if $ptype.code != "PNHS"}				
 				<option value="{$ptype.code}" {if $proposalType[$formLocale] == $ptype.code} selected="selected" {/if}>{$ptype.name}</option>
