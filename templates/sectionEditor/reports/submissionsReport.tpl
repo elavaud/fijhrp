@@ -13,13 +13,13 @@
 
 
 <ul class="menu">
-	<li><a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a></li>
-	<li class="current"><a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a></li>
+	<li class="current"><a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a></li>
+	<li><a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a></li>
 </ul>
 <div class="separator"></div>
 
 
-<h2>{translate key="editor.reports.submissions"}</h2>
+<h3>{translate key="editor.reports.submissions"}</h3>
 {include file="common/formErrors.tpl"}
 
 <div id="submissionsReport">
@@ -35,19 +35,19 @@
 	
     <br/>
     		<h5>FILTER BY </h5>
-			<h5>{translate key="editor.reports.decision"}</h5>
+			<h5>{translate key="editor.reports.decision"}*</h5>
 			<select name="decisions[]" id="decisions" multiple="multiple" size="5" class="selectMenu">
 		 	 	<!--	<option value='' selected="selected" >All Decisions</option> -->
 		 			{html_options_translate options=$decisionsOptions selected=$decisions}
 		    </select>	
 		    
-		    <h5>{translate key="editor.reports.country"}</h5>
+		    <h5>{translate key="editor.reports.country"}*</h5>
 			<select name="countries[]" id="countries" multiple="multiple" size="5" class="selectMenu">
 			 	<!-- 	<option value=''  selected="selected" >All Countries</option> -->
 		 			{html_options options=$countriesOptions selected=$countries}
 		    </select>	
 		    
-			<h5>{translate key="editor.reports.technicalUnit"}</h5>
+			<h5>{translate key="editor.reports.technicalUnit"}*</h5>
 		 	<select name="technicalUnits[]" id="technicalUnits" multiple="multiple" size="5" class="selectMenu">
 		 	 	<!--	<option value=''  selected="selected" >All Technical Units</option> -->
 		 			{html_options options=$technicalUnitsOptions selected=$technicalUnits}

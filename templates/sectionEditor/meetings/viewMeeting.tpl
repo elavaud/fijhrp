@@ -19,7 +19,7 @@
 <div class="separator"></div>
 <br/>
 <div id="details">
-<h2>{translate key="reviewer.meetings.details}</h2>
+<h3>{translate key="reviewer.meetings.details}</h3>
 <div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
@@ -38,7 +38,7 @@
 </div>
 <br>
 <div id="submissions">
-<h2>{translate key="editor.meetings.submissions"}</h2>
+<h3>{translate key="editor.meetings.submissions"}</h3>
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
@@ -83,7 +83,7 @@
 </div>
 <br>
 <div id="reviewers">
-	<h2>{translate key="editor.meetings.reviewers"}</h2>
+	<h3>{translate key="editor.meetings.reviewers"}</h3>
 	<table class="listing" width="100%">
 		<tr><td colspan="3" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
@@ -135,7 +135,7 @@
 </div>
 <br>
 <div>
-<h2>{translate key="editor.meetings.tentativeAttendance}</h2>
+<h3>{translate key="editor.meetings.tentativeAttendance}</h3>
 <div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
