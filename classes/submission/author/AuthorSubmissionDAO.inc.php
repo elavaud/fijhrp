@@ -240,10 +240,12 @@ class AuthorSubmissionDAO extends DAO {
 				break;
 		}
 
+                $technicalUnitSql = '';
 		if (!empty($technicalUnitField)) {
 			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
 		}
 
+                $countrySql = '';
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
 		}

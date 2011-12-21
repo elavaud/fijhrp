@@ -26,9 +26,9 @@
 {assign var="count" value=0}
 {iterate from=submissions1 item=submission}
 	{assign var="status" value=$submission->getSubmissionStatus()}
-        {assign var="decision" value=$submission->getMostRecentDecision() }
+    {assign var="decision" value=$submission->getMostRecentDecision() }
         
-        {if ($status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT || $status==PROPOSAL_STATUS_EXTENSION }
+    {if ($status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT || $status==PROPOSAL_STATUS_EXTENSION }
 
             {assign var="articleId" value=$submission->getArticleId()}
             {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}

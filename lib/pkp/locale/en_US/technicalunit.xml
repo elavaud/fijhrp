@@ -6,6 +6,8 @@
     Author     : Anne Ivy G. Mirasol
     Description:
         For use in technical unit of proposal.
+
+    Note       : If adding to technical units, add key to author.xml (author.proposal.technicalUnit)
 -->
 
 <technicalunits>

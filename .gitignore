@@ -11,3 +11,4 @@ cache/t_config/*
 .settings/
 *.orig
 /cache
+/.classpath

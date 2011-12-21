@@ -41,7 +41,8 @@ class AuthorSubmitStep4Form extends AuthorSubmitForm {
                     "author.submit.suppFile.who.funding" => "author.submit.suppFile.who.funding",
                     "author.submit.suppFile.who.cv" => "author.submit.suppFile.who.cv",
                     "author.submit.suppFile.who.questionnaire" => "author.submit.suppFile.who.questionnaire",
-                    "author.submit.suppFile.who.local" => "author.submit.suppFile.who.local",
+                    // Deleted author.submit.suppFile.who.local option as supplementary file - 9Dec2011 - spf
+                    // "author.submit.suppFile.who.local" => "author.submit.suppFile.who.local",
                     "author.submit.suppFile.who.ethicalClearance" => "author.submit.suppFile.who.ethicalClearance",
                     "author.submit.suppFile.who.proofOfRegistration" => "author.submit.suppFile.who.proofOfRegistration",
                     "author.submit.suppFile.who.otherErcDecision" => "author.submit.suppFile.who.otherErcDecision",

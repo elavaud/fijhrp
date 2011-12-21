@@ -17,6 +17,58 @@
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 {include file="common/formErrors.tpl"}
 
+<h3>Proposal Details</h3>
+<table class="listing" width="100%">
+    <tr>
+        <td colspan="5" class="headseparator">&nbsp;</td>
+    </tr>
+    <tr>
+        <td style="width: 30%">WHO ID:</td>
+        <td style="width: 70%">{$whoId}</td>
+    </tr>
+    <tr>
+        <td>Title:</td>
+        <td>{$title}</td>
+    </tr>
+    <tr>
+        <td>Abstract: </td>
+        <td>{$abstract}</td>
+    </tr>
+    <tr>
+        <td>Objectives:</td>
+        <td>{$objectives}</td>
+    </tr>
+    <tr>
+        <td>Start Date:</td>
+        <td>{$startDate}</td>
+    </tr>
+    <tr>
+        <td>End Date:</td>
+        <td>{$endDate}</td>
+    </tr>
+    <tr>
+        <td>Funds Required (in USD):</td>
+        <td>{$fundsRequired}</td>
+    </tr>
+    <tr>
+        <td>Country:</td>
+        <td>{$proposalCountry}</td>
+    </tr>
+    <tr>
+        <td>Technical Unit:</td>
+        <td>{translate key=$technicalUnit}</td>
+    </tr>
+    <tr>
+        <td>Proposal Type:</td>
+        <td>{translate key=$proposalType}</td>
+    </tr>
+</table>
+<div class="separator"></div>
+<span style="font-size: smaller; font-style: italic;">To edit proposal details, <a href="{url op="submit" path="3" articleId=$articleId}">click here to go back Step 3.</a></span>
+
+<br />
+<br />
+
 <h3>{translate key="author.submit.filesSummary"}</h3>
 <table class="listing" width="100%">
 <tr>
@@ -46,10 +98,11 @@
 </tr>
 {/foreach}
 </table>
-
-<!-- Added by AIM, June 15, 2011 -->
-
 <div class="separator"></div>
+<span style="font-size: smaller; font-style: italic;">To add or remove supplementary files, <a href="{url op="submit" path="4" articleId=$articleId}">click here to go back Step 4.</a></span>
+
+<br />
+<br />
 
 <div id="commentsForEditor">
 <h3>{translate key="author.submit.commentsForEditor"}</h3>
@@ -60,6 +113,7 @@
 	<td width="80%" class="value"><textarea name="commentsToEditor" id="commentsToEditor" rows="3" cols="40" class="textArea">{$commentsToEditor|escape}</textarea></td>
 </tr>
 </table>
+
 </div>{* commentsForEditor *}
 
 <div class="separator"></div>

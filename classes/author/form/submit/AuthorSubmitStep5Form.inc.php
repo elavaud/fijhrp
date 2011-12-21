@@ -44,12 +44,39 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		$user =& Request::getUser();
 		$templateMgr =& TemplateManager::getManager();
 
-		// Get article file for this article
+                // Get article file for this article
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$articleFiles =& $articleFileDao->getArticleFilesByArticle($this->articleId);
 
 		$templateMgr->assign_by_ref('files', $articleFiles);
 		$templateMgr->assign_by_ref('journal', Request::getJournal());
+
+                //Get article details, AIM, 12.12.2011
+                $article = $this->article;
+                $countryDao =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+
+                $whoId = $article->getWhoId($article->getLocale());
+                $title = $article->getTitle($article->getLocale());
+                $abstract = $article->getAbstract($article->getLocale());
+                $objectives = $article->getObjectives($article->getLocale());
+                $startDate = $article->getStartDate($article->getLocale());
+                $endDate = $article->getEndDate($article->getLocale());
+                $fundsRequired = $article->getFundsRequired($article->getLocale());
+                $proposalCountry = $countryDao->getAsiaPacificCountry($article->getProposalCountry($article->getLocale()));
+                $technicalUnit = 'author.proposal.technicalUnit.'.$article->getTechnicalUnit($article->getLocale());
+                $proposalType = 'author.proposal.type.'.$article->getProposalType($article->getLocale());
+
+                $templateMgr->assign('whoId', $whoId);
+                $templateMgr->assign('title', $title);
+                $templateMgr->assign('abstract', $abstract);
+                $templateMgr->assign('objectives', $objectives);
+                $templateMgr->assign('startDate', $startDate);
+                $templateMgr->assign('endDate', $endDate);
+                $templateMgr->assign('fundsRequired', $fundsRequired);
+                $templateMgr->assign('proposalCountry', $proposalCountry);
+                $templateMgr->assign('technicalUnit', $technicalUnit);
+                $templateMgr->assign('proposalType', $proposalType);
+                //End of Edit, AIM, 12.12.2011
 
 		// Set up required Payment Related Information
 		import('classes.payment.ojs.OJSPaymentManager');
@@ -215,7 +242,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		import('classes.search.ArticleSearchIndex');
 		ArticleSearchIndex::indexArticleMetadata($article);
 		ArticleSearchIndex::indexArticleFiles($article);
-
+                
 		// Send author notification email
 		import('classes.mail.ArticleMailTemplate');
 		$mail = new ArticleMailTemplate($article, 'SUBMISSION_ACK', null, null, null, false);
@@ -253,7 +280,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		import('classes.article.log.ArticleLog');
 		import('classes.article.log.ArticleEventLogEntry');
 		ArticleLog::logEvent($this->articleId, ARTICLE_LOG_ARTICLE_SUBMIT, ARTICLE_LOG_TYPE_AUTHOR, $user->getId(), 'log.author.submitted', array('submissionId' => $article->getId(), 'authorName' => $user->getFullName()));
-
+                
 		return $this->articleId;
 	}
 

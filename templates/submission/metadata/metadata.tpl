@@ -15,7 +15,7 @@
 {/if}
 
 <div id="authors">
-<h4>{*translate key="article.authors"*}Primary Investigators</h4>
+<h4>{*translate key="article.authors"*}RTO and Primary Investigators</h4>
 	
 <table width="100%" class="data">
 	{foreach name=authors from=$submission->getAuthors() item=author}
@@ -50,10 +50,12 @@
 			<td class="value">{$author->getLocalizedCompetingInterests()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
 		</tr>
 	{/if}
+{**
 	<tr valign="top">
 		<td class="label">{translate key="user.biography"}</td>
 		<td class="value">{$author->getLocalizedBiography()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
 	</tr>
+*}
 	{if $author->getPrimaryContact()}
 		<tr valign="top">
 			<td colspan="2" class="label">{translate key="author.submit.selectPrincipalContact"}</td>
