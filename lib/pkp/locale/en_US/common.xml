@@ -336,6 +336,9 @@
 	<message key="search.titleIndex">Browse Title Index</message>
 	<message key="search.title">Title</message>
 	<message key="search.typeMethodApproach">Type (method/approach)</message>
+	<message key="editor.article.decision.accept">Approved</message>
+	<message key="editor.article.decision.decline">Not Approved</message>	
+	
 	
 		<!--  Added by MSB July 7 2011 -->
 		<message key="common.update">Update</message>

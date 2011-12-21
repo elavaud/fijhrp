@@ -1502,6 +1502,29 @@ class Submission extends DataObject {
 	function getApprovalDate($locale) {
 		return $this->getData("approvalDate", $locale);
 	}
+	
+	function setPrimaryAuthor($author) {
+		return $this->setData('primaryAuthor', $author);
+	}
+	
+	function getPrimaryAuthor() {
+		return $this->getData("primaryAuthor");
+	}
+	
+	function setPrimaryEditor($editor) {
+		return $this->setData('primaryEditor', $editor);
+	}
+	
+	function getPrimaryEditor() {
+		return $this->getData("primaryEditor");
+	}
+	
+	function setAuthorEmail($email) {
+		return $this->setData("authorEmail", $email);
+	}
+	function getAuthorEmail() {
+		return $this->getData("authorEmail");
+	}
 
 }
 

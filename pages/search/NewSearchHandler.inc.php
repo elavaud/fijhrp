@@ -60,31 +60,6 @@ class NewSearchHandler extends Handler {
 		$templateMgr->display('search/search.tpl');
 	}
 
-
-	/**
-	 * Show index of published articles by title.
-	 */
-	function titles($args) {
-		$this->validate();
-		$this->setupTemplate(true);
-
-		$journal =& Request::getJournal();
-
-		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
-
-		$rangeInfo = Handler::getRangeInfo('search');
-
-		$articleIds =& $publishedArticleDao->getPublishedArticleIdsAlphabetizedByJournal(isset($journal)?$journal->getId():null);
-		$totalResults = count($articleIds);
-		$articleIds = array_slice($articleIds, $rangeInfo->getCount() * ($rangeInfo->getPage()-1), $rangeInfo->getCount());
-		import('lib.pkp.classes.core.VirtualArrayIterator');
-		$results = new VirtualArrayIterator(ArticleSearch::formatResults($articleIds), $totalResults, $rangeInfo->getPage(), $rangeInfo->getCount());
-
-		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign_by_ref('results', $results);
-		$templateMgr->display('search/titleIndex.tpl');
-	}
-
 	/**
 	 * Show basic search results.
 	 */
@@ -125,40 +100,18 @@ class NewSearchHandler extends Handler {
 		$this->validate();
 		$this->setupTemplate(true);
 
-		$rangeInfo = Handler::getRangeInfo('search');
-
-		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
-		$searchJournalId = Request::getUserVar('searchJournal');
-		if (!empty($searchJournalId)) {
-			$journalDao =& DAORegistry::getDAO('JournalDAO');
-			$journal =& $journalDao->getJournal($searchJournalId);
-			$yearRange = $publishedArticleDao->getArticleYearRange($journal->getId());
-		} else {
-			$journal =& Request::getJournal();
-			$yearRange = $publishedArticleDao->getArticleYearRange(null);
-		}
-
-		// Load the keywords array with submitted values
-		$keywords = array(null => ArticleSearch::parseQuery(Request::getUserVar('query')));
-		$keywords[ARTICLE_SEARCH_AUTHOR] = ArticleSearch::parseQuery(Request::getUserVar('author'));
-		$keywords[ARTICLE_SEARCH_TITLE] = ArticleSearch::parseQuery(Request::getUserVar('title'));
-		$keywords[ARTICLE_SEARCH_DISCIPLINE] = ArticleSearch::parseQuery(Request::getUserVar('discipline'));
-		$keywords[ARTICLE_SEARCH_SUBJECT] = ArticleSearch::parseQuery(Request::getUserVar('subject'));
-		$keywords[ARTICLE_SEARCH_TYPE] = ArticleSearch::parseQuery(Request::getUserVar('type'));
-		$keywords[ARTICLE_SEARCH_COVERAGE] = ArticleSearch::parseQuery(Request::getUserVar('coverage'));
-		$keywords[ARTICLE_SEARCH_GALLEY_FILE] = ArticleSearch::parseQuery(Request::getUserVar('fullText'));
-		$keywords[ARTICLE_SEARCH_SUPPLEMENTARY_FILE] = ArticleSearch::parseQuery(Request::getUserVar('supplementaryFiles'));
-
+		$query = Request::getUserVar('query');
 		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
 		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 
-		$results =& ArticleSearch::retrieveResults($journal, $keywords, $fromDate, $toDate, $rangeInfo);
+		$results =& $articleDao->searchProposalsPublic($query, $fromDate, $toDate);
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('results', $results);
-		$this->assignAdvancedSearchParameters($templateMgr, $yearRange);
+		$templateMgr->assign('basicQuery', Request::getUserVar('query'));
 
 		$templateMgr->display('search/searchResults.tpl');
 	}	
