@@ -851,6 +851,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="search.authorIndex">Browse Author Index</message>
 	<message key="search.authorDetails">Author Details</message>
 	<message key="search.syntaxInstructions"><![CDATA[Search tips: <ul>
+	
 <li>Search terms are case-insensitive</li>
 <li>Common words are ignored</li>
 <li>By default only articles containing <em>all</em> terms in the query are returned (i.e., <em>AND</em> is implied)</li>
@@ -860,7 +861,15 @@ current password.<br /><br />Enter your email address below to reset your passwo
 <li>Exclude a word by prefixing it with <strong>-</strong> or <em>NOT</em>; e.g. <em>online -politics</em> or <em>online NOT politics</em></li>
 <li>Use <strong>*</strong> in a term as a wildcard to match any sequence of characters; e.g., <em>soci* morality</em> would match documents containing "sociological" or "societal"</li>
 </ul>]]></message>
-
+	
+	<message key="search.summary">Proposal Summary</message>
+	<message key="search.whoid">WHO ID</message>
+	<message key="search.responsibleOfficer">Responsible Officer</message>
+	<message key="search.primaryInvestigator">Primary Investigator</message>
+	<message key="search.email">Email</message>
+	<message key="search.duration">Duration</message>
+	<message key="search.finalDecision">Final Decision and Date</message>
+	
 	<!-- Interstitial page for PDFs -->
 	<message key="article.pdf.title">Portable Document Format (PDF)</message>
 	<message key="article.pdf.download">Download this PDF file</message>

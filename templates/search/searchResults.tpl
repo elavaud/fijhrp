@@ -28,59 +28,61 @@ function ensureKeyword() {
 {/literal}
 </script>
 
-<br/>
-
-{if $basicQuery}
-	<form method="post" name="search" action="{url op="results"}">
-		<input type="text" size="40" maxlength="255" class="textField" name="query" value="{$basicQuery|escape}"/>&nbsp;&nbsp;
-		<input type="hidden" name="searchField" value="{$searchField|escape}"/>
-		<input type="submit" class="button defaultButton" onclick="ensureKeyword();" value="{translate key="common.search"}"/>
-	</form>
-	<br />
-{else}
-	<form name="revise" action="{url op="advanced"}" method="post">
-		<input type="hidden" name="query" value="{$query|escape}"/>
-		<input type="hidden" name="dateFromMonth" value="{$dateFromMonth|escape}"/>
-		<input type="hidden" name="dateFromDay" value="{$dateFromDay|escape}"/>
-		<input type="hidden" name="dateFromYear" value="{$dateFromYear|escape}"/>
-		<input type="hidden" name="dateToMonth" value="{$dateToMonth|escape}"/>
-		<input type="hidden" name="dateToDay" value="{$dateToDay|escape}"/>
-		<input type="hidden" name="dateToYear" value="{$dateToYear|escape}"/>
-	</form>
-	<a href="javascript:document.revise.submit()" class="action">{translate key="search.reviseSearch"}</a><br />
+{if !$dateFrom}
+{assign var="dateFrom" value="--"}
 {/if}
 
+{if !$dateTo}
+{assign var="dateTo" value="--"}
+{/if}
+
+<br/>
+<form name="revise" action="{url op="advanced"}" method="post">
+	<input type="hidden" name="query" value="{$query|escape}"/>
+	<div style="display:none">
+		{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
+		{html_select_date prefix="dateTo" time=$dateTo all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
+	</div>
+</form>
+<a href="javascript:document.revise.submit()" class="action">{translate key="search.reviseSearch"}</a>&nbsp;&nbsp;
+<a href="javascript:document.generate.submit()" class="action">Generate CSV</a><br />
+<form name="generate" action="{url op="generateCSV"}" method="post">
+	<input type="hidden" name="query" value="{$query|escape}"/>
+	<div style="display:none">
+		{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
+		{html_select_date prefix="dateTo" time=$dateTo all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
+	</div>
+</form>
+<br/>
+<h4>Search for '{$query}' {if $dateFrom != '--'} from {$dateFrom|date_format:$dateFormatShort}{/if} {if $dateTo != '--'} from {$dateTo|date_format:$dateFormatShort}{/if} returned {$count} result(s). </h4>
 <div id="results">
 <table width="100%" class="listing">
 <tr class="heading" valign="bottom">
-		<td>WHOID</td>
-		<td>Date of Proposal</td>
-		<td>Title</td>
-		<td>Country</td>
-		<td>Responsible Officer</td>
-		<td>Principal Investigator</td>
-		<td>Duration</td>
-		<td>Decision of TRG/ERC and date</td>
+		<td>{translate key='common.dateSubmitted'}</td>
+		<td>{translate key='article.title'}</td>
+		<td>{translate key='search.primaryInvestigator'}</td>
+		<td>{translate key='search.finalDecision'}</td>
 </tr>
 <tr>
-	<td colspan="6" class="headseparator">&nbsp;</td>
+	<td colspan="4" class="headseparator">&nbsp;</td>
 </tr>
 <p></p>
 {foreach from=$results item=result}
 <tr valign="bottom">
-	<td>{$result->getWhoId()}</td>
 	<td>{$result->getDateSubmitted()|date_format:$dateFormatShort}</td>
-	<td>{$result->getTitle()}</td>
-	<td>{$result->getProposalCountry()}</td>
-	<td>{$result->getPrimaryEditor()}</td>
-	<td>{$result->getPrimaryAuthor()} <br/>{$result->getAuthorEmail()}</td>
-	<td>{$result->getStartDate()|date_format:$dateFormatShort} to {$result->getEndDate()|date_format:$dateFormatShort} </td>
+	<td><a href="{url op="viewProposal" path=$result->getId()}" class="action">{$result->getTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+	<td>{$result->getPrimaryAuthor()}</td>
 	{assign var="decision" value=$result->getEditorDecisionKey()}
 	<td>{translate key=$decision} on {$result->getDateStatusModified()|date_format:$dateFormatShort}</td>
 </tr>
+<tr>
+	<td colspan="4" class="separator">&nbsp;</td>
+</tr>
 {/foreach}
+<tr>
+	<td colspan="4" class="endseparator">&nbsp;</td>
+</tr>
 </table>
-<p>{translate key="search.syntaxInstructions"}</p>
 </div>	
 
 {include file="common/footer.tpl"}

@@ -903,7 +903,7 @@ class ArticleDAO extends DAO {
 	}
 	
 	function searchProposalsPublic($query, $dateFrom, $dateTo) {
-		$searchSql = "select distinct a.article_id, whoid.setting_value as whoid, a.date_submitted, title.setting_value as title, 
+		$searchSql = "select distinct a.article_id, whoid.setting_value as whoid, a.date_submitted as date_submitted, title.setting_value as title, 
 					  country.setting_value as country, author.first_name as afname, author.last_name as alname, author.email as email,
 					  editor.first_name as efname, editor.last_name as elname, startDate.setting_value as start_date, 
 					  endDate.setting_value as end_date, keywords.setting_value as keywords, ed.decision, ed.date_decided

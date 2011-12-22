@@ -68,7 +68,6 @@ function ensureKeyword() {
 </script>
 </form>
 </div>
-{translate key="search.syntaxInstructions"}
 
 {include file="common/footer.tpl"}
 
