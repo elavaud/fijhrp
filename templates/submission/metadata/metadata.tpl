@@ -148,6 +148,12 @@
 		<td class="label">{translate key="proposal.reviewedByOtherErc"}</td>
 		<td class="value">{$submission->getLocalizedReviewedByOtherErc()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
 	</tr>
+        {if $submission->getLocalizedOtherErcDecision() != 'NA'}
+        <tr valign="top">
+		<td class="label">{translate key="proposal.otherErcDecision"}</td>
+		<td class="value">{$submission->getLocalizedOtherErcDecision()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
+	</tr>
+        {/if}
         {*
         {if $submission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED}
             <tr>
