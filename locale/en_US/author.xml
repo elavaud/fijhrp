@@ -31,7 +31,7 @@
 	<message key="author.submit.metadata">3. Enter Metadata</message>
 	<message key="author.submit.supplementaryFiles">4. Upload Supplementary Files</message>
 	<message key="author.submit.confirmation">5. Confirmation</message>
-	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the Author home.</message>
+	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the RTO home page.</message>
 	<message key="author.submit.notAccepting">This journal is not accepting submissions at this time.</message>
 	<message key="author.submit.requestWaiver">Request Waiver</message>
 	<message key="author.submit.qualityForWaiver">Please consider waiving the Article Submission Fee for this article</message>
@@ -92,7 +92,7 @@
         <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
         <message key="author.submit.form.endDateRequired">Please enter the end date of your research proposal.</message>
         <message key="author.submit.form.fundsRequiredRequired">Please enter the funds required for your research.</message>
-        <message key="author.submit.form.proposalCountryRequired">Please enter the country of submission for this proposal.</message>
+        <message key="author.submit.form.proposalCountryRequired">Please enter the implementation country/countries for this proposal.</message>
         <message key="author.submit.form.technicalUnitRequired">Please enter the WHO technical unit for this proposal.</message>
         <message key="author.submit.form.proposalTypeRequired">Please enter the research proposal type.</message>
         <message key="author.submit.form.submittedAsPiRequired">Please select Yes or No (Submitting as Primary Investigator?).</message>

@@ -71,6 +71,11 @@ class FormValidatorLocale extends FormValidator {
 		if (is_array($data) && isset($data[$this->_requiredLocale])) {
 			$fieldValue = $data[$this->_requiredLocale];
 			if (is_scalar($fieldValue)) $fieldValue = trim((string)$fieldValue);
+                        else { //Added by AIM, 12.24.2011
+                            foreach($data[$this->_requiredLocale] as $x) {
+                                if(empty($x)) return '';
+                            }
+                        }
 		}
 		return $fieldValue;
 	}

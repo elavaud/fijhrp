@@ -87,10 +87,19 @@ class AsiaPacificCountryDAO extends DAO {
 	 * Return a translated country name, given a code.
 	 * @param $locale string Name of locale (optional)
 	 * @return array
+         *
+         * Updated 12.22.2011 to handle multiple countries
 	 */
 	function getAsiaPacificCountry($code, $locale = null) {
 		$cache =& $this->_getCountryCache($locale);
-		return $cache->get($code);
+
+                $countries = explode(",", $code);
+                $countriesText = "";
+                foreach($countries as $i => $country) {
+                    $countriesText = $countriesText . $cache->get(trim($country));
+                    if($i < count($countries)-1) $countriesText = $countriesText . ", ";
+                }
+		return $countriesText;
 	}
 }
 

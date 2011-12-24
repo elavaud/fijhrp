@@ -282,7 +282,7 @@ class TinyMCEPlugin extends GenericPlugin {
 					$fields[] = "authors-$i-biography";
 					$fields[] = "authors-$i-competingInterests";
 				}
-				$fields[] = 'abstract';
+				//$fields[] = 'abstract';
 				break;
 			case 'sectionEditor/editSuppFile':
 			case 'editor/editSuppFile':
