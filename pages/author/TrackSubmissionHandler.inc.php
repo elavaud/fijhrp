@@ -131,6 +131,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
                 
 		// Set up required Payment Related Information
+                /*
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
 		if ( $paymentManager->submissionEnabled() || $paymentManager->fastTrackEnabled() || $paymentManager->publicationEnabled()) {
@@ -149,12 +150,17 @@ class TrackSubmissionHandler extends AuthorHandler {
 				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
 			}
 		}
-                
+                */
 		$templateMgr->assign('helpTopicId','editorial.authorsRole');
 
 		//$initialCopyeditSignoff = $submission->getSignoff('SIGNOFF_COPYEDITING_INITIAL');
 		//$templateMgr->assign('canEditMetadata', !$initialCopyeditSignoff->getDateCompleted() && $submission->getStatus() != STATUS_PUBLISHED);
-                $templateMgr->assign('canEditMetadata', false);  //Edited by AIM, June 1, 2011
+                //Last Updated, AIM, 12.22.2011
+                if($submission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED)
+                        $canEditMetadata = true;
+                else
+                        $canEditMetadata = false;
+                $templateMgr->assign('canEditMetadata', $canEditMetadata);
                 
 		$templateMgr->display('author/submission.tpl');
                 
@@ -413,11 +419,14 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		// If the copy editor has completed copyediting, disallow
 		// the author from changing the metadata.
-		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
-		$initialSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $submission->getArticleId());
-		if ($initialSignoff->getDateCompleted() != null || AuthorAction::saveMetadata($submission, $request)) {
+                
+		//$signoffDao =& DAORegistry::getDAO('SignoffDAO');
+		//$initialSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $submission->getArticleId());
+		if (/*$initialSignoff->getDateCompleted() != null || */AuthorAction::saveMetadata($submission, $request)) {
  			$request->redirect(null, null, 'submission', $articleId);
  		}
+                 
+                 
 	}
 
 	/**

@@ -52,13 +52,15 @@
 		</td>
 	</tr>
 	<tr>
-		<td class="label">{translate key="submission.initiated"}</td>
+		<td class="label">Date</td>
 		<td colspan="2" class="value">{$submission->getDateStatusModified()|date_format:$dateFormatShort}</td>
 	</tr>
+        {*
 	<tr>
 		<td class="label">{translate key="submission.lastModified"}</td>
 		<td colspan="2" class="value">{$submission->getLastModified()|date_format:$dateFormatShort}</td>
 	</tr>
+        *}
 </table>
 </div>
 

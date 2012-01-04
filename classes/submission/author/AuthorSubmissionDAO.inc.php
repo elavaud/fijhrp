@@ -247,7 +247,7 @@ class AuthorSubmissionDAO extends DAO {
 
                 $countrySql = '';
 		if (!empty($countryField)) {
-			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) like '%" . $countryField . "%'";
 		}
 
 		$sql = 'SELECT DISTINCT	a.*,

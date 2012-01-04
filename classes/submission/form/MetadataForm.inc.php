@@ -82,7 +82,25 @@ class MetadataForm extends Form {
 			$this->addCheck(new FormValidatorArray($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', array('firstName', 'lastName')));
 			$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$email, $regExp', 'return String::regexp_match($regExp, $email);'), array(ValidatorEmail::getRegexp()), false, array('email')));
 			$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'user.profile.form.urlInvalid', create_function('$url, $regExp', 'return empty($url) ? true : String::regexp_match($regExp, $url);'), array(ValidatorUrl::getRegexp()), false, array('url')));
-		} else {
+                        
+                        /************************************************************************************************************/
+                        /*  Validation code for additional proposal metadata (keys found in author.xml)
+                         *  Added by:  AIM
+                         *  Last Update: Dec 24, 2011
+                         ************************************************************************************************************/
+                        $this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'reviewedByOtherErc', 'required', 'author.submit.form.reviewedByOtherErcRequired', $this->getRequiredLocale()));
+
+                } else {
 			parent::Form('submission/metadata/metadataView.tpl');
 		}
 
@@ -112,6 +130,11 @@ class MetadataForm extends Form {
 	function initData() {
 		if (isset($this->article)) {
 			$article =& $this->article;
+
+                        //Added by AIM, 12.24.2011
+                        $proposalCountryArray = $article->getProposalCountry(null);
+                        $proposalCountry[$this->getFormLocale()] = explode(",", $proposalCountryArray[$this->getFormLocale()]);
+
 			$this->_data = array(
 				'authors' => array(),
 				'title' => $article->getTitle(null), // Localized
@@ -134,7 +157,21 @@ class MetadataForm extends Form {
 				'language' => $article->getLanguage(),
 				'sponsor' => $article->getSponsor(null), // Localized
 				'citations' => $article->getCitations(),
-				'hideAuthor' => $article->getHideAuthor()
+				'hideAuthor' => $article->getHideAuthor(),
+
+                                //Added by AIM, 12.22.2011
+                                'objectives' => $article->getObjectives(null),
+                                'keywords' => $article->getKeywords(null),
+                                'startDate' => $article->getStartDate(null),
+                                'endDate' => $article->getEndDate(null),
+                                'fundsRequired' => $article->getFundsRequired(null),
+                                'proposalCountry' => $proposalCountry,
+                                'technicalUnit' => $article->getTechnicalUnit(null),
+                                'proposalType' => $article->getProposalType(null),
+                                'submittedAsPi' => $article->getSubmittedAsPi(null),
+                                'conflictOfInterest' => $article->getConflictOfInterest(null),
+                                'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
+                                'otherErcDecision' => $article->getOtherErcDecision(null)
 			);
 
 			$authors =& $article->getAuthors();
@@ -168,10 +205,13 @@ class MetadataForm extends Form {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
+                /*
 		return array(
 			'title', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 'citations'
-		);
+		);*/
+
+                return array('title', 'abstract', 'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -210,6 +250,36 @@ class MetadataForm extends Form {
 			$templateMgr->assign('isEditor', true);
 		}
 
+                /*********************************************************************
+                 *  Get proposal types from database
+                 *  Added by:  AIM
+                 *  Last Updated: December 22, 2011
+                 *********************************************************************/
+                $articleDao =& DAORegistry::getDAO('ArticleDAO');
+                $proposalTypes = $articleDao->getProposalTypes();
+                $templateMgr->assign('proposalTypes', $proposalTypes);
+
+                /*********************************************************************
+                 *  Get list of WPRO countries from the XML file
+                 *  Added by:  AIM
+                 *  Last Updated: December 22, 2011
+                 *********************************************************************/
+
+                $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+                $proposalCountries =& $countryDAO->getAsiaPacificCountries();
+                $templateMgr->assign_by_ref('proposalCountries', $proposalCountries);
+
+
+                /*********************************************************************
+                 *  Get list of WPRO technical units from the XML file
+                 *  Added by:  AIM
+                 *  Last Updated: December 22, 2011
+                 *********************************************************************/
+
+                $technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+                $technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+                $templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+
 		parent::display();
 	}
 
@@ -226,25 +296,43 @@ class MetadataForm extends Form {
 				'primaryContact',
 				'title',
 				'abstract',
-				'coverPageAltText',
-				'showCoverPage',
-				'hideCoverPageToc',
-				'hideCoverPageAbstract',
+				//'coverPageAltText',
+				//'showCoverPage',
+				//'hideCoverPageToc',
+				//'hideCoverPageAbstract',
 				'originalFileName',
 				'fileName',
-				'width',
-				'height',
-				'discipline',
-				'subjectClass',
-				'subject',
-				'coverageGeo',
-				'coverageChron',
-				'coverageSample',
-				'type',
-				'language',
-				'sponsor',
-				'citations',
-				'hideAuthor'
+				//'width',
+				//'height',
+				//'discipline',
+				//'subjectClass',
+				//'subject',
+				//'coverageGeo',
+				//'coverageChron',
+				//'coverageSample',
+				//'type',
+				//'language',
+				//'sponsor',
+				//'citations',
+				//'hideAuthor',
+
+                                /*********************************************************
+                                 *  Read input code for additional proposal metadata
+                                 *  Added by: AIM
+                                 *  Last Edited: Dec 24, 2011
+                                 *********************************************************/
+                                 'objectives',
+                                 'keywords',
+                                 'startDate',
+                                 'endDate',
+                                 'fundsRequired',
+                                 'proposalCountry',
+                                 'technicalUnit',
+                                 'proposalType',
+                                 'submittedAsPi',
+                                 'conflictOfInterest',
+                                 'reviewedByOtherErc',
+                                 'otherErcDecision'
 			)
 		);
 
@@ -253,7 +341,6 @@ class MetadataForm extends Form {
 		if (!$section->getAbstractsNotRequired()) {
 			$this->addCheck(new FormValidatorLocale($this, 'abstract', 'required', 'author.submit.form.abstractRequired', $this->getRequiredLocale()));
 		}
-
 	}
 
 	/**
@@ -277,6 +364,33 @@ class MetadataForm extends Form {
 		$section =& $sectionDao->getSection($article->getSectionId());
 		$article->setAbstract($this->getData('abstract'), null); // Localized
 
+                /***********************************************************
+                 *  Edited by: AIM
+                 *  Last Updated: Dec 24, 2011
+                 ***********************************************************/
+
+                $article->setObjectives($this->getData('objectives'), null); // Localized
+                $article->setKeywords($this->getData('keywords'), null); // Localized
+                $article->setStartDate($this->getData('startDate'), null); // Localized
+                $article->setEndDate($this->getData('endDate'), null); // Localized
+                $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
+                
+                //Convert multiple countries to CSV string
+                $proposalCountryArray = $this->getData('proposalCountry');
+                $proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
+                $article->setProposalCountry($proposalCountry, null); // Localized
+                
+                $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
+                $article->setProposalType($this->getData('proposalType'), null); // Localized
+                $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
+                $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
+                $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
+                $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
+
+                /***************** END OF EDIT *****************************/
+
+                
+                /** AIM, 12.14.2011
 		import('classes.file.PublicFileManager');
 		$publicFileManager = new PublicFileManager();
 		if ($publicFileManager->uploadedFileExists('coverPage')) {
@@ -331,7 +445,7 @@ class MetadataForm extends Form {
 		if ($this->isEditor) {
 			$article->setHideAuthor($this->getData('hideAuthor') ? $this->getData('hideAuthor') : 0);
 		}
-
+                */
 		// Update authors
 		$authors = $this->getData('authors');
 		for ($i=0, $count=count($authors); $i < $count; $i++) {
@@ -361,7 +475,7 @@ class MetadataForm extends Form {
 				if (array_key_exists('competingInterests', $authors[$i])) {
 					$author->setCompetingInterests($authors[$i]['competingInterests'], null); // Localized
 				}
-				$author->setBiography($authors[$i]['biography'], null); // Localized
+				//$author->setBiography($authors[$i]['biography'], null); // Localized
 				$author->setPrimaryContact($this->getData('primaryContact') == $i ? 1 : 0);
 				$author->setSequence($authors[$i]['seq']);
 

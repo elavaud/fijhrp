@@ -43,7 +43,8 @@
 				{translate key="common.none"}
 			{/foreach}
 		</td>
-                <!-- {*
+                <!--  Adding of supp files not allowed after submission
+                {*
 		<td width="50%" class="value">
                         {if $submission->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED}
 				<a href="{url op="addSuppFile" path=$submission->getArticleId()}" class="action">{translate key="submission.addSuppFile"}</a>
