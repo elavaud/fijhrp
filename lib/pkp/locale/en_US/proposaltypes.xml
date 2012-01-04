@@ -5,8 +5,9 @@
     Created on : May 12, 2011, 6:18 PM
     Author     : anne
     Description:
-        {Proposal Types.
-    Updated    : 18 Nov 2011 - added Intervention Evaluation Research and Operation Research types
+        Proposal Types.
+    Updated    : 21 Dec 2011 - removed Proposal with Human Subjects; removed Operation Research types
+                 18 Nov 2011 - added Intervention Evaluation Research and Operation Research types
     Note       : If adding proposal types, also add key to author.xml (author.proposal.type.<code>)
 -->
 
@@ -14,7 +15,7 @@
     <proposaltype name="Clinical Trial with Human Subjects" code="CWHS" />
     <proposaltype name="Health System and Policy Research" code="HSPR" />
     <proposaltype name="Population-Based Survey" code="PBS" />
-    <proposaltype name="Proposal with Human Subjects" code="PWHS" />
+<!--    <proposaltype name="Proposal with Human Subjects" code="PWHS" /> --> 
     <proposaltype name="Proposal without Human Subjects" code="PNHS" />
     <proposaltype name="Qualitative Study" code="QS" />
     <proposaltype name="Intervention Evaluation Research" code="IER" />

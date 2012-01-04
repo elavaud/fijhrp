@@ -55,7 +55,7 @@ class ArticleDAO extends DAO {
 		return array(
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'withHumanSubjects', 'proposalType', 'proposalCountry',
                         'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption','withdrawReason', 'withdrawComments',
 						'approvalDate'
                         );
