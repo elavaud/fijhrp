@@ -62,10 +62,16 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 	 * Initialize form data from current article.
 	 */
 	function initData() {
+
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 
 		if (isset($this->article)) {
 			$article =& $this->article;
+
+                        //Added by AIM, 12.24.2011
+                        $proposalCountryArray = $article->getProposalCountry(null);
+                        $proposalCountry[$this->getFormLocale()] = explode(",", $proposalCountryArray[$this->getFormLocale()]);
+
 			$this->_data = array(
 				'authors' => array(),
 				'title' => $article->getTitle(null), // Localized
@@ -84,14 +90,14 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                                 /***********************************************************
                                  *  Init code for additional proposal metadata
                                  *  Added by: Anne Ivy Mirasol
-                                 *  Last Edited: May 3, 2011
+                                 *  Last Edited: Dec. 24, 2011
                                  ***********************************************************/
                                  'objectives' => $article->getObjectives(null),
                                  'keywords' => $article->getKeywords(null),
                                  'startDate' => $article->getStartDate(null),
                                  'endDate' => $article->getEndDate(null),
                                  'fundsRequired' => $article->getFundsRequired(null),
-                                 'proposalCountry' => $article->getProposalCountry(null),
+                                 'proposalCountry' => $proposalCountry,
                                  'technicalUnit' => $article->getTechnicalUnit(null),
                                  'withHumanSubjects' => $article->getWithHumanSubjects(null),
 				                 'proposalType' => $article->getProposalType(null),
@@ -271,8 +277,8 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 		}
 
                 /***********************************************************
-                 *  Edited by: Anne Ivy Mirasol
-                 *  Last Updated: April 25, 2011
+                 *  Edited by: AIM
+                 *  Last Updated: Dec 24, 2011
                  ***********************************************************/
                  
                 $article->setObjectives($this->getData('objectives'), null); // Localized
@@ -280,7 +286,12 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $article->setStartDate($this->getData('startDate'), null); // Localized
                 $article->setEndDate($this->getData('endDate'), null); // Localized
                 $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
-                $article->setProposalCountry($this->getData('proposalCountry'), null); // Localized
+
+                //Convert multiple countries to CSV string
+                $proposalCountryArray = $this->getData('proposalCountry');
+                $proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
+                $article->setProposalCountry($proposalCountry, null); // Localized
+                
                 $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
                 $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
 	            $article->setProposalType($this->getData('proposalType'), null); // Localized
@@ -346,7 +357,6 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 		if ($previousRawCitationList != $rawCitationList) {
 			$citationDao->importCitations($request, ASSOC_TYPE_ARTICLE, $article->getId(), $rawCitationList);
 		}
-
 		return $this->articleId;
 	}
 }

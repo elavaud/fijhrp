@@ -33,7 +33,6 @@ function moveAuthor(dir, authorIndex) {
 // -->
 
 $(document).ready(function() {
-
 	if($('input[name^="proposalType"]:selected').val() == null) {
 			$('#proposalTypeField').show();        
 		}
@@ -315,14 +314,33 @@ $(document).ready(function() {
 	<td width="80%" class="value"><input type="text" class="textField" name="fundsRequired[{$formLocale|escape}]" id="fundsRequired" value="{$fundsRequired[$formLocale]|escape}" size="20" maxlength="255" /></td>
 </tr>
 
-<tr valign="top">
+{* Last updated by AIM, 12.24.2011 *}
+{foreach from=$proposalCountry[$formLocale] key=i item=country}
+<tr valign="top" {if $i == 0}id="firstProposalCountry"{/if} class="proposalCountry">
 	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
 	<td width="80%" class="value">
-            <select name="proposalCountry[{$formLocale|escape}]" id="proposalCountry" class="selectMenu">
+            <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
                 <option value=""></option>
-		{html_options options=$proposalCountries selected=$proposalCountry[$formLocale]}
+		{html_options options=$proposalCountries selected=$proposalCountry[$formLocale][$i]}
             </select>
+            <a href="" class="removeProposalCountry" {if $i == 0}style="display:none"{/if}>Remove</a>
         </td>
+</tr>
+{foreachelse}
+    <tr valign="top" {if $i == 0}id="firstProposalCountry"{/if} class="proposalCountry">
+	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
+	<td width="80%" class="value">
+            <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
+                <option value=""></option>
+		{html_options options=$proposalCountries}
+            </select>
+            <a href="" class="removeProposalCountry" {if $i == 0}style="display:none"{/if}>Remove</a>
+        </td>
+    </tr>
+{/foreach}
+<tr>
+        <td width="20%">&nbsp;</td>
+        <td><a href="#" id="addAnotherCountry">Add Another Country</a></td>
 </tr>
 
 <tr valign="top">

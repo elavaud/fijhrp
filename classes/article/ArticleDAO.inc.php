@@ -779,6 +779,25 @@ class ArticleDAO extends DAO {
 	}
 
 
+        /**
+	 * Get the number of submissions for the country for the year.
+	 * @param $year
+	 * @return integer
+	 *
+         * Added 12.25.2011
+	 */
+	function getICPSubmissionsForYearCount($year) {
+		$result =& $this->retrieve('SELECT * FROM articles
+                                            WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
+                                            article_id in (SELECT article_id from article_settings where setting_name = ? and setting_value LIKE ?)',
+		array($year, 'whoId', '%.ICP.%'));
+
+		$count = $result->NumRows();
+
+		return $count;
+	}
+
+
 	/************************************
 	 * Added by: Anne Ivy Mirasol
 	 * Last Updated: May 18, 2011

@@ -188,9 +188,15 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
                     
                     $countyear = $articleDao->getSubmissionsForYearCount($year) + 1;
 
-                    $country = $article->getProposalCountry($this->getFormLocale());
-                    $countyearcountry = $articleDao->getSubmissionsForYearForCountryCount($year, $country) + 1;
-                    
+                    $countryArray = explode(",", $article->getProposalCountry($this->getFormLocale()));
+                    if(count($countryArray) > 1) {
+                        $country = 'ICP';
+                        $countyearcountry = $articleDao->getICPSubmissionsForYearCount($year) + 1;
+
+                    } else {
+                        $country = $countryArray[0];
+                        $countyearcountry = $articleDao->getSubmissionsForYearForCountryCount($year, $country) + 1;
+                    }
                     $unit = $article->getTechnicalUnit($this->getFormLocale());
 
                     $article->setWhoId($year. '.' . $countyear . '.' . $country . '.' . $countyearcountry . '.' .$unit , $this->getFormLocale());

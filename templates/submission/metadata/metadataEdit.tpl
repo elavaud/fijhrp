@@ -17,7 +17,6 @@
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 {include file="common/formErrors.tpl"}
 
-{if $canViewAuthors}
 {literal}
 <script type="text/javascript">
 <!--
@@ -30,6 +29,49 @@ function moveAuthor(dir, authorIndex) {
 	form.submit();
 }
 // -->
+
+
+$(document).ready(function() {
+    if($('input[name^="reviewedByOtherErc"]:checked').val() == "No" || $('input[name^="reviewedByOtherErc"]:checked').val() == null) {
+        //$('#otherErcDecision option:selected').removeAttr('selected');
+        //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+
+        $('#otherErcDecisionField').hide();
+        $('#otherErcDecision').val("NA");
+    }
+
+    $('input[name^="reviewedByOtherErc"]').change(function(){
+        var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
+
+        if(answer == "Yes") {
+            $('#otherErcDecisionField').show();
+        } else {
+            $('#otherErcDecisionField').hide();
+            $('#otherErcDecision').val("NA");
+
+            //$('#otherErcDecision option:selected').removeAttr('selected');
+            //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+
+        }
+    });
+
+    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+
+    $('#addAnotherCountry').click(function(){
+        var proposalCountryHtml = '<tr valign="top" class="proposalCountry">' + $('#firstProposalCountry').html() + '</tr>';
+        $('#firstProposalCountry').after(proposalCountryHtml);
+        $('#firstProposalCountry').next().find('select').attr('selectedIndex', 0);
+        $('.proposalCountry').find('.removeProposalCountry').show();
+        $('#firstProposalCountry').find('.removeProposalCountry').hide();
+        return false;
+    });
+
+    $('.removeProposalCountry').live('click', function(){
+        $(this).closest('tr').remove();
+        return false;
+    });
+});
 </script>
 {/literal}
 
@@ -59,167 +101,309 @@ function moveAuthor(dir, authorIndex) {
 		</td>
 	</tr>
 </table>
-</locales>
+</div>
 {/if}
 
 <div id="authors">
-<h3>{translate key="article.authors"}</h3>
+<h3>{*translate key="article.authors" *} Responsible Technical Officer</h3>
 
 <input type="hidden" name="deletedAuthors" value="{$deletedAuthors|escape}" />
 <input type="hidden" name="moveAuthor" value="0" />
 <input type="hidden" name="moveAuthorDir" value="" />
 <input type="hidden" name="moveAuthorIndex" value="" />
 
-<table width="100%" class="data">
-	{foreach name=authors from=$authors key=authorIndex item=author}
-	<tr valign="top">
-		<td width="20%" class="label">
-			<input type="hidden" name="authors[{$authorIndex|escape}][authorId]" value="{$author.authorId|escape}" />
-			<input type="hidden" name="authors[{$authorIndex|escape}][seq]" value="{$authorIndex+1}" />
-			{if $smarty.foreach.authors.total <= 1}
-				<input type="hidden" name="primaryContact" value="{$authorIndex|escape}" />
-			{/if}
-			{fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}
-		</td>
-		<td width="80%" class="value"><input type="text" name="authors[{$authorIndex|escape}][firstName]" id="authors-{$authorIndex|escape}-firstName" value="{$author.firstName|escape}" size="20" maxlength="40" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-middleName" key="user.middleName"}</td>
-		<td class="value"><input type="text" name="authors[{$authorIndex|escape}][middleName]" id="authors-{$authorIndex|escape}-middleName" value="{$author.middleName|escape}" size="20" maxlength="40" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-lastName" required="true" key="user.lastName"}</td>
-		<td class="value"><input type="text" name="authors[{$authorIndex|escape}][lastName]" id="authors-{$authorIndex|escape}-lastName" value="{$author.lastName|escape}" size="20" maxlength="90" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-email" required="true" key="user.email"}</td>
-		<td class="value"><input type="text" name="authors[{$authorIndex|escape}][email]" id="authors-{$authorIndex|escape}-email" value="{$author.email|escape}" size="30" maxlength="90" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-url" key="user.url"}</td>
-		<td class="value"><input type="text" name="authors[{$authorIndex|escape}][url]" id="authors-{$authorIndex|escape}-url" value="{$author.url|escape}" size="30" maxlength="90" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-affiliation" key="user.affiliation"}</td>
-		<td class="value">
-			<textarea name="authors[{$authorIndex|escape}][affiliation][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-affiliation" rows="5" cols="40">{$author.affiliation[$formLocale]|escape}</textarea><br/>
-			<span class="instruct">{translate key="user.affiliation.description"}</span>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-country" key="common.country"}</td>
-		<td class="value">
-			<select name="authors[{$authorIndex|escape}][country]" id="authors-{$authorIndex|escape}-country" class="selectMenu">
-				<option value=""></option>
-				{html_options options=$countries selected=$author.country|escape}
-			</select>
-		</td>
-	</tr>
-	{if $currentJournal->getSetting('requireAuthorCompetingInterests')}
-		<tr valign="top">
-			<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
-			<td width="80%" class="value"><textarea name="authors[{$authorIndex|escape}][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-competingInterests" rows="5" cols="40">{$author.competingInterests[$formLocale]|escape}</textarea></td>
-		</tr>
-	{/if}{* requireAuthorCompetingInterests *}
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-$authorIndex-biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
-		<td class="value"><textarea name="authors[{$authorIndex|escape}][biography][{$formLocale|escape}]" id="authors-{$authorIndex|escape}-biography" rows="5" cols="40" class="textArea">{$author.biography[$formLocale]|escape}</textarea></td>
-	</tr>
-
-{call_hook name="Templates::Submission::MetadataEdit::Authors"}
-
-	{if $smarty.foreach.authors.total > 1}
-	<tr valign="top">
-		<td class="label">{translate key="author.submit.reorder"}</td>
-		<td class="value"><a href="javascript:moveAuthor('u', '{$authorIndex|escape}')" class="action plain">&uarr;</a> <a href="javascript:moveAuthor('d', '{$authorIndex|escape}')" class="action plain">&darr;</a></td>
-	</tr>
-	<tr valign="top">
-		<td>&nbsp;</td>
-		<td class="label"><input type="radio" name="primaryContact" id="primaryContact-{$authorIndex|escape}" value="{$authorIndex|escape}"{if $primaryContact == $authorIndex} checked="checked"{/if} /> <label for="primaryContact-{$authorIndex|escape}">{translate key="author.submit.selectPrincipalContact"}</label></td>
-		<td class="labelRightPlain">&nbsp;</td>
-	</tr>
-	<tr valign="top">
-		<td>&nbsp;</td>
-		<td class="value"><input type="submit" name="delAuthor[{$authorIndex|escape}]" value="{translate key="author.submit.deleteAuthor"}" class="button" /></td>
-	</tr>
-	{/if}
-	{if !$smarty.foreach.authors.last}
-	<tr>
-		<td colspan="2" class="separator">&nbsp;</td>
-	</tr>
-	{/if}
-
-	{foreachelse}
-	<input type="hidden" name="authors[0][authorId]" value="0" />
-	<input type="hidden" name="primaryContact" value="0" />
-	<input type="hidden" name="authors[0][seq]" value="1" />
-	<tr valign="top">
-		<td width="20%" class="label">{fieldLabel name="authors-0-firstName" required="true" key="user.firstName"}</td>
-		<td width="80%" class="value"><input type="text" name="authors[0][firstName]" id="authors-0-firstName" size="20" maxlength="40" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-0-middleName" key="user.middleName"}</td>
-		<td class="value"><input type="text" name="authors[0][middleName]" id="authors-0-middleName" size="20" maxlength="40" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-0-lastName" required="true" key="user.lastName"}</td>
-		<td class="value"><input type="text" name="authors[0][lastName]" id="authors-0-lastName" size="20" maxlength="90" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-0-affiliation" key="user.affiliation"}</td>
-		<td class="value">
-			<textarea name="authors[0][affiliation][{$formLocale|escape}]" class="textArea" id="authors-0-affiliation" rows="5" cols="40"></textarea><br/>
-			<span class="instruct">{translate key="user.affiliation.description"}</span>
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-0-email" required="true" key="user.email"}</td>
-		<td class="value"><input type="text" name="authors[0][email]" id="authors-0-email" size="30" maxlength="90" class="textField" /></td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-0-url" key="user.url"}</td>
-		<td class="value"><input type="text" name="authors[0][url]" id="authors-0-url" size="30" maxlength="90" class="textField" /></td>
-	</tr>
-	{if $currentJournal->getSetting('requireAuthorCompetingInterests')}
-		<tr valign="top">
-			<td width="20%" class="label">{fieldLabel name="authors-0-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
-			<td width="80%" class="value"><textarea name="authors[0][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-0-competingInterests" rows="5" cols="40"></textarea></td>
-		</tr>
-	{/if}
-	<tr valign="top">
-		<td class="label">{fieldLabel name="authors-0-biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
-		<td class="value"><textarea name="authors[0][biography][{$formLocale|escape}]" id="authors-0-biography" rows="5" cols="40" class="textArea"></textarea></td>
-	</tr>
-	{/foreach}
-</table>
-
-<p><input type="submit" class="button" name="addAuthor" value="{translate key="author.submit.addAuthor"}" /></p>
-</div>
-
-<div class="separator"></div>
+{foreach name=authors from=$authors key=authorIndex item=author}
+<input type="hidden" name="authors[{$authorIndex|escape}][authorId]" value="{$author.authorId|escape}" />
+<input type="hidden" name="authors[{$authorIndex|escape}][seq]" value="{$authorIndex+1}" />
+{if $smarty.foreach.authors.total <= 1}
+<input type="hidden" name="primaryContact" value="{$authorIndex|escape}" />
 {/if}
+
+{if $authorIndex == 1}<h3>Primary Investigators</h3>{/if}
+<table width="100%" class="data">
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][firstName]" id="authors-{$authorIndex|escape}-firstName" value="{$author.firstName|escape}" size="20" maxlength="40" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-middleName" key="user.middleName"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][middleName]" id="authors-{$authorIndex|escape}-middleName" value="{$author.middleName|escape}" size="20" maxlength="40" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-lastName" required="true" key="user.lastName"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][lastName]" id="authors-{$authorIndex|escape}-lastName" value="{$author.lastName|escape}" size="20" maxlength="90" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-email" required="true" key="user.email"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][email]" id="authors-{$authorIndex|escape}-email" value="{$author.email|escape}" size="30" maxlength="90" /></td>
+</tr>
+<tr valign="top">
+	<td class="label">{fieldLabel name="authors-$authorIndex-url" key="user.url"}</td>
+	<td class="value"><input type="text" name="authors[{$authorIndex|escape}][url]" id="authors-{$authorIndex|escape}-url" value="{$author.url|escape}" size="30" maxlength="90" class="textField" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-affiliation" key="user.affiliation"}</td>
+	<td width="80%" class="value">
+		<textarea name="authors[{$authorIndex|escape}][affiliation][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-affiliation" rows="5" cols="40">{$author.affiliation[$formLocale]|escape}</textarea><br/>
+		<span class="instruct">{translate key="user.affiliation.description"}</span>
+	</td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-country" key="common.country"}</td>
+	<td width="80%" class="value">
+		<select name="authors[{$authorIndex|escape}][country]" id="authors-{$authorIndex|escape}-country" class="selectMenu">
+			<option value=""></option>
+			{html_options options=$countries selected=$author.country}
+		</select>
+	</td>
+</tr>
+{if $currentJournal->getSetting('requireAuthorCompetingInterests')}
+	<tr valign="top">
+		<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
+		<td width="80%" class="value"><textarea name="authors[{$authorIndex|escape}][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-competingInterests" rows="5" cols="40">{$author.competingInterests[$formLocale]|escape}</textarea></td>
+	</tr>
+{/if}{* requireAuthorCompetingInterests *}
+<!-- Comment Out, AIM, May 31, 2011
+{*
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-$authorIndex-biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
+	<td width="80%" class="value"><textarea name="authors[{$authorIndex|escape}][biography][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-biography" rows="5" cols="40">{$author.biography[$formLocale]|escape}</textarea></td>
+</tr>
+*}
+-->
+
+{call_hook name="Templates::Author::Submit::Authors"}
+
+{if $smarty.foreach.authors.total > 1}
+<!--
+{*
+<tr valign="top">
+	<td colspan="2">
+		<a href="javascript:moveAuthor('u', '{$authorIndex|escape}')" class="action">&uarr;</a>
+                <a href="javascript:moveAuthor('d', '{$authorIndex|escape}')" class="action">&darr;</a>
+		{translate key="author.submit.reorderInstructions"}
+	</td>
+</tr>
+*}
+-->
+<tr valign="top">
+	<td width="80%" class="value" colspan="2">
+            <div style="display:none">
+            <input type="radio" name="primaryContact" value="{$authorIndex|escape}"{if $primaryContact == $authorIndex} checked="checked"{/if} /> <label for="primaryContact">{*translate key="author.submit.selectPrincipalContact"*}</label>
+            </div>
+            {if $authorIndex != 0}
+                <input type="submit" name="delAuthor[{$authorIndex|escape}]" value="{*translate key="author.submit.deleteAuthor"*}Delete Primary Investigator" class="button" />
+            {else}
+                &nbsp;
+            {/if}
+        </td>
+</tr>
+<tr>
+	<td colspan="2"><br/></td>
+</tr>
+{/if}
+
+
+</table>
+{foreachelse}
+<input type="hidden" name="authors[0][authorId]" value="0" />
+<input type="hidden" name="primaryContact" value="0" />
+<input type="hidden" name="authors[0][seq]" value="1" />
+<table width="100%" class="data">
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-firstName" required="true" key="user.firstName"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[0][firstName]" id="authors-0-firstName" size="20" maxlength="40" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-middleName" key="user.middleName"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[0][middleName]" id="authors-0-middleName" size="20" maxlength="40" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-lastName" required="true" key="user.lastName"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[0][lastName]" id="authors-0-lastName" size="20" maxlength="90" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-affiliation" key="user.affiliation"}</td>
+	<td width="80%" class="value">
+		<textarea name="authors[0][affiliation][{$formLocale|escape}]" class="textArea" id="authors-0-affiliation" rows="5" cols="40"></textarea><br/>
+		<span class="instruct">{translate key="user.affiliation.description"}</span>
+	</td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-country" key="common.country"}</td>
+	<td width="80%" class="value">
+		<select name="authors[0][country]" id="authors-0-country" class="selectMenu">
+			<option value=""></option>
+			{html_options options=$countries}
+		</select>
+	</td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-email" required="true" key="user.email"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[0][email]" id="authors-0-email" size="30" maxlength="90" /></td>
+</tr>
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-url" required="true" key="user.url"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="authors[0][url]" id="authors-0-url" size="30" maxlength="90" /></td>
+</tr>
+{if $currentJournal->getSetting('requireAuthorCompetingInterests')}
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
+	<td width="80%" class="value"><textarea name="authors[0][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-0-competingInterests" rows="5" cols="40"></textarea></td>
+</tr>
+{/if}
+<!-- Comment out, AIM May 31, 2011
+{*
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="authors-0-biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
+	<td width="80%" class="value"><textarea name="authors[0][biography][{$formLocale|escape}]" class="textArea" id="authors-0-biography" rows="5" cols="40"></textarea></td>
+</tr>
+*}
+-->
+</table>
+{/foreach}
+
+<p><input type="submit" class="button" name="addAuthor" value="{*translate key="author.submit.addAuthor"*}Add Primary Investigator" /></p>
+</div>
+<div class="separator"></div>
 
 <div id="titleAndAbstract">
 <h3>{translate key="submission.titleAndAbstract"}</h3>
 
 <table width="100%" class="data">
-	<tr>
-		<td width="20%" class="label">{fieldLabel name="title" required="true" key="article.title"}</td>
-		<td width="80%" class="value"><input type="text" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="50" maxlength="255" class="textField" /></td>
-	</tr>
 
-	<tr>
-		<td colspan="2" class="separator">&nbsp;</td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" required="true" key="article.abstract"}{else}{fieldLabel name="abstract" key="article.abstract"}{/if}</td>
-		<td class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" rows="15" cols="50" class="textArea">{$abstract[$formLocale]|escape}</textarea></td>
-	</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="title" required="true" key="proposal.title"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="title[{$formLocale|escape}]" id="title" value="{$title[$formLocale]|escape}" size="50" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{if $section->getAbstractsNotRequired()==0}{fieldLabel name="abstract" key="proposal.abstract" required="true"}{else}{fieldLabel name="abstract" key="proposal.abstract"}{/if}</td>
+	<td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="50">{$abstract[$formLocale]|escape}</textarea></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="objectives" required="true" key="proposal.objectives"}</td>
+	<td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="50">{$objectives[$formLocale]|escape}</textarea></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="50" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="startDate" required="true" key="proposal.startDate"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="startDate[{$formLocale|escape}]" id="startDate" value="{$startDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="endDate" required="true" key="proposal.endDate"}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="endDate[{$formLocale|escape}]" id="endDate" value="{$endDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="fundsRequired" required="true" key="proposal.fundsRequired"}{$fundsRequired[$formLocale]}</td>
+	<td width="80%" class="value"><input type="text" class="textField" name="fundsRequired[{$formLocale|escape}]" id="fundsRequired" value="{$fundsRequired[$formLocale]|replace:',':''|number_format:2:".":","}" size="20" maxlength="255" /></td>
+</tr>
+
+{* Last updated by AIM, 12.24.2011 *}
+{foreach from=$proposalCountry[$formLocale] key=i item=country}
+<tr valign="top" {if $i == 0}id="firstProposalCountry"{/if} class="proposalCountry">
+	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
+	<td width="80%" class="value">
+            <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
+                <option value=""></option>
+		{html_options options=$proposalCountries selected=$proposalCountry[$formLocale][$i]}
+            </select>
+            <a href="" class="removeProposalCountry" {if $i == 0}style="display:none"{/if}>Remove</a>
+        </td>
+</tr>
+{foreachelse}
+    <tr valign="top" {if $i == 0}id="firstProposalCountry"{/if} class="proposalCountry">
+	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
+	<td width="80%" class="value">
+            <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
+                <option value=""></option>
+		{html_options options=$proposalCountries}
+            </select>
+            <a href="" class="removeProposalCountry" {if $i == 0}style="display:none"{/if}>Remove</a>
+        </td>
+    </tr>
+{/foreach}
+<tr>
+        <td width="20%">&nbsp;</td>
+        <td><a href="#" id="addAnotherCountry">Add Another Country</a></td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="technicalUnit" required="true" key="proposal.technicalUnit"}</td>
+	<td width="80%" class="value">
+            <select name="technicalUnit[{$formLocale|escape}]" id="technicalUnit" class="selectMenu">
+                <option value=""></option>
+		{html_options options=$technicalUnits selected=$technicalUnit[$formLocale]}
+            </select>
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="proposalType" required="true" key="proposal.proposalType"}</td>
+	<td width="80%" class="value">
+            <select name="proposalType[{$formLocale|escape}]" id="proposalType" class="selectMenu">
+                <option value=""></option>
+                {foreach from=$proposalTypes key=id item=ptype}
+                <option value="{$ptype.code}" {if  $proposalType[$formLocale] == $ptype.code } selected="selected"{/if} >{$ptype.name}</option>
+                {/foreach}
+            </select>
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="submittedAsPi" required="true" key="proposal.submittedAsPi"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="submittedAsPi[{$formLocale|escape}]" id="submittedAsPi" value="Yes" {if  $submittedAsPi[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="submittedAsPi[{$formLocale|escape}]" id="submittedAsPi" value="No" {if  $submittedAsPi[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="conflictOfInterest" required="true" key="proposal.conflictOfInterest"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="conflictOfInterest[{$formLocale|escape}]" id="conflictOfInterest" value="Yes" {if  $conflictOfInterest[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="conflictOfInterest[{$formLocale|escape}]" id="conflictOfInterest" value="No" {if  $conflictOfInterest[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="reviewedByOtherErc" required="true" key="proposal.reviewedByOtherErc"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="reviewedByOtherErc[{$formLocale|escape}]" id="reviewedByOtherErc" value="Yes" {if  $reviewedByOtherErc[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="reviewedByOtherErc[{$formLocale|escape}]" id="reviewedByOtherErc" value="No" {if  $reviewedByOtherErc[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top" id="otherErcDecisionField">
+	<td width="20%" class="label">{fieldLabel name="otherErcDecision" required="false" key="proposal.otherErcDecision"}</td>
+	<td width="80%" class="value">
+            <select name="otherErcDecision[{$formLocale|escape}]" id="otherErcDecision" class="selectMenu">
+                <option value="NA"></option>
+                <option value="Under Review" {if  $otherErcDecision[$formLocale] == "Under Review" } selected="selected"{/if} >Under Review</option>
+                <option value="Final Decision Available" {if  $otherErcDecision[$formLocale] == "Final Decision Available" } selected="selected"{/if} >Final Decision Available</option>
+            </select>
+        </td>
+</tr>
+
 </table>
 </div>
 
 <div class="separator"></div>
 
+{*
+<!--
 <div id="cover">
 <h3>{translate key="editor.article.cover"}</h3>
 
@@ -254,7 +438,11 @@ function moveAuthor(dir, authorIndex) {
 </div>
 
 <div class="separator"></div>
+-->
+*}
 
+{*
+<!--
 <div id="indexing">
 <h3>{translate key="submission.indexing"}</h3>
 
@@ -371,7 +559,11 @@ function moveAuthor(dir, authorIndex) {
 </div>
 
 <div class="separator"></div>
+-->
+*}
 
+{*
+<!--
 <div id="supportingAgencies">
 <h3>{translate key="submission.supportingAgencies"}</h3>
 
@@ -388,7 +580,11 @@ function moveAuthor(dir, authorIndex) {
 </div>
 
 <div class="separator"></div>
+-->
+*}
 
+{*
+<!--
 {call_hook name="Templates::Submission::MetadataEdit::AdditionalMetadata"}
 
 {if $journalSettings.metaCitations}
@@ -422,7 +618,11 @@ function moveAuthor(dir, authorIndex) {
 </script>
 <div class="separator"></div>
 {/if}
+-->
+*}
 
+{*
+<!--
 {if $isEditor}
 <div id="display">
 <h3>{translate key="editor.article.display"}</h3>
@@ -441,7 +641,8 @@ function moveAuthor(dir, authorIndex) {
 {/if}
 
 <div class="separator"></div>
-
+-->
+*}
 
 <p><input type="submit" value="{translate key="submission.saveMetadata"}" class="button defaultButton"/> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="history.go(-1)" /></p>
 
