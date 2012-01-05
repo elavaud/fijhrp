@@ -429,5 +429,4 @@
 	<message key="editor.reports.countryRequired">Select at least (1) country for the report.</message>	
 	<message key="editor.reports.technicalUnitRequired">Select at least (1) technical unit for the report.</message>	
 	<message key="editor.reports.decisionRequired">Select at least (1) decision for the report.</message>	
-	
 </locale>

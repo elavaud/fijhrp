@@ -14,7 +14,6 @@
 <script type="text/javascript" src="{$baseUrl|cat:"/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"}"></script>
 {literal}<script type="text/javascript">
 $(document).ready(function() {
-
 		$("#selectAllCountries").click(function() {
 		     $("#countriesTbl input:checkbox").attr('checked',this.checked);
 		});
@@ -72,6 +71,7 @@ $(document).ready(function() {
 		    </select>	
 		    
 		    <h5>{translate key="editor.reports.country"}</h5>
+<<<<<<< HEAD
 		    <input type="checkbox" id="selectAllCountries">&nbsp;&nbsp;<b>{translate key="editor.reports.allCountries"}</b>
 			{assign var="numCols" value="3"}
 			{assign var="col" value="0"}
@@ -98,6 +98,18 @@ $(document).ready(function() {
 			</td>  {assign var="col" value=$col+1}
 			{/foreach}
 			</table>
+=======
+			<select name="countries[]" id="countries" multiple="multiple" size="5" class="selectMenu">
+		 		<option value="0" selected="selected">{translate key="editor.reports.allCountries"}</option>
+		 		{html_options options=$countriesOptions selected=$countries}
+		    </select>
+		    	
+		    <h5>{translate key="editor.reports.technicalUnit"} </h5>
+		    <select name="technicalUnits[]" id="technicalUnits" multiple="multiple" size="5" class="selectMenu">
+		 		<option value="0" selected="selected">{translate key="editor.reports.allTechnicalUnits"}</option>
+		 		{html_options options=$technicalUnitsOptions selected=$technicalUnits}
+		    </select>
+>>>>>>> dac19a7b7d6ad9cd11997929cefd0f4c3e82b1c1
 
 	<br/>			
 	<h5>DATE</h5>
