@@ -18,19 +18,18 @@
 	<tr>
 		<td><input type="text" id="query" name="query" size="15" maxlength="255" value="" class="textField" /></td>
 	</tr>
-	<tr>
+	<!-- <tr>
 		<td><select name="searchField" size="1" class="selectMenu">
 			{html_options_translate options=$articleSearchByOptions}
 		</select></td>
 	</tr>
-	<tr>
+	<tr>  -->
 		<td><input type="submit" value="{translate key="common.search"}" class="button" /></td>
 	</tr>
 	</table>
 	</form>
 	
 	<br />
-	
 	{if $currentJournal}
 	<span class="blockSubtitle">{translate key="navigation.browse"}</span>
 	<ul>
@@ -41,6 +40,6 @@
 		<li><a href="{url journal="index"}">{translate key="navigation.otherJournals"}</a></li>
 		{/if}
 	</ul>
-	{/if}
+	{/if} 
 </div>
 {/if}

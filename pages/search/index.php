@@ -19,15 +19,20 @@
 
 
 switch ($op) {
+	case 'authors':
+	case 'titles':
+		define('HANDLER_CLASS', 'SearchHandler');
+		import('pages.search.SearchHandler');
+		break;
 	case 'index':
 	case 'search':
 	case 'advanced':
-	case 'authors':
-	case 'titles':
 	case 'results':
 	case 'advancedResults':
-		define('HANDLER_CLASS', 'SearchHandler');
-		import('pages.search.SearchHandler');
+	case 'generateCSV':
+	case 'viewProposal':
+		define('HANDLER_CLASS', 'NewSearchHandler');
+		import('pages.search.NewSearchHandler');
 		break;
 }
 
