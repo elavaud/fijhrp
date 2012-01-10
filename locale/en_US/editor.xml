@@ -16,7 +16,7 @@
 	<message key="editor.article.reviewForms">Review Forms</message>
 	<message key="editor.article.selectReviewForm">Select Review Form</message>
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>
-	<message key="editor.home">STO Home</message> /*editor to STO*/
+	<message key="editor.home">ERC Secretary Home</message> /*editor to ERC Secretary */
 	<message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
 	<message key="editor.submissionsAndPublishing">Submissions and Publishing</message>
 	<message key="editor.submissionQueue">Submission Queue</message>
@@ -160,8 +160,8 @@
 	<message key="editor.article.authorProofing">Author Proofing</message>
 	<message key="editor.article.archiveSubmission">Reject and Archive Submission</message>
 	<message key="editor.article.restoreToQueue">Restore to Active List</message>
-	<message key="editor.article.assignSectionEditor">Add Senior Technical Officer</message>
-	<message key="editor.article.assignEditor">Add Senior Technical Officer</message>
+	<message key="editor.article.assignSectionEditor">Add ERC Secretary</message>
+	<message key="editor.article.assignEditor">Add ERC Secretary</message>
 	<message key="editor.article.selectEditor">Select {$roleName}</message>
 
 	<!-- *********************************************

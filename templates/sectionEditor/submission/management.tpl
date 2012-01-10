@@ -74,9 +74,12 @@
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
 	</tr>
 	<tr>
+{******************
+* Remove Section:Articles display - spf 6 Jan 2012
 		<td class="label">{translate key="section.section"}</td>
-		<td class="value">{$submission->getSectionTitle()|escape}</td>
 
+		<td class="value">{$submission->getSectionTitle()|escape}</td>
+**************}
 		{*********************************************
 		 *
 		 * Section is set by default, do not allow editor and section editor to change section
