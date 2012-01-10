@@ -15,6 +15,7 @@
 
 
 import('classes.article.Article');
+import('classes.submission.common.Action');
 
 class ArticleDAO extends DAO {
 	var $authorDao;
@@ -55,7 +56,7 @@ class ArticleDAO extends DAO {
 		return array(
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalType', 'proposalCountry',
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'withHumanSubjects', 'proposalType', 'proposalCountry',
                         'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption','withdrawReason', 'withdrawComments',
 						'approvalDate'
                         );
@@ -920,6 +921,82 @@ class ArticleDAO extends DAO {
 		}
 		$this->flushCache();
 		return $article->getId();
+	}
+	
+	function searchProposalsPublic($query, $dateFrom, $dateTo) {
+		$searchSql = "select distinct a.article_id, whoid.setting_value as whoid, a.date_submitted as date_submitted, title.setting_value as title, 
+					  country.setting_value as country, author.first_name as afname, author.last_name as alname, author.email as email,
+					  editor.first_name as efname, editor.last_name as elname, startDate.setting_value as start_date, 
+					  endDate.setting_value as end_date, keywords.setting_value as keywords, ed.decision, ed.date_decided
+				  FROM articles a
+				inner join article_settings whoid on (a.article_id = whoid.article_id and whoid.setting_name = 'whoId')
+				inner join article_settings title on (a.article_id = title.article_id and title.setting_name = 'title')
+				inner join article_settings country on (a.article_id = country.article_id and country.setting_name = 'proposalCountry')
+				inner join article_settings keywords on (a.article_id = keywords.article_id and keywords.setting_name = 'keywords')
+				inner join article_settings startDate on (a.article_id = startDate.article_id and startDate.setting_name = 'startDate')
+				inner join article_settings endDate on (a.article_id = endDate.article_id and endDate.setting_name = 'endDate')
+				inner join users as author on (author.user_id = a.user_id)
+				inner join edit_decisions as ed on (ed.article_id = a.article_id)
+				inner join users as editor on (editor.user_id = ed.editor_id)
+				where (ed.decision = '1' or ed.decision = '2' or ed.decision = '3')";
+		
+		if (!empty($query)) {
+			$searchSql .= " AND (keywords.setting_value LIKE '"."%".$query."%"."' or title.setting_value LIKE '"."%".$query."%"."')";
+		}
+	
+		if (!empty($dateFrom) || !empty($dateTo)){
+			if (!empty($dateFrom)) {
+				$searchSql .= ' AND a.date_submitted >= ' . $this->datetimeToDB($dateFrom);
+			}
+			if (!empty($dateTo)) {
+				$searchSql .= ' AND a.date_submitted <= ' . $this->datetimeToDB($dateTo);
+			}
+		}
+		$result =& $this->retrieve($searchSql);
+		
+		while (!$result->EOF) {
+			$articles[] =& $this->_returnSearchArticleFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $articles;
+	}
+	
+/**
+	 * Internal function to return an Article object from a row.
+	 * @param $row array
+	 * @return Article
+	 */
+	function &_returnSearchArticleFromRow(&$row) {
+		$article = new Article();
+		$this->_searchArticleFromRow($article, $row);
+		return $article;
+	}
+
+	/**
+	 * Internal function to fill in the passed article object from the row.
+	 * @param $article Article output article
+	 * @param $row array input row
+	 */
+	function _searchArticleFromRow(&$article, &$row) {
+		$article->setId($row['article_id']);
+		$article->setWhoId($row['whoid']);
+		$article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
+		$article->setTitle($row['title']);
+		$article->setProposalCountry($row['country']);
+		$article->setPrimaryEditor($row['efname']." ".$row['elname']);
+		$article->setPrimaryAuthor($row['afname']." ".$row['alname']);
+		$article->setStartDate($this->datetimeFromDB($row['start_date']));
+		$article->setEndDate($this->datetimeFromDB($row['end_date']));
+		$article->setProposalStatus($row['decision']);
+		$article->setDateStatusModified($this->datetimeFromDB($row['date_decided']));
+		$article->setAuthorEmail($row['email']);
+		
+		HookRegistry::call('ArticleDAO::_returnSearchArticleFromRow', array(&$article, &$row));
+
 	}
 }
 

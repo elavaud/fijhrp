@@ -1,0 +1,11 @@
+Summary of 6 Jan 2012 Meeting
+Attendees: Len, Linette, Susan
+
+1. Project Team structure would still change. The current tentative grouping (based on main HIIP functions) are:
+a. CMS
+b. Mapping
+c. Dashboarding
+d. Advanced BI and Reports
+e. Shared Services: OS, Server Administration
+f. Database and Analysis (including ETL and OLAP)
+g. Quality Assurance (QA)

@@ -76,18 +76,15 @@
 	</tr>
 	<tr>
 		<td class="label">{translate key="section.section"}</td>
-		<td class="value">{$submission->getSectionTitle()|escape}</td>
-
-		
 		 
 		  Section is set by default, do not allow editor and section editor to change section
 		  Edited by Gay Figueroa
 		  Last Update: 5/3/2011
-		 
-		 
-			<td class="value">
-			<form action="{url op="updateSection" path=$submission->getId()}" method="post">{translate key="submission.changeSection"} <select 				name="section" size="1" class="selectMenu">{html_options options=$sections selected=$submission->getSectionId()}</select> <input type="submit" 				value="{translate key="common.record"}" class="button" /></form>
-			</td>
+
+                <td class="value">{$submission->getSectionTitle()|escape}</td>
+                <td class="value">
+                <form action="{url op="updateSection" path=$submission->getId()}" method="post">{translate key="submission.changeSection"} <select 				name="section" size="1" class="selectMenu">{html_options options=$sections selected=$submission->getSectionId()}</select> <input type="submit" 				value="{translate key="common.record"}" class="button" /></form>
+                </td>
 		
 	</tr>
 	{if $submission->getCommentsToEditor()}

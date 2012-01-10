@@ -1186,6 +1186,35 @@ class Submission extends DataObject {
 	}
 
 
+    /**
+	 * Get "localized" withHumanSubjects 
+	 * @return string
+	 */
+	function getLocalizedWithHumanSubjects() {
+		return $this->getLocalizedData('withHumanSubjects');
+	}
+
+	/**
+	 * Get withHumanSubjects.
+	 * @param $locale
+	 * @return string
+	 */
+	function getWithHumanSubjects($locale) {
+		return $this->getData('withHumanSubjects', $locale);
+	}
+
+	/**
+	 * Set withHumanSubjects (yes/no).
+	 * @param $withHumanSubjects string
+	 * @param $locale
+	 */
+	function setWithHumanSubjects($withHumanSubjects, $locale) {
+		return $this->setData('withHumanSubjects', $withHumanSubjects, $locale);
+	}
+
+
+
+
 
         /**
 	 * Get "localized" proposal type (if applicable).
@@ -1501,6 +1530,29 @@ class Submission extends DataObject {
 	 */
 	function getApprovalDate($locale) {
 		return $this->getData("approvalDate", $locale);
+	}
+	
+	function setPrimaryAuthor($author) {
+		return $this->setData('primaryAuthor', $author);
+	}
+	
+	function getPrimaryAuthor() {
+		return $this->getData("primaryAuthor");
+	}
+	
+	function setPrimaryEditor($editor) {
+		return $this->setData('primaryEditor', $editor);
+	}
+	
+	function getPrimaryEditor() {
+		return $this->getData("primaryEditor");
+	}
+	
+	function setAuthorEmail($email) {
+		return $this->setData("authorEmail", $email);
+	}
+	function getAuthorEmail() {
+		return $this->getData("authorEmail");
 	}
 
 }

@@ -161,7 +161,8 @@
         <message key="proposal.startDate">Start Date</message>
         <message key="proposal.endDate">End Date</message>
         <message key="proposal.fundsRequired">Funds Required (in USD)</message>
-        <message key="proposal.proposalType">Proposal Type</message>
+        <message key="proposal.withHumanSubjects">Does the research involve human subjects?</message>
+        <message key="proposal.proposalType">Specific Proposal Type (for Proposals with Human Subjects)</message>
         <message key="proposal.proposalCountry">Country</message>
         <message key="proposal.technicalUnit">Technical Unit</message>
         <message key="proposal.conflictOfInterest">Conflict of Interest?</message>
@@ -219,7 +220,7 @@
 	<message key="submissions.reviewRound">Review Round</message>
 	<message key="submissions.proof">Proof</message>
 	<message key="submissions.editorDecision">ERC Decision</message> /*Editor decision to ERC Decision*/
-	<message key="submissions.editorRuling">Editor Ruling</message>
+	<message key="submissions.editorRuling">ERC Ruling</message>
 	<message key="submission.eventLog">Event Log</message>
 
 	<!-- Submission list search engine -->
@@ -327,10 +328,10 @@
 
 	<message key="submission.event.general.authorRevision">RTO revision file updated</message>
 	
-	<message key="submission.event.editor.editorAssigned">Editor assigned to submission</message>
-	<message key="submission.event.editor.editorUnassigned">Editor unassigned from submission</message>
-	<message key="submission.event.editor.editorDecision">Editor decision submitted</message>
-	<message key="submission.event.editor.editorFile">Editor file updated</message>
+	<message key="submission.event.editor.editorAssigned">Secretary assigned to submission</message>
+	<message key="submission.event.editor.editorUnassigned">Secretary unassigned from submission</message>
+	<message key="submission.event.editor.editorDecision">Secreatary decision submitted</message>
+	<message key="submission.event.editor.editorFile">ERC file updated</message>
 	<message key="submission.event.editor.submissionArchived">Submission sent to archive</message>
 	<message key="submission.event.editor.submissionRestored">Submission restored from archive</message>
 
@@ -453,8 +454,8 @@ Note that the OAI interface can be disabled for this site by editing the OJS sys
 	<!-- Setup Step 2 -->
 
 
-	<message key="manager.setup.reviewProcessEmailDescription">Editors send
-	Reviewers the request to review with the submission attached to the email. Reviewers email editors their assent (or regrets), as well as the review and recommendation. Editors enter Reviewers' assent (or regrets), as well as the review and recommendation on the submission's Review page, to record the review process.</message>
+	<message key="manager.setup.reviewProcessEmailDescription">The ERC Secretary sends
+to the ERC Members the request to review with the proposal attached to the email. ERC Members email the Secretary their assent (or regrets), as well as the review and recommendation. The Secretary enters the ERC Member's assent (or regrets), as well as the review and recommendation on the proposal's Review page, to record the review process.</message>
 
 
 	<message key="manager.setup.lockssDescription"><![CDATA[Open Journal Systems supports the <a href="http://lockss.org/" target="_blank">LOCKSS</a> (Lots of Copies Keep Stuff Safe) system to ensure a secure and permanent archive for the journal. LOCKSS is open source software developed at Stanford University Library that enables libraries to preserve selected web journals by regularly polling registered journal websites for newly published content and archiving it. Each archive is continually validated against other library caches, and if content is found to be corrupted or lost, the other caches or the journal is used to restore it.
@@ -632,7 +633,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.article.sendReminder">Send Reminder</message>
 	<message key="reviewer.article.automatic">(Auto)</message>
 	<message key="reviewer.article.recommendation">Recommendation</message>
-	<message key="reviewer.article.submitReview">Submit Review To Editor</message>
+	<message key="reviewer.article.submitReview">Submit Review To ERC</message>
 	<message key="reviewer.article.reviewerComments">Comments</message>
 	<message key="reviewer.article.uploadedFile">Uploaded files</message>	
 	<message key="reviewer.article.reviewersAnnotatedVersion">Version uploaded by reviewer</message>
@@ -680,7 +681,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
         <message key="reviewer.article.enterCompetingInterests"><![CDATA[Declare whether or not you have competing interests with regard to this research (see <a target="_new" class="action" href="{$competingInterestGuidelinesUrl}">CI&nbsp;Policy</a>).]]></message>
 	<message key="reviewer.competingInterests">Competing Interests</message>
         <message key="reviewer.article.enterReviewA">Click on icon to enter (or paste) your review of this submission.</message>
-        <message key="reviewer.article.uploadFile">In addition, you can upload files for the editor and/or author to consult.</message>
+        <message key="reviewer.article.uploadFile">In addition, you can upload files for the ERC Secretary and/or RTO to consult.</message>
         <message key="reviewer.article.selectRecommendation">Select a recommendation and submit the review to complete the process. You must enter a review or upload a file before selecting a recommendation.</message>
 	<message key="reviewer.article.mustSelectDecision">No recommendation was selected. You must choose a recommendation to submit.</message>
 	<message key="reviewer.article.confirmDecision">Once you have recorded a decision you will no longer be able to make changes to this review. Are you sure you wish to continue?</message>
@@ -853,6 +854,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="search.authorIndex">Browse Author Index</message>
 	<message key="search.authorDetails">Author Details</message>
 	<message key="search.syntaxInstructions"><![CDATA[Search tips: <ul>
+	
 <li>Search terms are case-insensitive</li>
 <li>Common words are ignored</li>
 <li>By default only articles containing <em>all</em> terms in the query are returned (i.e., <em>AND</em> is implied)</li>
@@ -862,7 +864,15 @@ current password.<br /><br />Enter your email address below to reset your passwo
 <li>Exclude a word by prefixing it with <strong>-</strong> or <em>NOT</em>; e.g. <em>online -politics</em> or <em>online NOT politics</em></li>
 <li>Use <strong>*</strong> in a term as a wildcard to match any sequence of characters; e.g., <em>soci* morality</em> would match documents containing "sociological" or "societal"</li>
 </ul>]]></message>
-
+	
+	<message key="search.summary">Proposal Summary</message>
+	<message key="search.whoid">WHO ID</message>
+	<message key="search.responsibleOfficer">Responsible Officer</message>
+	<message key="search.primaryInvestigator">Primary Investigator</message>
+	<message key="search.email">Email</message>
+	<message key="search.duration">Duration</message>
+	<message key="search.finalDecision">Final Decision and Date</message>
+	
 	<!-- Interstitial page for PDFs -->
 	<message key="article.pdf.title">Portable Document Format (PDF)</message>
 	<message key="article.pdf.download">Download this PDF file</message>

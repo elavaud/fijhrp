@@ -29,11 +29,9 @@ class PDF extends FPDF {
 
 	function ChapterTitle($label, $style = 'B')
 	{
-		$this->SetFont('Times',$style,15);
-		$w = $this->GetStringWidth($label)+6;
-		$this->SetX((210-$w)/2);
-		$this->Cell($w,9,$label,0,1,'C');
-		$this->Ln(10);
+		$this->SetFont('Times',$style,16);
+		$this->MultiCell(0,6,$label,0,'C');
+		$this->Ln();
 	}
 
 	function ChapterItemKeyVal($key, $val, $style = 'B')

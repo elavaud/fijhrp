@@ -94,6 +94,7 @@
         <message key="author.submit.form.fundsRequiredRequired">Please enter the funds required for your research.</message>
         <message key="author.submit.form.proposalCountryRequired">Please enter the implementation country/countries for this proposal.</message>
         <message key="author.submit.form.technicalUnitRequired">Please enter the WHO technical unit for this proposal.</message>
+        <message key="author.submit.form.withHumanSubjectsRequired">Please indicate if the research involves human subjects.</message>
         <message key="author.submit.form.proposalTypeRequired">Please enter the research proposal type.</message>
         <message key="author.submit.form.submittedAsPiRequired">Please select Yes or No (Submitting as Primary Investigator?).</message>
         <message key="author.submit.form.conflictOfInterestRequired">Please select Yes or No (Conflict Of Interest?).</message>
@@ -105,11 +106,11 @@
         <message key="author.submit.addExtensionRequest">Submit Extension Request</message>
         <message key="author.submit.addWithdrawReport">Reason for Withdrawal</message>
 
-        <message key ="author.proposal.type.CWHS">Clinical Trial with Human Subjects</message>
+        <message key ="author.proposal.type.CWHS">Clinical Trial</message>
         <message key ="author.proposal.type.HSPR">Health System and Policy Research</message>
         <message key ="author.proposal.type.PBS">Population-Based Survey</message>
-        <message key ="author.proposal.type.PWHS">Proposal with Human Subjects</message>
-        <message key ="author.proposal.type.PNHS">Proposal without Human Subjects</message>
+        <!-- <message key ="author.proposal.type.PWHS">Proposal with Human Subjects</message> --> 
+        <message key ="author.proposal.type.PNHS">Proposal without Human Subjects</message> 
         <message key ="author.proposal.type.QS">Qualitative Study</message>
         <message key ="author.proposal.type.IER">Intervention Evaluation Research</message>
         <message key ="author.proposal.type.OR">Operation Research</message>

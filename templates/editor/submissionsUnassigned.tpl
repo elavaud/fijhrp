@@ -9,39 +9,41 @@
 <div id="submissions">
 <table width="100%" class="listing">
 	<tr>
-		<td colspan="5" class="headseparator">&nbsp;</td>
+		<td colspan="4" class="headseparator">&nbsp;</td>
 	</tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_search key="submissions.submit" sort="submitDate"}</td>
+		<td width="10%">WHO Proposal ID</td>
+		<td width="10%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br/>
+<!-- {sort_search key="submissions.submit" sort="submitDate"}--> </td> 
 		<!-- <td width="5%">{sort_search key="submissions.sec" sort="section"}</td> Commented out by MSB, Sept25,2011-->
-		<td width="30%">{sort_search key="article.authors" sort="authors"}</td>
-		<td width="50%">{sort_search key="article.title" sort="title"}</td>
+		<td width="30%"><span class="disabled">{translate key="article.authors"}</span><br/></td> <!-- {sort_search key="article.authors" sort="authors"}</td> -->
+		<td width="50%"><span class="disabled">{translate key="article.title"}</span><br/></td> <!-- {sort_search key="article.title" sort="title"}</td> -->
 	</tr>
 	<tr>
-		<td colspan="5" class="headseparator">&nbsp;</td>
+		<td colspan="4" class="headseparator">&nbsp;</td>
 	</tr>
 	
 	{iterate from=submissions item=submission}
 	<tr valign="top" {if $submission->getFastTracked()} class="fastTracked"{/if}>
 <!-- Changed to display WHO Proposal ID instead of article ID -->
-		<td>{$submission->getWhoId($submission->getLocale())}</td>
-		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
+		{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+		<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
 	<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td>  *}--> <!-- Commented out by MSB -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB -->
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
 		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
 	</tr>
 	<tr>
-		<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="4" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
 {/iterate}
 {if $submissions->wasEmpty()}
 	<tr>
-		<td colspan="5" class="nodata">{translate key="submissions.noSubmissions"}</td>
+		<td colspan="4" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
 	<tr>
-		<td colspan="5" class="endseparator">&nbsp;</td>
+		<td colspan="4" class="endseparator">&nbsp;</td>
 	</tr>
 {else}
 	<tr>
