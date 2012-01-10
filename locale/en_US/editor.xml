@@ -118,7 +118,7 @@
 	<message key="editor.article.setDueDate">Set Due Date</message>
 	<message key="editor.article.addReviewer">Add Reviewer</message>
 	<message key="editor.article.toReviewer">To Reviewer</message>
-	<message key="editor.article.notifyReviewer">Notify Reviewer</message>
+	<message key="editor.article.notifyReviewer">Notify ERC Members</message>
 	<message key="editor.article.initiateReview">Initiate Review</message>
 	<message key="editor.article.cancelReview">Cancel Request</message>
 	<message key="editor.article.clearReview">Clear Reviewer</message>
