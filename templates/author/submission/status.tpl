@@ -11,6 +11,8 @@
 <div id="status">
 <h3>{translate key="common.status"}</h3>
 
+{* When editing this page, edit templates/sectionEditor/submission/status.tpl as well *}
+
 <table width="100%" class="data">
 	<tr>
 		{assign var="status" value=$submission->getSubmissionStatus()}
