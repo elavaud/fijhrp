@@ -308,16 +308,21 @@ $(document).ready(function() {
 	<td width="80%" class="value"><input type="text" class="textField" name="fundsRequired[{$formLocale|escape}]" id="fundsRequired" value="{$fundsRequired[$formLocale]|replace:',':''|number_format:2:".":","}" size="20" maxlength="255" /></td>
 </tr>
 
-{* Last updated by AIM, 12.24.2011 *}
+{* Last updated by AIM, 01.11.12 *}
+<!-- Do not allow country edits
+{*
 {foreach from=$proposalCountry[$formLocale] key=i item=country}
 <tr valign="top" {if $i == 0}id="firstProposalCountry"{/if} class="proposalCountry">
 	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
 	<td width="80%" class="value">
+            
             <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
                 <option value=""></option>
 		{html_options options=$proposalCountries selected=$proposalCountry[$formLocale][$i]}
             </select>
             <a href="" class="removeProposalCountry" {if $i == 0}style="display:none"{/if}>Remove</a>
+            
+            
         </td>
 </tr>
 {foreachelse}
@@ -332,11 +337,25 @@ $(document).ready(function() {
         </td>
     </tr>
 {/foreach}
+
 <tr>
         <td width="20%">&nbsp;</td>
         <td><a href="#" id="addAnotherCountry">Add Another Country</a></td>
 </tr>
+*}
+-->
+{foreach from=$proposalCountryText[$formLocale] key=i item=country}
+    <tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
+	<td width="80%" class="value">
+            {$proposalCountryText[$formLocale][$i]}
+        </td>
+    </tr>
+{/foreach}
 
+{* Last updated by AIM, 01.11.12 *}
+<!-- Do not allow technical unit edits
+{*
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="technicalUnit" required="true" key="proposal.technicalUnit"}</td>
 	<td width="80%" class="value">
@@ -344,6 +363,14 @@ $(document).ready(function() {
                 <option value=""></option>
 		{html_options options=$technicalUnits selected=$technicalUnit[$formLocale]}
             </select>
+        </td>
+</tr>
+*}
+-->
+<tr valign="top">
+	<td width="20%" class="label">{fieldLabel name="technicalUnit" required="true" key="proposal.technicalUnit"}</td>
+	<td width="80%" class="value">
+            {$technicalUnitText}
         </td>
 </tr>
 
