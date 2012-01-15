@@ -77,6 +77,23 @@ $(document).ready(function() {
 
 	    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
 	    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+
+
+    //Code for multi-country proposals
+    $('#addAnotherCountry').click(function(){
+        var proposalCountryHtml = '<tr valign="top" class="proposalCountry">' + $('#firstProposalCountry').html() + '</tr>';
+        $('#firstProposalCountry').after(proposalCountryHtml);
+        $('#firstProposalCountry').next().find('select').attr('selectedIndex', 0);
+        $('.proposalCountry').find('.removeProposalCountry').show();
+        $('#firstProposalCountry').find('.removeProposalCountry').hide();
+        return false;
+    });
+
+    $('.removeProposalCountry').live('click', function(){
+        $(this).closest('tr').remove();
+        return false;
+    }); 
+
 });   
 </script>
 {/literal}

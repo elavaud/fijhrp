@@ -93,8 +93,8 @@ class MetadataForm extends Form {
                         $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
-                        $this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
-                        $this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
+                        //$this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
+                        //$this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
@@ -134,6 +134,9 @@ class MetadataForm extends Form {
                         //Added by AIM, 12.24.2011
                         $proposalCountryArray = $article->getProposalCountry(null);
                         $proposalCountry[$this->getFormLocale()] = explode(",", $proposalCountryArray[$this->getFormLocale()]);
+                        
+                        $countryDao =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+                        $proposalCountryText[$this->getFormLocale()] = explode(",", $countryDao->getAsiaPacificCountry($proposalCountryArray[$this->getFormLocale()]));
 
 			$this->_data = array(
 				'authors' => array(),
@@ -166,7 +169,9 @@ class MetadataForm extends Form {
                                 'endDate' => $article->getEndDate(null),
                                 'fundsRequired' => $article->getFundsRequired(null),
                                 'proposalCountry' => $proposalCountry,
+                                'proposalCountryText' => $proposalCountryText,
                                 'technicalUnit' => $article->getTechnicalUnit(null),
+                                'technicalUnitText' => $article->getLocalizedTechnicalUnitText(),
                                 'proposalType' => $article->getProposalType(null),
                                 'submittedAsPi' => $article->getSubmittedAsPi(null),
                                 'conflictOfInterest' => $article->getConflictOfInterest(null),
@@ -326,8 +331,8 @@ class MetadataForm extends Form {
                                  'startDate',
                                  'endDate',
                                  'fundsRequired',
-                                 'proposalCountry',
-                                 'technicalUnit',
+                                 //'proposalCountry',
+                                 //'technicalUnit',
                                  'proposalType',
                                  'submittedAsPi',
                                  'conflictOfInterest',
@@ -376,11 +381,11 @@ class MetadataForm extends Form {
                 $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
                 
                 //Convert multiple countries to CSV string
-                $proposalCountryArray = $this->getData('proposalCountry');
-                $proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
-                $article->setProposalCountry($proposalCountry, null); // Localized
+                //$proposalCountryArray = $this->getData('proposalCountry');
+                //$proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
+                //$article->setProposalCountry($proposalCountry, null); // Localized
                 
-                $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
+                //$article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
                 $article->setProposalType($this->getData('proposalType'), null); // Localized
                 $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
                 $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
