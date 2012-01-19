@@ -5,10 +5,10 @@
 {if count($submissions) == 0 }
 	{translate key="editor.minutes.noProposalsForContinuingReview"}
 {else}
-	
+<form method="POST" action="{url op="selectContinuingReview" path=$meeting->getId()}">			
+			
 	<div id="selectContinuingReview">
 		<table class="data">
-			<form method="POST" action="{url op="selectContinuingReview" path=$meeting->getId()}">			
 			<tr>
 				<td class="label">
 					{fieldLabel name="articleId" required="true" key="editor.minutes.selectProposal"}													
@@ -20,9 +20,8 @@
 							<option value="{$submission->getArticleId()}">{$submission->getLocalizedWhoId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
 						{/foreach}
 					</select>
-					&nbsp;&nbsp;&nbsp;<input type="submit" class="button" name="selectProposal" value="Select Proposal"/></td>	
+				</td>	
 			</tr>
-			</form>	
 			<tr>
 				<td colspan="6">
 					<br/>				
@@ -31,5 +30,7 @@
 		</table>
 	</div>
 {/if}	
-<br/><input type="button" class="button defaultButton" id="complete" name="complete" value="{translate key="editor.minutes.completeContinuingReviews"}" onclick="document.location.href='{url op="completeContinuingReviews" path=$meeting->getId()}'"/>
+<br/>
+<input type="submit" class="button" name="selectProposal" value="Select Proposal"/>
 <input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
+</form>	

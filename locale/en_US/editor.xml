@@ -380,6 +380,7 @@
 	<message key="editor.minutes.summaryRequired">Please enter protocol summary</message>
 	<message key="editor.minutes.downloadAttendance">Download Attendance</message>
 	<message key="editor.minutes.downloadInitialReviews">Download Initial Reviews</message>
+	<message key="editor.minutes.setFinalAndDownload">Set Final and Download</message>
 	<message key="editor.minutes.downloadMinutes">Download Minutes</message>
 	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
 	<message key="editor.minutes.confirmAttendance">This cannot be undone. Are you sure you want to submit this attendance?</message>

@@ -110,7 +110,26 @@ class MinutesHandler extends Handler {
 		$this->validate($meetingId);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
+		
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$meetingSubmissionDao =& DAORegistry::getDAO("MeetingSubmissionDAO");
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+		$minutesStatusMap = $meeting->getStatusMap();
 
+		$meetingSubmissionIds = $meetingSubmissionDao->getMeetingSubmissionsById($meetingId);
+		$remainingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getMeetingSubmissionsForInitialReview($meetingId);
+		$remainingSubmissionsForContinuingReview = $sectionEditorSubmissionDao->getMeetingSubmissionsForContinuingReview($meetingId);
+		
+		if ($minutesStatusMap[MINUTES_STATUS_INITIAL_REVIEWS]!=1 && ($remainingSubmissionsForInitialReview == null || count($remainingSubmissionsForInitialReview) == 0) && ($meetingSubmissionIds!=null || count($meetingSubmissionIds)>0)) {
+			$meeting->updateMinutesStatus(MINUTES_STATUS_INITIAL_REVIEWS);
+			$meetingDao->updateMinutesStatus($meeting);				
+		}
+				
+		if ($minutesStatusMap[MINUTES_STATUS_CONTINUING_REVIEWS]!=1 && ($remainingSubmissionsForContinuingReview == null || count($remainingSubmissionsForContinuingReview) == 0) && ($meetingSubmissionIds!=null || count($meetingSubmissionIds)>0)) {
+			$meeting->updateMinutesStatus(MINUTES_STATUS_CONTINUING_REVIEWS);
+			$meetingDao->updateMinutesStatus($meeting);				
+		}	
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->display('sectionEditor/minutes/uploadMinutes.tpl');

@@ -19,7 +19,7 @@
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutesStatus"}</td>
 			<td class="value" width="80%">
-				{$meeting->getMinutesStatusKey()}&nbsp;&nbsp;&nbsp;				
+				{$meeting->getMinutesStatusKey()}&nbsp;&nbsp;&nbsp;								
 			</td>
 		</tr>
 	</table>
@@ -58,7 +58,7 @@
 	<tr><td colspan="6" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
-		{if $statusMap.2 == 1 || $meeting->isMinutesComplete()}
+		{if $statusMap.2 == 1}
 			 <td width="40%">			
 				{translate key="editor.minutes.initialReviews"}
 			</td>
@@ -70,15 +70,14 @@
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right">
-				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a><br/>
-				<a href="{url op="completeInitialReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeInitialReviews"}</a>
+				<a href="{url op="selectInitialReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadInitialReviews"}</a>
 			</td>				
 		{/if}
 	</tr>
 	<tr><td colspan="6" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
-		{if $statusMap.8 == 1 || $meeting->isMinutesComplete()}
+		{if $statusMap.8 == 1 }
 			 <td width="40%">			
 				{translate key="editor.minutes.continuingReviews"}
 			</td>
@@ -90,8 +89,7 @@
 			</td>
 			<td width="10%">Not Done</td>
 			<td width="30%" align="right">
-				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadContinuingReviews"}</a><br/>
-				<a href="{url op="completeContinuingReviews" path=$meeting->getId()}">{translate key="editor.minutes.completeContinuingReviews"}</a>
+				<a href="{url op="selectContinuingReview" path=$meeting->getId()}">{translate key="editor.minutes.uploadContinuingReviews"}</a>
 			</td>				
 		{/if}
 	</tr>
@@ -99,10 +97,11 @@
 </table>
 </div>
 <br/>
-{if !$meeting->isMinutesComplete()}
+{***
 	<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMinutesFinal" path=$meeting->getId() }'" />
-{else}
-	<input type="button" value="{translate key="editor.minutes.downloadMinutes"}" class="button defaultButton" onclick="document.location.href='{url op="downloadMinutes" path=$meeting->getId() }'" />		
+***}
+{if $meeting->isMinutesComplete()}
+	<input type="button" value="{translate key="editor.minutes.setFinalAndDownload"}" class="button defaultButton" onclick="document.location.href='{url op="downloadMinutes" path=$meeting->getId() }'" />		
 {/if}
 <input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
 {include file="common/footer.tpl"}

@@ -1440,7 +1440,33 @@ class SectionEditorSubmissionDAO extends DAO {
 		unset($result);
 		return $reviewers;				
 	}
+
+	function getMeetingSubmissionsForInitialReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
 		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);
+			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
+	function getMeetingSubmissionsForContinuingReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
+		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
+			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
 }
 
 ?>

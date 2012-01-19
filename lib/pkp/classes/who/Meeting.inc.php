@@ -158,7 +158,8 @@ class Meeting extends DataObject {
 	 * Get meeting status if complete or incomplete
 	 */
 	function isMinutesComplete() {
-		if($this->getMinutesStatus() == MINUTES_STATUS_COMPLETE) {
+		$status = $this->getMinutesStatus(); 
+		if($status == MINUTES_STATUS_COMPLETE || ($status == (MINUTES_STATUS_ATTENDANCE + MINUTES_STATUS_INITIAL_REVIEWS + MINUTES_STATUS_CONTINUING_REVIEWS)) || ($status == (MINUTES_STATUS_ATTENDANCE + MINUTES_STATUS_INITIAL_REVIEWS)) || ($status == (MINUTES_STATUS_ATTENDANCE + MINUTES_STATUS_CONTINUING_REVIEWS))) {
 			return true;
 		}
 		return false;
