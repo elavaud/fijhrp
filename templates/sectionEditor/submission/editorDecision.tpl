@@ -8,15 +8,6 @@
  *
  * $Id$
  *}
- <!-- 
-	{*******************************************************
-	 *
-	 * Get proposal status key and proposal status
-	 * Added by aglet
-	 * Last Update: 5/3/2011
-	 *
-	 *******************************************************}
- -->
 {assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 {assign var="proposalStatus" value=$submission->getSubmissionStatus()}
  <!-- 
@@ -34,7 +25,7 @@
  -->
 { if $proposalStatus == PROPOSAL_STATUS_ASSIGNED} 
 
-	<div id="peerReview">
+	<div>
 		{include file="sectionEditor/submission/peerReview.tpl"}
 		<div class="separator"></div>
 	</div>
@@ -96,16 +87,6 @@
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmExemption"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 			</form>
 		</td>
-<!-- 
-{*******************************************************
- *
- * Continuing Review
- * Added by aglet
- * Last Update: 7/12/2011
- *
- *******************************************************}
- -->
-		
 
 	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $submission->isSubmissionDue()}
 		<td class="label" width="20%">{translate key="editor.article.selectContinuingReview"}</td>
@@ -120,15 +101,6 @@
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmReviewSelection"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 			</form>
 		</td>
-<!-- 
-{*******************************************************
- *
- * Ask for final decision if status is for expedited review or last decision was RESUBMIT
- * Added by aglet
- * Last Update: 6/1/2011
- *
- *******************************************************}
- -->
 	{ elseif $proposalStatus == PROPOSAL_STATUS_EXPEDITED || ($articleMoreRecent && $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
@@ -144,15 +116,6 @@
 		</td>
 	{/if}
 </tr>
-<!--
-{*******************************************************
- *
- * Indicate if this submission is a revision or resubmission
- * Added by aglet
- * Last Update: 5/8/2011
- *
- *******************************************************}
- -->
 {if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
 	<tr valign="top">
 	{if $articleMoreRecent}
@@ -166,15 +129,6 @@
 	{/if}
 	</tr>
 {/if}
-<!-- 
-{************************************************
- *
- * Display last decision only and date decided
- * Edited by aglet
- * Last Update: 5/8/2011
- *
- ************************************************}
- -->
 <tr valign="top">
 	<td class="label">{translate key="editor.article.finalDecision"}</td>
 	<td class="value">
