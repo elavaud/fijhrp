@@ -130,6 +130,11 @@
 	</tr>
 
         <tr valign="top">
+		<td class="label">{translate key="proposal.withHumanSubjects"}</td>
+		<td class="value">{$submission->getLocalizedWithHumanSubjects()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
+	</tr>
+
+        <tr valign="top">
 		<td class="label">{translate key="proposal.proposalType"}</td>
 		<td class="value">{$submission->getLocalizedProposalTypeText()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
 	</tr>

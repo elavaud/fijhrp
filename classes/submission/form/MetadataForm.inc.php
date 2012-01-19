@@ -95,6 +95,7 @@ class MetadataForm extends Form {
                         $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
                         //$this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
                         //$this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
+                        $this->addCheck(new FormValidatorLocale($this, 'withHumanSubjects', 'required', 'author.submit.form.withHumanSubjectsRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
@@ -172,6 +173,7 @@ class MetadataForm extends Form {
                                 'proposalCountryText' => $proposalCountryText,
                                 'technicalUnit' => $article->getTechnicalUnit(null),
                                 'technicalUnitText' => $article->getLocalizedTechnicalUnitText(),
+                                'withHumanSubjects' => $article->getWithHumanSubjects(null),
                                 'proposalType' => $article->getProposalType(null),
                                 'submittedAsPi' => $article->getSubmittedAsPi(null),
                                 'conflictOfInterest' => $article->getConflictOfInterest(null),
@@ -216,7 +218,7 @@ class MetadataForm extends Form {
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 'citations'
 		);*/
 
-                return array('title', 'abstract', 'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                return array('title', 'abstract', 'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -333,6 +335,7 @@ class MetadataForm extends Form {
                                  'fundsRequired',
                                  //'proposalCountry',
                                  //'technicalUnit',
+                                 'withHumanSubjects',
                                  'proposalType',
                                  'submittedAsPi',
                                  'conflictOfInterest',
@@ -386,6 +389,7 @@ class MetadataForm extends Form {
                 //$article->setProposalCountry($proposalCountry, null); // Localized
                 
                 //$article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
+                $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
                 $article->setProposalType($this->getData('proposalType'), null); // Localized
                 $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
                 $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized

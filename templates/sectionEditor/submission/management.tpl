@@ -45,19 +45,6 @@
 				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}
 
 
-<<<<<<< HEAD
-{************************************
- *
- *
- * Do not allow section editor and editor to edit and add files and metadata
- * Edited by Gay Figueroa
- * Last Update: 5/3/2011
- *
-
-&nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br /> 
-*************************************}
-<!--- this is a comment -->
-=======
  
  
   Do not allow section editor and editor to edit and add files and metadata
@@ -68,7 +55,6 @@
 &nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br /> 
 
 
->>>>>>> f1a03a7a71d21049a4af22cb6a1ed5f5ff1a3cfe
 				{assign var=notFirst value=1}
 			{foreachelse}
 				{translate key="common.none"}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>

@@ -169,6 +169,25 @@ class Action extends PKPAction {
 					);
 				}
 
+                                //Added by AIM, Jan 20, 2012
+                                $notificationUsers = array();
+                                $roleDao =& DAORegistry::getDAO('RoleDAO');
+                                $editors = $roleDao->getUsersByRoleId(ROLE_ID_EDITOR);
+
+                                while (!$editors->eof()) {
+                                        $editor =& $editors->next();
+                                        $notificationUsers[] = array('id' => $editor->getId());
+                                        unset($editor);
+                                }
+                             
+                                foreach ($notificationUsers as $userRole) {
+                                        $url = $router->url($request, null, $userRole['role'], 'submission', $article->getId(), null, 'metadata');
+                                        $notificationManager->createNotification(
+                                                $userRole['id'], 'notification.type.metadataModified',
+                                                $article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_METADATA_MODIFIED
+                                        );
+                                }
+
 				// Add log entry
 				$user =& $request->getUser();
 				import('classes.article.log.ArticleLog');

@@ -24,44 +24,70 @@
     </tr>
     <tr>
         <td style="width: 30%">WHO ID:</td>
-        <td style="width: 70%">{$whoId}</td>
+        <td style="width: 70%">{$article->getLocalizedWhoId()}</td>
     </tr>
-    <tr>
-        <td>Title:</td>
-        <td>{$title}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.title"}</td>
+        <td class="value">{$article->getLocalizedTitle()}</td>
     </tr>
-    <tr>
-        <td>Abstract: </td>
-        <td>{$abstract}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.abstract"}</td>
+        <td class="value">{$article->getLocalizedAbstract()}</td>
     </tr>
-    <tr>
-        <td>Objectives:</td>
-        <td>{$objectives}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.objectives"}</td>
+        <td class="value">{$article->getLocalizedObjectives()}</td>
     </tr>
-    <tr>
-        <td>Start Date:</td>
-        <td>{$startDate}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.keywords"}</td>
+        <td class="value">{$article->getLocalizedKeywords()}</td>
     </tr>
-    <tr>
-        <td>End Date:</td>
-        <td>{$endDate}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.startDate"}</td>
+        <td class="value">{$article->getLocalizedStartDate()}</td>
     </tr>
-    <tr>
-        <td>Funds Required (in USD):</td>
-        <td>{$fundsRequired}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.endDate"}</td>
+        <td class="value">{$article->getLocalizedEndDate()}</td>
     </tr>
-    <tr>
-        <td>Country:</td>
-        <td>{$proposalCountry}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.fundsRequired"}</td>
+        <td class="value">{$article->getLocalizedFundsRequired()}</td>
     </tr>
-    <tr>
-        <td>Technical Unit:</td>
-        <td>{translate key=$technicalUnit}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.proposalCountry"}</td>
+        <td class="value">{$article->getLocalizedProposalCountryText()}</td>
     </tr>
-    <tr>
-        <td>Proposal Type:</td>
-        <td>{translate key=$proposalType}</td>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.technicalUnit"}</td>
+        <td class="value">{$article->getLocalizedTechnicalUnitText()}</td>
     </tr>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.withHumanSubjects"}</td>
+        <td class="value">{$article->getLocalizedWithHumanSubjects()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.proposalType"}</td>
+        <td class="value">{$article->getLocalizedProposalTypeText()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.submittedAsPi"}</td>
+        <td class="value">{$article->getLocalizedSubmittedAsPi()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.conflictOfInterest"}</td>
+        <td class="value">{$article->getLocalizedConflictOfInterest()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label">{translate key="proposal.reviewedByOtherErc"}</td>
+        <td class="value">{$article->getLocalizedReviewedByOtherErc()}</td>
+    </tr>
+    {if $article->getLocalizedOtherErcDecision() != 'NA'}
+    <tr valign="top">
+        <td class="label">{translate key="proposal.otherErcDecision"}</td>
+        <td class="value">{$article->getLocalizedOtherErcDecision()}</td>
+    </tr>
+    {/if}
 </table>
 <div class="separator"></div>
 
