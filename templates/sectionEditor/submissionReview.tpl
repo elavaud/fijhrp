@@ -27,5 +27,9 @@
 
 {include file="sectionEditor/submission/editorDecision.tpl"}
 
+<div class="separator"></div>
+
+{include file="sectionEditor/submission/peerReview.tpl"}
+
 {include file="common/footer.tpl"}
 
