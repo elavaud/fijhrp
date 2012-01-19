@@ -16,7 +16,7 @@
 
 <table width="100%" class="data">
 	<tr valign="top">
-		<td class="label">{translate key="editor.article.decision"}</td>
+		<td class="label">{translate key="author.article.decision"}</td>
 		<td>
 			{if $lastEditorDecision}
 				{assign var="decision" value=$lastEditorDecision.decision}

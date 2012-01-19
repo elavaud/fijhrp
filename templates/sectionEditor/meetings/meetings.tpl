@@ -97,13 +97,12 @@
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getStatusKey()}
 				</a>
-				{if $meeting->getStatus() == 1}
-						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
-						{translate key="editor.minutes.uploadMinutes"}</a>
-				{/if}
-				{if $meeting->getMinutesStatus() == 128}
+				{if $meeting->isMinutesComplete()}
 						<br/><a href="{url op="downloadMinutes" path=$meeting->getId()}" class="action">
 						{translate key="editor.minutes.downloadMinutes"}</a>
+				{elseif $meeting->getStatus() == 1}
+						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
+						{translate key="editor.minutes.uploadMinutes"}</a>
 				{/if}
 			</td>
 		</tr>	

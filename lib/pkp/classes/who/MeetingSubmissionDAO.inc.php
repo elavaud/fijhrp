@@ -99,6 +99,4 @@ class MeetingSubmissionDAO extends DAO {
 		);
 	}
 	
-	
-
 }

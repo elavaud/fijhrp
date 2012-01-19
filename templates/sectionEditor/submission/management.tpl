@@ -12,7 +12,7 @@
 <h3>{translate key="article.submission"}</h3>
 
 {*  Code replaced with templates/author/submission/management.tpl, Jan 10, 2012 for uniformity
-<!--
+
 {assign var="submissionFile" value=$submission->getSubmissionFile()}
 {assign var="suppFiles" value=$submission->getSuppFiles()}
 
@@ -43,18 +43,6 @@
 		<td colspan="2" class="value">
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}
 				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}
-
-
- 
- 
-  Do not allow section editor and editor to edit and add files and metadata
-  Edited by Gay Figueroa
-  Last Update: 5/3/2011
- 
- 
-&nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br /> 
-
-
 				{assign var=notFirst value=1}
 			{foreachelse}
 				{translate key="common.none"}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>

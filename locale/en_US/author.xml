@@ -81,7 +81,10 @@
 	<message key="author.submit.languageInstructions"><![CDATA[English=en; French=fr; Spanish=es. <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">Additional codes</a>.]]></message>
 	<message key="author.submit.form.authorRequired">At least one RTO is required.</message>
 	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each RTO or PI is required.</message>
-
+	
+	<!-- Added Jan 19, 2011 -->	
+	<message key="author.article.decision">ERC Decision</message>
+	
         <!-- ************************************************************************************************************************
             Added by: AIM, Last Edited: 12.12.2011
         -->

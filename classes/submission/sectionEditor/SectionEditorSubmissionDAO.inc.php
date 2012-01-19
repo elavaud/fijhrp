@@ -1440,7 +1440,59 @@ class SectionEditorSubmissionDAO extends DAO {
 		unset($result);
 		return $reviewers;				
 	}
+
+	function getRemainingSubmissionsForInitialReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
 		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);
+			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
+	function getMeetingSubmissionsAssignedForInitialReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
+		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);
+			if(!$submission->isSubmissionDue())
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
+	function getRemainingSubmissionsForContinuingReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
+		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
+			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
+	function getMeetingSubmissionsAssignedForContinuingReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
+		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
+			if($submission->isSubmissionDue())
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
 }
 
 ?>
