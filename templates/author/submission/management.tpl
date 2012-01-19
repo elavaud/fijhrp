@@ -10,6 +10,9 @@
  *}
 <div id="submission">
 <h3>{translate key="article.submission"}</h3>
+
+{* When editing this page, edit templates/sectionEditor/submission/management.tpl as well *}
+
 <table width="100%" class="data">
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="article.authors"}</td>
@@ -68,7 +71,7 @@
 		<td class="label">{translate key="common.dateSubmitted"}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$datetimeFormatLong}</td>
 	</tr>
-{** Commented out by spf - 1 Dec 2011
+{* Commented out by spf - 1 Dec 2011
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="section.section"}</td>
 		<td width="80%" colspan="2" class="data">{$submission->getSectionTitle()|escape}</td>

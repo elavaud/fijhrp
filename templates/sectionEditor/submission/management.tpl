@@ -11,6 +11,8 @@
 <div id="submission">
 <h3>{translate key="article.submission"}</h3>
 
+{*  Code replaced with templates/author/submission/management.tpl, Jan 10, 2012 for uniformity
+<!--
 {assign var="submissionFile" value=$submission->getSubmissionFile()}
 {assign var="suppFiles" value=$submission->getSuppFiles()}
 
@@ -43,6 +45,7 @@
 				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}
 
 
+<<<<<<< HEAD
 {************************************
  *
  *
@@ -50,10 +53,22 @@
  * Edited by Gay Figueroa
  * Last Update: 5/3/2011
  *
- *
+
 &nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br /> 
 *************************************}
+<!--- this is a comment -->
+=======
+ 
+ 
+  Do not allow section editor and editor to edit and add files and metadata
+  Edited by Gay Figueroa
+  Last Update: 5/3/2011
+ 
+ 
+&nbsp;&nbsp;<a href="{url op="editSuppFile" from="submission" path=$submission->getId()|to_array:$suppFile->getId()}" class="action">{translate key="common.edit"}</a>&nbsp;&nbsp;&nbsp;&nbsp;if !$notFirst}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>{/if}<br /> 
 
+
+>>>>>>> f1a03a7a71d21049a4af22cb6a1ed5f5ff1a3cfe
 				{assign var=notFirst value=1}
 			{foreachelse}
 				{translate key="common.none"}&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="addSuppFile" from="submission" path=$submission->getId()}" class="action">{translate key="submission.addSuppFile"}</a>
@@ -75,19 +90,16 @@
 	</tr>
 	<tr>
 		<td class="label">{translate key="section.section"}</td>
-		<td class="value">{$submission->getSectionTitle()|escape}</td>
+		 
+		  Section is set by default, do not allow editor and section editor to change section
+		  Edited by Gay Figueroa
+		  Last Update: 5/3/2011
 
-		{*********************************************
-		 *
-		 * Section is set by default, do not allow editor and section editor to change section
-		 * Edited by Gay Figueroa
-		 * Last Update: 5/3/2011
-		 *
-		 *
-			<td class="value">
-			<form action="{url op="updateSection" path=$submission->getId()}" method="post">{translate key="submission.changeSection"} <select 				name="section" size="1" class="selectMenu">{html_options options=$sections selected=$submission->getSectionId()}</select> <input type="submit" 				value="{translate key="common.record"}" class="button" /></form>
-			</td>
-		***********************************************}
+                <td class="value">{$submission->getSectionTitle()|escape}</td>
+                <td class="value">
+                <form action="{url op="updateSection" path=$submission->getId()}" method="post">{translate key="submission.changeSection"} <select 				name="section" size="1" class="selectMenu">{html_options options=$sections selected=$submission->getSectionId()}</select> <input type="submit" 				value="{translate key="common.record"}" class="button" /></form>
+                </td>
+		
 	</tr>
 	{if $submission->getCommentsToEditor()}
 	<tr valign="top">
@@ -127,15 +139,15 @@
 	</tr>
 	<tr>
 		<td class="label">Country</td>
-		<td class="value">{$submission->getLocalizedProposalCountryText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
+		<td class="value">{$submission->getLocalizedProposalCountryText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text --
 	</tr>
 	<tr>
 		<td class="label">Technical Unit</td>
-		<td class="value">{$submission->getLocalizedTechnicalUnitText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
+		<td class="value">{$submission->getLocalizedTechnicalUnitText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text --
 	</tr>
 	<tr>
 		<td class="label">Proposal Type</td>
-		<td class="value">{$submission->getLocalizedProposalTypeText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
+		<td class="value">{$submission->getLocalizedProposalTypeText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text --
 	</tr>
 	<tr>
 		<td class="label">Conflict Of Interest</td>
@@ -149,6 +161,109 @@
 		<td class="label">Other Erc Decision</td>
 		<td class="value">{$submission->getLocalizedOtherErcDecision()|strip_unsafe_html}</td>
 	</tr>
+</table>
+-->
+*}
+<!---------------------------------------------------------------------------------------------------------------------------------------------------------->
+
+
+<table width="100%" class="data">
+	<tr valign="top">
+		<td width="20%" class="label">{translate key="article.authors"}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getFirstAuthor()|escape}</td>
+	</tr>
+	<tr valign="top">
+		<td width="20%" class="label">{translate key="article.title"}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
+	</tr>
+	<tr valign="top">
+		<td width="20%" class="label">{translate key="submission.originalFile"}</td>
+		<td width="80%" colspan="2" class="data">
+			{if $submissionFile}
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$submissionFile->getFileId():$submissionFile->getRevision()}" class="file">{$submissionFile->getFileName()|escape}</a>
+			{else}
+				{translate key="common.none"}
+			{/if}
+		</td>
+	</tr>
+	<tr valign="top">
+		<td class="label">{translate key="article.suppFilesAbbrev"}</td>
+		<td width="80%" class="value">
+			{foreach name="suppFiles" from=$suppFiles item=suppFile}
+                            <!-- Do not allow edit of supp files, Edit by AIM, June 6, 2011
+                            {*
+                            <a href="{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}{url op="editSuppFile" path=$submission->getArticleId()|to_array:$suppFile->getId()}{else}{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}{/if}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}<br />
+                            *}
+                            -->
+                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})<br />
+			{foreachelse}
+				{translate key="common.none"}
+			{/foreach}
+		</td>
+                <!--  Adding of supp files not allowed after submission
+                {*
+		<td width="50%" class="value">
+                        {if $submission->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED}
+				<a href="{url op="addSuppFile" path=$submission->getArticleId()}" class="action">{translate key="submission.addSuppFile"}</a>
+			{else}
+				&nbsp;
+			{/if}
+		</td>
+                *}
+                -->
+	</tr>
+	<tr>
+		<td class="label">{translate key="submission.submitter"}</td>
+		<td colspan="2" class="value">
+			{assign var="submitter" value=$submission->getUser()}
+			{assign var=emailString value=$submitter->getFullName()|concat:" <":$submitter->getEmail():">"}
+			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getArticleId()}
+			{$submitter->getFullName()|escape} {icon name="mail" url=$url}
+		</td>
+	</tr>
+	<tr>
+		<td class="label">{translate key="common.dateSubmitted"}</td>
+		<td>{$submission->getDateSubmitted()|date_format:$datetimeFormatLong}</td>
+	</tr>
+{* Commented out by spf - 1 Dec 2011
+	<tr valign="top">
+		<td width="20%" class="label">{translate key="section.section"}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getSectionTitle()|escape}</td>
+	</tr>
+	<tr valign="top">
+		<td width="20%" class="label">{translate key="user.role.editor"}</td>
+		{assign var="editAssignments" value=$submission->getEditAssignments()}
+		<td width="80%" colspan="2" class="data">
+			{foreach from=$editAssignments item=editAssignment}
+				{assign var=emailString value=$editAssignment->getEditorFullName()|concat:" <":$editAssignment->getEditorEmail():">"}
+				{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getArticleId()}
+				{$editAssignment->getEditorFullName()|escape} {icon name="mail" url=$url}
+				{if !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
+					{if $editAssignment->getCanEdit()}
+						({translate key="submission.editing"})
+					{else}
+						({translate key="submission.review"})
+					{/if}
+				{/if}
+				<br/>
+                        {foreachelse}
+                                {translate key="common.noneAssigned"}
+                        {/foreach}
+		</td>
+	</tr>
+*}
+	{if $submission->getCommentsToEditor()}
+	<tr valign="top">
+		<td width="20%" class="label">{translate key="article.commentsToEditor"}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getCommentsToEditor()|strip_unsafe_html|nl2br}</td>
+	</tr>
+	{/if}
+	{if $publishedArticle}
+	<tr>
+		<td class="label">{translate key="submission.abstractViews"}</td>
+		<td>{$publishedArticle->getViews()}</td>
+	</tr>
+	{/if}
 </table>
 </div>
 
