@@ -10,7 +10,7 @@ class MeetingDAO extends DAO {
 	var $userDao;
 	function MeetingDAO() {
 		parent::DAO();
-		$this->userDao &= DAORegistry::getDAO('UserDAO');
+		$this->userDao =& DAORegistry::getDAO('UserDAO');
 	}
 
 	/**
