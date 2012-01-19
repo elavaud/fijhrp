@@ -1454,6 +1454,19 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $submissions;
 	}
 	
+	function getSubmissionsAssignedForInitialReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
+		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);
+			if(!$submission->isSubmissionDue())
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
 	function getMeetingSubmissionsForContinuingReview($meetingId) {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -1462,6 +1475,19 @@ class SectionEditorSubmissionDAO extends DAO {
 		foreach($submissionIds as $submissionId) {
 			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
 			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+				array_push($submissions, $submission);
+		}
+		return $submissions;
+	}
+	
+	function getSubmissionsAssignedForContinuingReview($meetingId) {
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$submissions = array();
+		
+		foreach($submissionIds as $submissionId) {
+			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
+			if($submission->isSubmissionDue())
 				array_push($submissions, $submission);
 		}
 		return $submissions;
