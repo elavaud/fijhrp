@@ -24,7 +24,7 @@ class ProposalsForContinuingReviewForm extends Form {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		
-		$this->submissions = $sectionEditorSubmissionDao->getMeetingSubmissionsForContinuingReview($meetingId);
+		$this->submissions = $sectionEditorSubmissionDao->getRemainingSubmissionsForContinuingReview($meetingId);
 		$this->addCheck(new FormValidatorCustom($this, 'articleId', 'required', 'editor.minutes.selectProposalRequired',
 		create_function('$articleId', 'if($articleId == "none") return false; else return true;'), array('articleId')));		
 	}

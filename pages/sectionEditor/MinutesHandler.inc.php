@@ -116,23 +116,28 @@ class MinutesHandler extends Handler {
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$minutesStatusMap = $meeting->getStatusMap();
 
-		$remainingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getMeetingSubmissionsForInitialReview($meetingId);
-		$remainingSubmissionsForContinuingReview = $sectionEditorSubmissionDao->getMeetingSubmissionsForContinuingReview($meetingId);
-		$actualMeetingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getSubmissionsAssignedForInitialReview($meetingId);
-		$actualMeetingSubmissionsForContinuingReview = $sectionEditorSubmissionDao->getSubmissionsAssignedForContinuingReview($meetingId);
+		$remainingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getRemainingSubmissionsForInitialReview($meetingId);
+		$remainingSubmissionsForContinuingReview = $sectionEditorSubmissionDao->getRemainingSubmissionsForContinuingReview($meetingId);
+		$actualMeetingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getMeetingSubmissionsAssignedForInitialReview($meetingId);
+		$actualMeetingSubmissionsForContinuingReview = $sectionEditorSubmissionDao->getMeetingSubmissionsAssignedForContinuingReview($meetingId);
 		
-		if ($minutesStatusMap[MINUTES_STATUS_INITIAL_REVIEWS]!=1 && (count($remainingSubmissionsForInitialReview) == 0) && (count($actualMeetingSubmissionsForInitialReview)>0)) {
+		$hasProposalsForInitialReview = (count($actualMeetingSubmissionsForInitialReview)>0) ? true : false ;
+		$hasProposalsForContinuingReview = (count($actualMeetingSubmissionsForContinuingReview)>0) ? true : false ;
+		
+		if ($minutesStatusMap[MINUTES_STATUS_INITIAL_REVIEWS]!=1 && $hasProposalsForInitialReview && (count($remainingSubmissionsForInitialReview) == 0)) {
 			$meeting->updateMinutesStatus(MINUTES_STATUS_INITIAL_REVIEWS);
 			$meetingDao->updateMinutesStatus($meeting);				
 		}
 				
-		if ($minutesStatusMap[MINUTES_STATUS_CONTINUING_REVIEWS]!=1 && (count($remainingSubmissionsForContinuingReview) == 0) && (count($actualMeetingSubmissionsForContinuingReview)>0)) {
+		if ($minutesStatusMap[MINUTES_STATUS_CONTINUING_REVIEWS]!=1 && $hasProposalsForContinuingReview && (count($remainingSubmissionsForContinuingReview) == 0)) {
 			$meeting->updateMinutesStatus(MINUTES_STATUS_CONTINUING_REVIEWS);
 			$meetingDao->updateMinutesStatus($meeting);				
 		}	
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
+		$templateMgr->assign('allowInitialReview', $hasProposalsForInitialReview);
+		$templateMgr->assign('allowContinuingReview', $hasProposalsForContinuingReview);
 		$templateMgr->display('sectionEditor/minutes/uploadMinutes.tpl');
 	}
 

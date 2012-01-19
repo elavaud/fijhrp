@@ -1441,7 +1441,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $reviewers;				
 	}
 
-	function getMeetingSubmissionsForInitialReview($meetingId) {
+	function getRemainingSubmissionsForInitialReview($meetingId) {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$submissions = array();
@@ -1454,7 +1454,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $submissions;
 	}
 	
-	function getSubmissionsAssignedForInitialReview($meetingId) {
+	function getMeetingSubmissionsAssignedForInitialReview($meetingId) {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$submissions = array();
@@ -1467,7 +1467,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $submissions;
 	}
 	
-	function getMeetingSubmissionsForContinuingReview($meetingId) {
+	function getRemainingSubmissionsForContinuingReview($meetingId) {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$submissions = array();
@@ -1480,7 +1480,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $submissions;
 	}
 	
-	function getSubmissionsAssignedForContinuingReview($meetingId) {
+	function getMeetingSubmissionsAssignedForContinuingReview($meetingId) {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');		
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$submissions = array();
