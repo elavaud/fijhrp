@@ -235,6 +235,8 @@ class SubmitHandler extends AuthorHandler {
 					$roleDao =& DAORegistry::getDAO('RoleDAO');
 					$notificationUsers = array();
 					$editors = $roleDao->getUsersByRoleId(ROLE_ID_EDITOR);
+
+                                        /** Buggy notification code (?), AIM, Jan 20 2012
 					$notifyUsers = $editors->toArray();
 					while ($editor =& $editors->next()) {
 						$url = $request->url(null, 'editor', 'submission', $articleId);
@@ -244,6 +246,21 @@ class SubmitHandler extends AuthorHandler {
 						);
 						unset($editor);
 					}
+                                        **/
+
+                                        //Added by AIM, Jan 20, 2012
+                                        while (!$editors->eof()) {
+                                                $editor =& $editors->next();
+                                                $notificationUsers[] = array('id' => $editor->getId());
+                                                unset($editor);
+                                        }
+                                        $url = $request->url(null, 'editor', 'submission', $articleId);
+                                        foreach ($notificationUsers as $userRole) {
+                                                $notificationManager->createNotification(
+                                                        $userRole['id'], 'notification.type.articleSubmitted',
+                                                        $article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
+                                                );
+                                        }
 
 					$journal =& $request->getJournal();
 					$templateMgr =& TemplateManager::getManager();
@@ -256,35 +273,12 @@ class SubmitHandler extends AuthorHandler {
 					$templateMgr->assign('articleId', $articleId);
 					$templateMgr->assign('helpTopicId','submission.index');
 
-                                        //Get article details, AIM, 12.12.2011
-                                        $countryDao =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-
-                                        $whoId = $article->getWhoId($article->getLocale());
-                                        $title = $article->getTitle($article->getLocale());
-                                        $abstract = $article->getAbstract($article->getLocale());
-                                        $objectives = $article->getObjectives($article->getLocale());
-                                        $startDate = $article->getStartDate($article->getLocale());
-                                        $endDate = $article->getEndDate($article->getLocale());
-                                        $fundsRequired = $article->getFundsRequired($article->getLocale());
-                                        $proposalCountry = $countryDao->getAsiaPacificCountry($article->getProposalCountry($article->getLocale()));
-                                        $technicalUnit = 'author.proposal.technicalUnit.'.$article->getTechnicalUnit($article->getLocale());
-                                        $proposalType = 'author.proposal.type.'.$article->getProposalType($article->getLocale());
-
-                                        $templateMgr->assign('whoId', $whoId);
-                                        $templateMgr->assign('title', $title);
-                                        $templateMgr->assign('abstract', $abstract);
-                                        $templateMgr->assign('objectives', $objectives);
-                                        $templateMgr->assign('startDate', $startDate);
-                                        $templateMgr->assign('endDate', $endDate);
-                                        $templateMgr->assign('fundsRequired', $fundsRequired);
-                                        $templateMgr->assign('proposalCountry', $proposalCountry);
-                                        $templateMgr->assign('technicalUnit', $technicalUnit);
-                                        $templateMgr->assign('proposalType', $proposalType);
+                                        //Last updated, AIM, 1.20.2012
+                                        $templateMgr->assign_by_ref('article', $this->article);
 
                                         $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
                                         $articleFiles =& $articleFileDao->getArticleFilesByArticle($articleId);
                                         $templateMgr->assign_by_ref('files', $articleFiles);
-                                        //End of Edit, AIM, 12.12.2011
 					
 					$templateMgr->display('author/submit/complete.tpl');
 					

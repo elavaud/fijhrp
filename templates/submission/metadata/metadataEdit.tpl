@@ -32,32 +32,53 @@ function moveAuthor(dir, authorIndex) {
 
 
 $(document).ready(function() {
-    if($('input[name^="reviewedByOtherErc"]:checked').val() == "No" || $('input[name^="reviewedByOtherErc"]:checked').val() == null) {
-        //$('#otherErcDecision option:selected').removeAttr('selected');
-        //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+	if($('input[name^="proposalType"]:selected').val() == null) {
+			$('#proposalTypeField').show();
+		}
+   	// Add filter of proposal types: with Human Subjects vs. without Human Subjects
+	    if($('input[name^="withHumanSubjects"]:checked').val() == "No" || $('input[name^="withHumanSubjects"]:checked').val() == null) {
+	        $('#proposalTypeField').hide();
+	        $('#proposalTypeField').val("PNHS");
+	    } // end if withHumanSubjects
 
-        $('#otherErcDecisionField').hide();
-        $('#otherErcDecision').val("NA");
-    }
+	    $('input[name^="withHumanSubjects"]').change(function(){
+	        var answer = $('input[name^="withHumanSubjects"]:checked').val();
 
-    $('input[name^="reviewedByOtherErc"]').change(function(){
-        var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
+	        if(answer == "Yes") {
+	            $('#proposalTypeField').show();
+	            $('#proposalType option[value="PNHS"]').removeAttr('selected');
+	        } else {
+	            $('#proposalTypeField').hide();
+	            $('#proposalType').val("PNHS");
+	        }
+	    }); // end change function
 
-        if(answer == "Yes") {
-            $('#otherErcDecisionField').show();
-        } else {
-            $('#otherErcDecisionField').hide();
-            $('#otherErcDecision').val("NA");
+	// Add filter of ERC decisions
+		 if($('input[name^="reviewedByOtherErc"]:checked').val() == "No" || $('input[name^="reviewedByOtherErc"]:checked').val() == null) {
+	        //$('#otherErcDecision option:selected').removeAttr('selected');
+	        //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+	          $('#otherErcDecisionField').hide();
+	          $('#otherErcDecision').val("NA");
+	    } // end if reviewedByOtherErc
+	    $('input[name^="reviewedByOtherErc"]').change(function(){
+	          var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
 
-            //$('#otherErcDecision option:selected').removeAttr('selected');
-            //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+	          if(answer == "Yes") {
+	              $('#otherErcDecisionField').show();
+	          } else {
+	              $('#otherErcDecisionField').hide();
+	              $('#otherErcDecision').val("NA");
 
-        }
-    });
+	            //$('#otherErcDecision option:selected').removeAttr('selected');
+	            //$('#otherErcDecision option[value="NA"]').attr('selected', 'selected');
+	          } // end else
+	    }); // end change(function())
 
-    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
-    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+	    $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+	    $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
 
+
+    //Code for multi-country proposals
     $('#addAnotherCountry').click(function(){
         var proposalCountryHtml = '<tr valign="top" class="proposalCountry">' + $('#firstProposalCountry').html() + '</tr>';
         $('#firstProposalCountry').after(proposalCountryHtml);
@@ -71,6 +92,7 @@ $(document).ready(function() {
         $(this).closest('tr').remove();
         return false;
     });
+
 });
 </script>
 {/literal}
@@ -374,17 +396,32 @@ $(document).ready(function() {
         </td>
 </tr>
 
+<!-- Add filter of proposal types: with Human Subjects vs. without Human Subjects -->
+<!-- Added by spf, 20 Dec 2011 -->
+
 <tr valign="top">
-	<td width="20%" class="label">{fieldLabel name="proposalType" required="true" key="proposal.proposalType"}</td>
+	<td width="20%" class="label">{fieldLabel name="withHumanSubjects" required="true" key="proposal.withHumanSubjects"}</td>
+	<td width="80%" class="value">
+            <input type="radio" name="withHumanSubjects[{$formLocale|escape}]" id="withHumanSubjects" value="Yes" {if  $withHumanSubjects[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="withHumanSubjects[{$formLocale|escape}]" id="withHumanSubjects" value="No" {if  $withHumanSubjects[$formLocale] == "No" } checked="checked"{/if} />No
+        </td>
+</tr>
+
+<tr valign="top" id="proposalTypeField">
+	<td width="20%" class="label">{fieldLabel name="proposalType" required="false" key="proposal.proposalType"}</td>
 	<td width="80%" class="value">
             <select name="proposalType[{$formLocale|escape}]" id="proposalType" class="selectMenu">
-                <option value=""></option>
-                {foreach from=$proposalTypes key=id item=ptype}
-                <option value="{$ptype.code}" {if  $proposalType[$formLocale] == $ptype.code } selected="selected"{/if} >{$ptype.name}</option>
+
+                <option value="PNHS"></option>
+				{foreach from=$proposalTypes key=id item=ptype}
+				{if $ptype.code != "PNHS"}
+				<option value="{$ptype.code}" {if $proposalType[$formLocale] == $ptype.code} selected="selected" {/if}>{$ptype.name}</option>
+				{/if}
                 {/foreach}
             </select>
         </td>
-</tr>
+</tr> 
 
 <tr valign="top">
 	<td width="20%" class="label">{fieldLabel name="submittedAsPi" required="true" key="proposal.submittedAsPi"}</td>
