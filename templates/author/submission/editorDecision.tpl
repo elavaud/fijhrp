@@ -15,14 +15,29 @@
 {assign var=editorFiles value=$submission->getEditorFileRevisions($submission->getCurrentRound())}
 
 <table width="100%" class="data">
+        <!-- {*
 	<tr valign="top">
 		<td class="label">{translate key="editor.article.decision"}</td>
-		<td>
+		<td class="value">
 			{if $lastEditorDecision}
 				{assign var="decision" value=$lastEditorDecision.decision}
 				{translate key=$editorDecisionOptions.$decision} {$lastEditorDecision.dateDecided|date_format:$dateFormatShort}
 			{else}
 				&mdash;
+			{/if}
+		</td>
+	</tr>
+        *} -->
+        <tr valign="top">
+		<td class="label" width="20%">
+			View Comments
+		</td>
+		<td class="value" width="80%">
+			{if $submission->getMostRecentEditorDecisionComment()}
+				{assign var="comment" value=$submission->getMostRecentEditorDecisionComment()}
+				<a href="javascript:openComments('{url op="viewEditorDecisionComments" path=$submission->getArticleId() anchor=$comment->getId()}');" class="icon">{icon name="comment"}</a> {$comment->getDatePosted()|date_format:$dateFormatShort}
+			{else}
+				<a href="javascript:openComments('{url op="viewEditorDecisionComments" path=$submission->getArticleId()}');" class="icon">{icon name="comment"}</a>{translate key="common.noComments"}
 			{/if}
 		</td>
 	</tr>
@@ -35,14 +50,10 @@
 			{icon name="mail" url=$notifyAuthorUrl}
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			{translate key="submission.editorAuthorRecord"}
-			{if $submission->getMostRecentEditorDecisionComment()}
-				{assign var="comment" value=$submission->getMostRecentEditorDecisionComment()}
-				<a href="javascript:openComments('{url op="viewEditorDecisionComments" path=$submission->getArticleId() anchor=$comment->getId()}');" class="icon">{icon name="comment"}</a> {$comment->getDatePosted()|date_format:$dateFormatShort}
-			{else}
-				<a href="javascript:openComments('{url op="viewEditorDecisionComments" path=$submission->getArticleId()}');" class="icon">{icon name="comment"}</a>{translate key="common.noComments"}
-			{/if}
 		</td>
 	</tr>
+        <!--
+        {*
 	<tr valign="top">
 		<td class="label" width="20%">
 			{translate key="submission.editorVersion"}
@@ -81,5 +92,7 @@
 
 		</td>
 	</tr>
+        *}
+        -->
 </table>
 </div>
