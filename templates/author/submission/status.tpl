@@ -43,12 +43,13 @@
                         {elseif $status==PROPOSAL_STATUS_EXPEDITED}{translate key="submissions.proposal.expedited"}
                         {elseif $status==PROPOSAL_STATUS_ASSIGNED}{translate key="submissions.proposal.assigned"}
                         {elseif $status==PROPOSAL_STATUS_RETURNED}{translate key="submissions.proposal.returned"}
+                        {elseif $status==PROPOSAL_STATUS_EXEMPTED}{translate key="submissions.proposal.exempted"}
                         {elseif $status==PROPOSAL_STATUS_REVIEWED}
                             {assign var="decision" value=$submission->getMostRecentDecision()}
                             {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}{translate key="submissions.proposal.resubmit"}
                             {elseif $decision==SUBMISSION_EDITOR_DECISION_ACCEPT}{translate key="submissions.proposal.approved"}
                             {elseif $decision==SUBMISSION_EDITOR_DECISION_DECLINE}{translate key="submissions.proposal.decline"}
-                            {elseif $decision==SUBMISSION_EDITOR_DECISION_EXEMPTED}{translate key="submissions.proposal.exempted"}
+                            
                             {/if}
                         {/if}
 		</td>
