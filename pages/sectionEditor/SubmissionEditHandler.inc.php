@@ -517,7 +517,23 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			// FIXME: Prompt for due date.
 		} else {
 			$this->setupTemplate(true, $articleId, 'review');
-
+			
+			$userDao =& DAORegistry::getDAO('UserDAO');
+			$reviewerIds = array();
+			$unassignedReviewers = array();
+			$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
+			foreach($reviewAssignments as $reviewAssignment) {
+				$reviewAssignmentReviewerIds = $reviewAssignment->getReviewerId();
+				array_push($reviewerIds, $reviewAssignmentReviewerIds);
+			}
+			$journalReviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
+			foreach($journalReviewers as $journalReviewer) {
+				$reviewerId = $journalReviewer->getId();
+				if(!in_array($reviewerId, $reviewerIds)) {
+					array_push($unassignedReviewers, $journalReviewer);
+				}
+			}
+				
 			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 
 			$searchType = null;
@@ -536,17 +552,18 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 			$rangeInfo =& Handler::getRangeInfo('reviewers');
 			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $articleId, $submission->getCurrentRound(), $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
-
+			
 			$journal = Request::getJournal();
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 
 			$templateMgr =& TemplateManager::getManager();
 
+			$templateMgr->assign_by_ref('unassignedReviewers', $unassignedReviewers);
 			$templateMgr->assign('searchField', $searchType);
 			$templateMgr->assign('searchMatch', $searchMatch);
 			$templateMgr->assign('search', $searchQuery);
 			$templateMgr->assign('searchInitial', Request::getUserVar('searchInitial'));
-
+		
 			$templateMgr->assign_by_ref('reviewers', $reviewers);
 			$templateMgr->assign('articleId', $articleId);
 			$templateMgr->assign('reviewerStatistics', $sectionEditorSubmissionDao->getReviewerStatistics($journal->getId()));

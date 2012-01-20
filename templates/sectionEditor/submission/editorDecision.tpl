@@ -43,7 +43,7 @@
 	<td width="80%" class="value">
 		{if $submission->isSubmissionDue()} 
 			{translate key="submissions.proposal.forContinuingReview"} 
-		{elseif $proposalStatus == PROPOSAL_STATUS_RETURNED && $lastDecisionArray.resubmitCount}
+		{elseif $proposalStatus == PROPOSAL_STATUS_RETURNED && $lastDecisionArray.resubmitCount && $articleMoreRecent}
 				{translate key="submissions.proposal.resubmitted"}
 		{else}
 			{translate key=$proposalStatusKey}  

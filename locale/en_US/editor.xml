@@ -125,7 +125,8 @@
 	<message key="editor.article.enterRecommendation">Enter Recommendation</message>
 	<message key="editor.article.enterReviewerRecommendation">Enter Reviewer Recommendation</message>
 	<message key="editor.article.recommendation">Recommendation</message>
-	<message key="editor.article.selectReviewer">Select Reviewer</message>
+	<message key="editor.article.selectReviewer">Add other ERC members</message>
+	<message key="editor.article.unassignedReviewers">Unassigned ERC Members</message>
 	<message key="editor.article.replaceReviewer">Replace Reviewer</message>
 	<message key="editor.article.editorToEnter">Editor to enter recommendation/comments for reviewer</message>
 	<message key="editor.article.uploadReviewForReviewer">Upload review</message>
