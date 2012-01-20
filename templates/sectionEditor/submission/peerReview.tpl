@@ -16,8 +16,11 @@
 		<td width="14%"><h4>{translate key="submission.round" round=$round}</h4></td>
 		<td width="64%" class="nowrap">
 			<a href="{url op="notifyReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.notifyReviewer"}</a>
-			{**<!-- <a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a href="{url op="submissionRegrets" path=$submission->getId()}" class="action">{translate|escape key="sectionEditor.regrets.link"}</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">Set Due Date For All</a>
+			{**<!--<a href="{url op="submissionRegrets" path=$submission->getId()}" class="action">{translate|escape key="sectionEditor.regrets.link"}</a>
 			 -->**}
 		</td>
 	</tr>

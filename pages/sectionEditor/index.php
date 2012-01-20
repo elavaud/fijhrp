@@ -50,6 +50,7 @@ switch ($op) {
 	case 'enterReviewerRecommendation':
 	case 'makeReviewerFileViewable':
 	case 'setDueDate':
+	case 'setDueDateForAll':
 	case 'viewMetadata':
 	case 'saveMetadata':
 	case 'removeArticleCoverPage':

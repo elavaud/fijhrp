@@ -855,6 +855,34 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 
+	function setDueDateForAll($args) {
+		$articleId = isset($args[0]) ? (int) $args[0] : 0;
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$submission =& $this->submission;
+
+		$dueDate = Request::getUserVar('dueDate');
+		$numWeeks = null;
+		if ($dueDate != null) {
+			foreach ($submission->getReviewAssignments() as $roundReviewAssignments) {
+				foreach ($roundReviewAssignments as $reviewAssignment) {					
+					if ( ($reviewId = $reviewAssignment->getId()) > 0) {
+						SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks);		
+					}			
+				}
+			}
+			Request::redirect(null, null, 'submissionReview', $articleId);
+		} else {
+			$this->setupTemplate(true, $articleId, 'review');
+			$journal =& Request::getJournal();
+
+			$templateMgr =& TemplateManager::getManager();	
+			$templateMgr->assign('articleId', $articleId);
+			$templateMgr->assign_by_ref('submission', $submission);
+			$templateMgr->assign('todaysDate', date('Y-m-d'));
+			$templateMgr->display('sectionEditor/setDueDateForAll.tpl');
+		}
+	}
+	
 	function setDueDate($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);

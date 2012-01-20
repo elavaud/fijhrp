@@ -637,7 +637,7 @@ class SectionEditorAction extends Action {
 					$reviewAssignment->setDateDue(date('Y-m-d H:i:s', $todayTimestamp));
 				}
 			} else {
-				// Add the equivilant of $numWeeks weeks, measured in seconds, to $todaysTimestamp.
+				// Add the equivalent of $numWeeks weeks, measured in seconds, to $todaysTimestamp.
 				$newDueDateTimestamp = $todayTimestamp + ($numWeeks * 7 * 24 * 60 * 60);
 				$reviewAssignment->setDateDue($newDueDateTimestamp);
 			}
