@@ -40,7 +40,14 @@
 
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
-	<td width="80%" class="value">{if $submission->isSubmissionDue()} {translate key="submissions.proposal.forContinuingReview"} {else} {translate key=$proposalStatusKey}  {/if}</td>
+	<td width="80%" class="value">
+		{if $submission->isSubmissionDue()} 
+			{translate key="submissions.proposal.forContinuingReview"} 
+		{elseif $lastDecisionArray.resubmitCount}
+				{translate key="submissions.proposal.resubmitted"}
+		{else}
+			{translate key=$proposalStatusKey}  
+		{/if}</td>
 </tr>
  <!-- 
 {*******************************************************
@@ -121,7 +128,7 @@
 	{if $articleMoreRecent}
 		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
-		<td width="80%" class="value">({$lastDecisionArray.resubmitCount}){translate key="editor.article.proposalResubmitted"}  {$articleLastModified|date_format:$dateFormatShort}
+		<td width="80%" class="value">Re-submitted for {$lastDecisionArray.resubmitCount} time(s) as of {$articleLastModified|date_format:$dateFormatShort}
 		</td>
 	{else}	
 		<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>

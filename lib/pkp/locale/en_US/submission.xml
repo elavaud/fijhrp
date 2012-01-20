@@ -373,7 +373,8 @@
 	<message key="submissions.proposal.expedited">For Expedited Review</message>
 	<message key="submissions.proposal.reviewed">Reviewed</message>
 	<message key="submissions.proposal.expired">Expired</message>
-
+	<message key="submissions.proposal.resubmitted">Re-submitted (Incomplete)</message>
+	
         <message key="submissions.proposal.decline">Not Approved</message>
         <message key="submissions.proposal.resubmit">Revise and Resubmit</message>
         <message key="submissions.proposal.withdrawn">Withdrawn</message>
