@@ -497,6 +497,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 	function selectReviewer($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
+		$reviewerId = isset($args[1]) && $args[1]!=null ? (int) $args[1] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$journal =& Request::getJournal();
 		$submission =& $this->submission;
@@ -508,9 +509,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 
-		if (isset($args[1]) && $args[1] != null) {
+		if ($reviewerId > 0) {
 			// Assign reviewer to article
-			SectionEditorAction::addReviewer($submission, $args[1]);
+			SectionEditorAction::addReviewer($submission, $reviewerId);
 			Request::redirect(null, null, 'submissionReview', $articleId);
 
 			// FIXME: Prompt for due date.
