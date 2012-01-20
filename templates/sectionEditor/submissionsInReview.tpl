@@ -41,7 +41,7 @@
 	   			<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
            		<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 				<td align="right">
-					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
+					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($status)}
 					{translate key=$proposalStatusKey}
 					{if $submission->isSubmissionDue()} 
 						({translate key="submissions.proposal.forContinuingReview"}) 

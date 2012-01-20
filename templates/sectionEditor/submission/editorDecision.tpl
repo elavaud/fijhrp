@@ -8,8 +8,8 @@
  *
  * $Id$
  *}
-{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 {assign var="proposalStatus" value=$submission->getSubmissionStatus()}
+{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($proposalStatus)}
  <!-- 
 {** include file="sectionEditor/submission/status.tpl" 
 <div class="separator"></div>
@@ -43,8 +43,6 @@
 	<td width="80%" class="value">
 		{if $submission->isSubmissionDue()} 
 			{translate key="submissions.proposal.forContinuingReview"} 
-		{elseif $proposalStatus == PROPOSAL_STATUS_RETURNED && $lastDecisionArray.resubmitCount && $articleMoreRecent}
-				{translate key="submissions.proposal.resubmitted"}
 		{else}
 			{translate key=$proposalStatusKey}  
 		{/if}</td>
@@ -59,7 +57,7 @@
  *******************************************************}
   -->
 <tr valign="top">
-	{if $proposalStatus == PROPOSAL_STATUS_SUBMITTED || ($proposalStatus == PROPOSAL_STATUS_RETURNED && $articleMoreRecent)}
+	{if $proposalStatus == PROPOSAL_STATUS_SUBMITTED || $proposalStatus == PROPOSAL_STATUS_RESUBMITTED }
 		<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
@@ -123,7 +121,7 @@
 		</td>
 	{/if}
 </tr>
-{if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
+{if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_RESUBMITTED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
 	<tr valign="top">
 	{if $articleMoreRecent}
 		<td class="label"></td>

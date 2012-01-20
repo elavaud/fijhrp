@@ -155,7 +155,7 @@ class SectionEditorSubmission extends Article {
          * Copied from AuthorSubmission::getSubmissionStatus
 	 */
 	function getSubmissionStatus() {
-
+				
                 /**
                  * Added by: AIM
                  * Last Updated: June 1, 2011
@@ -173,13 +173,12 @@ class SectionEditorSubmission extends Article {
 
                 $status = $this->getProposalStatus();
                 
-                /*if($status == PROPOSAL_STATUS_RETURNED) {
+                if($status == PROPOSAL_STATUS_RETURNED) {
                     $articleDao = DAORegistry::getDAO('ArticleDAO');
                     $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
 
-                    if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
-                    else return PROPOSAL_STATUS_RETURNED;
-                }*/
+                    if($isResubmitted) return PROPOSAL_STATUS_RESUBMITTED;
+                }
 
                 //For all other statuses
                 return $status;
