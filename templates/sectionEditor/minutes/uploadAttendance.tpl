@@ -23,6 +23,18 @@
 			}
 		}
 		);
+		$("#allPresent").click(
+				function() {
+					var presentVal = $("#allPresent").val();
+					if(presentVal == "Select all as present") {	
+						$("#allPresent").val("Deselect all");					
+						$(".present").attr('checked', true);
+					} else {
+						$("#allPresent").val("Select all as present");					
+						$(".present").attr('checked', false);						
+					}
+				}
+		);
 		$("#addGuest").click(
 				function() {
 					$("#guests tr:last").after($("#guests tr:last").clone());
@@ -91,7 +103,7 @@
 </div>
 <br/>
 <div id="attendance">
-	<h3>Review Committee </h3>
+	<h3>Review Committee &nbsp;&nbsp;&nbsp;<input type="button" class="button" name="allPresent" id="allPresent" value="Select all as present" /></h3> 
 	<table width="100%" class="listing" name="ercMembers">
 			<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		 	<tr class="heading">
@@ -101,6 +113,7 @@
 		 		<td width="20%">{translate key="editor.minutes.affiliationOfMember"}</td>
 		 		<td width="50%" class="div_reason_of_absence" id="div_title_reason_of_absence">{translate key="editor.minutes.reasonOfAbsence"}</td>
 		 	</tr>
+		 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		 	{assign var="isPresent" value="attendance"}
 		 	{assign var="reason" value="reason"}
