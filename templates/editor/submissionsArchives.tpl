@@ -22,7 +22,9 @@
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
-{foreach from=$submissions item=submission}
+{*foreach from=$submissions item=submission*} <!-- by AIM, Jan 21, 2012 to restore pagination -->
+{iterate from=submissions item=submission}
+	{assign var="articleId" value=$submission->getArticleId()}
 	{assign var="articleId" value=$submission->getArticleId()}
         {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
@@ -45,11 +47,29 @@
 	<tr>
 		<td colspan="6" class="separator">&nbsp;</td>
 	</tr>
+{/iterate}
+<!-- {*  by AIM, Jan 21 2012, to restore pagination
 {foreachelse}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
 {/foreach}
+*} -->
+
+<!-- Pagination, AIM, Jan 21 2012 -->
+{if $submissions->wasEmpty()}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="4" align="left">{page_info iterator=$submissions}</td>
+		<td colspan="2" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth dateSearchField=$dateSearchField section=$section sort=$sort sortDirection=$sortDirection}</td>
+	</tr>
+{/if}
 		
 </table>
 </div>
