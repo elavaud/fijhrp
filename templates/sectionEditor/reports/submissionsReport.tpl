@@ -71,7 +71,9 @@ $(document).ready(function() {
 		    </select>	
 		    
 		    <h5>{translate key="editor.reports.country"}</h5>
-<<<<<<< HEAD
+{*****************************************************************************************************************************
+Commented out Jan 21, 2012
+Chose dropdown over checkboxes
 		    <input type="checkbox" id="selectAllCountries">&nbsp;&nbsp;<b>{translate key="editor.reports.allCountries"}</b>
 			{assign var="numCols" value="3"}
 			{assign var="col" value="0"}
@@ -98,7 +100,8 @@ $(document).ready(function() {
 			</td>  {assign var="col" value=$col+1}
 			{/foreach}
 			</table>
-=======
+END OF COMMENT
+**********************************************************************}
 			<select name="countries[]" id="countries" multiple="multiple" size="5" class="selectMenu">
 		 		<option value="0" selected="selected">{translate key="editor.reports.allCountries"}</option>
 		 		{html_options options=$countriesOptions selected=$countries}
@@ -109,8 +112,6 @@ $(document).ready(function() {
 		 		<option value="0" selected="selected">{translate key="editor.reports.allTechnicalUnits"}</option>
 		 		{html_options options=$technicalUnitsOptions selected=$technicalUnits}
 		    </select>
->>>>>>> dac19a7b7d6ad9cd11997929cefd0f4c3e82b1c1
-
 	<br/>			
 	<h5>DATE</h5>
 	{translate key="common.between"}

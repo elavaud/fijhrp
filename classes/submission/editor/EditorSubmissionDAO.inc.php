@@ -806,15 +806,23 @@ class EditorSubmissionDAO extends DAO {
 			'(a.status <> ' . STATUS_QUEUED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
+
+                //Array format necessary for pagination in .tpl, AIM Jan 21 2012
+                $returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
+		return $returner;
+
+                /**
 		while (!$result->EOF) {
 			$editorSubmissions[] =& $this->_returnEditorSubmissionFromRow($result->GetRowAssoc(false));
 			$result->MoveNext();
 		}
 
+                
 		$result->Close();
 		unset($result);
-
 		return $editorSubmissions;
+                 * 
+                 */
 		
 	}	
 	

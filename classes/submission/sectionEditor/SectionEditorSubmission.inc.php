@@ -516,6 +516,22 @@ class SectionEditorSubmission extends Article {
 	}
 
 	/**
+	 * 
+	 */
+	function &getAllPossibleEditorDecisionOptions() {
+		static $editorDecisionOptions = array(
+			SUBMISSION_EDITOR_DECISION_ACCEPT => 'editor.article.decision.accept',
+			SUBMISSION_EDITOR_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
+			SUBMISSION_EDITOR_DECISION_DECLINE => 'editor.article.decision.decline',
+			SUBMISSION_EDITOR_DECISION_COMPLETE => 'editor.article.decision.complete',
+			SUBMISSION_EDITOR_DECISION_INCOMPLETE=> 'editor.article.decision.incomplete',
+			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
+			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'			
+			);
+		return $editorDecisionOptions;
+	}
+	/**
 	 * Return array mapping editor decision constants to their locale strings.
 	 * (Includes default mapping '' => "Choose One".)
 	 * @return array decision => localeString

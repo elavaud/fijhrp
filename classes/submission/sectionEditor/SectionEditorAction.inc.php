@@ -130,7 +130,7 @@ class SectionEditorAction extends Action {
 			$sectionEditorSubmission->addDecision($editorDecision, $sectionEditorSubmission->getCurrentRound());
 			$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
 
-			$decisions = SectionEditorSubmission::getEditorDecisionOptions();
+			$decisions = SectionEditorSubmission::getAllPossibleEditorDecisionOptions();
 			// Add log
 			import('classes.article.log.ArticleLog');
 			import('classes.article.log.ArticleEventLogEntry');

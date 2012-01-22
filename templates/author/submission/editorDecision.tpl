@@ -17,13 +17,10 @@
 <table width="100%" class="data">
         <!-- {*
 	<tr valign="top">
-<<<<<<< HEAD
 		<td class="label">{translate key="author.article.decision"}</td>
 		<td>
-=======
 		<td class="label">{translate key="editor.article.decision"}</td>
 		<td class="value">
->>>>>>> 4fb879318a74924590335cc01414785070a997c0
 			{if $lastEditorDecision}
 				{assign var="decision" value=$lastEditorDecision.decision}
 				{translate key=$editorDecisionOptions.$decision} {$lastEditorDecision.dateDecided|date_format:$dateFormatShort}

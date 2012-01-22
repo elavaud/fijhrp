@@ -63,7 +63,11 @@
 </div><br/><br/><br/>
 <p align="left"><input type="submit" class="button defaultButton" value="{translate key="common.search"}"/></p>
 </form>
-
+<div class="separator"></div>
+<h4>{translate key="editor.meetings.setNewMeeting"}</h4>
+<a href="{url op="setMeeting"}">{translate key="editor.meetings.clickHere"}</a>&nbsp;{translate key="editor.meetings.toSetNewMeeting"}
+<br/>
+<br/>
 <div id="meetings">
 <table class="listing" width="100%">
 	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
@@ -127,6 +131,4 @@
 </div>
 <br />
 
-<h3>{translate key="editor.meetings.setNewMeeting"}</h3>
-<a href="{url op="setMeeting"}">{translate key="editor.meetings.clickHere"}</a>&nbsp;{translate key="editor.meetings.toSetNewMeeting"}
 {include file="common/footer.tpl"}
