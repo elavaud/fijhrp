@@ -17,7 +17,7 @@
 <ul class="menu">
 	<li><a href="{url op="submission" path=$submission->getId()}">{translate key="submission.summary"}</a></li>
 	<li class="current"><a href="{url op="submissionReview" path=$submission->getId()}">{translate key="submission.review"}</a></li>
-	<li><a href="{url op="submissionEditing" path=$submission->getId()}">{translate key="submission.editing"}</a></li>
+	<!-- {* <li><a href="{url op="submissionEditing" path=$submission->getId()}">{translate key="submission.editing"}</a></li> *} -->
 </ul>
 
 
@@ -25,7 +25,8 @@
 
 <div class="separator"></div>
 
-{include file="author/submission/peerReview.tpl"}
+<!-- {* {include file="author/submission/peerReview.tpl"} *} -->
+{include file="author/submission/status.tpl"}
 
 <div class="separator"></div>
 

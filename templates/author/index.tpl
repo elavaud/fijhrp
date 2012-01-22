@@ -67,13 +67,17 @@
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>
-&nbsp;
-{include file="author/$pageToDisplay.tpl"}
+
+<br />
 <div id="submitStart">
 <h4>{translate key="author.submit.startHereTitle"}</h4>
 {url|assign:"submitUrl" op="submit"}
 {translate submitUrl=$submitUrl key="author.submit.startHereLink"}<br />
 </div>
+
+<br /><br />
+
+{include file="author/$pageToDisplay.tpl"}
 
 <!-- Comment out, AIM, May 31, 2011 -->
 {*
