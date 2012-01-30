@@ -57,9 +57,10 @@
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>
- 
+<br/><br/><br/>
 <div id="submissions">
 <table class="listing" width="100%">
+	<tr><td colspan="5">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO ID</td> <!-- Replaced id with WHO ID, SPF, 21 Dec 2011 -->
@@ -67,27 +68,36 @@
 		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
 		<td width="70%">{sort_heading key="article.title" sort='title'}</td>
 		<td width="5%">{sort_heading key="submission.due" sort='dueDate'}</td>
-		<td width="10%">{sort_heading key="submissions.reviewRound" sort='round'}</td>
+		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
-
-{iterate from=submissions item=submission}
+{assign var="count" value=0}
+{iterate from=submissions1 item=submission}
 	{assign var="articleId" value=$submission->getLocalizedWhoId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
-	<tr valign="top">
-		<td>{$articleId|escape}</td>
-		<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
-		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept25,2011-->
-		<td><a href="{url op="submission" path=$reviewId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
-		<td class="nowrap">{$submission->getDateDue()|date_format:$dateFormatTrunc}</td>
-		<td>{$submission->getRound()}</td>
-	</tr>
-	<tr>
-		<td colspan="6" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
-	</tr>
+	{assign var="status" value=$submission->getSubmissionStatus()}
+    {assign var="decision" value=$submission->getMostRecentDecision() }
+
+    {if ($status!=PROPOSAL_STATUS_DRAFT && $status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}	
+		<tr valign="top">
+			<td>{$articleId|escape}</td>
+			<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
+			<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept25,2011-->
+			<td><a href="{url op="submission" path=$reviewId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+			<td class="nowrap">{$submission->getDateDue()|date_format:$dateFormatTrunc}</td>
+			<td align="right">
+						{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($status)}
+						{translate key=$proposalStatusKey}
+						{if $decision==SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->isSubmissionDue()} 
+							({translate key="submissions.proposal.forContinuingReview"}) 
+						{/if}	
+			</td>
+		</tr>
+		{assign var="count" value=$count+1}
+	{/if}	
 {/iterate}
-{if $submissions->wasEmpty()}
-<tr>
+{if $count==0}
+	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
 	<tr>
@@ -95,10 +105,181 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="3" align="left">{page_info iterator=$submissions}</td>
-		<td colspan="3" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions sort=$sort sortDirection=$sortDirection}</td>
+		<td colspan="6" align="left">{$count} active submission(s)</td>
 	</tr>
 {/if}
+</table>
+
+<br />
+<br />
+<br />
+{assign var="count" value=0}
+<table class="listing" width="100%">
+        <tr><td colspan="6">APPROVED PROPOSALS (Research Ongoing)</td></tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr class="heading" valign="bottom">
+		<td width="5%">WHO ID</td> <!-- Replaced id with WHO ID, SPF, 21 Dec 2011 -->
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="common.assigned" sort='assignDate'}</td>
+		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
+		<td width="70%">{sort_heading key="article.title" sort='title'}</td>
+		<td width="5%">{sort_heading key="submission.due" sort='dueDate'}</td>
+		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+	</tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	
+	{iterate from=submissions2 item=submission}
+	{assign var="articleId" value=$submission->getLocalizedWhoId()}
+	{assign var="reviewId" value=$submission->getReviewId()}
+	{assign var="status" value=$submission->getSubmissionStatus()}
+    {assign var="decision" value=$submission->getMostRecentDecision() }
+
+    {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}		
+		<tr valign="top">
+			<td>{$articleId|escape}</td>
+			<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
+			<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept25,2011-->
+			<td><a href="{url op="submission" path=$reviewId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+			<td class="nowrap">{$submission->getDateDue()|date_format:$dateFormatTrunc}</td>
+			<td align="right">
+						{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
+					{translate key=$displayStatus}{if $submission->isSubmissionDue()}&nbsp; ({translate key="submissions.proposal.forContinuingReview"}){/if}
+			</td>
+			{assign var="count" value=$count+1}
+		</tr>
+	{/if}	
+{/iterate}
+
+{if $count==0}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="6" align="left">{$count} active submission(s)</td>
+	</tr>
+{/if}
+</table>
+
+<br />
+<br />
+<br />
+
+<table class="listing" width="100%">
+        <tr><td colspan="6">NOT APPROVED</td></tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr class="heading" valign="bottom">
+		<td width="5%">WHO ID</td> <!-- Replaced id with WHO ID, SPF, 21 Dec 2011 -->
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="common.assigned" sort='assignDate'}</td>
+		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
+		<td width="70%">{sort_heading key="article.title" sort='title'}</td>
+		<td width="5%">{sort_heading key="submission.due" sort='dueDate'}</td>
+		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+	</tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	
+	{assign var="count" value=0}
+	{iterate from=submissions3 item=submission}
+	{assign var="articleId" value=$submission->getLocalizedWhoId()}
+	{assign var="reviewId" value=$submission->getReviewId()}
+	{assign var="status" value=$submission->getSubmissionStatus()}
+    {assign var="decision" value=$submission->getMostRecentDecision() }
+
+    {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_DECLINE)}
+		<tr valign="top">
+			<td>{$articleId|escape}</td>
+			<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
+			<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept25,2011-->
+			<td><a href="{url op="submission" path=$reviewId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+			<td class="nowrap">{$submission->getDateDue()|date_format:$dateFormatTrunc}</td>
+			<td align="right">
+						{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
+					{if $status == PROPOSAL_STATUS_EXEMPTED}
+						{translate key=$proposalStatusKey}	
+					{else}
+						{assign var="editorDecisionKey" value=$submission->getEditorDecisionKey()}
+						{translate key=$editorDecisionKey}
+					{/if}
+			</td>
+		</tr>
+		{assign var="count" value=$count+1}
+	{/if}
+{/iterate}
+
+{if $count==0}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="6" align="left">{$count} active submission(s)</td>
+	</tr>
+{/if}
+</table>
+
+
+<br />
+<br />
+<br />
+
+<table class="listing" width="100%">
+        <tr><td colspan="6">EXEMPTED</td></tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr class="heading" valign="bottom">
+		<td width="5%">WHO ID</td> <!-- Replaced id with WHO ID, SPF, 21 Dec 2011 -->
+		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="common.assigned" sort='assignDate'}</td>
+		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
+		<td width="70%">{sort_heading key="article.title" sort='title'}</td>
+		<td width="5%">{sort_heading key="submission.due" sort='dueDate'}</td>
+		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+	</tr>
+	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	
+	{assign var="count" value=0}
+	{iterate from=submissions4 item=submission}
+	{assign var="articleId" value=$submission->getLocalizedWhoId()}
+	{assign var="reviewId" value=$submission->getReviewId()}
+	{assign var="status" value=$submission->getSubmissionStatus()}
+    {assign var="decision" value=$submission->getMostRecentDecision() }
+
+    {if $status==PROPOSAL_STATUS_EXEMPTED}		
+		<tr valign="top">
+			<td>{$articleId|escape}</td>
+			<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
+			<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept25,2011-->
+			<td><a href="{url op="submission" path=$reviewId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+			<td class="nowrap">{$submission->getDateDue()|date_format:$dateFormatTrunc}</td>
+			<td align="right">
+						{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
+					{if $status == PROPOSAL_STATUS_EXEMPTED}
+						{translate key=$proposalStatusKey}	
+					{else}
+						{assign var="editorDecisionKey" value=$submission->getEditorDecisionKey()}
+						{translate key=$editorDecisionKey}
+					{/if}
+			</td>
+		</tr>
+		{assign var="count" value=$count+1}
+	{/if}
+{/iterate}
+
+{if $count==0}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="6" align="left">{$count} active submission(s)</td>
+	</tr>
+{/if}	
 </table>
 </div>
 

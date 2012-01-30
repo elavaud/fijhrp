@@ -487,6 +487,7 @@ class ReviewerSubmissionDAO extends DAO {
 			default: return null;
 		}
 	}
+	
 }
 
 ?>
