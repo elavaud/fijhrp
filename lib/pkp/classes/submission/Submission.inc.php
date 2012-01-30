@@ -53,9 +53,9 @@ class Submission extends DataObject {
 		parent::DataObject();
 		$this->authors = array();
 		$this->removedAuthors = array();
-        $this->countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $this->technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-        $this->articleDAO =& DAORegistry::getDAO('ArticleDAO');
+                $this->countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+                $this->technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+                $this->articleDAO =& DAORegistry::getDAO('ArticleDAO');
         
 	}
 

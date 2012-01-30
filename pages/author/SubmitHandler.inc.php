@@ -298,7 +298,7 @@ class SubmitHandler extends AuthorHandler {
 		$articleId = $request->getUserVar('articleId');
                 // Start Edit Raf Tan 04/30/2011
                 $fileTypes = $request->getUserVar('fileType');
-
+                $otherFileType = trim($request->getUserVar('otherFileType'));
                 // End Edit Raf Tan 04/30/2011
 		$journal =& $request->getJournal();
 
@@ -316,10 +316,15 @@ class SubmitHandler extends AuthorHandler {
 
                 // Bypass displaying the supplementay submission form (pass articleId and proposalType)
                 $suppFileType = $fileTypes[0];
+                if($suppFileType == Locale::translate('common.other') && $otherFileType != "") $suppFileType = $otherFileType;
                 $count = 1;
                 foreach ($fileTypes as $type) {
-                    if($count > 1)
+                    if($count > 1) {
+                        if($type == Locale::translate('common.other') && $otherFileType != "")
+                            $type = $otherFileType;
+
                         $suppFileType = $suppFileType . ', ' . $type;
+                    }
                     $count++;
                 }
                 
