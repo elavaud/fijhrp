@@ -123,12 +123,22 @@
 </tr>
 {if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_RESUBMITTED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
 	<tr valign="top">
-	{if $articleMoreRecent}
-		<td class="label"></td>
 		{assign var="articleLastModified" value=$submission->getLastModified()}
-		<td width="80%" class="value">Re-submitted for {$lastDecisionArray.resubmitCount} time(s) as of {$articleLastModified|date_format:$dateFormatShort}
-		</td>
-	{else}	
+		{if ($lastDecisionArray.resubmitCount!=null && $lastDecisionArray.resubmitCount!=0) }
+			<td class="label"></td>
+			{if $lastDecisionArray.resubmitCount == 1}
+				{assign var="resubmitMsg" value="once"}
+			{else}
+				{assign var="resubmitCount" value=$lastDecisionArray.resubmitCount}
+				{assign var="resubmitMsg" value="for $resubmitCount times"}
+			{/if}
+			<td width="80%" class="value">
+				Re-submitted {$resubmitMsg} as of {$articleLastModified|date_format:$dateFormatShort}
+			</td>
+		{/if}
+	</tr>
+	<tr valign="top">
+	{if !$articleMoreRecent}
 		<td class="label" width="20%">{translate key="editor.article.submissionStatus"}</td>
 		<td width="80%" class="value">{translate key="editor.article.waitingForResubmission"}</td>
 	{/if}

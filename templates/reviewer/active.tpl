@@ -105,6 +105,9 @@
 	</tr>
 {else}
 	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+	<tr>
 		<td colspan="6" align="left">{$count} active submission(s)</td>
 	</tr>
 {/if}
@@ -157,6 +160,9 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 {else}
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
 	<tr>
 		<td colspan="6" align="left">{$count} active submission(s)</td>
 	</tr>
@@ -217,6 +223,9 @@
 	</tr>
 {else}
 	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+	<tr>
 		<td colspan="6" align="left">{$count} active submission(s)</td>
 	</tr>
 {/if}
@@ -276,6 +285,9 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 {else}
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
 	<tr>
 		<td colspan="6" align="left">{$count} active submission(s)</td>
 	</tr>

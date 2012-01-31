@@ -361,13 +361,13 @@ class ReviewerSubmissionDAO extends DAO {
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
 				r.date_notified IS NOT NULL';
-
+		/*
 		if ($active) {
 			$sql .=  ' AND r.date_completed IS NULL AND r.declined <> 1 AND (r.cancelled = 0 OR r.cancelled IS NULL)';
 		} else {
 			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1)';
 		}
-
+		*/
 		$result =& $this->retrieveRange(
 			$sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 			count($params)===1?array_shift($params):$params,
