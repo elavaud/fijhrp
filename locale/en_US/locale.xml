@@ -774,11 +774,11 @@ Active is how many reviews are currently being considered or underway.]]></messa
 (After saving, further comments can be added.)]]></message>
 	<!-- Edited by ayveemallare 7/19/2011 -->
 	<!-- Changed Editor to ERC, Author to RTO -->
-	<message key="submission.comments.canShareWithAuthor">For RTO and ERC</message>
-	<message key="submission.comments.cannotShareWithAuthor">For ERC</message>
+	<message key="submission.comments.canShareWithAuthor">For RTO and STO</message>
+	<message key="submission.comments.cannotShareWithAuthor">For STO</message>
 	<message key="submission.comments.blindCcReviewers">After sending, present an editable BCC copy to send to reviewers.</message>
-	<message key="submission.comments.forAuthorEditor">For RTO and ERC</message>
-	<message key="submission.comments.forEditor">For ERC</message>
+	<message key="submission.comments.forAuthorEditor">For RTO and STO</message>
+	<message key="submission.comments.forEditor">For STO</message>
 	<message key="submission.comments.saveAndEmailAuthor">Save and Email Author</message>
 	<message key="submission.comments.saveAndEmailEditor">Save and Email Editor</message>
 	
