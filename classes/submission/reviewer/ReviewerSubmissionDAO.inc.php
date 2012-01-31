@@ -281,7 +281,8 @@ class ReviewerSubmissionDAO extends DAO {
 				'abbrev',
 				$locale,
 				$journalId,
-				$reviewerId);
+				$reviewerId,
+				SUBMISSION_EDITOR_DECISION_ASSIGNED);
 		$searchSql = '';
 		$technicalUnitSql = '';
 		$countrySql = '';
@@ -358,9 +359,11 @@ class ReviewerSubmissionDAO extends DAO {
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				LEFT JOIN edit_decisions ed ON (ed.article_id = a.article_id)
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
-				r.date_notified IS NOT NULL';
+				r.date_notified IS NOT NULL AND
+				ed.decision = ? ';
 		/*
 		if ($active) {
 			$sql .=  ' AND r.date_completed IS NULL AND r.declined <> 1 AND (r.cancelled = 0 OR r.cancelled IS NULL)';
@@ -413,19 +416,59 @@ class ReviewerSubmissionDAO extends DAO {
 				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)				
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
 				r.date_notified IS NOT NULL';
 
 		$result =& $this->retrieve($sql, array($journalId, $reviewerId));
-
+		
 		while (!$result->EOF) {
 			if ($result->fields['date_completed'] == null && $result->fields['declined'] != 1 && $result->fields['cancelled'] != 1) {
 				$submissionsCount[0] += 1;
 			} else {
 				$submissionsCount[1] += 1;
 			}
+			$result->moveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $submissionsCount;
+	}
+	
+/**
+	 * Get count of active and complete assignments
+	 * @param reviewerId int
+	 * @param journalId int
+	 */
+	function getSubmissionsForERCReviewCount($reviewerId, $journalId) {
+		$submissionsCount = array();
+		$submissionsCount[0] = 0;
+		$submissionsCount[1] = 0;
+
+		$sql = 'SELECT	r.date_completed, r.declined, r.cancelled
+			FROM	articles a
+				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
+				LEFT JOIN sections s ON (s.section_id = a.section_id)
+				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
+				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN edit_decisions ed ON (ed.article_id = a.article_id)
+			WHERE	a.journal_id = ? AND
+				r.reviewer_id = ? AND
+				r.date_notified IS NOT NULL AND 
+				ed.decision = ? ';
+
+		$result =& $this->retrieve($sql, array($journalId, $reviewerId, SUBMISSION_EDITOR_DECISION_ASSIGNED));
+		
+		while (!$result->EOF) {
+			/*if ($result->fields['date_completed'] == null && $result->fields['declined'] != 1 && $result->fields['cancelled'] != 1) {
+				$submissionsCount[0] += 1;
+			} else {
+				$submissionsCount[1] += 1;
+			}*/
+			$submissionsCount[0] += 1;
 			$result->moveNext();
 		}
 

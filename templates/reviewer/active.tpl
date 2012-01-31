@@ -81,7 +81,7 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
     {assign var="decision" value=$submission->getMostRecentDecision() }
 
-    {if $decision == SUBMISSION_EDITOR_DECISION_ASSIGNED}	
+    	
 		<tr valign="top">
 			<td>{$articleId|escape}</td>
 			<td>{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
@@ -97,14 +97,18 @@
 					&mdash;
 				{/if}
 			</td>
-			<td align="right">
+			<td align="right">			
 				{assign var="recommendation" value=$submission->getRecommendation()}
-				{translate key=$reviewerRecommendationOptions.$recommendation}				
+				{if $recommendation != 0}
+					{translate key=$reviewerRecommendationOptions.$recommendation}
+				{else}
+					&mdash;
+				{/if}				
 			</td>			
 		</tr>
 		<td colspan="6" class="separator">&nbsp;</td>
 		{assign var="count" value=$count+1}
-	{/if}	
+		
 {/iterate}
 {if $count==0}
 	<tr>

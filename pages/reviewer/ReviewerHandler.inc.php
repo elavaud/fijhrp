@@ -45,7 +45,8 @@ class ReviewerHandler extends Handler {
 		$meetings = $meetingReviewerDao->getMeetingsByReviewerId($user->getId());
 		//$meetings = $meetingReviewerDao->getMeetingsOfUser($user->getId());
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign('rangeInfo', count($submissions->toArray()));
+		$submissionsCount =& $reviewerSubmissionDao->getSubmissionsForERCReviewCount($user->getId(), $journal->getId());
+		$templateMgr->assign('rangeInfo', $submissionsCount[0]);
 		$templateMgr->assign('meetingsCount', count($meetings->toArray()));
 
 		$templateMgr->display('reviewer/index.tpl');
