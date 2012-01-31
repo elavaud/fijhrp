@@ -388,10 +388,12 @@ class SubmitHandler extends AuthorHandler {
                  */
 
                 //$submitForm->readInputData();
-                $suppFileDao = DAORegistry::getDAO('SuppFileDAO');
-                $suppFileCount = count($suppFileDao->getSuppFilesByArticle($articleId));
-                
-                $submitForm->setData('title', array($article->getLocale() => ('SuppFile'.$suppFileCount)));
+
+               // $suppFileDao = DAORegistry::getDAO('SuppFileDAO');
+               // $suppFileCount = count($suppFileDao->getSuppFilesByArticle($articleId));
+                //$submitForm->setData('title', array($article->getLocale() => ('SuppFile'.$suppFileCount)));
+                $submitForm->setData('title', array($article->getLocale() => ($type)));
+
                 $submitForm->setData('type', $type);
                 $submitForm->execute();
                 Request::redirect(null, null, 'submit', '4', array('articleId' => $articleId));
