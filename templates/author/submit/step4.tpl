@@ -66,7 +66,7 @@ $(document).ready(function() {
 {foreach from=$suppFiles item=file}
 <tr valign="top">
 	<!-- {* <td>{$file->getSuppFileId()}</td> *} -->
-	<td>{$file->getSuppFileTitle()|escape} ({$file->getType()|escape})</td>
+	<td>{$file->getSuppFileTitle()|escape} <!-- {*({$file->getType()|escape}) *} --></td>
 	<td>{$file->getOriginalFileName()|escape}</td>
 	<td>{$file->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 	<td align="right">
