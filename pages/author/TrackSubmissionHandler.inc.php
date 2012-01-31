@@ -156,12 +156,17 @@ class TrackSubmissionHandler extends AuthorHandler {
 		//$initialCopyeditSignoff = $submission->getSignoff('SIGNOFF_COPYEDITING_INITIAL');
 		//$templateMgr->assign('canEditMetadata', !$initialCopyeditSignoff->getDateCompleted() && $submission->getStatus() != STATUS_PUBLISHED);
                 //Last Updated, AIM, 12.22.2011
-                if($submission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED)
+                if($submission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED) {
                         $canEditMetadata = true;
-                else
+                        $canEditFiles = true;
+                }
+                else {
                         $canEditMetadata = false;
+                        $canEditFiles = false;
+                }
                 $templateMgr->assign('canEditMetadata', $canEditMetadata);
-                
+                $templateMgr->assign('canEditFiles', $canEditFiles);
+
 		$templateMgr->display('author/submission.tpl');
                 
 	}
@@ -216,6 +221,8 @@ class TrackSubmissionHandler extends AuthorHandler {
 	/**
 	 * Add a supplementary file.
 	 * @param $args array ($articleId)
+         *
+         * Last Edit Jan 31 2012
 	 */
 	function addSuppFile($args, $request) {
 		$articleId = (int) array_shift($args);
@@ -224,12 +231,16 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$this->validate($articleId);
 		$authorSubmission =& $this->submission;
 
-		if ($authorSubmission->getStatus() != STATUS_PUBLISHED && $authorSubmission->getStatus() != STATUS_ARCHIVED) {
+		//if ($authorSubmission->getStatus() != STATUS_PUBLISHED && $authorSubmission->getStatus() != STATUS_ARCHIVED) {
+                if ($authorSubmission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED) {
 			$this->setupTemplate(true, $articleId, 'summary');
 
 			import('classes.submission.form.SuppFileForm');
 
 			$submitForm = new SuppFileForm($authorSubmission, $journal);
+
+                        //Added Jan 31 2012
+                        $submitForm->setData('type', 'Supp File');
 
 			if ($submitForm->isLocaleResubmit()) {
 				$submitForm->readInputData();
@@ -241,6 +252,34 @@ class TrackSubmissionHandler extends AuthorHandler {
 			$request->redirect(null, null, 'submission', $articleId);
 		}
 	}
+
+        /**
+         * Added by AIM Jan 30 2012
+         *
+	 * Delete a supplementary file.
+	 * @param $args array, the first parameter is the supplementary file to delete
+	 */
+	function deleteSuppFile($args) {
+		import('classes.file.ArticleFileManager');
+
+                $articleId = (int)Request::getUserVar('articleId');
+		$suppFileId = isset($args[0]) ? (int) $args[0] : 0;
+                //$this->validate($articleId, 4);
+		$article =& $this->article;
+		//$this->setupTemplate(true);
+
+                $suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
+		$suppFile = $suppFileDao->getSuppFile($suppFileId, $articleId);
+		$suppFileDao->deleteSuppFileById($suppFileId, $articleId);
+
+                if ($suppFile->getFileId()) {
+			$articleFileManager = new ArticleFileManager($articleId);
+			$articleFileManager->deleteFile($suppFile->getFileId());
+		}
+
+                Request::redirect(null, null, 'submission', $articleId);
+	}
+
 
 	/**
 	 * Edit a supplementary file.
