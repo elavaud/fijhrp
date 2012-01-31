@@ -43,7 +43,7 @@
 				<td align="right">
 					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($status)}
 					{translate key=$proposalStatusKey}
-					{if $decision==SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->isSubmissionDue()} 
+					{if $submission->isSubmissionDue()} 
 						({translate key="submissions.proposal.forContinuingReview"}) 
 					{/if}					
 				</td>		
