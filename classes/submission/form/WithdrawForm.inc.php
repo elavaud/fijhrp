@@ -172,6 +172,7 @@ class WithdrawForm extends Form {
 	 */
 	function setSuppFileData(&$suppFile) {
             $suppFile->setType($this->getData('type'));
+            $suppFile->setShowReviewers(1);
                 
 	}
 }

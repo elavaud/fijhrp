@@ -41,23 +41,27 @@
                             <a href="{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}{url op="editSuppFile" path=$submission->getArticleId()|to_array:$suppFile->getId()}{else}{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}{/if}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}<br />
                             *}
                             -->
-                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})<br />
-			{foreachelse}
+                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})
+                            {if $canEditFiles}
+                            &nbsp;
+                            <a href="{url op="deleteSuppFile" path=$suppFile->getSuppFileId() articleId=$submission->getArticleId()}" onclick="return confirm('{translate|escape:"jsparam" key="author.submit.confirmDeleteSuppFile"}')" class="action">{translate key="common.delete"}</a>
+                            {/if}
+                            <br />
+                        {foreachelse}
 				{translate key="common.none"}
 			{/foreach}
 		</td>
-                <!--  Adding of supp files not allowed after submission
-                {*
-		<td width="50%" class="value">
-                        {if $submission->getSubmissionStatus() == PROPOSAL_STATUS_SUBMITTED}
-				<a href="{url op="addSuppFile" path=$submission->getArticleId()}" class="action">{translate key="submission.addSuppFile"}</a>
-			{else}
-				&nbsp;
-			{/if}
+                <td>&nbsp;</td>
+        </tr>
+        <!--  Adding of supp files allowed only until proposal is reviewed -->
+        {if $canEditFiles}
+        <tr>
+                <td>&nbsp;</td>
+		<td>
+                        <a href="{url op="addSuppFile" path=$submission->getArticleId()}" class="action">{translate key="submission.addSuppFile"}</a>
 		</td>
-                *}
-                -->
 	</tr>
+        {/if}
 	<tr>
 		<td class="label">{translate key="submission.submitter"}</td>
 		<td colspan="2" class="value">

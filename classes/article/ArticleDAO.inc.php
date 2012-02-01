@@ -657,16 +657,34 @@ class ArticleDAO extends DAO {
 	/**********************************************************************
 	 * Get proposal type by code
 	 * Added by igm 9/28/11
+         * Last updated Jan 30 2012, to support multiple proposal types
 	 ***********************************************************************/
 	function getProposalType($code) {
-		$proposalTypes = $this->getProposalTypes();
-		
-		foreach($proposalTypes as $pt) {
-			if($pt['code'] == $code) {
-				return $pt['name'];
-			}
-		}
+                $proposalTypeCodeArray = explode("+", $code);
+                $proposalTypeTextArray = array();
+                foreach($proposalTypeCodeArray as $ptypeCode) {
+                    $typeText = $this->getProposalTypeSingle($ptypeCode);
+                    array_push($proposalTypeTextArray, $typeText);
+                }
+                
+                $proposalTypeText = "";
+                foreach($proposalTypeTextArray as $i => $ptype) {
+                    $proposalTypeText = $proposalTypeText . $ptype;
+                    if($i < count($proposalTypeTextArray)-1) $proposalTypeText = $proposalTypeText . ", ";
+                }
+
+                return $proposalTypeText;
 	}
+
+        function getProposalTypeSingle($code) {
+            $proposalTypes = $this->getProposalTypes();
+            foreach($proposalTypes as $pt) {
+                if ($pt['code'] == $code) {
+                    return $pt['name'];
+                }
+            }
+            return $code;
+        }
 
 	/**********************************************************************
 	 *

@@ -212,17 +212,18 @@ class AuthorSubmitSuppFileForm extends Form {
 	 */
 	function setSuppFileData(&$suppFile) {
 		$suppFile->setTitle($this->getData('title'), null); // Null
-		$suppFile->setCreator($this->getData('creator'), null); // Null
-		$suppFile->setSubject($this->getData('subject'), null); // Null
+		//$suppFile->setCreator($this->getData('creator'), null); // Null
+		//$suppFile->setSubject($this->getData('subject'), null); // Null
 		$suppFile->setType($this->getData('type'));
-		$suppFile->setTypeOther($this->getData('typeOther'), null); // Null
-		$suppFile->setDescription($this->getData('description'), null); // Null
-		$suppFile->setPublisher($this->getData('publisher'), null); // Null
-		$suppFile->setSponsor($this->getData('sponsor'), null); // Null
-		$suppFile->setDateCreated($this->getData('dateCreated') == '' ? Core::getCurrentDate() : $this->getData('dateCreated'));
-		$suppFile->setSource($this->getData('source'), null); // Null
-		$suppFile->setLanguage($this->getData('language'));
-		$suppFile->setShowReviewers($this->getData('showReviewers'));
+		//$suppFile->setTypeOther($this->getData('typeOther'), null); // Null
+		//$suppFile->setDescription($this->getData('description'), null); // Null
+		//$suppFile->setPublisher($this->getData('publisher'), null); // Null
+		//$suppFile->setSponsor($this->getData('sponsor'), null); // Null
+		//$suppFile->setDateCreated($this->getData('dateCreated') == '' ? Core::getCurrentDate() : $this->getData('dateCreated'));
+		//$suppFile->setSource($this->getData('source'), null); // Null
+		//$suppFile->setLanguage($this->getData('language'));
+		//$suppFile->setShowReviewers($this->getData('showReviewers'));
+                $suppFile->setShowReviewers(1);
 	}
 }
 
