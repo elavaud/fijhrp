@@ -26,8 +26,8 @@ class MinutesHandler extends Handler {
 		parent::Handler();
 
 		$this->addCheck(new HandlerValidatorJournal($this));
-		// FIXME This is kind of evil
-		$page = Request::getRequestedPage();
+		// 02-01-2012 
+                $page = Request::getRequestedPage();
 		if ( $page == 'sectionEditor' )
 		$this->addCheck(new HandlerValidatorRoles($this, true, null, null, array(ROLE_ID_SECTION_EDITOR)));
 		elseif ( $page == 'editor' )
