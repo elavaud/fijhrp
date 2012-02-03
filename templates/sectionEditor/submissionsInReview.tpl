@@ -26,7 +26,7 @@
 {assign var="count" value=0}
 {foreach from=$submissions item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
-        {assign var="decision" value=$submission->getMostRecentDecision() }
+    {assign var="decision" value=$submission->getMostRecentDecision() }
 
         {if ($status!=PROPOSAL_STATUS_DRAFT && $status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}		
 			
