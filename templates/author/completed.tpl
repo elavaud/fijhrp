@@ -13,7 +13,7 @@
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
 	<tr valign="bottom" class="heading">
 		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!--<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>-->
 		<td width="23%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="32%">{sort_heading key="article.title" sort="title"}</td>
@@ -26,7 +26,7 @@
         {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
 		<td>{$whoId|escape}</td>
-		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
+		<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
 		<!--<td>{$submission->getSectionAbbrev()|escape}</td>-->
 		<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>
 		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>

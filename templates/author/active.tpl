@@ -15,7 +15,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
 		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
@@ -35,7 +35,7 @@
 
             <tr valign="top">
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
-                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
+                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
@@ -114,7 +114,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
 		<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
@@ -138,7 +138,7 @@
 
             <tr valign="top">
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
-                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
+                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB, Sept25, 2011 -->
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
@@ -181,7 +181,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
 		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
@@ -203,7 +203,7 @@
 
             <tr valign="top">
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
-                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
+                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB, Sept25,2011 -->
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
@@ -243,7 +243,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
 		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
@@ -265,7 +265,7 @@
 
             <tr valign="top">
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
-                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
+                <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
