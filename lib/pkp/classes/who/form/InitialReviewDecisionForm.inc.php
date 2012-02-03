@@ -144,7 +144,7 @@ class InitialReviewDecisionForm extends Form {
 			$votesStr = "The distribution of votes are as follows. ". $this->getData('votesApprove')." member(s) voted for, ".$this->getData('votesNotApprove')." member(s) voted against, ".$this->getData('votesAbstain')." member(s) abstained.";
 			$reasonsStr = "Reasons for minority opinions are as follows: $minorityReason";
 		}
-		$pdf->ChapterItemKey('(d) IRB Decision and Votes', "BU");
+		$pdf->ChapterItemKey('IRB Decision and Votes', "BU");
 		$pdf->ChapterItemVal($decisionStr);
 		if(!$isUnanimous) {
 			$pdf->ChapterItemVal($votesStr);
