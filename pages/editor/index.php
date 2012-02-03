@@ -212,11 +212,13 @@ switch ($op) {
 	case 'uploadAttendance':	
 	case 'downloadAttendance':
 	case 'selectInitialReview':
-	case 'uploadInitialReview':
+	case 'uploadInitialReviewFile':
+	case 'uploadInitialReviewDecision':
 	case 'completeInitialReviews':
 	case 'downloadInitialReviews':
 	case 'selectContinuingReview':
-	case 'uploadContinuingReview':
+	case 'uploadContinuingReviewFile':
+	case 'uploadContinuingReviewDecision':
 	case 'completeContinuingReviews':
 	case 'setMinutesFinal':
 		define('HANDLER_CLASS', 'MinutesHandler');

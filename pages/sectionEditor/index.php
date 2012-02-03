@@ -182,6 +182,7 @@ switch ($op) {
 	case 'downloadMinutes':
 	case 'uploadAttendance':	
 	case 'selectInitialReview':
+	case 'uploadReviewFile':
 	case 'uploadInitialReview':
 	case 'completeInitialReviews':	
 	case 'selectContinuingReview':
