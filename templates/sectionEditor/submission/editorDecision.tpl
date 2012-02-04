@@ -106,7 +106,7 @@
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmReviewSelection"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 			</form>
 		</td>
-	{ elseif $proposalStatus == PROPOSAL_STATUS_EXPEDITED || ($articleMoreRecent && $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)}
+	{ elseif ($articleMoreRecent && $proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT)}
 		<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
 		<td width="80%" class="value">
 			<form method="post" action="{url op="recordDecision"}">
@@ -118,9 +118,31 @@
 				</select>
 				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.recordDecision"}"  class="button" />
 			</form>
-		</td>
+		</td>	
 	{/if}
 </tr>
+{if $proposalStatus == PROPOSAL_STATUS_EXPEDITED}	
+	<form method="post" action="{url op="recordDecision"}" enctype="multipart/form-data">
+	<tr>
+			<td class="label" width="20%">{translate key="editor.article.selectDecision"}</td>
+			<td width="80%" class="value">
+					<input type="hidden" name="articleId" value="{$submission->getId()}" />
+					<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />
+					<input type="hidden" name="resubmitCount" value="{$lastDecisionArray.resubmitCount}" />
+					<select name="decision" size="1" class="selectMenu">
+						{html_options_translate options=$editorDecisionOptions selected=1}
+					</select>
+					<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.uploadRecordDecision"}"  class="button" />				
+			</td>		
+	</tr>
+	<tr>
+		<td class="label" width="20%">{translate key="editor.article.uploadFinalDecisionFile"}</td>
+		<td width="80%" class="value">
+			<input type="file" class="uploadField" name="finalDecisionFile" id="finalDecisionFile" />		
+		</td>
+	</tr>
+	</form>
+{/if}
 {if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_RESUBMITTED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
 	<tr valign="top">
 		{assign var="articleLastModified" value=$submission->getLastModified()}
