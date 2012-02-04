@@ -62,6 +62,7 @@ class InitialReviewDecisionForm extends Form {
 		$templateMgr->assign("minorityReason", $this->getData('minorityReason'));
 		$templateMgr->assign('decision', $this->getData('decision'));
 		$templateMgr->assign('chairReview', $this->getData('chairReview'));
+		$templateMgr->assign('approvalDate', $this->getData('approvalDate'));
 		parent::display();
 	}
 
@@ -76,7 +77,8 @@ class InitialReviewDecisionForm extends Form {
 			'votesAbstain',
 			'unanimous',
 			'minorityReason',
-			'chairReview'
+			'chairReview',
+			'approvaDate'
 			));
 	}
 
@@ -84,6 +86,7 @@ class InitialReviewDecisionForm extends Form {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		$decision = $this->getData('decision');
+		$approvaDate = $this->getData('approvalDate');
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($submission->getId());
 
@@ -92,7 +95,7 @@ class InitialReviewDecisionForm extends Form {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
-				SectionEditorAction::recordDecision($submission, $decision, $previousDecision['editDecisionId'], $previousCount['resubmitCount'], $previousCount['dateDecided']);
+				SectionEditorAction::recordDecision($submission, $decision, $previousDecision['editDecisionId'], $previousCount['resubmitCount'], $approvalDate);
 				break;
 		}
 	}

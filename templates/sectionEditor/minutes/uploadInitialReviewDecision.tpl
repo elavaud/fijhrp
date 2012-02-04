@@ -2,7 +2,18 @@
 {literal}
 <script type="text/javascript">	
 	$(document).ready(function() {			
-		
+		$("#approvalDateRow").hide();
+		$("#approvalDate").datepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd'});
+		$("#decision").change(
+			function() {
+				var decision = $("#decision option:selected").val();
+				if(decision == 1) {
+					$("#approvalDateRow").show();
+				} else {
+					$("#approvalDateRow").hide();
+				}
+			}
+		);		
 });	
 </script>
 {/literal}
@@ -32,6 +43,12 @@
 					</select>																						
 			</td>			
 		</tr>
+		<tr id="approvalDateRow">
+			<td class="label">{translate key="editor.article.setApprovalDate"}</td>
+			<td class="value">
+				<input type="text" name="approvalDate" id="approvalDate" class="textField" size="19" />
+			</td>
+		</tr>		
 		<tr>
 			<td class="label" width="20%" align="right">{fieldLabel name="unanimous" required="true" key="editor.minutes.unanimous"}</td>
 			<td width="80%" class="value">
