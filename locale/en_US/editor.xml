@@ -170,6 +170,7 @@
 	 * Added by aglet
 	 * Last Update: 5/3/2011
 	********************************************** -->
+	<message key="editor.article.setApprovalDate">Set Approval Date</message>
 	<message key="editor.article.uploadRecordDecision">Upload and Submit Decision</message>
 	<message key="editor.article.uploadFinalDecisionFile">Upload Decision File</message>
 	<message key="editor.article.selectDecision">Select decision</message>
