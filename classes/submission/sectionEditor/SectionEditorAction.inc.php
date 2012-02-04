@@ -94,13 +94,13 @@ class SectionEditorAction extends Action {
 		$journal =& Request::getJournal();
 
 		$currentDate = date(Core::getCurrentDate());
-		$startDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
+		$approvalDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;
 		$editorDecision = array(
 				'editDecisionId' => $lastDecisionId,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => $startDate,
+				'dateDecided' => $currentDate,
 				'resubmitCount' => $resubmitCount
 		);
 
@@ -121,7 +121,7 @@ class SectionEditorAction extends Action {
 		 */
 		if($decision == SUBMISSION_EDITOR_DECISION_ACCEPT) {
 			$articleDao =& DaoRegistry::getDAO('ArticleDAO');
-			$articleDao->insertApprovalDate($sectionEditorSubmission, $currentDate);
+			$articleDao->insertApprovalDate($sectionEditorSubmission, $approvalDate);
 		}
 
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {

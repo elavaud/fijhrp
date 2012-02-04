@@ -128,7 +128,7 @@ $(document).ready(function() {
 {if ($proposalStatus == PROPOSAL_STATUS_RETURNED) || ($proposalStatus == PROPOSAL_STATUS_RESUBMITTED) || ($proposalStatus == PROPOSAL_STATUS_REVIEWED && $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) }
 	<tr valign="top">
 		{assign var="articleLastModified" value=$submission->getLastModified()}
-		{if ($lastDecisionArray.resubmitCount!=null && $lastDecisionArray.resubmitCount!=0) }
+		{if $articleMoreRecent && $lastDecisionArray.resubmitCount!=null && $lastDecisionArray.resubmitCount!=0 }
 			<td class="label"></td>
 			{if $lastDecisionArray.resubmitCount == 1}
 				{assign var="resubmitMsg" value="once"}
@@ -155,7 +155,11 @@ $(document).ready(function() {
 			{assign var="decision" value=$submission->getEditorDecisionKey()}
 			{translate key=$decision}
 			{if $submission->isSubmissionDue()}&nbsp;(Due)&nbsp;{/if}
-			{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
+			{if $lastDecisionArray.decision == SUBMISSION_EDITOR_DECISION_ACCEPT}
+				{$submission->getApprovalDate($submission->getLocale())|date_format:$dateFormatShort}
+			{else}
+				{$lastDecisionArray.dateDecided|date_format:$dateFormatShort}
+			{/if}
 		{else}
 				{translate key="common.none"}
 		{/if}		

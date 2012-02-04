@@ -423,8 +423,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
 
-		$fileName = "finalDecisionFile";
+		$approvalDate = Request::getUserVar('approvalDate'); 
 		
+		$fileName = "finalDecisionFile";
 		if($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED && isset($_FILES[$fileName])) {			
 			SectionEditorAction::uploadDecisionFile($articleId, $fileName);
 		}
@@ -445,7 +446,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount);
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount, $approvalDate);
 				break;
 		}
 
