@@ -223,7 +223,8 @@ class UserHandler extends Handler {
 		}
 		if (Validation::isReviewer($journalId)) {
 			$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
-			$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsCount($userId, $journalId);
+			$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsForERCReviewCount($userId, $journalId);
+			//$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsCount($userId, $journalId);
 			$isValid["Reviewer"][$journalId] = true;
 		}
 	}

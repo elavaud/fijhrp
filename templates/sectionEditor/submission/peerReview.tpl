@@ -123,14 +123,14 @@
 	</tr>
 
 	{if $reviewAssignment->getDateConfirmed() && !$reviewAssignment->getDeclined()}
-		<tr valign="top">
+		<tr>
 			<td class="label">{translate key="reviewer.article.recommendation"}</td>
 			<td>
 				{if $reviewAssignment->getRecommendation() !== null && $reviewAssignment->getRecommendation() !== ''}
 					{assign var="recommendation" value=$reviewAssignment->getRecommendation()}
 					{translate key=$reviewerRecommendationOptions.$recommendation}
 					&nbsp;&nbsp;{$reviewAssignment->getDateCompleted()|date_format:$dateFormatShort}
-				{else}
+				{else}				
 					{translate key="common.none"}&nbsp;&nbsp;&nbsp;&nbsp;
 					<a href="{url op="remindReviewer" articleId=$submission->getId() reviewId=$reviewAssignment->getId()}" class="action">{translate key="reviewer.article.sendReminder"}</a>
 					{if $reviewAssignment->getDateReminded()}
@@ -139,7 +139,10 @@
 							&nbsp;&nbsp;{translate key="reviewer.article.automatic"}
 						{/if}
 					{/if}
-				{/if}
+					{if $reviewAssignment->getDateConfirmed() && !$reviewAssignment->getDeclined()}
+						&nbsp;&nbsp;&nbsp;&nbsp;<a class="action" href="{url op="enterReviewerRecommendation" articleId=$submission->getId() reviewId=$reviewAssignment->getId()}">{translate key="editor.article.enterRecommendation"}</a>
+					{/if}
+				{/if}								
 			</td>
 		</tr>
 		{if $currentJournal->getSetting('requireReviewerCompetingInterests')}
@@ -157,7 +160,7 @@
 			</tr>
 		{/if}
 		{if !$reviewAssignment->getReviewFormId() || $reviewAssignment->getMostRecentPeerReviewComment()}{* Only display comments link if a comment is entered or this is a non-review form review *}
-			<tr valign="top">
+			<tr>
 				<td class="label">{translate key="submission.review"}</td>
 				<td>
 					{if $reviewAssignment->getMostRecentPeerReviewComment()}
@@ -169,7 +172,7 @@
 				</td>
 			</tr>
 		{/if}
-		<tr valign="top">
+		<tr>
 			<td class="label">{translate key="reviewer.article.uploadedFile"}</td>
 			<td>
 				<table width="100%" class="data">
@@ -188,7 +191,7 @@
 						</td>
 					</tr>
 					{foreachelse}
-					<tr valign="top">
+					<tr>
 						<td>{translate key="common.none"}</td>
 					</tr>
 					{/foreach}
@@ -204,15 +207,14 @@
 				{if !$reviewAssignment->getDateConfirmed()}
 					<a href="{url op="confirmReviewForReviewer" path=$submission->getId()|to_array:$reviewAssignment->getId() accept=1}" class="action">{translate key="reviewer.article.canDoReview"}</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="confirmReviewForReviewer" path=$submission->getId()|to_array:$reviewAssignment->getId() accept=0}" class="action">{translate key="reviewer.article.cannotDoReview"}</a><br />
 				{/if}
+				{if $reviewAssignment->getDateConfirmed() && !$reviewAssignment->getDeclined()}
 				<form method="post" action="{url op="uploadReviewForReviewer"}" enctype="multipart/form-data">
 					{translate key="editor.article.uploadReviewForReviewer"}
 					<input type="hidden" name="articleId" value="{$submission->getId()}" />
 					<input type="hidden" name="reviewId" value="{$reviewAssignment->getId()}"/>
 					<input type="file" name="upload" class="uploadField" />
 					<input type="submit" name="submit" value="{translate key="common.upload"}" class="button" />
-				</form>
-				{if $reviewAssignment->getDateConfirmed() && !$reviewAssignment->getDeclined()}
-					<a class="action" href="{url op="enterReviewerRecommendation" articleId=$submission->getId() reviewId=$reviewAssignment->getId()}">{translate key="editor.article.recommendation"}</a>
+				</form>				
 				{/if}
 			</td>
 		</tr>

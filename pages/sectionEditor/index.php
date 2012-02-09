@@ -34,8 +34,10 @@ switch ($op) {
 	case 'submissionCitations':
 	case 'changeSection':
 	case 'recordDecision':
-	//if proposal is exempted, record reasons for exemption
+	//if proposal is exempted, record reasons for exemption 
 	case 'recordReasonsForExemption':
+	//if proposal was tabled for expedited review, allow STO to upload approval/disapproval file
+	case 'uploadDecisionFile':
 	case 'selectReviewer':
 	case 'notifyReviewer':
 	case 'notifyAllReviewers':
@@ -182,6 +184,7 @@ switch ($op) {
 	case 'downloadMinutes':
 	case 'uploadAttendance':	
 	case 'selectInitialReview':
+	case 'uploadReviewFile':
 	case 'uploadInitialReview':
 	case 'completeInitialReviews':	
 	case 'selectContinuingReview':

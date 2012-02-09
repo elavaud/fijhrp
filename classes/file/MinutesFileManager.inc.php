@@ -111,9 +111,19 @@ class MinutesFileManager extends FileManager {
 		$fileType = "application/zip";
 		return parent::downloadFile($filePath, $fileType, false);		
 	}	
+
 	
+	function uploadReview($filename, $articleId) {
+		if ($_FILES[$filename]['size'] > 0 && $_FILES[$filename]['tmp_name'] != null && $this->createDirectory() && $articleId!=null) {
+			$filesDir = $this->filesDir;
+			$name = $_FILES[$filename]['name'];
+			$targetFile =  $filesDir.$name;
+			if($this->uploadFile($filename, $targetFile)) {
+				return $name;
+			}
+		}
+		return null;
+	}
+	 
 }
-
-
-
 ?>

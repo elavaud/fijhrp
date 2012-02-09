@@ -45,7 +45,8 @@ class ReviewerHandler extends Handler {
 		$meetings = $meetingReviewerDao->getMeetingsByReviewerId($user->getId());
 		//$meetings = $meetingReviewerDao->getMeetingsOfUser($user->getId());
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign('rangeInfo', count($submissions->toArray()));
+		$submissionsCount =& $reviewerSubmissionDao->getSubmissionsForERCReviewCount($user->getId(), $journal->getId());
+		$templateMgr->assign('rangeInfo', $submissionsCount[0]);
 		$templateMgr->assign('meetingsCount', count($meetings->toArray()));
 
 		$templateMgr->display('reviewer/index.tpl');
@@ -107,15 +108,29 @@ class ReviewerHandler extends Handler {
 			}
 			// Convert submission array back to an ItemIterator class
 			import('lib.pkp.classes.core.ArrayItemIterator');
-			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			//TODO change to array instead of iterator 
+			$submissions1 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			$submissions2 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			$submissions3 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			$submissions4 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		}  else {
-			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+			$submissions1 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
 											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
+			$submissions2 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
+			$submissions3 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
+			$submissions4 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
+											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
+											  
 		}
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign('pageToDisplay', $page);
-		$templateMgr->assign_by_ref('submissions', $submissions);
+		$templateMgr->assign_by_ref('submissions1', $submissions1);
+		$templateMgr->assign_by_ref('submissions2', $submissions2);
+		$templateMgr->assign_by_ref('submissions3', $submissions3);
+		$templateMgr->assign_by_ref('submissions4', $submissions4);
 		$templateMgr->assign('rangeInfo', count($submissions));
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());

@@ -543,6 +543,54 @@ class ReviewerSubmission extends Article {
 		return $this->setData('isAttending', $isAttending);
 	}
 
+/**
+	 * Get the submission status. Returns one of the defined constants
+         * PROPOSAL_STATUS_DRAFT, PROPOSAL_STATUS_WITHDRAWN, PROPOSAL_STATUS_SUBMITTED,
+         * PROPOSAL_STATUS_RETURNED, PROPOSAL_STATUS_REVIEWED, PROPOSAL_STATUS_EXEMPTED
+         * Copied from SectionEditorSubmission::getSubmissionStatus
+	 */
+	function getSubmissionStatus() {
+				
+                /**
+                 * Added by: AIM
+                 * Last Updated: June 1, 2011
+                 * Return status of proposal
+                 **/
+                if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
+
+                //Withdrawn status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+
+                if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
+                
+                //Archived status is reflected in table articles field status
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
+
+                $status = $this->getProposalStatus();
+                
+                if($status == PROPOSAL_STATUS_RETURNED) {
+                    $articleDao = DAORegistry::getDAO('ArticleDAO');
+                    $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+
+                    if($isResubmitted) return PROPOSAL_STATUS_RESUBMITTED;
+                }
+
+                //For all other statuses
+                return $status;
+	}
+	
+	/**
+	 * Check if submission is due for continuing review (1-year since it was approved)
+	 * @return boolean
+	 */
+	function isSubmissionDue() {         
+        $today = time();
+        $startdate = strtotime($this->getStartDate($this->getLocale()));
+        $dueDate = strtotime ('+1 year', $startdate) ;
+    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
+        $approvalDue = strtotime ('+1 year', $approvalDate) ;
+    	return ($today >= $dueDate && $today >= $approvalDue);
+    }
 }
 
 ?>
