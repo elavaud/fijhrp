@@ -20,4 +20,6 @@
     <proposaltype name="Qualitative Study" code="QS" />
     <proposaltype name="Intervention Evaluation Research" code="IER" />
     <proposaltype name="Operation Research" code="OR" />
+    <proposaltype name="Others" code="OTHER" />
+    <!-- Do not change code of OTHER -->
 </proposaltypes>

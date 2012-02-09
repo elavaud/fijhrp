@@ -50,11 +50,12 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $this->addCheck(new FormValidatorLocale($this, 'proposalCountry', 'required', 'author.submit.form.proposalCountryRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'technicalUnit', 'required', 'author.submit.form.technicalUnitRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'withHumanSubjects', 'required', 'author.submit.form.withHumanSubjectsRequired', $this->getRequiredLocale()));	        
-		        $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'proposalType', 'required', 'author.submit.form.proposalTypeRequired', $this->getRequiredLocale()));
                 
-				$this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'submittedAsPi', 'required', 'author.submit.form.submittedAsPiRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'reviewedByOtherErc', 'required', 'author.submit.form.reviewedByOtherErcRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'otherErcDecision', 'required', 'author.submit.form.otherErcDecisionRequired', $this->getRequiredLocale()));
 
 	}
 
@@ -68,9 +69,12 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 		if (isset($this->article)) {
 			$article =& $this->article;
 
-                        //Added by AIM, 12.24.2011
+                        //Added by AIM, 01.30.2012
                         $proposalCountryArray = $article->getProposalCountry(null);
                         $proposalCountry[$this->getFormLocale()] = explode(",", $proposalCountryArray[$this->getFormLocale()]);
+
+                        $proposalTypeArray = $article->getProposalType(null);
+                        $proposalType[$this->getFormLocale()] = explode(",", $proposalTypeArray[$this->getFormLocale()]);
 
 			$this->_data = array(
 				'authors' => array(),
@@ -100,7 +104,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                                  'proposalCountry' => $proposalCountry,
                                  'technicalUnit' => $article->getTechnicalUnit(null),
                                  'withHumanSubjects' => $article->getWithHumanSubjects(null),
-				                 'proposalType' => $article->getProposalType(null),
+                                 'proposalType' => $proposalType,
                                  'submittedAsPi' => $article->getSubmittedAsPi(null),
                                  'conflictOfInterest' => $article->getConflictOfInterest(null),
                                  'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
@@ -166,7 +170,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                                  'proposalCountry',
                                  'technicalUnit',
                                  'withHumanSubjects',
-				                 'proposalType',
+                                 'proposalType',
                                  'submittedAsPi',
                                  'conflictOfInterest',
                                  'reviewedByOtherErc',
@@ -278,7 +282,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 
                 /***********************************************************
                  *  Edited by: AIM
-                 *  Last Updated: Dec 24, 2011
+                 *  Last Updated: Jan 30, 2012
                  ***********************************************************/
                  
                 $article->setObjectives($this->getData('objectives'), null); // Localized
@@ -291,11 +295,21 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 $proposalCountryArray = $this->getData('proposalCountry');
                 $proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
                 $article->setProposalCountry($proposalCountry, null); // Localized
+
+                //Convert multiple proposal types to CSV string, Jan 30 2012
+                $proposalTypeArray = $this->getData('proposalType');
+                foreach($proposalTypeArray[$this->getFormLocale()] as $i => $type) {
+                    if($type == "OTHER") {
+                        $otherType = trim(str_replace("+", ",", $request->getUserVar('otherProposalType')));
+                        if($otherType != "") $proposalTypeArray[$this->getFormLocale()][$i] = "Others (". $otherType .")";
+                    }
+                }
+                $proposalType[$this->getFormLocale()] = implode("+", $proposalTypeArray[$this->getFormLocale()]);
+                $article->setProposalType($proposalType, null); // Localized
                 
                 $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
                 $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
-	            $article->setProposalType($this->getData('proposalType'), null); // Localized
-                $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
+	        $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
                 $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
                 $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
                 $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized

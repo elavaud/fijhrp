@@ -92,6 +92,25 @@ class SuppFileForm extends Form {
 		$templateMgr->assign('articleId', $this->article->getArticleId());
 		$templateMgr->assign('suppFileId', $this->suppFileId);
 
+                // Start Edit Jan 31 2012
+                // Add Options drop-down list for WHO journals
+                $typeOptions = array(
+                    "author.submit.suppFile.who.summary" => "author.submit.suppFile.who.summary",
+                    "author.submit.suppFile.who.informedConsent" => "author.submit.suppFile.who.informedConsent",
+                    "author.submit.suppFile.who.localEthicalApproval" => "author.submit.suppFile.who.localEthicalApproval",
+                    "author.submit.suppFile.who.funding" => "author.submit.suppFile.who.funding",
+                    "author.submit.suppFile.who.cv" => "author.submit.suppFile.who.cv",
+                    "author.submit.suppFile.who.questionnaire" => "author.submit.suppFile.who.questionnaire",
+                    "author.submit.suppFile.who.ethicalClearance" => "author.submit.suppFile.who.ethicalClearance",
+                    "author.submit.suppFile.who.proofOfRegistration" => "author.submit.suppFile.who.proofOfRegistration",
+                    "author.submit.suppFile.who.otherErcDecision" => "author.submit.suppFile.who.otherErcDecision",
+                    "common.other" => "common.other"
+		);
+
+		$templateMgr->assign('typeOptions', $typeOptions);
+		// End Edit Jan 31 2012
+
+                /*
 		$typeOptionsOutput = array(
 			'author.submit.suppFile.researchInstrument',
 			'author.submit.suppFile.researchMaterials',
@@ -107,6 +126,7 @@ class SuppFileForm extends Form {
 
 		$templateMgr->assign('typeOptionsOutput', $typeOptionsOutput);
 		$templateMgr->assign('typeOptionsValues', $typeOptionsValues);
+                */
 
 		// Sometimes it's necessary to track the page we came from in
 		// order to redirect back to the right place
@@ -177,18 +197,20 @@ class SuppFileForm extends Form {
 		$this->readUserVars(
 			array(
 				'title',
-				'creator',
-				'subject',
+				//'creator',
+				//'subject',
 				'type',
-				'typeOther',
-				'description',
-				'publisher',
-				'sponsor',
-				'dateCreated',
-				'source',
-				'language',
-				'showReviewers',
-				'publicSuppFileId'
+				//'typeOther',
+				//'description',
+				//'publisher',
+				//'sponsor',
+				//'dateCreated',
+				//'source',
+				//'language',
+				//'showReviewers',
+				//'publicSuppFileId',
+                                'fileType',
+                                'otherFileType'
 			)
 		);
 	}
@@ -227,20 +249,19 @@ class SuppFileForm extends Form {
 				$fileId = $articleFileManager->uploadSuppFile($fileName);
 				import('classes.search.ArticleSearchIndex');
 				ArticleSearchIndex::updateFileIndex($this->article->getArticleId(), ARTICLE_SEARCH_SUPPLEMENTARY_FILE, $fileId);
+
+                                // Insert new supplementary file
+                                $suppFile = new SuppFile();
+                                $suppFile->setArticleId($this->article->getArticleId());
+                                $suppFile->setFileId($fileId);
+                                $this->setSuppFileData($suppFile);
+
+                                $suppFileDao->insertSuppFile($suppFile);
+                                $this->suppFileId = $suppFile->getId();
 			} else {
 				$fileId = 0;
 			}
-
-			// Insert new supplementary file		
-			$suppFile = new SuppFile();
-			$suppFile->setArticleId($this->article->getArticleId());
-			$suppFile->setFileId($fileId);
-			$this->setSuppFileData($suppFile);
-
-                        $suppFileDao->insertSuppFile($suppFile);
-			$this->suppFileId = $suppFile->getId();
 		}
-
 		return $this->suppFileId;
 	}
 
@@ -249,19 +270,45 @@ class SuppFileForm extends Form {
 	 * @param $suppFile SuppFile
 	 */
 	function setSuppFileData(&$suppFile) {
-		$suppFile->setTitle($this->getData('title'), null); // Localized
-		$suppFile->setCreator($this->getData('creator'), null); // Localized
-		$suppFile->setSubject($this->getData('subject'), null); // Localized
-		$suppFile->setType($this->getData('type'));
-                $suppFile->setTypeOther($this->getData('typeOther'), null); // Localized
-		$suppFile->setDescription($this->getData('description'), null); // Localized
-		$suppFile->setPublisher($this->getData('publisher'), null); // Localized
-		$suppFile->setSponsor($this->getData('sponsor'), null); // Localized
-		$suppFile->setDateCreated($this->getData('dateCreated') == '' ? Core::getCurrentDate() : $this->getData('dateCreated'));
-		$suppFile->setSource($this->getData('source'), null); // Localized
-		$suppFile->setLanguage($this->getData('language'));
-		$suppFile->setShowReviewers($this->getData('showReviewers')==1?1:0);
-		$suppFile->setPublicSuppFileId($this->getData('publicSuppFileId'));
+		//$suppFile->setTitle($this->getData('title'), null); // Localized
+		//$suppFile->setCreator($this->getData('creator'), null); // Localized
+		//$suppFile->setSubject($this->getData('subject'), null); // Localized
+
+                if($this->getData('type')=="Supp File") {
+                    $fileTypes = $this->getData('fileType');
+                    $otherFileType = trim($this->getData('otherFileType'));
+
+                    $suppFileType = $fileTypes[0];
+                    if($suppFileType == Locale::translate('common.other') && $otherFileType != "") $suppFileType = $otherFileType;
+                    $count = 1;
+                    foreach ($fileTypes as $type) {
+                        if($count > 1) {
+                            if($type == Locale::translate('common.other') && $otherFileType != "")
+                                $type = $otherFileType;
+
+                            $suppFileType = $suppFileType . ', ' . $type;
+                        }
+                        $count++;
+                    }
+                    $suppFile->setType($suppFileType);
+                    $suppFile->setData('title', array($this->getDefaultFormLocale() => ($suppFileType)));
+                }
+                else {
+                    $suppFile->setData('title', array($article->getDefaultFormLocale() => ($this->getData('type'))));
+                    $suppFile->setTitle($this->getData('type'), null);
+                }
+
+                //$suppFile->setTypeOther($this->getData('typeOther'), null); // Localized
+		//$suppFile->setDescription($this->getData('description'), null); // Localized
+		//$suppFile->setPublisher($this->getData('publisher'), null); // Localized
+		//$suppFile->setSponsor($this->getData('sponsor'), null); // Localized
+		//$suppFile->setDateCreated($this->getData('dateCreated') == '' ? Core::getCurrentDate() : $this->getData('dateCreated'));
+                $suppFile->setDateCreated(Core::getCurrentDate());
+		//$suppFile->setSource($this->getData('source'), null); // Localized
+		//$suppFile->setLanguage($this->getData('language'));
+		//$suppFile->setShowReviewers($this->getData('showReviewers')==1?1:0);
+                $suppFile->setShowReviewers(1);
+		//$suppFile->setPublicSuppFileId($this->getData('publicSuppFileId'));
 	}
 }
 

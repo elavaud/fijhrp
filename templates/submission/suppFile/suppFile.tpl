@@ -8,6 +8,28 @@
  *
  * $Id$
  *}
+{include file="common/header.tpl"}
+
+{literal}
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#fileType').change(function(){
+        var isOtherSelected = false;
+        $.each($('#fileType').val(), function(key, value){
+            if(value == "{/literal}{translate key="common.other"}{literal}") {
+                isOtherSelected = true;
+            }
+        });
+        if(isOtherSelected) {
+            $('#divOtherFileType').show();
+        } else {
+            $('#divOtherFileType').hide();
+        }
+    });
+});
+</script>
+{/literal}
+
 {strip}
 {if $suppFileId}
 	{assign var="pageTitle" value="author.submit.editSupplementaryFile"}
@@ -40,7 +62,7 @@
     {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
 {/if}
 
-{include file="common/header.tpl"}
+
 {/strip}
 
 <form name="suppFile" method="post" action="{url page=$rolePath op="saveSuppFile" path=$suppFileId}" enctype="multipart/form-data">
@@ -49,6 +71,8 @@
 <input type="hidden" name="type" value="{$type|escape}" /> <!-- Added by AIM, June 15 2011 -->
 {include file="common/formErrors.tpl"}
 
+<!--
+{*
 {if count($formLocales) > 1}
 <div id="locale">
 <table width="100%" class="data">
@@ -65,8 +89,7 @@
 </table>
 </div>
 {/if}
-<!--
-{*
+
 
 <div id="supplementaryFileData">
 <h3>{translate key="author.submit.supplementaryFileData"}</h3>
@@ -148,15 +171,15 @@
 -->
 
 {if $type == "Progress Report"}
-<h3>{translate key="submission.progressReports"}</h3>
+    <h3>{translate key="submission.progressReports"}</h3>
 {elseif $type == "Completion Report"}
-<h3>{translate key="submission.completionReports"}</h3>
+    <h3>{translate key="submission.completionReports"}</h3>
 {elseif $type == "Extension Request"}
-<h3>{translate key="submission.extensionRequest"}</h3>
+    <h3>{translate key="submission.extensionRequest"}</h3>
 {else}
-    {$type|escape}
     <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
 {/if}
+
 <table id="suppFile" class="data">
 {if $suppFile}
 	<tr valign="top">
@@ -188,13 +211,31 @@
 -->
 {else}
 	<tr valign="top">
-		<td colspan="2" class="nodata">{translate key="author.submit.suppFile.noFile"}</td>
+		<td colspan="2" class="nodata">{* translate key="author.submit.suppFile.noFile" *}</td>
 	</tr>
 {/if}
 
 <br />
 
 <table id="showReviewers" width="100%" class="data">
+        <!--Start Edit Jan 30 2012-->
+        {if $type == "Supp File"}
+            <tr>
+                <td width="30%" class="label">Select file type(s)<br />(Hold down the CTRL button to select multiple options.)</td>
+                <td width="35%" class="value">
+                        <select name="fileType[]" id="fileType" multiple="multiple" size="10" class="selectMenu">
+                            {html_options_translate options=$typeOptions translateValues="true" selected=$fileType}
+                        </select>
+                </td>
+                <td style="vertical-align: bottom;">
+                        <div id="divOtherFileType" style="display: none;">
+                            <span class="label" style="font-style: italic;">Specify "Other" file type</span> <br />
+                            <input type="text" name="otherFileType" id="otherFileType" size="20" /> <br />
+                        </div>
+                </td>
+            </tr>
+        {/if}
+        <!--End Edit -->
 	<tr valign="top">
 		<td class="label">
 			{if $suppFile}
@@ -203,7 +244,7 @@
 				{fieldLabel name="uploadSuppFile" key="common.upload"}
 			{/if}
 		</td>
-		<td class="value"><input type="file" name="uploadSuppFile" id="uploadSuppFile" class="uploadField" />&nbsp;&nbsp;{translate key="author.submit.supplementaryFiles.saveToUpload"}</td>
+		<td class="value" colspan="2"><input type="file" name="uploadSuppFile" id="uploadSuppFile" class="uploadField" />&nbsp;&nbsp;{translate key="author.submit.supplementaryFiles.saveToUpload"}</td>
 	</tr>
         <!--
         {*

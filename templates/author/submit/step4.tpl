@@ -11,8 +11,8 @@
 {assign var="pageTitle" value="author.submit.step4"}
 {include file="author/submit/submitHeader.tpl"}
 
-<script type="text/javascript">
 {literal}
+<script type="text/javascript">
 <!--
 function confirmForgottenUpload() {
 	var fieldValue = document.submitForm.uploadSuppFile.value;
@@ -22,8 +22,26 @@ function confirmForgottenUpload() {
 	return true;
 }
 // -->
-{/literal}
+
+
+$(document).ready(function() {
+   $('#fileType').change(function(){
+        var isOtherSelected = false;
+        $.each($('#fileType').val(), function(key, value){
+            if(value == "{/literal}{translate key="common.other"}{literal}") {
+                isOtherSelected = true;
+            }
+        });
+        if(isOtherSelected) {
+            $('#divOtherFileType').show();
+        } else {
+            $('#divOtherFileType').hide();
+        }
+    });
+});
+
 </script>
+{/literal}
 
 <form name="submitForm" method="post" action="{url op="saveSubmit" path=$submitStep}" enctype="multipart/form-data">
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
@@ -48,7 +66,7 @@ function confirmForgottenUpload() {
 {foreach from=$suppFiles item=file}
 <tr valign="top">
 	<!-- {* <td>{$file->getSuppFileId()}</td> *} -->
-	<td>{$file->getSuppFileTitle()|escape} ({$file->getType()|escape})</td>
+	<td>{$file->getSuppFileTitle()|escape} <!-- {*({$file->getType()|escape}) *} --></td>
 	<td>{$file->getOriginalFileName()|escape}</td>
 	<td>{$file->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 	<td align="right">
@@ -66,16 +84,27 @@ function confirmForgottenUpload() {
 
 <table class="data" width="100%">
 <tr>
-	<td width="30%" class="label">{fieldLabel name="uploadSuppFileLabel" key="author.submit.uploadSuppFile"}</td>
-	<td width="70%" class="value">
-		<!--Start Edit Raf Tan 04/30/2011-->
-                <select name="fileType[]" id="fileType" multiple="multiple" size="11" class="selectMenu">
+	<td width="30%" class="label">Select file type(s)<br />(Hold down the CTRL button to select multiple options.)</td>
+	<td width="35%" class="value">
+<!--Start Edit Jan 30 2012-->
+                <select name="fileType[]" id="fileType" multiple="multiple" size="10" class="selectMenu">
                     {html_options_translate options=$typeOptions translateValues="true" selected=$fileType}
                 </select>
                 <!-- {*
                 <select name="type" class="selectMenu" id="type" size="1">{html_options_translate output=$typeOptionsOutput values=$typeOptionsValues translateValues="true" selected=$type}</select>
                 *} -->
-                <!--End Edit Raf Tan 04/30/2011-->
+        </td>
+        <td style="vertical-align: bottom;">
+                <div id="divOtherFileType" style="display: none;">
+                    <span class="label" style="font-style: italic;">Specify "Other" file type</span> <br />
+                    <input type="text" name="otherFileType" id="otherFileType" size="20" /> <br />
+                </div>
+        </td>
+        <!--End Edit -->
+</tr>
+<tr>
+        <td width="30%" class="label">Select file to upload</td>
+        <td width="70%" class="value" colspan="2">
                 <input type="file" name="uploadSuppFile" id="uploadSuppFile"  class="uploadField" />
                 <input name="submitUploadSuppFile" type="submit" class="button" value="{translate key="common.upload"}" /> 
 		{if $currentJournal->getSetting('showEnsuringLink')}<a class="action" href="javascript:openHelp('{get_help_id key="editorial.sectionEditorsRole.review.blindPeerReview" url="true"}')">{translate key="reviewer.article.ensuringBlindReview"}</a>{/if}
