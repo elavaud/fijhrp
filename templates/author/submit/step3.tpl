@@ -20,7 +20,7 @@
 {include file="common/formErrors.tpl"}
 
 {literal}
-    <script type="text/javascript">
+ <script type="text/javascript">
     <!--
     // Move author up/down
     function moveAuthor(dir, authorIndex) {

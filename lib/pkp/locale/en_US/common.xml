@@ -281,7 +281,7 @@
 	<message key="navigation.previousPage"><![CDATA[&lt;&lt;]]></message>
 	<message key="navigation.previousStep">Previous Step</message>
 	<message key="navigation.register">Register</message>
-	<message key="navigation.search">Search</message>
+	<message key="navigation.search">Past Proposals</message>
 	<message key="navigation.stepNumber">Step {$step}</message>
 	<message key="navigation.userHome">User Home</message>
 	<message key="navigation.user">User</message>

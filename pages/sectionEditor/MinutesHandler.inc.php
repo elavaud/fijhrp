@@ -201,7 +201,7 @@ class MinutesHandler extends Handler {
 		if($submitted) {
 			$initialReviewForm->readInputData();
 			if($initialReviewForm->validate()) {
-				Request::redirect(null, null, 'uploadInitialReview', array($meetingId, $articleId));
+				Request::redirect(null, null, 'uploadInitialReviewFile', array($meetingId, $articleId));
 			}
 			else {
 				if ($initialReviewForm->isLocaleResubmit()) {
@@ -224,17 +224,18 @@ class MinutesHandler extends Handler {
 	 * @param $args
 	 * @param $request
 	 */
-	function uploadInitialReview($args, $request) {
+	function uploadInitialReviewDecision($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = isset($args[1]) ? $args[1]: 0;
+		
 		$this->validate($meetingId);
 		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, INITIAL_REVIEW);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
-
-		import('lib.pkp.classes.who.form.InitialReviewForm');
-		$initialReviewForm = new InitialReviewForm($meetingId, $articleId);
+		
+		import('lib.pkp.classes.who.form.InitialReviewDecisionForm');
+		$initialReviewForm = new InitialReviewDecisionForm($meetingId, $articleId);
 		$submitted = Request::getUserVar("submitInitialReview") != null ? true : false;
 
 		if($submitted) {
@@ -258,7 +259,41 @@ class MinutesHandler extends Handler {
 			$initialReviewForm->display();
 		}
 	}
-
+	
+	
+	function uploadInitialReviewFile($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$articleId = isset($args[1]) ? $args[1]: 0;
+		$this->validate($meetingId);
+		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, INITIAL_REVIEW);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+		$submission =& $this->submission;
+		
+		import('lib.pkp.classes.who.form.UploadInitialReviewFileForm');
+		$uploadReviewFileForm = new UploadInitialReviewFileForm($meetingId, $articleId);
+		
+		if($request->getUserVar('uploadMinutesFile')) {
+			$uploadReviewFileForm->readInputData();
+			if($uploadReviewFileForm->validate()) {
+				$uploadReviewFileForm->execute();				
+				Request::redirect(null, null, 'uploadInitialReviewDecision', array($meetingId, $articleId));
+			}
+			else {
+				if ($uploadReviewFileForm->isLocaleResubmit()) {
+					$uploadReviewFileForm->readInputData();
+				}
+				else {
+					$uploadReviewFileForm->initData();
+				}
+				$uploadReviewFileForm->display();
+			}
+		}
+		else {
+			$uploadReviewFileForm->display();
+		}				
+	}
+	
 	function completeInitialReviews($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId, MINUTES_STATUS_INITIAL_REVIEWS);
@@ -292,7 +327,7 @@ class MinutesHandler extends Handler {
 		if($submitted) {
 			$continuingReviewForm->readInputData();
 			if($continuingReviewForm->validate()) {
-				Request::redirect(null, null, 'uploadContinuingReview', array($meetingId, $articleId));
+				Request::redirect(null, null, 'uploadContinuingReviewFile', array($meetingId, $articleId));
 			}
 			else {
 				if ($continuingReviewForm->isLocaleResubmit()) {
@@ -315,7 +350,7 @@ class MinutesHandler extends Handler {
 	 * @param $args
 	 * @param $request
 	 */
-	function uploadContinuingReview($args, $request) {
+	function uploadContinuingReviewDecision($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = isset($args[1]) ? $args[1]: 0;
 		$this->validate($meetingId);
@@ -324,8 +359,8 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 
-		import('lib.pkp.classes.who.form.ContinuingReviewForm');
-		$continuingReviewForm = new ContinuingReviewForm($meetingId, $articleId);
+		import('lib.pkp.classes.who.form.ContinuingReviewDecisionForm');
+		$continuingReviewForm = new ContinuingReviewDecisionForm($meetingId, $articleId);
 		$submitted = Request::getUserVar("submitContinuingReview") != null ? true : false;
 
 		if($submitted) {
@@ -348,6 +383,39 @@ class MinutesHandler extends Handler {
 		else {
 			$continuingReviewForm->display();
 		}
+	}
+	
+	function uploadContinuingReviewFile($args, $request) {
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$articleId = isset($args[1]) ? $args[1]: 0;
+		$this->validate($meetingId);
+		$this->validateAccess($articleId, SECTION_EDITOR_ACCESS_REVIEW, INITIAL_REVIEW);
+		$this->setupTemplate(true, $meetingId);
+		$meeting =& $this->meeting;
+		$submission =& $this->submission;
+		
+		import('lib.pkp.classes.who.form.UploadContinuingReviewFileForm');
+		$uploadReviewFileForm = new UploadContinuingReviewFileForm($meetingId, $articleId);
+		
+		if($request->getUserVar('uploadMinutesFile')) {
+			$uploadReviewFileForm->readInputData();
+			if($uploadReviewFileForm->validate()) {
+				$uploadReviewFileForm->execute();				
+				Request::redirect(null, null, 'uploadContinuingReviewDecision', array($meetingId, $articleId));
+			}
+			else {
+				if ($uploadReviewFileForm->isLocaleResubmit()) {
+					$uploadReviewFileForm->readInputData();
+				}
+				else {
+					$uploadReviewFileForm->initData();
+				}
+				$uploadReviewFileForm->display();
+			}
+		}
+		else {
+			$uploadReviewFileForm->display();
+		}				
 	}
 	
 	function completeContinuingReviews($args, $request) {

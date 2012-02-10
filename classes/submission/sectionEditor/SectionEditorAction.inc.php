@@ -94,13 +94,13 @@ class SectionEditorAction extends Action {
 		$journal =& Request::getJournal();
 
 		$currentDate = date(Core::getCurrentDate());
-		$startDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
+		$approvalDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;
 		$editorDecision = array(
 				'editDecisionId' => $lastDecisionId,
 				'editorId' => $user->getId(),
 				'decision' => $decision,
-				'dateDecided' => $startDate,
+				'dateDecided' => $currentDate,
 				'resubmitCount' => $resubmitCount
 		);
 
@@ -121,7 +121,7 @@ class SectionEditorAction extends Action {
 		 */
 		if($decision == SUBMISSION_EDITOR_DECISION_ACCEPT) {
 			$articleDao =& DaoRegistry::getDAO('ArticleDAO');
-			$articleDao->insertApprovalDate($sectionEditorSubmission, $currentDate);
+			$articleDao->insertApprovalDate($sectionEditorSubmission, $approvalDate);
 		}
 
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
@@ -2824,6 +2824,46 @@ class SectionEditorAction extends Action {
 		}
 		return true;
 	}
+	
+	/**
+	 * Upload final decision file for expedited review as supplementary file with type "Final Decision File"
+	 * 2/4/2012
+	 */
+	function uploadDecisionFile($articleId, $fileName) {
+		$journal =& Request::getJournal();
+		$this->validate($articleId);
+
+		import('classes.file.ArticleFileManager');
+		$articleFileManager = new ArticleFileManager($articleId);
+		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
+		
+		$type = "Final Decision";
+		
+        // Upload file, if file selected.
+		if ($articleFileManager->uploadedFileExists($fileName)) {
+			$fileId = $articleFileManager->uploadSuppFile($fileName);
+			import('classes.search.ArticleSearchIndex');
+			ArticleSearchIndex::updateFileIndex($articleId, ARTICLE_SEARCH_SUPPLEMENTARY_FILE, $fileId);
+		} else {
+			$fileId = 0;
+		}
+
+		//Insert new supplementary file
+		$suppFile = new SuppFile();
+		$suppFile->setArticleId($articleId);
+		$suppFile->setFileId($fileId);
+		$suppFile->setType($type);		
+
+		$suppFileDao->insertSuppFile($suppFile);
+		/*import('classes.submission.form.SuppFileForm');
+		$suppFileForm = new SuppFileForm($submission, $journal);
+		$suppFileForm->setData('title', array($submission->getLocale() => Locale::translate('common.untitled')));
+		$suppFileForm->setData('type', $type);
+		$suppFileId = $suppFileForm->execute($fileName);
+		*/
+		return $suppFile->getId();			
+	}
+	
 }
 
 ?>

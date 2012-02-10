@@ -265,7 +265,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Added details of lastDecision
 		 * Added flag if article is more recent than last decision
 		 * Added reasons for exemption array
-		 * Added by aglet
 		 * Last Update: 5/8/2011
 		 * 
 		*************************************************************/
@@ -424,13 +423,20 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
 
+		$approvalDate = Request::getUserVar('approvalDate'); 
+		
+		$fileName = "finalDecisionFile";
+		if($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED && isset($_FILES[$fileName])) {			
+			SectionEditorAction::uploadDecisionFile($articleId, $fileName);
+		}
+		
 		$decision = Request::getUserVar('decision');
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($articleId);
 		$resubmitCount = $previousDecision['resubmitCount'];
 		//pass lastDecisionId of this article to update existing row in edit_decisions
 		$lastDecisionId = $previousDecision['editDecisionId'];
-		 
+		
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
@@ -440,7 +446,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount);
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount, $approvalDate);
 				break;
 		}
 
@@ -448,24 +454,16 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		/*Do not start new round of review
 		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
 			SectionEditorAction::initiateNewReviewRound($submission);
-		}*/
-
-		/*
-		 * Automatically send email to author when decision is recorded
-		 * Added by aglet 6/8/2011
-		 * TODO: FIX @ SectionEditorAction: does not reflect decision in email
-		 */
+		}
+		*/
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
 				SubmissionCommentsHandler::emailEditorDecisionComment($articleId);
-				break;
-			/*default:
-				Request::redirect(null, null, 'submissionReview', $articleId);
-				break;
-			*/
+				break;			
 		}
+		
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 	
@@ -974,7 +972,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			$templateMgr->display('sectionEditor/reviewerRecommendation.tpl');
 		}
 	}
-
+	
 	/**
 	 * Display a user's profile.
 	 * @param $args array first parameter is the ID or username of the user to display

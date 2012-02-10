@@ -36,6 +36,8 @@ switch ($op) {
 	case 'recordDecision':
 	//if proposal is exempted, record reasons for exemption
 	case 'recordReasonsForExemption':
+	//if proposal was tabled for expedited review, allow STO to upload approval/disapproval file
+	case 'uploadDecisionFile':
 	case 'selectReviewer':
 	case 'notifyReviewer':
 	case 'notifyAllReviewers':
@@ -212,11 +214,13 @@ switch ($op) {
 	case 'uploadAttendance':	
 	case 'downloadAttendance':
 	case 'selectInitialReview':
-	case 'uploadInitialReview':
+	case 'uploadInitialReviewFile':
+	case 'uploadInitialReviewDecision':
 	case 'completeInitialReviews':
 	case 'downloadInitialReviews':
 	case 'selectContinuingReview':
-	case 'uploadContinuingReview':
+	case 'uploadContinuingReviewFile':
+	case 'uploadContinuingReviewDecision':
 	case 'completeContinuingReviews':
 	case 'setMinutesFinal':
 		define('HANDLER_CLASS', 'MinutesHandler');

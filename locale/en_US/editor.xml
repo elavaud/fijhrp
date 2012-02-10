@@ -170,6 +170,9 @@
 	 * Added by aglet
 	 * Last Update: 5/3/2011
 	********************************************** -->
+	<message key="editor.article.setApprovalDate">Set Approval Date</message>
+	<message key="editor.article.uploadRecordDecision">Upload and Submit Decision</message>
+	<message key="editor.article.uploadFinalDecisionFile">Upload Decision File</message>
 	<message key="editor.article.selectDecision">Select decision</message>
 	<message key="editor.article.decision.accept">Approved</message>
 	<message key="editor.article.decision.pendingRevisions">Revisions Required</message >
@@ -302,6 +305,8 @@
 	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
 
+	<message key="editor.minutes.minutesFileRequired">Please submit a minutes file</message>
+	<message key="editor.minutes.minutesFile">Minutes File</message>
 	<message key="editor.minutes.adjourned">Meeting was adjourned at</message>
 	<message key="editor.minutes.adjournedRequired">Please indicate the time when meeting was adjourned</message>
 	<message key="editor.minutes.venue">Venue of Meeting</message>
@@ -360,7 +365,7 @@
 	<message key="editor.minutes.attendanceAnnouncements">Attendance and Announcements for Meeting #</message>
 	<message key="editor.minutes.stipulations">(b) STIPULATIONS / CONDITIONS</message>	
 	<message key="editor.minutes.recommendations">(c) RECOMMENDATIONS</message>
-	<message key="editor.minutes.decision">(d) IRB Decision</message>
+	<message key="editor.minutes.decision">IRB Decision</message>
 	<message key="editor.minutes.decisionRequired">Please choose a decision</message>
 	<message key="editor.minutes.unanimous">Is decision unanimous?</message>
 	<message key="editor.minutes.unanimousRequired">Please indicate if decision is unanimous or not</message>
