@@ -30,7 +30,7 @@
         *} -->
         <tr valign="top">
 		<td class="label" width="20%">
-			View Comments
+			View Comments from Secretary
 		</td>
 		<td class="value" width="80%">
 			{if $submission->getMostRecentEditorDecisionComment()}

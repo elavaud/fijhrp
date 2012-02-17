@@ -1897,16 +1897,21 @@ class SectionEditorAction extends Action {
 		if ($commentForm->validate()) {
 			$commentForm->execute();
 
+                        //Added by AIM, 02.17.2012
+                        $roleDao =& DAORegistry::getDAO('RoleDAO');
+
 			// Send a notification to associated users
 			import('lib.pkp.classes.notification.NotificationManager');
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds();
-			foreach ($notificationUsers as $userRole) {
-				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
-				$notificationManager->createNotification(
-				$userRole['id'], 'notification.type.reviewerComment',
-				$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
-				);
+                        foreach ($notificationUsers as $userRole) {
+                                if($userRole['role'] == $roleDao->getRolePath(ROLE_ID_EDITOR) || $userRole['role'] == $roleDao->getRolePath(ROLE_ID_SECTION_EDITOR)) { //If condition added by AIM, , send notification to Secretary only
+                                    $url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
+                                    $notificationManager->createNotification(
+                                    $userRole['id'], 'notification.type.reviewerComment',
+                                    $article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
+                                    );
+                                }
 			}
 
 			if ($emailComment) {

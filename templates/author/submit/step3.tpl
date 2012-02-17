@@ -172,7 +172,7 @@
         <input type="hidden" name="primaryContact" value="{$authorIndex|escape}" />
 {/if}
 
-{if $authorIndex == 1}<h3>Primary Investigators</h3>{/if}
+{if $authorIndex == 1}<h3>Primary Investigator(s)</h3>{/if}
         <table width="100%" class="data">
             <tr valign="top">
                 <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}</td>
@@ -227,7 +227,7 @@
 
 {call_hook name="Templates::Author::Submit::Authors"}
 
-{if $smarty.foreach.authors.total > 1}
+{if $smarty.foreach.authors.total > 2}
             <!--
 {*
 <tr valign="top">
@@ -315,8 +315,8 @@
             -->
         </table>
 {/foreach}
-
-        <p><input type="submit" class="button" name="addAuthor" value="{*translate key="author.submit.addAuthor"*}Add Primary Investigator" /></p>
+        <br /><br />
+        <p><input type="submit" class="button" name="addAuthor" value="{*translate key="author.submit.addAuthor"*}Add Another Primary Investigator" /></p>
     </div>
     <div class="separator"></div>
 
@@ -437,7 +437,7 @@
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
                     <span style="font-style: italic;">Specify "other" proposal type</span>&nbsp;&nbsp;
-                    <input type="text" name="otherProposalType" id="otherProposalType" size="20" />
+                    <input type="text" name="otherProposalType" id="otherProposalType" size="20" {if $otherProposalType}value="{$otherProposalType}"{/if} />
                 </td>
             </tr>
 

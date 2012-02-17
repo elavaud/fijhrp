@@ -42,17 +42,24 @@ $(document).ready(function() {
 
 <table width="100%" class="data">
 <tr valign="top">
+	<td width="20%" class="label">WHO ID</td>
+	<td width="80%" class="value">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+</tr>
+<tr valign="top">
 	<td width="20%" class="label">{translate key="article.title"}</td>
 	<td width="80%" class="value">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
 </tr>
+<!-- {*
 <tr valign="top">
 	<td class="label">{translate key="article.journalSection"}</td>
 	<td class="value">{$submission->getSectionTitle()|escape}</td>
 </tr>
+*} -->
 <tr valign="top">
 	<td class="label">{translate key="article.abstract"}</td>
 	<td class="value">{$submission->getLocalizedAbstract()|strip_unsafe_html|nl2br}</td>
 </tr>
+<!-- {*
 {assign var=editAssignments value=$submission->getEditAssignments()}
 {foreach from=$editAssignments item=editAssignment}
 	{if !$notFirstEditAssignment}
@@ -77,6 +84,8 @@ $(document).ready(function() {
 		</td>
 	</tr>
 {/if}
+
+*} -->
 	<tr valign="top">
 	       <td class="label">{translate key="submission.metadata"}</td>
 	       <td class="value">
