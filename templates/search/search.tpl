@@ -61,6 +61,8 @@ function ensureKeyword() {
 
 <p><input type="button" onclick="ensureKeyword();" value="{translate key="common.search"}" class="button defaultButton" /></p>
 
+<p><a href="/whorrp/whorrp/public/ResearchProposalsReviewed2011.pdf">2011 Proposals</a></p>
+
 <script type="text/javascript">
 <!--
 	document.search.query.focus();
