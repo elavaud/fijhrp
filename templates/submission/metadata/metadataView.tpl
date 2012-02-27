@@ -13,6 +13,10 @@
 {include file="common/header.tpl"}
 {/strip}
 
+{* Added by AIM, 02.17.2012 *}
+{include file="submission/metadata/metadata.tpl"}
+
+<!-- {*
 {if $canViewAuthors}
 <div id="authors">
 <h3>{translate key="article.authors"}</h3>
@@ -187,6 +191,7 @@
 	</tr>
 </table>
 </div>
+*} -->
 
 {include file="common/footer.tpl"}
 
