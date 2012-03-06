@@ -12,6 +12,7 @@
   -->
 <email_texts locale="en_US">
 	<email_text key="NOTIFICATION">
+		<!-- Edited 3 March 2012 spf 
 		<subject>New notification from {$siteTitle}</subject>
 		<body>You have a new notification from {$siteTitle}:
 
@@ -19,12 +20,22 @@
 
 Link: {$url}
 
+{$principalContactSignature}</body> -->
+
+		<subject>New notification from ERC</subject>
+		<body>You have a new notification from ERC:
+
+{$notificationContents}
+
+Link: {$url}
+
 {$principalContactSignature}</body>
+
 		<description>The email is sent to registered users that have selected to have this type of notification emailed to them.</description>
 	</email_text>
 	<email_text key="NOTIFICATION_MAILLIST">
-		<subject>New notification from {$siteTitle}</subject>
-		<body>You have a new notification from {$siteTitle}:
+		<subject>New notification from ERC:</subject>
+		<body>You have a new notification from ERC:
 --
 {$notificationContents}
 
@@ -37,8 +48,8 @@ If you wish to stop receiving notification emails, please go to {$unsubscribeLin
 		<description>This email is sent to unregistered users on the notification mailing list.</description>
 	</email_text>
 	<email_text key="NOTIFICATION_MAILLIST_WELCOME">
-		<subject>Welcome to the the {$siteTitle} mailing list!</subject>
-		<body>You have signed up to receive notifications from {$siteTitle}.
+		<subject>Welcome to the the ERC Members' mailing list!</subject>
+		<body>You have signed up to receive notifications from the ERC.
 			
 Please click on this link to confirm your request and add your email address to the mailing list: {$confirmLink}
 
@@ -50,7 +61,7 @@ Your password for disabling notification emails is: {$password}
 		<description>This email is sent to an unregistered user who just registered with the notification mailing list.</description>
 	</email_text>
 	<email_text key="NOTIFICATION_MAILLIST_PASSWORD">
-		<subject>Your notification mailing list information for {$siteTitle}</subject>
+		<subject>Your notification mailing list information for ERC:</subject>
 		<body>Your new password for disabling notification emails is: {$password}
 
 If you wish to stop receiving notification emails, please go to {$unsubscribeLink} and enter your email address and password.
@@ -60,7 +71,7 @@ If you wish to stop receiving notification emails, please go to {$unsubscribeLin
 	</email_text>
 	<email_text key="PASSWORD_RESET_CONFIRM">
 		<subject>Password Reset Confirmation</subject>
-		<body>We have received a request to reset your password for the {$siteTitle} web site.
+		<body>We have received a request to reset your password for the ERC web site.
 
 If you did not make this request, please ignore this email and your password will not be changed. If you wish to reset your password, click on the below URL.
 
@@ -71,7 +82,7 @@ Reset my password: {$url}
 	</email_text>
 	<email_text key="PASSWORD_RESET">
 		<subject>Password Reset</subject>
-		<body>Your password has been successfully reset for use with the {$siteTitle} web site. Please retain this username and password, as it is necessary for all work with the journal.
+		<body>Your password has been successfully reset for use with the ERC web site. Please retain this username and password, as it is necessary for all work with the journal.
 
 Your username: {$username}
 Your new password: {$password}
@@ -80,10 +91,10 @@ Your new password: {$password}
 		<description>This email is sent to a registered user when they have successfully reset their password following the process described in the PASSWORD_RESET_CONFIRM email.</description>
 	</email_text>
 	<email_text key="USER_REGISTER">
-		<subject>Journal Registration</subject>
+		<subject>Site Registration</subject>
 		<body>{$userFullName}
 
-You have now been registered as a user with {$journalName}. We have included your username and password in this email, which are needed for all work with this journal through its website. At any point, you can ask to be removed from the journal's list of users by contacting me.
+You have now been registered as a user with the WPRO ERC system. We have included your username and password in this email, which are needed for all work with our website. At any point, you can ask to be removed from the site's list of users by contacting me.
 
 Username: {$username}
 Password: {$password}
@@ -105,10 +116,8 @@ Thank you,
 		<description>This email is sent to a newly registered user to welcome them to the system and provide them with a record of their username and password.</description>
 	</email_text>
 	<email_text key="REVIEWER_REGISTER">
-		<subject>Registration as Reviewer with {$journalName}</subject>
-		<body>In light of your expertise, we have taken the liberty of registering your name in the reviewer database for {$journalName}. This does not entail any form of commitment on your part, but simply enables us to approach you with a submission to possibly review. On being invited to review, you will have an opportunity to see the title and abstract of the paper in question, and you'll always be in a position to accept or decline the invitation. You can also ask at any point to have your name removed from this reviewer list.
-
-We are providing you with a username and password, which is used in all interactions with the journal through its website. You may wish, for example, to update your profile, including your reviewing interests.
+		<subject>Registration as ERC Member</subject>
+		<body>We are providing you with a username and password, which is used in all interactions with the website. 
 
 Username: {$username}
 Password: {$password}
@@ -163,21 +172,21 @@ Thank you,
 		<subject>Submission Acknowledgement</subject>
 		<body>{$authorName}:
 
-Thank you for submitting the manuscript, "{$articleTitle}" to {$journalName}. With the online journal management system that we are using, you will be able to track its progress through the editorial process by logging in to the journal web site:
+Thank you for submitting the proposal, "{$articleTitle}" to the Ethics Review Committee. With the online proposal management system that we are using, you will be able to track its progress through the review process by logging in to the ERC web site:
 
 Manuscript URL: {$submissionUrl}
 Username: {$authorUsername}
 
-If you have any questions, please contact me. Thank you for considering this journal as a venue for your work.
+If you have any questions, please contact me. 
 
 {$editorialContactSignature}</body>
-		<description>This email, when enabled, is automatically sent to an author when he or she completes the process of submitting a manuscript to the journal. It provides information about tracking the submission through the process and thanks the author for the submission.</description>
+		<description>This email, when enabled, is automatically sent to the RTO when he or she completes the process of submitting a proposal to the ERC. It provides information about tracking the submission through the process and thanks the RTO for the submission.</description>
 	</email_text>
 	<email_text key="SUBMISSION_UNSUITABLE">
 		<subject>Unsuitable Submission</subject>
 		<body>{$authorName}:
 
-An initial review of "{$articleTitle}" has made it clear that this submission does not fit within the scope and focus of {$journalName}. I recommend that you consult the description of this journal under About, as well as its current contents, to learn more about the work that we publish. You might also consider submitting this manuscript to another, more suitable journal.
+An initial review of "{$articleTitle}" has made it clear that this submission does not fit within the scope and focus of our Ethics Review Committee. I recommend that you consult the Standard Operating Procedure of the ERC. 
 
 {$editorialContactSignature}</body>
 	</email_text>
@@ -185,35 +194,35 @@ An initial review of "{$articleTitle}" has made it clear that this submission do
 		<subject>Submission Comment</subject>
 		<body>{$name}:
 
-{$commentName} has added a comment to the submission, "{$articleTitle}" in {$journalName}:
+{$commentName} has added a comment to the proposal submission, "{$articleTitle}" in {$journalName}:
 
 {$comments}</body>
-		<description>This email notifies the various people involved in a submission's editing process that a new comment has been posted.</description>
+		<description>This email notifies the various people involved in a proposal's review process that a new comment has been posted.</description>
 	</email_text>
 	<email_text key="SUBMISSION_DECISION_REVIEWERS">
 		<subject>Decision on "{$articleTitle}"</subject>
-		<body>As one of the reviewers for the submission, "{$articleTitle}," to {$journalName}, I am sending you the reviews and editorial decision sent to the author of this piece. Thank you again for your important contribution to this process.
+		<body>As one of the reviewers for the submission, "{$articleTitle}", I am sending you the reviews and decision sent to the RTO of this proposal. Thank you again for your important contribution to this process.
  
 {$editorialContactSignature}
 
 {$comments}</body>
-		<description>This email notifies the reviewers of a submission that the review process has been completed. It includes information about the article and the decision reached, and thanks the reviewers for their contributions.</description>
+		<description>This email notifies the reviewers of a proposal that the review process has been completed.</description>
 	</email_text>
 	<email_text key="EDITOR_ASSIGN">
-		<subject>Editorial Assignment</subject>
+		<subject>Review Assignment</subject>
 		<body>{$editorialContactName}:
 
-The submission, "{$articleTitle}," to {$journalName} has been assigned to you to see through the editorial process in your role as Section Editor.  
+The submission, "{$articleTitle}" has been assigned to you to see through the review process in your role as Principal Reviewer.  
 
 Submission URL: {$submissionUrl}
 Username: {$editorUsername}
 
 Thank you,
 {$editorialContactSignature}</body>
-		<description>This email notifies a Section Editor that the Editor has assigned them the task of overseeing a submission through the editing process. It provides information about the submission and how to access the journal site.</description>
+		<description>This email notifies an ERC Member that the Secretariat has assigned them the task of principal reviewer.</description>
 	</email_text>
 	<email_text key="REVIEW_REQUEST">
-		<subject>Article Review Request</subject>
+		<subject>Proposal Review Request</subject>
 		<body>{$reviewerName}:
 
 I believe that you would serve as an excellent reviewer of the manuscript, "{$articleTitle}," which has been submitted to {$journalName}. The submission's abstract is inserted below, and I hope that you will consider undertaking this important task for us.
