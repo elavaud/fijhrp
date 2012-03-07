@@ -54,13 +54,17 @@
 	-->
 
 	<!-- Common Messages -->
+<<<<<<< HEAD
 	<message key="common.openJournalSystems">WPRO Ethics Review Committee</message>
+=======
+	<message key="common.openJournalSystems">Open Journal Systems</message>
+>>>>>>> parent of 7c4d49c... WPROERC System edits 6 March 2012
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
 	<message key="common.payment">Payment</message>
 	<message key="common.payments">Payments</message>
 	<message key="common.pageHeader.altText">Page Header</message>
 	<message key="common.homePageHeader.altText">Homepage Header</message>
-	<message key="common.journalHomepageImage.altText">Homepage Image</message>
+	<message key="common.journalHomepageImage.altText">Journal Homepage Image</message>
 
 	<!-- Common Form Messages -->
 	
@@ -71,16 +75,20 @@
 	<!-- Common Error Messages -->
 		
 	<!-- Navigation -->
-	<message key="navigation.journalHelp">Help</message>
+	<message key="navigation.journalHelp">Journal Help</message>
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
+<<<<<<< HEAD
 	<message key="navigation.otherJournals">Other Sites</message>
+=======
+	<message key="navigation.otherJournals">Other Journals</message>
+>>>>>>> parent of 7c4d49c... WPROERC System edits 6 March 2012
 	<message key="navigation.browseByIssue">By Issue</message>
-	<message key="navigation.browseByAuthor">By RTO</message>
-	<message key="navigation.infoForAuthors">For RTOs</message>
+	<message key="navigation.browseByAuthor">By Author</message>
+	<message key="navigation.infoForAuthors">For Authors</message>
 	<message key="navigation.infoForLibrarians">For Librarians</message>
 	<message key="navigation.competingInterestGuidelines">Competing Interest Guidelines</message>
-	<message key="navigation.infoForAuthors.long">Information For RTOs</message>
+	<message key="navigation.infoForAuthors.long">Information For Authors</message>
 	<message key="navigation.infoForLibrarians.long">Information For Librarians</message>
 	
 	<!-- Article Queues -->
@@ -106,20 +114,20 @@
 
 	<!-- Common Section Terms -->
 	<message key="section.section">Section</message>
-	<message key="section.sections">Sections</message>
-	<message key="section.title">title</message>
+	<message key="section.sections">Journal Sections</message>
+	<message key="section.title">Section title</message>
 	<message key="section.abbreviation">Abbreviation</message>
 	<message key="section.abbreviation.example">(For example, Proposals=PRO)</message>
 
 	<!-- Common Article Terms -->
-	<message key="article.article">Proposal</message>
-	<message key="article.articles">Proposals</message>
-	<message key="article.submissionId">Proposal ID</message>
+	<message key="article.article">Article</message>
+	<message key="article.articles">Articles</message>
+	<message key="article.submissionId">Submission ID</message>
 	<message key="article.title">Title</message>
 	<message key="article.authors">RTO</message> /*Replaced "Authors" with "RTO"*/
 	<message key="article.indexingInformation">Indexing Information</message>
 	<message key="article.metadata">Metadata</message>
-	<message key="article.journalSection">Section</message>
+	<message key="article.journalSection">Journal Section</message>
 	<message key="article.file">File</message>
 	<message key="article.suppFile">Supplementary File</message>
 	<message key="article.suppFiles">Supplementary File(s)</message>
@@ -232,15 +240,15 @@
 	
 	<!-- Common Journal Terms -->
 	<message key="journal.currentIssue">Current Issue</message>
-	<message key="journal.journals">Sites</message>
+	<message key="journal.journals">Journals</message>
 	<message key="journal.path">Path</message>
-	<message key="journal.journal">Site</message>
+	<message key="journal.journal">Journal</message>
 	<message key="journal.issn">ISSN</message>
 
 	<!-- User -->
-	<message key="user.showAllJournals">Show My Sites</message>
-	<message key="user.registerForOtherJournals">Register for Other Sites</message>
-	<message key="user.myJournals">My Sites</message>
+	<message key="user.showAllJournals">Show My Journals</message>
+	<message key="user.registerForOtherJournals">Register for Other Journals</message>
+	<message key="user.myJournals">My Journals</message>
 	<message key="user.manageMySubscriptions">Manage My Subscriptions</message>
 	<message key="user.noRoles.chooseJournal">Your account is not currently associated with any site. Please choose a site:</message>
 	<message key="user.noRoles.noRolesForJournal">Your account does not currently have any roles for this site. Please choose from the actions below:</message>

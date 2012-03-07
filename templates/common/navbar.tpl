@@ -25,11 +25,7 @@
 			<li id="search"><a href="{url page="search"}">{translate key="navigation.search"}</a></li>
 		{/if}
 
-<<<<<<< HEAD
-{** - Removed Current and Archives links in navigation bar - spf 
-=======
 {** -  Removed links to Current and Archives - spf 
->>>>>>> a4cc7d4f5c2114ee0db35ac45761a68d74cad7c1
 		{if $currentJournal && $currentJournal->getSetting('publishingMode') != $smarty.const.PUBLISHING_MODE_NONE}
 			<li id="current"><a href="{url page="issue" op="current"}">{translate key="navigation.current"}</a></li>
 			<li id="archives"><a href="{url page="issue" op="archive"}">{translate key="navigation.archives"}</a></li>
