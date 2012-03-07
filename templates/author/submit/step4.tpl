@@ -51,14 +51,14 @@ $(document).ready(function() {
 
 <table class="listing" width="100%">
 <tr>
-	<td colspan="5" class="headseparator">&nbsp;</td>
+	<td colspan="4" class="headseparator">&nbsp;</td>
 </tr>
 <tr class="heading" valign="bottom">
 	<!-- {* <td width="5%">{translate key="common.id"}</td> *} -->
 	<td width="40%">{translate key="common.title"}</td>
 	<td width="25%">{translate key="common.originalFileName"}</td>
-	<td width="15%" class="nowrap">{translate key="common.dateUploaded"}</td>
-	<td width="15%" align="right">{translate key="common.action"}</td>
+	<td width="5%" class="nowrap">{translate key="common.dateUploaded"}</td>
+	<td width="30%">{translate key="common.action"}</td>
 </tr>
 <tr>
 	<td colspan="6" class="headseparator">&nbsp;</td>
@@ -68,8 +68,8 @@ $(document).ready(function() {
 	<!-- {* <td>{$file->getSuppFileId()}</td> *} -->
 	<td>{$file->getSuppFileTitle()|escape} <!-- {*({$file->getType()|escape}) *} --></td>
 	<td>{$file->getOriginalFileName()|escape}</td>
-	<td>{$file->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
-	<td align="right">
+	<td>{$file->getDateSubmitted()|date_format:$dateFormatShort}</td>
+	<td width="30%">
             <!-- {*<a href="{url op="submitSuppFile" path=$file->getSuppFileId() articleId=$articleId}" class="action">{translate key="common.edit"}</a>&nbsp;|&nbsp; *} -->
             <a href="{url op="deleteSubmitSuppFile" path=$file->getSuppFileId() articleId=$articleId}" onclick="return confirm('{translate|escape:"jsparam" key="author.submit.confirmDeleteSuppFile"}')" class="action">{translate key="common.delete"}</a></td>
 </tr>
