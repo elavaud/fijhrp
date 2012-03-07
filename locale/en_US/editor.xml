@@ -16,35 +16,37 @@
 	<message key="editor.article.reviewForms">Review Forms</message>
 	<message key="editor.article.selectReviewForm">Select Review Form</message>
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>
-	<message key="editor.home">ERC Secretary Home</message> /*editor to ERC Secretary */
+	<!-- Edited spf 3 March 2012
+	  Replace editor with ERC Secretary -->
+	<message key="editor.home">ERC Secretary Home</message> 
 	<message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
-	<message key="editor.submissionsAndPublishing">Submissions and Publishing</message>
+	<message key="editor.submissionsAndPublishing">Submissions</message>
 	<message key="editor.submissionQueue">Submission Queue</message>
 	<message key="editor.submissionArchive">Submission Archive</message>
-	<message key="editor.publishing">Publishing</message>
-	<message key="editor.publishedIssues">Published Issues</message>
+	<message key="editor.publishing">Proposal Approval</message>
+	<message key="editor.publishedIssues">Approved Proposals</message>
 	<message key="editor.allSections">All Sections</message>
-	<message key="editor.allEditors">All Editors</message>
+	<message key="editor.allEditors">ERC Secretariat</message>
 	<message key="editor.me">Me</message>
 	<message key="editor.submissionArchive.noSubmissions">No submissions in the archive.</message>
 	<message key="editor.submissionArchive.saveChanges">Save changes to archived submissions? Submissions marked for deletion will be permanently deleted from the system.</message>
 	<message key="editor.submissionArchive.confirmDelete">Are you sure you want to permanently delete this submission?</message>
 	<message key="editor.submissionReview.confirmDecision">Are you sure you wish to record this decision?</message>
-	<message key="editor.submissionReview.emailWillArchive">This submission will be archived after the Notify Author email is either sent or its Skip Email button is pressed.</message>
-	<message key="editor.submissionReview.cannotSendToCopyediting">Before sending a submission to Copyediting, use Notify Author link to inform author of decision and select the version to be sent.</message>
+	<message key="editor.submissionReview.emailWillArchive">This submission will be archived after the Notify RTO email is either sent or its Skip Email button is pressed.</message>
+	<message key="editor.submissionReview.cannotSendToCopyediting">Before sending a submission, use Notify RTO link to inform RTO of decision and select the version to be sent.</message>
 	<message key="editor.submissionReview.sendToCopyediting">Send to Copyediting</message>
 	<message key="editor.notifyUsers">Notify Users</message>
-	<message key="editor.notifyUsers.allUsers">All users associated with this conference ({$count} users)</message>
-	<message key="editor.notifyUsers.allReaders">All readers ({$count} users)</message>
-	<message key="editor.notifyUsers.allAuthors">All published authors ({$count} users)</message>
+	<message key="editor.notifyUsers.allUsers">All users associated with this site. ({$count} users)</message>
+	<message key="editor.notifyUsers.allReaders">All guest ({$count} users)</message>
+	<message key="editor.notifyUsers.allAuthors">All RTOs ({$count} users)</message>
 	<message key="editor.notifyUsers.allIndividualSubscribers">All individual subscribers ({$count} users)</message>
 	<message key="editor.notifyUsers.allInstitutionalSubscribers">All institutional subscribers ({$count} users)</message>
 	<message key="editor.notifyUsers.inProgress">Notifying users...</message>
 	<message key="editor.usersNotified">Users Notified</message>
-	<message key="editor.notifyUsers.allUsers">Send this message to all users associated with this journal ({$count} users)</message>
-	<message key="editor.notifyUsers.interestedUsers">Send this message to the users associated with this journal who have indicated that they wish to receive updates ({$count} users)</message>
-	<message key="editor.notifyUsers.includeToc">Include the table of contents from this issue:</message>
-	<message key="editor.editorAdministration">Editor Administration</message>
+	<message key="editor.notifyUsers.allUsers">Send this message to all users associated with this site ({$count} users)</message>
+	<message key="editor.notifyUsers.interestedUsers">Send this message to the users associated with this site who have indicated that they wish to receive updates ({$count} users)</message>
+	<message key="editor.notifyUsers.includeToc">Include the table of contents:</message>
+	<message key="editor.editorAdministration">ERC Administration</message>
 	<message key="editor.issues.createIssue">Create Issue</message>
 	<message key="editor.issues.backIssues">Back Issues</message>
 	<message key="editor.issues.futureIssues">Future Issues</message>
@@ -218,6 +220,7 @@
 	<message key="editor.minutes.adverseEvents">Adverse Events</message>
 	<message key="editor.minutes.informationItems">Information Items</message>
 	<message key="editor.minutes.announcementsRequired">Please enter announcements.</message>
+	<!-- End of 3 May 2011 additions aglet -->
 			
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
 	<message key="editor.article.replaceLayoutEditor">Replace Layout Editor</message>
@@ -305,8 +308,8 @@
 	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
 
-	<message key="editor.minutes.minutesFileRequired">Please submit a minutes file</message>
-	<message key="editor.minutes.minutesFile">Minutes File</message>
+	<message key="editor.minutes.minutesFileRequired">Please upload meeting minutes</message>
+	<message key="editor.minutes.minutesFile">Minutes</message>
 	<message key="editor.minutes.adjourned">Meeting was adjourned at</message>
 	<message key="editor.minutes.adjournedRequired">Please indicate the time when meeting was adjourned</message>
 	<message key="editor.minutes.venue">Venue of Meeting</message>

@@ -32,12 +32,13 @@ class MetadataForm extends Form {
 	 * Constructor.
 	 */
 	function MetadataForm($article, $journal) {
+                
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
 
 		$user =& Request::getUser();
 		$roleId = $roleDao->getRoleIdFromPath(Request::getRequestedPage());
-
+                /*
 		// If the user is an editor of this article, make the entire form editable.
 		$this->canEdit = false;
 		$this->isEditor = false;
@@ -64,7 +65,14 @@ class MetadataForm extends Form {
 				}
 			}
 		}
-
+                */
+                //Added by AIM Feb 16 2012
+                if ($roleId == ROLE_ID_AUTHOR || $roleId == ROLE_ID_EDITOR || $roleId == ROLE_ID_COPYEDITOR) {
+                    $this->canEdit = true;
+                } else {
+                    $this->canEdit = false;
+                }
+                
 		if ($this->canEdit) {
 			$supportedSubmissionLocales = $journal->getSetting('supportedSubmissionLocales');
 			if (empty($supportedSubmissionLocales)) $supportedSubmissionLocales = array($journal->getPrimaryLocale());
@@ -104,15 +112,15 @@ class MetadataForm extends Form {
                 } else {
 			parent::Form('submission/metadata/metadataView.tpl');
 		}
-
+                /*
 		// If the user is a reviewer of this article, do not show authors.
 		$this->canViewAuthors = true;
 		if ($roleId != null && $roleId == ROLE_ID_REVIEWER) {
 			$this->canViewAuthors = false;
 		}
-
+                */
 		$this->article = $article;
-
+                
 		$this->addCheck(new FormValidatorPost($this));
 	}
 
@@ -139,6 +147,27 @@ class MetadataForm extends Form {
                         $countryDao =& DAORegistry::getDAO('AsiaPacificCountryDAO');
                         $proposalCountryText[$this->getFormLocale()] = explode(",", $countryDao->getAsiaPacificCountry($proposalCountryArray[$this->getFormLocale()]));
 
+                        $proposalTypeArray = $article->getProposalType(null);
+                        $proposalType[$this->getFormLocale()] = explode("+", $proposalTypeArray[$this->getFormLocale()]);
+                        $otherProposalType = "";
+
+                        //Added by AIM 02.16.2012
+                        $articleDao =& DAORegistry::getDAO('ArticleDAO');
+                        $proposalTypes = $articleDao->getProposalTypes();
+                        $proposalTypeCodes = array();
+                        foreach ($proposalTypes as $i => $type) {
+                            array_push($proposalTypeCodes, $type['code']);
+                        }
+
+
+                        foreach($proposalType[$this->getFormLocale()] as $i => $type) {
+                            if(!in_array($type, $proposalTypeCodes)) {
+                                preg_match('/\((.*)\)/', $type, $matches);
+                                $otherProposalType = $matches[1];
+                                $proposalType[$this->getFormLocale()][$i] = "OTHER";
+                            }
+                        }
+                        
 			$this->_data = array(
 				'authors' => array(),
 				'title' => $article->getTitle(null), // Localized
@@ -174,11 +203,15 @@ class MetadataForm extends Form {
                                 'technicalUnit' => $article->getTechnicalUnit(null),
                                 'technicalUnitText' => $article->getLocalizedTechnicalUnitText(),
                                 'withHumanSubjects' => $article->getWithHumanSubjects(null),
-                                'proposalType' => $article->getProposalType(null),
+                                'proposalType' => $proposalType,
+                                'otherProposalType' => $otherProposalType,
                                 'submittedAsPi' => $article->getSubmittedAsPi(null),
                                 'conflictOfInterest' => $article->getConflictOfInterest(null),
                                 'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
-                                'otherErcDecision' => $article->getOtherErcDecision(null)
+                                'otherErcDecision' => $article->getOtherErcDecision(null),
+
+                                //for metadataView.tpl
+                                'submission' => $article
 			);
 
 			$authors =& $article->getAuthors();
@@ -383,14 +416,25 @@ class MetadataForm extends Form {
                 $article->setEndDate($this->getData('endDate'), null); // Localized
                 $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
                 
-                //Convert multiple countries to CSV string
+                //Convert multiple countries to CSV string //Do not allow later edits of country
                 //$proposalCountryArray = $this->getData('proposalCountry');
                 //$proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
                 //$article->setProposalCountry($proposalCountry, null); // Localized
-                
+
+                //Convert multiple proposal types to CSV string, Feb 16 2012
+                $proposalTypeArray = $this->getData('proposalType');
+                foreach($proposalTypeArray[$this->getFormLocale()] as $i => $type) {
+                    if($type == "OTHER") {
+                        $otherType = trim(str_replace("+", ",", $request->getUserVar('otherProposalType')));
+                        if($otherType != "") $proposalTypeArray[$this->getFormLocale()][$i] = "OTHER (". $otherType .")";
+                    }
+                }
+                $proposalType[$this->getFormLocale()] = implode("+", $proposalTypeArray[$this->getFormLocale()]);
+                $article->setProposalType($proposalType, null); // Localized
+
                 //$article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
                 $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
-                $article->setProposalType($this->getData('proposalType'), null); // Localized
+                //$article->setProposalType($this->getData('proposalType'), null); // Localized
                 $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
                 $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
                 $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized

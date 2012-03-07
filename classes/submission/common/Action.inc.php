@@ -176,10 +176,10 @@ class Action extends PKPAction {
 
                                 while (!$editors->eof()) {
                                         $editor =& $editors->next();
-                                        $notificationUsers[] = array('id' => $editor->getId());
+                                        $notificationUsers[] = array('id' => $editor->getId(), 'role' => $roleDao->getRolePath(ROLE_ID_EDITOR));
                                         unset($editor);
                                 }
-                             
+                                //print_r($notificationUsers); die();
                                 foreach ($notificationUsers as $userRole) {
                                         $url = $router->url($request, null, $userRole['role'], 'submission', $article->getId(), null, 'metadata');
                                         $notificationManager->createNotification(

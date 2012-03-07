@@ -74,8 +74,26 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                         $proposalCountry[$this->getFormLocale()] = explode(",", $proposalCountryArray[$this->getFormLocale()]);
 
                         $proposalTypeArray = $article->getProposalType(null);
-                        $proposalType[$this->getFormLocale()] = explode(",", $proposalTypeArray[$this->getFormLocale()]);
+                        $proposalType[$this->getFormLocale()] = explode("+", $proposalTypeArray[$this->getFormLocale()]);
+                        $otherProposalType = "";
 
+                        //Added by AIM 02.16.2012
+                        $articleDao =& DAORegistry::getDAO('ArticleDAO');
+                        $proposalTypes = $articleDao->getProposalTypes();
+                        $proposalTypeCodes = array();
+                        foreach ($proposalTypes as $i => $type) {
+                            array_push($proposalTypeCodes, $type['code']);
+                        }
+                        
+
+                        foreach($proposalType[$this->getFormLocale()] as $i => $type) {
+                            if(!in_array($type, $proposalTypeCodes) && $type != "") {
+                                preg_match('/\((.*)\)/', $type, $matches);
+                                $otherProposalType = $matches[1];
+                                $proposalType[$this->getFormLocale()][$i] = "OTHER";
+                            }
+                        }
+                        
 			$this->_data = array(
 				'authors' => array(),
 				'title' => $article->getTitle(null), // Localized
@@ -105,12 +123,13 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                                  'technicalUnit' => $article->getTechnicalUnit(null),
                                  'withHumanSubjects' => $article->getWithHumanSubjects(null),
                                  'proposalType' => $proposalType,
+                                 'otherProposalType' => $otherProposalType,
                                  'submittedAsPi' => $article->getSubmittedAsPi(null),
                                  'conflictOfInterest' => $article->getConflictOfInterest(null),
                                  'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
                                  'otherErcDecision' => $article->getOtherErcDecision(null)
 			);
-
+                        
 			$authors =& $article->getAuthors();
 			for ($i=0, $count=count($authors); $i < $count; $i++) {
 				array_push(
@@ -132,6 +151,11 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
 					$this->setData('primaryContact', $i);
 				}
 			}
+                        //Added by AIM, Feb 16 2012
+                        //Add another author -- at least one PI
+                        if($count <= 1) {
+                            array_push($this->_data['authors'], array());
+                        }
 		}
 		return parent::initData();
 	}
@@ -301,7 +325,7 @@ class AuthorSubmitStep3Form extends AuthorSubmitForm {
                 foreach($proposalTypeArray[$this->getFormLocale()] as $i => $type) {
                     if($type == "OTHER") {
                         $otherType = trim(str_replace("+", ",", $request->getUserVar('otherProposalType')));
-                        if($otherType != "") $proposalTypeArray[$this->getFormLocale()][$i] = "Others (". $otherType .")";
+                        if($otherType != "") $proposalTypeArray[$this->getFormLocale()][$i] = "OTHER (". $otherType .")";
                     }
                 }
                 $proposalType[$this->getFormLocale()] = implode("+", $proposalTypeArray[$this->getFormLocale()]);

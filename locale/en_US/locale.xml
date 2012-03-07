@@ -54,7 +54,7 @@
 	-->
 
 	<!-- Common Messages -->
-	<message key="common.openJournalSystems">WPRO ERC System</message>
+	<message key="common.openJournalSystems">WPRO Ethics Review Committee</message>
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
 	<message key="common.payment">Payment</message>
 	<message key="common.payments">Payments</message>
@@ -74,7 +74,7 @@
 	<message key="navigation.journalHelp">Help</message>
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
-	<message key="navigation.otherJournals">Other Systems</message>
+	<message key="navigation.otherJournals">Other Sites</message>
 	<message key="navigation.browseByIssue">By Issue</message>
 	<message key="navigation.browseByAuthor">By RTO</message>
 	<message key="navigation.infoForAuthors">For RTOs</message>
@@ -109,7 +109,7 @@
 	<message key="section.sections">Sections</message>
 	<message key="section.title">title</message>
 	<message key="section.abbreviation">Abbreviation</message>
-	<message key="section.abbreviation.example">(For example, Articles=ART)</message>
+	<message key="section.abbreviation.example">(For example, Proposals=PRO)</message>
 
 	<!-- Common Article Terms -->
 	<message key="article.article">Proposal</message>
@@ -242,12 +242,12 @@
 	<message key="user.registerForOtherJournals">Register for Other Sites</message>
 	<message key="user.myJournals">My Sites</message>
 	<message key="user.manageMySubscriptions">Manage My Subscriptions</message>
-	<message key="user.noRoles.chooseJournal">Your account is not currently associated with any journals. Please choose a journal:</message>
-	<message key="user.noRoles.noRolesForJournal">Your account does not currently have any roles for this journal. Please choose from the actions below:</message>
+	<message key="user.noRoles.chooseJournal">Your account is not currently associated with any site. Please choose a site:</message>
+	<message key="user.noRoles.noRolesForJournal">Your account does not currently have any roles for this site. Please choose from the actions below:</message>
 	<message key="user.noRoles.submitArticle">Submit a Proposal</message>
-	<message key="user.noRoles.submitArticleRegClosed">Submit an Article: Author registration is currently disabled.</message>
-	<message key="user.noRoles.regReviewer">Register as a Reviewer</message>
-	<message key="user.noRoles.regReviewerClosed">Register as a Reviewer: Reviewer registration is currently disabled.</message>
+	<message key="user.noRoles.submitArticleRegClosed">Submit Proposal: Registration is currently disabled.</message>
+	<message key="user.noRoles.regReviewer">Register as a ERC Member</message>
+	<message key="user.noRoles.regReviewerClosed">Register as a ERC Member: ERC Member registration is currently disabled.</message>
 
 	<!-- Roles -->
 	<message key="user.role.manager">ERC Admin</message> /* Replaced Journal Manager to ERC Admin - spf */
@@ -319,10 +319,10 @@
 	<message key="submission.event.logLevel.error">Error</message>
 	
 	<message key="submission.event.general.defaultEvent">Submission event</message>
-	<message key="submission.event.general.articleSubmitted">Article submitted</message>
-	<message key="submission.event.general.issueScheduled">Submission sent to issue scheduling queue</message>
-	<message key="submission.event.general.issueAssigned">Submission assigned to issue</message>
-	<message key="submission.event.general.articlePublished">Article published</message>
+	<message key="submission.event.general.articleSubmitted">Proposal submitted</message>
+	<message key="submission.event.general.issueScheduled">Submission sent to queue</message>
+	<message key="submission.event.general.issueAssigned">Submission assigned</message>
+	<message key="submission.event.general.articlePublished">Proposal reviewed</message>
 
 	<message key="submission.event.author.authorRevision">RTO revision submitted</message>
 
@@ -330,7 +330,7 @@
 	
 	<message key="submission.event.editor.editorAssigned">Secretary assigned to submission</message>
 	<message key="submission.event.editor.editorUnassigned">Secretary unassigned from submission</message>
-	<message key="submission.event.editor.editorDecision">Secreatary decision submitted</message>
+	<message key="submission.event.editor.editorDecision">Secretary decision submitted</message>
 	<message key="submission.event.editor.editorFile">ERC file updated</message>
 	<message key="submission.event.editor.submissionArchived">Submission sent to archive</message>
 	<message key="submission.event.editor.submissionRestored">Submission restored from archive</message>
@@ -365,13 +365,13 @@
 
 	<!-- Reader article view -->
 	<message key="reader.subscribersOnly">Subscribers Only</message>
-	<message key="reader.subscriptionRequiredLoginText">Subscription required to access item. To verify subscription, log in to journal.</message>  
+	<message key="reader.subscriptionRequiredLoginText">Subscription required to access item. To verify subscription, log in to site.</message>  
 	<message key="reader.openAccess">Open Access</message>
 	<message key="reader.subscriptionAccess">Subscription Access</message>
 	<message key="reader.subscriptionOrFeeAccess">Subscription or Fee Access</message>
 
 	<!-- Reader Comments -->
-	<message key="comments.commentsOnArticle">Comments on this article</message>
+	<message key="comments.commentsOnArticle">Comments on this proposal</message>
 	<message key="comments.authenticated"><![CDATA[by <a href="{$publicProfileUrl}" target="_parent">{$userName}</a>]]></message>
 
 	<!-- Site Administration -->
@@ -515,7 +515,7 @@ You may optionally provide the user with a reason for disabling their account.</
 	<message key="manager.people.noAdministrativeRights"><![CDATA[Sorry, you do not have administrative rights over this user. This may be because:
 		<ul>
 			<li>The user is a site administrator</li>
-			<li>The user is active in journals you do not manage</li>
+			<li>The user is active in sites you do not manage</li>
 		</ul>
 	This task must be performed by a site administrator.
 	]]></message>

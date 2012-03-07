@@ -142,15 +142,19 @@
 
 
 <table width="100%" class="data">
-	<tr valign="top">
+	<tr>
 		<td width="20%" class="label">{translate key="article.authors"}</td>
 		<td width="80%" colspan="2" class="data">{$submission->getFirstAuthor()|escape}</td>
 	</tr>
-	<tr valign="top">
+        <tr>
+		<td width="20%" class="label">WHO ID</td>
+		<td width="80%" colspan="2" class="data">{$submission->getLocalizedWhoId()|escape}</td>
+	</tr>
+	<tr>
 		<td width="20%" class="label">{translate key="article.title"}</td>
 		<td width="80%" colspan="2" class="data">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td width="20%" class="label">{translate key="submission.originalFile"}</td>
 		<td width="80%" colspan="2" class="data">
 			{if $submissionFile}
@@ -160,7 +164,7 @@
 			{/if}
 		</td>
 	</tr>
-	<tr valign="top">
+	<tr>
 		<td class="label">{translate key="article.suppFilesAbbrev"}</td>
 		<td width="80%" class="value">
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}

@@ -15,8 +15,12 @@
 	<tr>
 		<td width="20%" class="label">{translate key="article.authors"}</td>
 		<td width="80%">
+                        {*
 			{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$submission->getAuthorEmails() subject=$submission->getLocalizedTitle() articleId=$submission->getArticleId()}
 			{$submission->getAuthorString()|escape} {icon name="mail" url=$url}
+                        *}
+                        
+			{$submission->getFirstAuthor()|escape}
 		</td>
 	</tr>
 	<tr>
