@@ -10,18 +10,6 @@
   *
   * $Id$
   -->
-
-
-<!-- 
-
-  WPRO ERC Edited E-mail Templates
-
-  Pruned to only templates used by WPRO ERC
-
-  spf - 8 March 2012
-
--->
-
 <email_texts locale="en_US">
 	<email_text key="NOTIFICATION">
 		<!-- Edited 3 March 2012 spf 
@@ -94,7 +82,7 @@ Reset my password: {$url}
 	</email_text>
 	<email_text key="PASSWORD_RESET">
 		<subject>Password Reset</subject>
-		<body>Your password has been successfully reset for use with the ERC web site. Please retain this username and password, as it is necessary for all work with the website.
+		<body>Your password has been successfully reset for use with the ERC web site. Please retain this username and password, as it is necessary for all work with the journal.
 
 Your username: {$username}
 Your new password: {$password}
@@ -138,13 +126,55 @@ Thank you,
 {$principalContactSignature}</body>
 		<description>This email is sent to a newly registered reviewer to welcome them to the system and provide them with a record of their username and password.</description>
 	</email_text>
+	<email_text key="PUBLISH_NOTIFY">
+		<subject>New Issue Published</subject>
+		<body>Readers:
+
+{$journalName} has just published its latest issue at {$journalUrl}. We invite you to review the Table of Contents here and then visit our web site to review articles and items of interest.
+
+Thanks for the continuing interest in our work,
+{$editorialContactSignature}</body>
+		<description>This email is sent to registered readers via the "Notify Users" link in the Editor's User Home. It notifies readers of a new issue and invites them to visit the journal at a supplied URL.</description>
+	</email_text>
+	<email_text key="LOCKSS_EXISTING_ARCHIVE">
+		<subject>Archiving Request for {$journalName}</subject>
+		<body>Dear [University Librarian]
+
+{$journalName} &lt;{$journalUrl}&gt;, is a journal for which a member of your faculty, [name of member], serves as a [title of position]. The journal is seeking to establish a LOCKSS (Lots of Copies Keep Stuff Safe) compliant archive with this and other university libraries.
+
+[Brief description of journal]
+
+The URL to the LOCKSS Publisher Manifest for our journal is: {$journalUrl}/gateway/lockss
+
+We understand that you are already participating in LOCKSS. If we can provide any additional metadata for purposes of registering our journal with your version of LOCKSS, we would be happy to provide it.
+
+Thank you,
+{$principalContactSignature}</body>
+		<description>This email requests the keeper of a LOCKSS archive to consider including this journal in their archive. It provides the URL to the journal's LOCKSS Publisher Manifest.</description>
+	</email_text>
+	<email_text key="LOCKSS_NEW_ARCHIVE">
+		<subject>Archiving Request for {$journalName}</subject>
+		<body>Dear [University Librarian]
+
+{$journalName} &lt;{$journalUrl}&gt;, is a journal for which a member of your faculty, [name of member] serves as a [title of position]. The journal is seeking to establish a LOCKSS (Lots of Copies Keep Stuff Safe) compliant archive with this and other university libraries.
+
+[Brief description of journal]
+
+The LOCKSS Program &lt;http://lockss.org/&gt;, an international library/publisher initiative, is a working example of a distributed preservation and archiving repository, additional details are below. The software, which runs on an ordinary personal computer is free; the system is easily brought on-line; very little ongoing maintenance is required.
+
+To assist in the archiving of our journal, we invite you to become a member of the LOCKSS community, to help collect and preserve titles produced by your faculty and by other scholars worldwide. To do so, please have someone on your staff visit the LOCKSS site for information on how this system operates. I look forward to hearing from you on the feasibility of providing this archiving support for this journal.
+
+Thank you,
+{$principalContactSignature}</body>
+		<description>This email encourages the recipient to participate in the LOCKSS initiative and include this journal in the archive. It provides information about the LOCKSS initiative and ways to become involved.</description>
+	</email_text>
 	<email_text key="SUBMISSION_ACK">
 		<subject>Submission Acknowledgement</subject>
 		<body>{$authorName}:
 
 Thank you for submitting the proposal, "{$articleTitle}" to the Ethics Review Committee. With the online proposal management system that we are using, you will be able to track its progress through the review process by logging in to the ERC web site:
 
-Proposal URL: {$submissionUrl}
+Manuscript URL: {$submissionUrl}
 Username: {$authorUsername}
 
 If you have any questions, please contact me. 
@@ -195,15 +225,13 @@ Thank you,
 		<subject>Proposal Review Request</subject>
 		<body>{$reviewerName}:
 
-Please review the proposal, "{$articleTitle}," which has been submitted to the Ethics Review Committee. 
+I believe that you would serve as an excellent reviewer of the manuscript, "{$articleTitle}," which has been submitted to {$journalName}. The submission's abstract is inserted below, and I hope that you will consider undertaking this important task for us.
 
-Please log into the web site by {$weekLaterDate} to indicate whether you will undertake the review or not, as well as to access the proposal and to record your initial review and recommendation. The web site is {$journalUrl}
+Please log into the journal web site by {$weekLaterDate} to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation. The web site is {$journalUrl}
 
-The initial review itself is due {$reviewDueDate}.
+The review itself is due {$reviewDueDate}.
 
-We shall also inform you of the ERC Meeting Date when this proposal will be reviewed, if applicable.
-
-If you do not have your username and password for the web site, you can use this link to reset your password (which will then be emailed to you along with your username). {$passwordResetUrl}
+If you do not have your username and password for the journal's web site, you can use this link to reset your password (which will then be emailed to you along with your username). {$passwordResetUrl}
 
 Submission URL: {$submissionReviewUrl}
 
@@ -217,15 +245,15 @@ Thank you for considering this request.
 
 {$abstractTermIfEnabled}
 {$articleAbstract}</body>
-		<description>This email from the Secretariat to an ERC Member requests that the ERC Member accept or decline the task of reviewing a proposal. It provides information about the submission such as the title and abstract, a review due date, and how to access the submission itself. </description>
+		<description>This email from the Section Editor to a Reviewer requests that the reviewer accept or decline the task of reviewing a submission. It provides information about the submission such as the title and abstract, a review due date, and how to access the submission itself. This message is used when the Standard Review Process is selected in Journal Setup, Step 2. (Otherwise see REVIEW_REQUEST_ATTACHED.)</description>
 	</email_text>
 	<email_text key="REVIEW_REQUEST_ONECLICK">
-		<subject>Proposal Review Request</subject>
+		<subject>Article Review Request</subject>
 		<body>{$reviewerName}:
 
-Please review the proposal, "{$articleTitle}," which has been submitted to the Ethics Review Committee. 
+I believe that you would serve as an excellent reviewer of the manuscript, "{$articleTitle}," which has been submitted to {$journalName}. The submission's abstract is inserted below, and I hope that you will consider undertaking this important task for us.
 
-Please log into the web site by {$weekLaterDate} to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.
+Please log into the journal web site by {$weekLaterDate} to indicate whether you will undertake the review or not, as well as to access the submission and to record your review and recommendation.
 
 The review itself is due {$reviewDueDate}.
 
@@ -241,10 +269,10 @@ Thank you for considering this request.
 
 {$abstractTermIfEnabled}
 {$articleAbstract}</body>
-		<description>This email from the Secretariat to an ERC Member requests that the reviewer accept or decline the task of reviewing a submission. It provides information about the submission such as the title and abstract, a review due date, and how to access the submission itself. </description>
+		<description>This email from the Section Editor to a Reviewer requests that the reviewer accept or decline the task of reviewing a submission. It provides information about the submission such as the title and abstract, a review due date, and how to access the submission itself. This message is used when the Standard Review Process is selected in Journal Setup, Step 2, and one-click reviewer access is enabled.</description>
 	</email_text>
 	<email_text key="REVIEW_REQUEST_ATTACHED">
-		<subject>Proposal Review Request</subject>
+		<subject>Article Review Request</subject>
 		<body>{$reviewerName}:
 
 I believe that you would serve as an excellent reviewer of the manuscript, "{$articleTitle}," and I am asking that you consider undertaking this important task for us. The Review Guidelines for this journal are appended below, and the submission is attached to this email. Your review of the submission, along with your recommendation, should be emailed to me by {$reviewDueDate}.
