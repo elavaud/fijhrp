@@ -36,7 +36,7 @@
 	<message key="common.activate">Activate</message>
 	<message key="common.active">Active</message>
 	<message key="common.add">Add</message>
-	<message key="common.addSelf">Add Self</message>
+	<message key="common.addSelf">Start Initial Review</message>
 	<message key="common.all">All</message>
 	<message key="common.alphaList">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</message>
 	<message key="common.alreadyAssigned">Assigned</message>
