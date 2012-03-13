@@ -11,10 +11,8 @@
  * Common HTML elements
  */
 
-body {
+html, body {
 	background-color: #d6d5bb;
-	background-image: url(images/wpro_body.gif);
-	background-repeat: repeat-y;
 	font-family: verdana, helvetica, sans-serif;
 	color: black;
 	font-size: 11px;
@@ -58,11 +56,20 @@ a:hover {
 
 /*BODY*/
 #body {
+	background-color: #d6d5bb;
+	background-image: url(images/wpro_body.gif);
+	background-repeat: repeat-y;
 	min-width: 900px;
 	width: 950px;
 	position: relative;
-	min-height: 600px;
 }
+
+#container {
+	background-color: #d6d5bb;
+	background-image: url(images/wpro_body.gif);
+	background-repeat: repeat-y;
+}
+
 
 #main {
 	position: relative;
