@@ -24,15 +24,14 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 <p></p>
 {assign var="count" value=0}
-{foreach from=$submissions item=submission}	
+{iterate from=submissions1 item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision() }
 
         {if ($status!=PROPOSAL_STATUS_DRAFT && $status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}		
-			
+			{assign var="count" value=$count+1}
             {assign var="articleId" value=$submission->getArticleId()}
             {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
-			{assign var="count" value=$count+1}
 			<tr valign="top">
 				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
@@ -52,7 +51,7 @@
 				<td colspan="6" class="separator">&nbsp;</td>
 			</tr>
 		{/if}
-{/foreach}
+{/iterate}
 {if $count==0}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
@@ -85,14 +84,14 @@
 	<tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 <p></p>
 {assign var="count" value=0}
-{foreach from=$submissions item=submission}	
+{iterate from=submissions2 item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
-        {assign var="decision" value=$submission->getMostRecentDecision() }
+     {assign var="decision" value=$submission->getMostRecentDecision() }
 
-        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}		
+        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}
+        	{assign var="count" value=$count+1}		
 			{assign var="articleId" value=$submission->getArticleId()}
             {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
-			{assign var="count" value=$count+1}
 			<tr valign="top">
 				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
@@ -111,20 +110,20 @@
 				<td colspan="7" class="separator">&nbsp;</td>
 			</tr>
 		{/if}
-{/foreach}
+{/iterate}
 {if $count==0}
 	<tr>
-		<td colspan="7" class="nodata">{translate key="submissions.noSubmissions"}</td>
+		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
 	<tr>
-		<td colspan="7" class="endseparator">&nbsp;</td>
+		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 {else}
 	<tr>
-		<td colspan="7" class="endseparator">&nbsp;</td>
+		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="7" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} submission(s)</td>
 	</tr>
 {/if}
 </table>
@@ -144,7 +143,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 <p></p>
 {assign var="count" value=0}
-{foreach from=$submissions item=submission}	
+{iterate from=submissions3 item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision() }
 
@@ -175,7 +174,7 @@
 				<td colspan="6" class="separator">&nbsp;</td>
 			</tr>
 		{/if}
-{/foreach}
+{/iterate}
 {if $count==0}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
@@ -209,7 +208,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 <p></p>
 {assign var="count" value=0}
-{foreach from=$submissions item=submission}	
+{iterate from=submissions4 item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision() }
 
@@ -240,7 +239,7 @@
 				<td colspan="6" class="separator">&nbsp;</td>
 			</tr>
 		{/if}
-{/foreach}
+{/iterate}
 {if $count==0}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
@@ -256,6 +255,21 @@
 		<td colspan="6" align="left">{$count} submission(s)</td>
 	</tr>
 {/if}
+
+{if $submissions1->wasEmpty()}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="4" align="left">{page_info iterator=$submissions1}</td>
+		<td align="right" colspan="2">{page_links anchor="submissions" name="submissions" iterator=$submissions1 searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth dateSearchField=$dateSearchField section=$section sort=$sort sortDirection=$sortDirection}</td>
+	</tr>
+{/if}
+
 </table>
 
 

@@ -251,7 +251,7 @@ class EditorHandler extends SectionEditorHandler {
 				break;
 			default:
 				$page = 'submissionsInReview';
-				$functionName = 'getEditorSubmissionsInReview';
+				$functionName = 'getEditorSubmissionsInReviewIterator';
 				$helpTopicId = 'editorial.editorsRole.submissions.inReview';
 		}
 
@@ -282,23 +282,20 @@ class EditorHandler extends SectionEditorHandler {
 				$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
 			}
 		}
-
-		$submissions =& $editorSubmissionDao->$functionName(
-			$journalId,
-			$filterSection,
-			$editorId,
-			$searchField,
-			$searchMatch,
-			$search,
-			$dateSearchField,
-			$fromDate,
-			$toDate,
-			$technicalUnitField,
-			$countryField,
-			$rangeInfo,
-			$sort,
-			$sortDirection
-		);
+		//workaround for multiple use of iterator in one page 3/21/2012
+		$submissions1 =& $editorSubmissionDao->$functionName(
+			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
+			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+		$submissions2 =& $editorSubmissionDao->$functionName(
+			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
+			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+		$submissions3 =& $editorSubmissionDao->$functionName(
+			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
+			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+		$submissions4 =& $editorSubmissionDao->$functionName(
+			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
+			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+		
 
 		$templateMgr =& TemplateManager::getManager();
 
@@ -306,8 +303,11 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('editor', $user->getFullName());
 		$templateMgr->assign('editorOptions', $filterEditorOptions);
 		$templateMgr->assign('sectionOptions', $filterSectionOptions);
-
-		$templateMgr->assign_by_ref('submissions', $submissions);
+		
+		$templateMgr->assign_by_ref('submissions1', $submissions1);
+		$templateMgr->assign_by_ref('submissions2', $submissions2);
+		$templateMgr->assign_by_ref('submissions3', $submissions3);
+		$templateMgr->assign_by_ref('submissions4', $submissions4);
 		$templateMgr->assign('filterEditor', $filterEditor);
 		$templateMgr->assign('filterSection', $filterSection);
 
