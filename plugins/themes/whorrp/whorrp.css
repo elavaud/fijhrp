@@ -11,10 +11,8 @@
  * Common HTML elements
  */
 
-body {
+html, body {
 	background-color: #d6d5bb;
-	background-image: url(images/wpro_body.gif);
-	background-repeat: repeat-y;
 	font-family: verdana, helvetica, sans-serif;
 	color: black;
 	font-size: 11px;
@@ -45,7 +43,7 @@ a:hover {
 
 /*HEADER*/
 #header {
-	background-image: url(images/wpro_banner.gif);
+	background-image: url(images/wpro_banner2.png);
 	background-repeat: no-repeat;
 	background-color: transparent;
 	width: 950px;
@@ -58,11 +56,20 @@ a:hover {
 
 /*BODY*/
 #body {
+	background-color: #d6d5bb;
+	background-image: url(images/wpro_body.gif);
+	background-repeat: repeat-y;
 	min-width: 900px;
 	width: 950px;
 	position: relative;
-	min-height: 600px;
 }
+
+#container {
+	background-color: #d6d5bb;
+	background-image: url(images/wpro_body.gif);
+	background-repeat: repeat-y;
+}
+
 
 #main {
 	position: relative;
@@ -246,12 +253,16 @@ a:hover {
 /*FOOTER*/
 #footer {
 	width: 950px;
-	min-height: 30px;
-	margin-bottom: 10px;
+	height: 100px; 
+	background-image: url(images/wpro_footer.gif); 
+	background-position: top left;
+	background-repeat: no-repeat;
+	background-color: transparent;
 	text-align: center;
 	font-size: 10px;
+	margin-left: -1px;
+	margin-top: -1px;
 }
-
 
 /*FORMS*/
 .input, select, textarea, button {
