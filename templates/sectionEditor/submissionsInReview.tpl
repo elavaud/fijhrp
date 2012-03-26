@@ -43,7 +43,7 @@
 				<td align="right">
 					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($status)}
 					{translate key=$proposalStatusKey}
-					{if $submission->isSubmissionDue()} 
+					{if $submission->isDueForReview()==1} 
 						({translate key="submissions.proposal.forContinuingReview"}) 
 					{/if}					
 				</td>		
@@ -101,7 +101,7 @@
            <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 				<td align="right">
 					{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
-					{translate key=$displayStatus}{if $submission->isSubmissionDue()}&nbsp; ({translate key="submissions.proposal.forContinuingReview"}){/if}
+					{translate key=$displayStatus}{if $submission->isDueForReview()==1}&nbsp; ({translate key="submissions.proposal.forContinuingReview"}){/if}
 				</td>		
 			</tr>
 			<tr>

@@ -694,7 +694,17 @@ class Article extends Submission {
 			);
 		}
 		return $reasonsForExemptionMap;
-	}	
-}
+	}
 
+	function isDueForReview() {
+		$today = time();
+        $startdate = strtotime($this->getStartDate($this->getLocale()));
+        $dueDate = strtotime ('+1 year', $startdate) ;
+    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
+        $approvalDue = strtotime ('+1 year', $approvalDate) ;
+        $due = (($today - $dueDate)>0 && ($today - $approvalDue) > 0) ? 1 : 0;
+        //echo "$today, $dueDate, $approvalDue, $due";
+        return $due;
+    }    
+}
 ?>

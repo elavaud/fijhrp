@@ -196,6 +196,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$lastDecision = $articleDao->getLastEditorDecision($articleId, $round);
 		$reviewAssignments =& $submission->getReviewAssignments($round);
 		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision['dateDecided']) ? true : false;
+		
 		$reasons = $submission->getProposalReasonsForExemption();
 		$reasonsMap =& $submission->getReasonsForExemptionMap();
 		

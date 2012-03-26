@@ -45,11 +45,12 @@ $(document).ready(function() {
 <h3>{translate key="submission.editorDecision"}</h3>
 
 <table id="table1" width="100%" class="data">
-
+{$dueForReview}
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
 	<td width="80%" class="value">
-		{if $submission->isSubmissionDue()} 
+		
+		{if $submission->isDueForReview()==1}			
 			{translate key="submissions.proposal.forContinuingReview"} 
 		{else}
 			{translate key=$proposalStatusKey}  
@@ -79,9 +80,10 @@ $(document).ready(function() {
 			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmExemption"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />
 		</td>
 
-	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $submission->isSubmissionDue()}
+	{elseif $proposalStatus == PROPOSAL_STATUS_REVIEWED && $submission->isDueForReview()==1}
 		<td class="label" width="20%">{translate key="editor.article.selectContinuingReview"}</td>
 		<td width="80%" class="value">
+			
 				<select id="decision" name="decision" size="1" class="selectMenu">
 					{html_options_translate options=$continuingReviewOptions selected=1}
 				</select>
