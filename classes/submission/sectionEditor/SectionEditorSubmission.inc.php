@@ -155,7 +155,6 @@ class SectionEditorSubmission extends Article {
          * Copied from AuthorSubmission::getSubmissionStatus
 	 */
 	function getSubmissionStatus() {
-				
                 /**
                  * Added by: AIM
                  * Last Updated: June 1, 2011
@@ -169,8 +168,8 @@ class SectionEditorSubmission extends Article {
                 if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
                 
                 //Archived status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
-
+                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;              
+                
                 $status = $this->getProposalStatus();
                 
                 if($status == PROPOSAL_STATUS_RETURNED) {
@@ -185,13 +184,17 @@ class SectionEditorSubmission extends Article {
 	}
 	
 	
-	function isSubmissionDue() {         
+	function isSubmissionDue() {
         $today = time();
         $startdate = strtotime($this->getStartDate($this->getLocale()));
         $dueDate = strtotime ('+1 year', $startdate) ;
     	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
         $approvalDue = strtotime ('+1 year', $approvalDate) ;
-    	return ($today >= $dueDate && $today >= $approvalDue);
+    	if($today >= $dueDate && $today >= $approvalDue) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
 	
 	/*
