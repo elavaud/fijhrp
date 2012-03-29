@@ -1,6 +1,10 @@
 <?php
 
 /**
+Comment
+**/
+
+/**
  * @mainpage OJS API Reference
  *
  * Welcome to the OJS API Reference. This resource contains documentation
