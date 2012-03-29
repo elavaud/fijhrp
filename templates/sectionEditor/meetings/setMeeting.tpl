@@ -17,7 +17,7 @@
 {literal}
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#meetingDate").datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
+	$( "#meetingDate" ).datetimepicker({changeMonth: true, changeYear: true, dateFormat: 'yy-mm-dd', minDate: '+0 d', ampm:true});
 });
 </script>
 {/literal}
