@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @defgroup sectionEditor_form
+ */
+
+/**
+ * @file lib/pkp/classes/who/form/SubmissionReportForm.inc.php
+ *
+ * Added by MSB. Last Updated: Oct 13, 2011
+ * @class SubmissionsReportForm
+ * @ingroup sectionEditor_form
+ *
+ * @brief Form for section editors to generate meeting attendance report form.
+ */
+
+
+import('lib.pkp.classes.form.Form');
+
+class SubmissionsReportForm extends Form {
+	/**
+	 * Constructor.
+	 */
+	function SubmissionsReportForm(&$request) {
+		parent::Form('sectionEditor/reports/submissionsReport.tpl');
+		$site =& Request::getSite();
+		$user =& Request::getUser();
+		// Validation checks for this form
+		$this->addCheck(new FormValidatorPost($this));
+		$this->addCheck(new FormValidator($this,'countries', 'required', 'editor.reports.countryRequired'));
+		$this->addCheck(new FormValidator($this,'decisions', 'required', 'editor.reports.decisionRequired'));
+		$this->addCheck(new FormValidator($this, 'technicalUnits','required' , 'editor.reports.technicalUnitRequired'));
+	}
+	
+	/**
+	 * Assign form data to user-submitted data.
+	 */
+	function readInputData() {
+		$this->readUserVars(array(
+			'decisions',
+			'countries',
+			'technicalUnits'
+		));
+	}
+
+	function display() {
+		
+		$templateMgr =& TemplateManager::getManager();
+		$decisionOptions = array(
+				'editor.article.decision.accept' => 'editor.article.decision.accept',
+				'editor.article.decision.resubmit' => 'editor.article.decision.resubmit',
+				'editor.article.decision.decline' => 'editor.article.decision.decline',
+				'editor.article.decision.complete' => 'editor.article.decision.complete',
+				'editor.article.decision.incomplete' => 'editor.article.decision.incomplete',
+				'editor.article.decision.exempted' => 'editor.article.decision.exempted',
+				'editor.article.decision.assigned' => 'editor.article.decision.assigned',
+				'editor.article.decision.expedited' => 'editor.article.decision.expedited'	
+		);
+		$templateMgr->assign_by_ref('decisionsOptions', $decisionOptions);
+
+		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
+		$templateMgr->assign('technicalUnitsOptions', $technicalUnits);
+		
+		$countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
+                $countries =& $countryDAO->getAsiaPacificCountries();
+                $templateMgr->assign_by_ref('countriesOptions', $countries);
+        
+                $fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+                if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+                $toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
+                if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+                $templateMgr->assign('dateFrom', $fromDate);
+                $templateMgr->assign('dateTo', $toDate);
+        
+     	        parent::display();
+	}
+
+	
+}
+
+?>

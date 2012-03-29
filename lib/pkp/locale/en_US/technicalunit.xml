@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : technicalunit.xml
+    Created on : May 3, 2011, 10:30 PM
+    Author     : Anne Ivy G. Mirasol
+    Description:
+        For use in technical unit of proposal.
+
+    Note       : If adding to technical units, add key to author.xml (author.proposal.technicalUnit)
+-->
+
+<technicalunits>
+    <technicalunit code="EHA" name="Emergency and Humanitarian Action"/>
+    <technicalunit code="EHH" name="Environmental Health"/>
+    <technicalunit code="EMT" name="Essential Medicines and Health Technologies"/>
+    <technicalunit code="EPI" name="Expanded Programme on Immunization"/>
+    <technicalunit code="ESR" name="Emerging Disease Surveillance and Response"/>
+    <technicalunit code="FOS" name="Food Safety"/>
+    <technicalunit code="HCF" name="Health Care Financing"/>
+    <technicalunit code="HRH" name="Human Resources for Health"/>
+    <technicalunit code="HSD" name="Health Services Development"/>
+    <technicalunit code="HSI" name="HIV/AIDS and STI"/>
+    <technicalunit code="IER" name="Health Information, Evidence and Research"/>
+    <technicalunit code="MCN" name="Maternal and Child Health and Nutrition"/>
+    <technicalunit code="MHI" name="Mental Health and Injury Prevention"/>
+    <technicalunit code="MVP" name="Malaria, other Vectorborne and Parasitic Diseases"/>
+    <technicalunit code="NHP" name="Noncommunicable Diseases and Health Promotion"/>
+    <technicalunit code="STB" name="Stop TB and Leprosy Elimination"/>
+    <technicalunit code="TFI" name="Tobacco Free Initiative"/>
+</technicalunits>

@@ -1,0 +1,14 @@
+config.inc.php
+config.inc.php.working
+config.inc.php.ivy
+cache/*
+cache/t_cache/*
+cache/t_compile/*
+cache/_db/*
+cache/t_config/*
+.buildpath
+.project
+.settings/
+*.orig
+/cache
+/.classpath

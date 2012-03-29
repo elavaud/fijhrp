@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Added by aglet
+	Last Update: 6/5/2011
+-->
+
+<committee>
+	<ercmember name="Dr John Ehrenberg" value="1" />
+	<ercmember name="Dr Susan Mercado" value="2" />
+	<ercmember name="Mrs Anjana Bhusban" value="3" />
+	<ercmember name="Dr Eva-Maria Christophel" value="4" />
+	<ercmember name="Dr Christopher James" value="5" />
+	<ercmember name="Dr Ardi Kaptiningshi" value="6" />
+	<ercmember name="Dr Patanjali Nayar" value="7" />
+	<ercmember name="Dr Daniel Sagebiel" value="8" />
+	<ercmember name="Dr Dean Shuey" value="9" />
+	<ercmember name="Dr David Sniadack" value="10" />
+	<ercmember name="Dr Cherian Varghese" value="11" />
+	<ercmember name="Dr Ying Chen" value="12" />
+	<ercmember name="Dr Chin-Kei Lee" value="13" />
+	<externalreviewer name="Dr Vicente Belizario, Jr." value="14" />
+	<externalreviewer name="Dr Poonam Dhavan" value="15" />
+</committee>
+
