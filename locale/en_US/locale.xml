@@ -54,11 +54,7 @@
 	-->
 
 	<!-- Common Messages -->
-<<<<<<< HEAD
 	<message key="common.openJournalSystems">WPRO Ethics Review Committee</message>
-=======
-	<message key="common.openJournalSystems">Open Journal Systems</message>
->>>>>>> parent of 7c4d49c... WPROERC System edits 6 March 2012
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
 	<message key="common.payment">Payment</message>
 	<message key="common.payments">Payments</message>
@@ -78,11 +74,7 @@
 	<message key="navigation.journalHelp">Journal Help</message>
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
-<<<<<<< HEAD
 	<message key="navigation.otherJournals">Other Sites</message>
-=======
-	<message key="navigation.otherJournals">Other Journals</message>
->>>>>>> parent of 7c4d49c... WPROERC System edits 6 March 2012
 	<message key="navigation.browseByIssue">By Issue</message>
 	<message key="navigation.browseByAuthor">By Author</message>
 	<message key="navigation.infoForAuthors">For Authors</message>
