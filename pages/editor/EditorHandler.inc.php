@@ -283,6 +283,9 @@ class EditorHandler extends SectionEditorHandler {
 			}
 		}
 		//workaround for multiple use of iterator in one page 3/21/2012
+		$submissions =& $editorSubmissionDao->$functionName(
+			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
+			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
 		$submissions1 =& $editorSubmissionDao->$functionName(
 			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
 			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
@@ -304,6 +307,7 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('editorOptions', $filterEditorOptions);
 		$templateMgr->assign('sectionOptions', $filterSectionOptions);
 		
+		$templateMgr->assign_by_ref('submissions', $submissions);
 		$templateMgr->assign_by_ref('submissions1', $submissions1);
 		$templateMgr->assign_by_ref('submissions2', $submissions2);
 		$templateMgr->assign_by_ref('submissions3', $submissions3);
