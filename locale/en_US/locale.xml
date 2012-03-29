@@ -54,7 +54,11 @@
 	-->
 
 	<!-- Common Messages -->
+<<<<<<< HEAD
 	<message key="common.openJournalSystems">WPRO Ethics Review Committee</message>
+=======
+	<message key="common.openJournalSystems">Open Journal Systems</message>
+>>>>>>> parent of 7c4d49c... WPROERC System edits 6 March 2012
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
 	<message key="common.payment">Payment</message>
 	<message key="common.payments">Payments</message>
@@ -74,7 +78,11 @@
 	<message key="navigation.journalHelp">Journal Help</message>
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
+<<<<<<< HEAD
 	<message key="navigation.otherJournals">Other Sites</message>
+=======
+	<message key="navigation.otherJournals">Other Journals</message>
+>>>>>>> parent of 7c4d49c... WPROERC System edits 6 March 2012
 	<message key="navigation.browseByIssue">By Issue</message>
 	<message key="navigation.browseByAuthor">By Author</message>
 	<message key="navigation.infoForAuthors">For Authors</message>
@@ -232,9 +240,9 @@
 	
 	<!-- Common Journal Terms -->
 	<message key="journal.currentIssue">Current Issue</message>
-	<message key="journal.journals">Sites</message>
+	<message key="journal.journals">Journals</message>
 	<message key="journal.path">Path</message>
-	<message key="journal.journal">Site</message>
+	<message key="journal.journal">Journal</message>
 	<message key="journal.issn">ISSN</message>
 
 	<!-- User -->
@@ -250,10 +258,8 @@
 	<message key="user.noRoles.regReviewerClosed">Register as a ERC Member: ERC Member registration is currently disabled.</message>
 
 	<!-- Roles -->
-        <!-- Replaced Journal Manager with ERC Admin - spf -->
-	<message key="user.role.manager">ERC Admin</message>
-        <!-- Replaced Editor with Secretary - spf -->
-	<message key="user.role.editor">Secretary</message>
+	<message key="user.role.manager">ERC Admin</message> /* Replaced Journal Manager to ERC Admin - spf */
+	<message key="user.role.editor">Secretary</message> /*Editor to Secretary*/
 	<message key="user.role.sectionEditor">Secretary</message> /*SectionEditor to Secretary*/
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>

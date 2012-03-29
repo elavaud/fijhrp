@@ -56,7 +56,6 @@
 						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsUnassigned"}">{$editorSubmissionsCount[0]} {translate key="common.queue.short.submissionsUnassigned"}</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsUnassigned"}</span>{/if}
 				</td>
-                                <td></td>
 				<td>{if $editorSubmissionsCount[1]}
 						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInReview"}">{$editorSubmissionsCount[1]} {translate key="common.queue.short.submissionsInReview"}</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
