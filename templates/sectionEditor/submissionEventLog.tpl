@@ -11,6 +11,7 @@
  *}
 {strip}
 {assign var="pageTitle" value="submission.eventLog"}
+{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 {include file="common/header.tpl"}
 {/strip}
 
