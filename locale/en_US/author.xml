@@ -28,7 +28,7 @@
 	<message key="author.submit.step5">Step 5. Confirming the Submission</message>
 	<message key="author.submit.start">1. Start</message>
 	<message key="author.submit.upload">2. Upload Main Proposal</message>
-	<message key="author.submit.metadata">3. Enter Metadata</message>
+	<message key="author.submit.metadata">3. Enter Proposal Metadata</message>
 	<message key="author.submit.supplementaryFiles">4. Upload Supplementary Files</message>
 	<message key="author.submit.confirmation">5. Confirmation</message>
 	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the RTO home page.</message>
@@ -43,11 +43,12 @@
 	<message key="author.submissions.queuedEditingProofread">In Editing: Proofread Requested</message>
 	<message key="author.submissions.uploadCopyeditedVersion">Upload Copyedited Version</message>
 	<message key="author.submissions.proofreadingCorrections">Proofreading Corrections</message>
-	<message key="author.submissions.confirmDelete">Are you sure you want to delete this draft?</message> //Edited May 25, 2011
+	<!-- Edited May 25, 2011 -->
+	<message key="author.submissions.confirmDelete">Are you sure you want to delete this draft?</message> 
 
-        <!-- Added by AIM, May 18, 2011  -->
-        <message key="author.submissions.confirmWithdraw">Are you sure you want to withdraw your submission? You cannot undo this action.</message>
-        <message key="author.submissions.confirmArchive">Are you sure you want to send this proposal to the Archive section?</message>
+    <!-- Added by AIM, May 18, 2011  -->
+    <message key="author.submissions.confirmWithdraw">Are you sure you want to withdraw your submission? You cannot undo this action.</message>
+    <message key="author.submissions.confirmArchive">Are you sure you want to send this proposal to the Archive section?</message>
 
 	<message key="author.submissions.viewStatus">View Status</message>
 	<message key="author.submissions.noSubmissions">No submissions.</message>
@@ -85,9 +86,9 @@
 	<!-- Added Jan 19, 2011 -->	
 	<message key="author.article.decision">ERC Decision</message>
 	
-        <!-- ************************************************************************************************************************
+    <!-- ************************************************************************************************************************
             Added by: AIM, Last Edited: 12.12.2011
-        -->
+    -->
         <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
 	    <message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
         <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message>
@@ -112,8 +113,9 @@
         <message key ="author.proposal.type.CWHS">Clinical Trial</message>
         <message key ="author.proposal.type.HSPR">Health System and Policy Research</message>
         <message key ="author.proposal.type.PBS">Population-Based Survey</message>
-        <!-- Removed author.proposal.type.PWHS after re-organization of proposal types, January 2012.
-             Removed by: spf ->
+
+        <!-- Removed by spf, January 2012. 
+          author.proposal.type.PWHS after re-organization of proposal types -->
         <!-- <message key ="author.proposal.type.PWHS">Proposal with Human Subjects</message> --> 
         <message key ="author.proposal.type.PNHS">Proposal without Human Subjects</message> 
         <message key ="author.proposal.type.QS">Qualitative Study</message>
@@ -133,16 +135,15 @@
         <message key="author.proposal.technicalUnit.IER">Health Information, Evidence and Research</message>
         <message key="author.proposal.technicalUnit.MCN">Maternal and Child Health and Nutrition</message>
         <message key="author.proposal.technicalUnit.MHI">Mental Health and Injury Prevention</message>
-        <message key="author.proposal.technicalUnit.MVP">Malaria, other Vectorborne and Parasitic Diseases</message>
+        <message key="author.proposal.technicalUnit.MVP">Malaria, other Vector-borne and Parasitic Diseases</message>
         <message key="author.proposal.technicalUnit.NHP">Noncommunicable Diseases and Health Promotion</message>
         <message key="author.proposal.technicalUnit.STB">Stop TB and Leprosy Elimination</message>
         <message key="author.proposal.technicalUnit.TFI">Tobacco Free Initiative</message>
 
-        <!-- ************************************End of Edit ********************************************************************-->
-
         <message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts.</message>
-	<message key="author.submit.submissionFile">Submission File</message>
-	<message key="author.submit.uploadSubmissionFile">Upload file</message>
+
+        <message key="author.submit.submissionFile">Submission File</message>
+	    <message key="author.submit.uploadSubmissionFile">Upload file</message>
 	<message key="author.submit.replaceSubmissionFile">Replace submission file</message>
 	<message key="author.submit.noSubmissionFile">No file uploaded.</message>
 	<message key="author.submit.noSubmissionConfirm">Are you sure you wish to continue without uploading a file?</message>
