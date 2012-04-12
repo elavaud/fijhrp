@@ -230,6 +230,9 @@ class AboutHandler extends Handler {
 		$extmembers =& $extmembers->toArray();
 							
 		$templateMgr->assign_by_ref('chair', $chair);
+		
+		$templateMgr->assign_by_ref('userSettingsDao', $userSettingsDao);
+		
 		$templateMgr->assign_by_ref('cochair', $cochair);		
 		$templateMgr->assign_by_ref('secretary', $secretary);
 		$templateMgr->assign_by_ref('adsecretary', $adsecretary);

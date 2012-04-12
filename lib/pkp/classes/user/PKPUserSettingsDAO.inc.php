@@ -31,14 +31,10 @@ class PKPUserSettingsDAO extends DAO {
 				setting_type
 			FROM	user_settings
 			WHERE	user_id = ? AND
-				setting_name = ? AND
-				assoc_type = ? AND
-				assoc_id = ?',
+				setting_name = ?',
 			array(
 				(int) $userId,
-				$name,
-				(int) $assocType,
-				(int) $assocId
+				$name
 			)
 		);
 

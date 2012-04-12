@@ -22,10 +22,11 @@
 	<div id="chair">
 	<ol class="editorialTeam">
 		{foreach from=$chair item=chair} 
-			<li><dd><strong>{$chair->getFullName()|escape}</strong>{if $chair->getLocalizedAffiliation()}, {$chair->getLocalizedAffiliation()|escape}{/if}</li>
+			<li><dd><strong>{$chair->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($chair->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($chair->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
+	{$chairFoA}
 {elseif count($secretary) == 0}
 Administration problem: No Chair.
 {/if}
@@ -35,7 +36,7 @@ Administration problem: No Chair.
 	<div id="cochair">
 	<ol class="editorialTeam">
 		{foreach from=$cochair item=cochair} 
-			<li><dd><strong>{$cochair->getFullName()|escape}</strong>{if $cochair->getLocalizedAffiliation()}, {$cochair->getLocalizedAffiliation()|escape}{/if}</li>
+			<li><dd><strong>{$cochair->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($cochair->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($cochair->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
@@ -45,12 +46,12 @@ Administration problem: No Co-hair.
 
 <h4><br />{translate key="user.ercrole.secretariat"}</h4>
 
-<h5><dd>{translate key="user.role.editor"}</h5>
+<h5><dd><u>{translate key="user.role.editor"}</u></h5>
 {if count($secretary) == 1}
 	<div id="secretary">
 	<ol class="editorialTeam">
 		{foreach from=$secretary item=secretary} 
-			<li><dd><strong>{$secretary->getFullName()|escape}</strong>{if $secretary->getLocalizedAffiliation()}, {$secretary->getLocalizedAffiliation()|escape}{/if}</li>
+			<li><dd><strong>{$secretary->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($secretary->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($secretary->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
@@ -58,12 +59,12 @@ Administration problem: No Co-hair.
 Administration problem: No Secretary.
 {/if}
 
-<h5><dd><br />{translate key="user.role.sectionEditors"}</h5>
+<h5><dd><br /><u>{translate key="user.role.sectionEditors"}</u></h5>
 {if count($adsecretary) == 1}
 	<div id="adsecretary">
 	<ol class="editorialTeam">
 		{foreach from=$adsecretary item=adsecretary} 
-			<li><dd><strong>{$adsecretary->getFullName()|escape}</strong>{if $adsecretary->getLocalizedAffiliation()}, {$adsecretary->getLocalizedAffiliation()|escape}{/if}</li>
+			<li><dd><strong>{$adsecretary->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($adsecretary->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($adsecretary->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
@@ -76,7 +77,7 @@ Administration problem: No Secretary Administrative Assistant.
 	<div id="ercmembers">
 	<ol class="editorialTeam">
 		{foreach from=$ercmembers item=ercmembers} 
-			<li><br /><dd><strong>{$ercmembers->getFullName()|escape}</strong>{if $ercmembers->getLocalizedAffiliation()}, {$ercmembers->getLocalizedAffiliation()|escape}{/if}</li>
+			<li><br /><dd><strong>{$ercmembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($ercmembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($ercmembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
@@ -89,7 +90,7 @@ Administration problem: No Members.
 	<div id="ercmembers">
 	<ol class="editorialTeam">
 		{foreach from=$extmembers item=extmembers} 
-			<li><br /><dd><strong>{$extmembers->getFullName()|escape}</strong>{if $extmembers->getLocalizedAffiliation()}, {$extmembers->getLocalizedAffiliation()|escape}{/if}</li>
+			<li><br /><dd><strong>{$extmembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($extmembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($extmembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
