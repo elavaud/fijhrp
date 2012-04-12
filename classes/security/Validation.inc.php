@@ -312,25 +312,7 @@ class Validation {
 	function isEditor($journalId = -1) {
 		return Validation::isAuthorized(ROLE_ID_EDITOR, $journalId);
 	}
-
-	/**
-	 * Shortcut for checking authorization as section editor.
-	 * @param $journalId int
-	 * @return boolean
-	 */
-	function isSectionEditor($journalId = -1) {
-		return Validation::isAuthorized(ROLE_ID_SECTION_EDITOR, $journalId);
-	}
-
-	/**
-	 * Shortcut for checking authorization as layout editor.
-	 * @param $journalId int
-	 * @return boolean
-	 */
-	function isLayoutEditor($journalId = -1) {
-		return Validation::isAuthorized(ROLE_ID_LAYOUT_EDITOR, $journalId);
-	}
-
+	
 	/**
 	 * Shortcut for checking authorization as reviewer.
 	 * @param $journalId int
@@ -339,25 +321,7 @@ class Validation {
 	function isReviewer($journalId = -1) {
 		return Validation::isAuthorized(ROLE_ID_REVIEWER, $journalId);
 	}
-
-	/**
-	 * Shortcut for checking authorization as copyeditor.
-	 * @param $journalId int
-	 * @return boolean
-	 */
-	function isCopyeditor($journalId = -1) {
-		return Validation::isAuthorized(ROLE_ID_COPYEDITOR, $journalId);
-	}
-
-	/**
-	 * Shortcut for checking authorization as proofreader.
-	 * @param $journalId int
-	 * @return boolean
-	 */
-	function isProofreader($journalId = -1) {
-		return Validation::isAuthorized(ROLE_ID_PROOFREADER, $journalId);
-	}
-
+	
 	/**
 	 * Shortcut for checking authorization as author.
 	 * @param $journalId int
@@ -366,25 +330,7 @@ class Validation {
 	function isAuthor($journalId = -1) {
 		return Validation::isAuthorized(ROLE_ID_AUTHOR, $journalId);
 	}
-
-	/**
-	 * Shortcut for checking authorization as reader.
-	 * @param $journalId int
-	 * @return boolean
-	 */
-	function isReader($journalId = -1) {
-		return Validation::isAuthorized(ROLE_ID_READER, $journalId);
-	}
-
-	/**
-	 * Shortcut for checking authorization as subscription manager.
-	 * @param $journalId int
-	 * @return boolean
-	 */
-	function isSubscriptionManager($journalId = -1) {
-		return Validation::isAuthorized(ROLE_ID_SUBSCRIPTION_MANAGER, $journalId);
-	}
-
+	
 	/**
 	 * Check whether a user is allowed to administer another user.
 	 * @param $journalId int
@@ -410,6 +356,75 @@ class Validation {
 		// There were no conflicting roles.
 		return true;
 	}
+	
+	/********************************************************/	
+	/* Commented out by EL on April 4 2012 - un-useful roles*/
+	/********************************************************/			
+	/**
+	 * Shortcut for checking authorization as section editor.
+	 * @param $journalId int
+	 * @return boolean
+	 */
+	/*
+	function isSectionEditor($journalId = -1) {
+		return Validation::isAuthorized(ROLE_ID_SECTION_EDITOR, $journalId);
+	}
+	*/
+	
+	/**
+	 * Shortcut for checking authorization as layout editor.
+	 * @param $journalId int
+	 * @return boolean
+	 */ 
+	/*
+	function isLayoutEditor($journalId = -1) {
+		return Validation::isAuthorized(ROLE_ID_LAYOUT_EDITOR, $journalId);
+	}
+	*/
+	
+	/**
+	 * Shortcut for checking authorization as copyeditor.
+	 * @param $journalId int
+	 * @return boolean
+	 */
+	/*
+	function isCopyeditor($journalId = -1) {
+		return Validation::isAuthorized(ROLE_ID_COPYEDITOR, $journalId);
+	}
+	*/
+	
+	/**
+	 * Shortcut for checking authorization as proofreader.
+	 * @param $journalId int
+	 * @return boolean
+	 */
+	/*
+	function isProofreader($journalId = -1) {
+		return Validation::isAuthorized(ROLE_ID_PROOFREADER, $journalId);
+	}
+	*/
+	
+	/**
+	 * Shortcut for checking authorization as reader.
+	 * @param $journalId int
+	 * @return boolean
+	 */
+	/*
+	function isReader($journalId = -1) {
+		return Validation::isAuthorized(ROLE_ID_READER, $journalId);
+	}
+	*/
+	
+	/**
+	 * Shortcut for checking authorization as subscription manager.
+	 * @param $journalId int
+	 * @return boolean
+	 */
+	/*
+	function isSubscriptionManager($journalId = -1) {
+		return Validation::isAuthorized(ROLE_ID_SUBSCRIPTION_MANAGER, $journalId);
+	}
+	*/	
 }
 
 ?>

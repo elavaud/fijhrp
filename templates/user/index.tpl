@@ -13,11 +13,13 @@
 {include file="common/header.tpl"}
 {/strip}
 
+
 {if $isSiteAdmin}
 	{assign var="hasRole" value=1}
 	&#187; <a href="{url journal="index" page=$isSiteAdmin->getRolePath()}">{translate key=$isSiteAdmin->getRoleName()}</a>
 	{call_hook name="Templates::User::Index::Site"}
 {/if}
+
 
 <div id="myJournals">
 {if !$currentJournal}<h3>{translate key="user.myJournals"}</h3>{/if}

@@ -30,13 +30,6 @@ p {
 	border: 1px solid gray;
 }
 
-.separator {
-	border-bottom: 0px;
-	padding-top: 3px !important;
-	padding-bottom: 3px;
-}
-
-
 input.textField, select.selectMenu, textarea.textArea, input.uploadField, input.button {
 	font-family: verdana, helvetica, sans-serif;
 	border-top: gray 1px solid;
@@ -44,21 +37,41 @@ input.textField, select.selectMenu, textarea.textArea, input.uploadField, input.
 	border-bottom: gray 1px solid;
 	border-right: gray 1px solid;
 	background-color: white;
-	
+	margin: 2px 1px;
+	padding: auto;
+}
+
+input.textField{
+	margin-bottom: 2px;
+	padding: 1px;
 }
 
 input.button {
 	color: #FBFBF3;
 	font-weight: bold;
 	background-color: #1e7fb8;
+	padding: 2px;
 }
 
 input.defaultButton{
 	background-color: #1e7fb8;
+	padding: 2px;
+
+}
+
+input.hasDatepicker{
+	width: 200px;
+	height: 18px;
 }
 
 span.disabled, label.disabled {
 	font-weight: bold;
+}
+
+.separator {
+	border-bottom: 0px;
+	padding-top: 3px !important;
+	padding-bottom: 3px;
 }
 
 /* link */
@@ -97,8 +110,13 @@ a:hover {
 	background-color: #F5F5F5;
     width: 980px !important;
 	border-bottom: 1px solid #CCCCCC;
-	position: absolute;
+	position: relative;
 	top: 105px;
+	left: -5px;
+}
+
+form{
+	width: 100%;
 }
 
 #header h1{
@@ -139,11 +157,9 @@ a:hover {
 }
 
 #content{
-	font-size: 12px;
 	border-top: 1px dotted #CCC;
 
 }
-
 
 #content h2,#content h3,#content h4,#content h5, #content h6 {
 	font-family: verdana, helvetica, sans-serif;
@@ -151,6 +167,18 @@ a:hover {
 
 #content h3 {
 	font-size: 16px;
+}
+
+#content h4 {
+	font-size: 15px;
+}
+
+#content h5 {
+	font-size: 14px;
+}
+
+#content h6 {
+	font-size: 13px;
 }
 
 #breadcrumb  a {
@@ -173,12 +201,12 @@ a:hover {
 }
 
 #footer{
-    color: transparent;
+    color: whiteSmoke;
 	background-image: url("images/wpro_footer.png");
 	background-position: left bottom;
 	background-repeat: no-repeat;
     width: 990px !important;
 	height: 110px;
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 }
 

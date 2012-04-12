@@ -54,12 +54,15 @@
 	-->
 
 	<!-- Common Messages -->
-	<message key="common.openJournalSystems">WPRO Ethics Review Committee</message>
+    
+        <!-- Change "Journal Systems" by "WPRO Ethics Review Committee". EL April 4 2012 -->
+        <message key="common.openJournalSystems">WPRO Ethics Review Committee</message>
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
 	<message key="common.payment">Payment</message>
 	<message key="common.payments">Payments</message>
 	<message key="common.pageHeader.altText">Page Header</message>
 	<message key="common.homePageHeader.altText">Homepage Header</message>
+
 	<message key="common.journalHomepageImage.altText">Homepage Image</message>
 
 	<!-- Common Form Messages -->
@@ -71,7 +74,8 @@
 	<!-- Common Error Messages -->
 		
 	<!-- Navigation -->
-	<message key="navigation.journalHelp">Help</message>
+	<message key="navigation.journalHelp">WHO-WPRO, Research Registration Portal Help</message>
+
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
 	<message key="navigation.otherJournals">Other Sites</message>
@@ -100,13 +104,14 @@
 	<!--
 	 *
 	 * ENTITIES - This section contains terms pertaining to the system's
-	 *            major entities, e.g. Article, Journal, Section
+	 *            major entities, e.g. Article, WHO-WPRO, Research Registration Portal, Section
 	 *
 	-->
 
 	<!-- Common Section Terms -->
 	<message key="section.section">Section</message>
-	<message key="section.sections">Sections</message>
+	<message key="section.sections">WHO-WPRO, Research Registration Portal Sections</message>
+
 	<message key="section.title">Section title</message>
 	<message key="section.abbreviation">Abbreviation</message>
 	<message key="section.abbreviation.example">(For example, Proposals=PRO)</message>
@@ -119,7 +124,8 @@
 	<message key="article.authors">RTO</message> /*Replaced "Authors" with "RTO"*/
 	<message key="article.indexingInformation">Indexing Information</message>
 	<message key="article.metadata">Metadata</message>
-	<message key="article.journalSection">Section</message>
+	<message key="article.journalSection">WHO-WPRO, Research Registration Portal Section</message>
+
 	<message key="article.file">File</message>
 	<message key="article.suppFile">Supplementary File</message>
 	<message key="article.suppFiles">Supplementary File(s)</message>
@@ -133,7 +139,10 @@
 	<message key="article.coverageSample"> Research sample characteristics</message>
 	<message key="article.type">Type, method or approach</message>
 	<message key="article.language">Language</message>
-	<message key="article.sectionEditor">Secretary</message> /*replace section editor with Secretary */
+    
+        <!-- Changed "Secreatary" by "Secretary Administrative Assistant. EL April 4 2012-->
+        <message key="article.sectionEditor">Secretary Administrative Assistant</message> /*replace section editor with Secretary */
+        
 	<message key="article.commentsToEditor">RTO comments</message> /*replace Author to RTO */
 	<message key="article.submission">Submission</message>
 	<message key="article.submissions">Submissions</message>
@@ -250,9 +259,20 @@
 	<message key="user.noRoles.regReviewerClosed">Register as a ERC Member: ERC Member registration is currently disabled.</message>
 
 	<!-- Roles -->
-	<message key="user.role.manager">ERC Admin</message> /* Replaced Journal Manager to ERC Admin - spf */
-	<message key="user.role.editor">Secretary</message> /*Editor to Secretary*/
-	<message key="user.role.sectionEditor">Secretary</message> /*SectionEditor to Secretary*/
+        <!-- Replaced Journal Manager with ERC Admin - spf -->
+        <message key="user.role.manager">ERC Admin</message>
+        <!-- Replaced Editor with Secretary - spf -->
+        <message key="user.role.editor">Secretary</message>
+        <!-- Replaced "Secretary" by "Secretary Administrative Assistants". EL April 4 2012-->
+        <message key="user.role.sectionEditor">Secretary Administrative Assistant</message> /*SectionEditor to Secretary*/
+        
+        <!-- Added ERC roles. EL April 10 2012-->
+        <message key="user.ercrole.chair">Chair</message>
+        <message key="user.ercrole.cochair">Co-chair</message>
+        <message key="user.ercrole.secretariat">Secretariat</message>
+        <message key="user.ercrole.ercmembers">Members</message>
+        <message key="user.ercrole.extreviewers">External Reviewers (Non-affiliated members)</message>
+        
 	<message key="user.role.reviewer">ERC Member</message> /* Reviewer to ERC Member */
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>
@@ -260,8 +280,11 @@
 	<message key="user.role.author">RTO</message> /*Author to RTO */
 	<message key="user.role.subscriptionManager">Subscription Manager</message>
 	<message key="user.role.managers">ERC Admins</message> /* Replaced Journal Managers with ERC Admins - spf */
-	<message key="user.role.editors">Secretary</message> /*Editor to Secretary*/
-	<message key="user.role.sectionEditors">Secretary</message> /* sectionEditor to Secretary*/
+    <message key="user.role.editors">Secretary</message> /*Editor to Secretary*/
+        
+        <!-- Replaced "Secratary" by "Secretary Administrative Assistant". EL April 4 2012-->
+        <message key="user.role.sectionEditors">Secretary Administrative Assitant</message> /* sectionEditor to Secretary*/
+        
 	<message key="user.role.layoutEditors">Layout Editors</message>
 	<message key="user.role.copyeditors">Copyeditors</message>
 	<message key="user.role.proofreaders">Proofreaders</message>
@@ -901,12 +924,15 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="archive.browse">Browse through the older issues</message>
 	<message key="archive.issueUnavailable">Issue Unavailable</message>
 	
-	<!-- About The Journal -->
+	<!-- About The WHO-WPRO Research Registration Portal -->
 	<message key="about.statistics">Statistics</message>
-	<message key="about.journalContact">Journal Contact</message>
-	<message key="about.aboutTheJournal">About the Journal</message>
-	<message key="about.history">Journal History</message>
-	<message key="about.editorialTeam">Editorial Team</message>
+	<message key="about.journalContact">The Ethics Review Committee - Secretariat</message>
+	<message key="about.aboutTheJournal">About the WHO-WPRO Research Registration Portal</message>
+	<message key="about.history">WHO-WPRO Research Registration Portal History</message>
+	
+        <!-- Changed "Editorial Team" by "WPRO-ERC Membership". EL April 10 2012 -->    
+        <message key="about.editorialTeam">WPRO-ERC Membership</message>
+        
 	<message key="about.editorialTeam.biography">Biography</message>
 	<message key="about.editorialPolicies">Editorial Policies</message>
 	<message key="about.focusAndScope">Focus and Scope</message>
@@ -917,8 +943,11 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="about.onlineSubmissions">Online Submissions</message>
 	<message key="about.onlineSubmissions.haveAccount">Already have a Username/Password for {$journalTitle}?</message>
 	<message key="about.onlineSubmissions.login">Go to Login</message>
-	<message key="about.onlineSubmissions.needAccount">Need a Username/Password?</message>
-	<message key="about.onlineSubmissions.registration">Go to Registration</message>
+        
+        <!-- Changed "Need a Username/Password" by "Need a username and a password?". EL April 11 2012-->
+        <message key="about.onlineSubmissions.needAccount">Need a username and a password?</message>
+	
+    <message key="about.onlineSubmissions.registration">Go to Registration</message>
 	<message key="about.onlineSubmissions.registrationRequired">Registration and login are required to submit items online and to check the status of current submissions.</message>
 	<message key="about.authorGuidelines">Author Guidelines</message>
 	<message key="about.submissionPreparationChecklist">Submission Preparation Checklist</message>
@@ -945,10 +974,10 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="about.subscriptionTypes.cost">Cost</message>
 	<message key="about.availableSubscriptionTypes">Subscription Types</message>
 	<message key="about.memberships">Memberships</message>
-	<message key="about.journalSponsorship">Journal Sponsorship</message>
+	<message key="about.journalSponsorship">WHO-WPRO Research Registration Portal Sponsorship</message>
 	<message key="about.aboutThisPublishingSystem">About this Publishing System</message>
 	<message key="about.aboutThisPublishingSystem.altText">OJS Editorial and Publishing Process</message>
-	<message key="about.aboutOJSJournal"><![CDATA[This journal uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
+	<message key="about.aboutOJSJournal"><![CDATA[This WHO-WPRO Research Registration Portal uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
 	<message key="about.aboutOJSSite"><![CDATA[This site uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
 	
 	<!-- Announcement -->
@@ -1130,15 +1159,15 @@ Your server currently supports mbstring: <strong>{$supportsMBString}</strong>]]>
 	<!-- RT Settings -->
 	<message key="rt.admin.settings">Reading Tool Options</message>
 
-	<message key="rt.admin.settings.description">The reading tools appear in a frame beside published items in the sections of the journal that have been designated for indexing. The reading tools consist of a set of optional tools related to the published item, listed below, and a set of tools that provide access to related items, organized by field and discipline.</message>
-	<message key="rt.admin.settings.enableReadingTools">Enable Reading Tools for designated sections of journal.</message>
+	<message key="rt.admin.settings.description">The reading tools appear in a frame beside published items in the sections of the WHO-WPRO Research Registration Portal that have been designated for indexing. The reading tools consist of a set of optional tools related to the published item, listed below, and a set of tools that provide access to related items, organized by field and discipline.</message>
+	<message key="rt.admin.settings.enableReadingTools">Enable Reading Tools for designated sections of WHO-WPRO Research Registration Portal.</message>
 	<message key="rt.admin.settings.relatedItems">Field</message>
 	<message key="rt.admin.settings.relatedItemsLink"><![CDATA[See <a href="{$relatedItemsLink}" class="action">Related Items Sets</a> to view, add, correct, or delete related items for each field.]]></message>
 
-	<message key="rt.admin.options">Journal Item Tools</message>
+	<message key="rt.admin.options">WHO-WPRO Research Registration Portal Item Tools</message>
 	<message key="rt.admin.relatedItems">Related Item Tools</message>
 
-	<message key="rt.admin.settings.addComment">Add comment (enables readers to post comments, with Journal Manager able to delete).</message>
+	<message key="rt.admin.settings.addComment">Add comment (enables readers to post comments, with WHO-WPRO Research Registration Portal Manager able to delete).</message>
 	<message key="rt.admin.settings.addComment.authenticated">Users must be registered and logged in to post, with anonymity not permitted.</message>
 	<message key="rt.admin.settings.addComment.anonymous">Users must be registered and logged in to post, with anonymity permitted.</message>
 	<message key="rt.admin.settings.addComment.unauthenticated">Users do not need to be registered to post, with anonymity permitted.</message>
@@ -1179,8 +1208,8 @@ Validation may fail on search URLs that require posted form data.]]></message>
 	
 	
 	<!-- Notification Types -->
-	<message key="notification.mailListDescription">Enter your email address to receive immediate notifications of important new content added to the journal.</message>
-	<message key="notification.notificationsPublicDescription">This page shows important updates associated with this journal such as new issues or announcements.  You may subscribe to these notifications through RSS feeds (by clicking on the images to the right), or <![CDATA[  <a href="{$emailUrl}">through email.</a>]]></message>
+	<message key="notification.mailListDescription">Enter your email address to receive immediate notifications of important new content added to the WHO-WPRO Research Registration Portal.</message>
+	<message key="notification.notificationsPublicDescription">This page shows important updates associated with this Research Registration Portal such as new issues or announcements.  You may subscribe to these notifications through RSS feeds (by clicking on the images to the right), or <![CDATA[  <a href="{$emailUrl}">through email.</a>]]></message>
 
 	<message key="notification.type.articleSubmitted">A new proposal, "{$param}", has been submitted.</message>
 	<message key="notification.type.copyeditComment">A copyeditor has left a comment on "{$param}".</message>

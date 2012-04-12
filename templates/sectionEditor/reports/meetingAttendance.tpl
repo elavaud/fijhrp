@@ -11,7 +11,6 @@
 {include file="common/header.tpl"}
 {/strip}
 
-
 <ul class="menu">
 	<li><a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a></li>
 	<li class="current"><a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a></li>

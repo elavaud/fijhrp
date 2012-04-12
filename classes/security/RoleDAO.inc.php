@@ -404,24 +404,25 @@ class RoleDAO extends DAO {
 				return 'user.role.manager' . ($plural ? 's' : '');
 			case ROLE_ID_EDITOR:
 				return 'user.role.editor' . ($plural ? 's' : '');
-			case ROLE_ID_SECTION_EDITOR:
-				return 'user.role.sectionEditor' . ($plural ? 's' : '');
-			case ROLE_ID_LAYOUT_EDITOR:
-				return 'user.role.layoutEditor' . ($plural ? 's' : '');
 			case ROLE_ID_REVIEWER:
 				return 'user.role.reviewer' . ($plural ? 's' : '');
-			case ROLE_ID_COPYEDITOR:
-				return 'user.role.copyeditor' . ($plural ? 's' : '');
-			case ROLE_ID_PROOFREADER:
-				return 'user.role.proofreader' . ($plural ? 's' : '');
 			case ROLE_ID_AUTHOR:
 				return 'user.role.author' . ($plural ? 's' : '');
-			case ROLE_ID_READER:
-				return 'user.role.reader' . ($plural ? 's' : '');
-			case ROLE_ID_SUBSCRIPTION_MANAGER:
-				return 'user.role.subscriptionManager' . ($plural ? 's' : '');
-			default:
-				return '';
+			default: return '';
+			
+			/* Commented out by EL on April 4 2012 - un-useful roles */
+			//case ROLE_ID_SECTION_EDITOR:
+			//	return 'user.role.sectionEditor' . ($plural ? 's' : '');
+			//case ROLE_ID_LAYOUT_EDITOR:
+			//	return 'user.role.layoutEditor' . ($plural ? 's' : '');
+			//case ROLE_ID_COPYEDITOR:
+			//	return 'user.role.copyeditor' . ($plural ? 's' : '');
+			//case ROLE_ID_PROOFREADER:
+			//	return 'user.role.proofreader' . ($plural ? 's' : '');
+			//case ROLE_ID_READER:
+			//	return 'user.role.reader' . ($plural ? 's' : '');
+			//case ROLE_ID_SUBSCRIPTION_MANAGER:
+			//	return 'user.role.subscriptionManager' . ($plural ? 's' : '');
 		}
 	}
 
@@ -438,24 +439,26 @@ class RoleDAO extends DAO {
 				return 'manager';
 			case ROLE_ID_EDITOR:
 				return 'editor';
-			case ROLE_ID_SECTION_EDITOR:
-				return 'sectionEditor';
-			case ROLE_ID_LAYOUT_EDITOR:
-				return 'layoutEditor';
 			case ROLE_ID_REVIEWER:
 				return 'reviewer';
-			case ROLE_ID_COPYEDITOR:
-				return 'copyeditor';
-			case ROLE_ID_PROOFREADER:
-				return 'proofreader';
 			case ROLE_ID_AUTHOR:
 				return 'author';
-			case ROLE_ID_READER:
-				return 'reader';
-			case ROLE_ID_SUBSCRIPTION_MANAGER:
-				return 'subscriptionManager';
 			default:
 				return '';
+				
+			/* Commented out by EL on April 4 2012 - un-useful roles */		
+			//case ROLE_ID_READER:
+			//	return 'reader';
+			//case ROLE_ID_SUBSCRIPTION_MANAGER:
+			//	return 'subscriptionManager';
+			//case ROLE_ID_SECTION_EDITOR:
+			//	return 'sectionEditor';
+			//case ROLE_ID_LAYOUT_EDITOR:
+			//	return 'layoutEditor';
+			//case ROLE_ID_COPYEDITOR:
+			//	return 'copyeditor';
+			//case ROLE_ID_PROOFREADER:
+			//	return 'proofreader';
 		}
 	}
 
@@ -472,24 +475,26 @@ class RoleDAO extends DAO {
 				return ROLE_ID_JOURNAL_MANAGER;
 			case 'editor':
 				return ROLE_ID_EDITOR;
-			case 'sectionEditor':
-				return ROLE_ID_SECTION_EDITOR;
-			case 'layoutEditor':
-				return ROLE_ID_LAYOUT_EDITOR;
 			case 'reviewer':
 				return ROLE_ID_REVIEWER;
-			case 'copyeditor':
-				return ROLE_ID_COPYEDITOR;
-			case 'proofreader':
-				return ROLE_ID_PROOFREADER;
 			case 'author':
 				return ROLE_ID_AUTHOR;
-			case 'reader':
-				return ROLE_ID_READER;
-			case 'subscriptionManager':
-				return ROLE_ID_SUBSCRIPTION_MANAGER;
 			default:
 				return null;
+				
+			/* Commented out by EL on April 4 2012 - un-useful roles */		
+			//case 'sectionEditor':
+			//	return ROLE_ID_SECTION_EDITOR;
+			//case 'layoutEditor':
+			//	return ROLE_ID_LAYOUT_EDITOR;
+			//case 'copyeditor':
+			//	return ROLE_ID_COPYEDITOR;
+			//case 'proofreader':
+			//	return ROLE_ID_PROOFREADER;
+			//case 'reader':
+			//	return ROLE_ID_READER;
+			//case 'subscriptionManager':
+			//	return ROLE_ID_SUBSCRIPTION_MANAGER;
 		}
 	}
 

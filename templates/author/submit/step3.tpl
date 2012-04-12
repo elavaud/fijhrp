@@ -364,7 +364,7 @@
 {* Last updated by AIM, 12.24.2011 *}
 {foreach from=$proposalCountry[$formLocale] key=i item=country}
             <tr valign="top" {if $i == 0}id="firstProposalCountry"{/if} class="proposalCountry">
-                <td width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
+                <td title="Specify the country/countries where proposal will be implemented." width="20%" class="label">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</td>
                 <td width="80%" class="value">
                     <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
                         <option value=""></option>

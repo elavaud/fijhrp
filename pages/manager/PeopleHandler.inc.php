@@ -83,30 +83,33 @@ class PeopleHandler extends ManagerHandler {
 				case ROLE_ID_EDITOR:
 					$helpTopicId = 'journal.roles.editor';
 					break;
-				case ROLE_ID_SECTION_EDITOR:
-					$helpTopicId = 'journal.roles.sectionEditor';
-					break;
-				case ROLE_ID_LAYOUT_EDITOR:
-					$helpTopicId = 'journal.roles.layoutEditor';
-					break;
+				/* Commented out by EL on April 4 2012 */
+				//case ROLE_ID_SECTION_EDITOR:
+				//	$helpTopicId = 'journal.roles.sectionEditor';
+				//	break;
+				//case ROLE_ID_LAYOUT_EDITOR:
+				//	$helpTopicId = 'journal.roles.layoutEditor';
+				//	break;
 				case ROLE_ID_REVIEWER:
 					$helpTopicId = 'journal.roles.reviewer';
 					break;
-				case ROLE_ID_COPYEDITOR:
-					$helpTopicId = 'journal.roles.copyeditor';
-					break;
-				case ROLE_ID_PROOFREADER:
-					$helpTopicId = 'journal.roles.proofreader';
-					break;
+				/* Commented out by EL on April 4 2012 */
+				//case ROLE_ID_COPYEDITOR:
+				//	$helpTopicId = 'journal.roles.copyeditor';
+				//	break;
+				//case ROLE_ID_PROOFREADER:
+				//	$helpTopicId = 'journal.roles.proofreader';
+				//	break;
 				case ROLE_ID_AUTHOR:
 					$helpTopicId = 'journal.roles.author';
 					break;
-				case ROLE_ID_READER:
-					$helpTopicId = 'journal.roles.reader';
-					break;
-				case ROLE_ID_SUBSCRIPTION_MANAGER:
-					$helpTopicId = 'journal.roles.subscriptionManager';
-					break;
+				/* Commented out by EL on April 4 2012 */
+				//case ROLE_ID_READER:
+				//	$helpTopicId = 'journal.roles.reader';
+				//	break;
+				//case ROLE_ID_SUBSCRIPTION_MANAGER:
+				//	$helpTopicId = 'journal.roles.subscriptionManager';
+				//	break;
 				default:
 					$helpTopicId = 'journal.roles.index';
 					break;

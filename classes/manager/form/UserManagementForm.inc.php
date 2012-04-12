@@ -86,8 +86,9 @@ class UserManagementForm extends Form {
 				'' => 'manager.people.doNotEnroll',
 				'manager' => 'user.role.manager',
 				'editor' => 'user.role.editor',
-				'sectionEditor' => 'user.role.sectionEditor',
+				//'sectionEditor' => 'user.role.sectionEditor',
 				);
+		
 		foreach($rolePrefs as $roleKey=>$use) {
 			if($use){
 				switch($roleKey){
@@ -192,6 +193,7 @@ class UserManagementForm extends Form {
 				$this->userId = null;
 			}
 		}
+		
 		if (!isset($this->userId)) {
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
 			$roleId = Request::getUserVar('roleId');
