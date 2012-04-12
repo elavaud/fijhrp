@@ -32,7 +32,7 @@ class WhorrpThemePlugin extends ThemePlugin {
 	}
 
 	function getDescription() {
-		return 'Whorrp layout';
+		return 'WHO Western Pacific Region layout';
 	}
 
 	function getStylesheetFilename() {

@@ -221,7 +221,7 @@
 	<message key="submissions.proof">Proof</message>
 	<message key="submissions.editorDecision">ERC Decision</message> /*Editor decision to ERC Decision*/
 	<message key="submissions.editorRuling">ERC Ruling</message>
-	<message key="submission.eventLog">Event Log</message>
+	<message key="submission.eventLog">{$id} Event Log</message>
 
 	<!-- Submission list search engine -->
 	<message key="submissions.copyeditComplete">Copyedited</message>

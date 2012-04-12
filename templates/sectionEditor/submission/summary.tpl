@@ -23,10 +23,12 @@
 		<td class="label">{translate key="article.title"}</td>
 		<td>{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
 	</tr>
+<!-- Edited out "Section - Articles"  12Apr2012 -spf
 	<tr>
 		<td class="label">{translate key="section.section"}</td>
 		<td>{$submission->getSectionTitle()|escape}</td>
 	</tr>
+--> 
 	<tr>
 		<td class="label">{translate key="user.role.editor"}</td>
 		<td>

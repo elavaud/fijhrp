@@ -21,7 +21,7 @@
 	</div>
 </form>
 <a href="javascript:document.revise.submit()" class="action">{translate key="search.reviseSearch"}</a>&nbsp;&nbsp;
-<a href="javascript:document.generate.submit()" class="action">Generate CSV</a><br />
+<a href="javascript:document.generate.submit()" class="action">| Export Search Results</a><br />
 <form name="generate" action="{url op="generateCSV"}" method="post">
 	<input type="hidden" name="query" value="{$query|escape}"/>
 	<div style="display:none">

@@ -10,7 +10,7 @@
  * $Id$
  *}
 {strip}
-{assign var="pageTitle" value="submission.notes"}
+{translate|assign:"pageTitleTranslated" key="submission.notes" id=$submission->getWhoId($submission->getLocale())}
 {assign var="pageCrumbTitle" value="submission.notes.breadcrumb"}
 {include file="common/header.tpl"}
 {/strip}
@@ -49,7 +49,10 @@
 <ul class="menu">
 	<li><a href="{url op="submission" path=$submission->getArticleId()}">{translate key="submission.summary"}</a></li>
 	{if $canReview}<li><a href="{url op="submissionReview" path=$submission->getArticleId()}">{translate key="submission.review"}</a></li>{/if}
+
+{* Edited out "Editing" - 12 Apr 2012 - spf
 	{if $canEdit}<li><a href="{url op="submissionEditing" path=$submission->getArticleId()}">{translate key="submission.editing"}</a></li>{/if}
+*}
 	<li><a href="{url op="submissionHistory" path=$submission->getArticleId()}">{translate key="submission.history"}</a></li>
 </ul>
 
@@ -65,7 +68,7 @@
 
 <div id="submissionNotes">
 {if $noteViewType == "edit"}
-<h3>{translate key="submission.notes"}</h3>
+<h3>Submission Notes</h3>
 <form name="editNote" method="post" action="{url op="updateSubmissionNote"}" enctype="multipart/form-data">
 	<input type="hidden" name="articleId" value="{$articleNote->getArticleId()}" />
 	<input type="hidden" name="noteId" value="{$articleNote->getId()}" />
@@ -119,7 +122,7 @@
 	<input type="submit" class="button defaultButton" value="{translate key="submission.notes.createNewNote"}" />
 	</form>
 {else}
-<h3>{translate key="submission.notes"}</h3>
+<h3>Submission Notes</h3>
 
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>

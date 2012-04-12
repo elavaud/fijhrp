@@ -10,7 +10,7 @@
  * $Id$
  *}
 {strip}
-{assign var="pageTitle" value="submission.emailLog"}
+{translate|assign:"pageTitleTranslated" key="submission.emailLog" id=$submission->getWhoId($submission->getLocale())}
 {include file="common/header.tpl"}
 {/strip}
 
