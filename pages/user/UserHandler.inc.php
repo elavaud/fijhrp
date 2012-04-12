@@ -30,7 +30,6 @@ class UserHandler extends Handler {
 	 */
 	function index() {
 		$this->validate();
-
 		$sessionManager =& SessionManager::getManager();
 		$session =& $sessionManager->getUserSession();
 
@@ -51,11 +50,11 @@ class UserHandler extends Handler {
 
 		if ($journal == null) { // Curently at site level
 			unset($journal);
-
+			
 			// Show roles for all journals
 			$journalDao =& DAORegistry::getDAO('JournalDAO');
 			$journals =& $journalDao->getJournals();
-
+						
 			// Fetch the user's roles for each journal
 			while ($journal =& $journals->next()) {
 				$journalId = $journal->getId();
@@ -76,15 +75,14 @@ class UserHandler extends Handler {
 			$templateMgr->assign('showAllJournals', 1);
 
 		} else { // Currently within a journal's context.
+				
 			$journalId = $journal->getId();
 			
 			// Determine if journal setup is incomplete, to provide a message for JM
 			$setupIncomplete[$journalId] = $this->checkIncompleteSetup($journal);
 			
-			$userJournals = array($journal);
-			
-			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid);
-			
+			$userJournals = array($journal);		
+			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid);			
 			$subscriptionTypeDAO =& DAORegistry::getDAO('SubscriptionTypeDAO');
 			$subscriptionsEnabled = $journal->getSetting('publishingMode') ==  PUBLISHING_MODE_SUBSCRIPTION
 				&& ($subscriptionTypeDAO->subscriptionTypesExistByInstitutional($journalId, false)
@@ -181,51 +179,59 @@ class UserHandler extends Handler {
 	 * @param $journalId int 
 	 * @param $submissionsCount array reference
 	 * @param $isValid array reference
-	
+	 *
+	 * New Version by EL on April 11 2012 -> Commented out some un-useful roles
+	 *
 	 */
 	function getRoleDataForJournal($userId, $journalId, &$submissionsCount, &$isValid) {
-		if (Validation::isJournalManager($journalId)) {
-			$journalDao =& DAORegistry::getDAO('JournalDAO');
-			$isValid["JournalManager"][$journalId] = true;
-		}
+/*
 		if (Validation::isSubscriptionManager($journalId)) {
 			$isValid["SubscriptionManager"][$journalId] = true;
+		}
+	
+		if (Validation::isCopyeditor($journalId)) {
+			$copyeditorSubmissionDao =& DAORegistry::getDAO('CopyeditorSubmissionDAO');
+			$submissionsCount["Copyeditor"][$journalId] = $copyeditorSubmissionDao->getSubmissionsCount($userId, $journalId);
+			$isValid["Copyeditor"][$journalId] = true;
+		}
+	
+		if (Validation::isLayoutEditor($journalId)) {
+			$layoutEditorSubmissionDao =& DAORegistry::getDAO('LayoutEditorSubmissionDAO');
+			$submissionsCount["LayoutEditor"][$journalId] = $layoutEditorSubmissionDao->getSubmissionsCount($userId, $journalId);
+			$isValid["LayoutEditor"][$journalId] = true;
+		}
+	
+		if (Validation::isSectionEditor($journalId)) {
+			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+			$submissionsCount["SectionEditor"][$journalId] = $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($userId, $journalId);
+			$isValid["SectionEditor"][$journalId] = true;
+		}
+
+		if (Validation::isProofreader($journalId)) {
+			$proofreaderSubmissionDao =& DAORegistry::getDAO('ProofreaderSubmissionDAO');
+			$submissionsCount["Proofreader"][$journalId] = $proofreaderSubmissionDao->getSubmissionsCount($userId, $journalId);
+			$isValid["Proofreader"][$journalId] = true;
+		}
+*/		
+		if (Validation::isJournalManager($journalId)) {
+			$journalDao =& DAORegistry::getDAO('JournalDAO');
+			$isValid["JournalManager"][$journalId] = true;			
 		}
 		if (Validation::isAuthor($journalId)) {
 			$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 			$submissionsCount["Author"][$journalId] = $authorSubmissionDao->getSubmissionsCount($userId, $journalId);
 			$isValid["Author"][$journalId] = true;
 		}
-		if (Validation::isCopyeditor($journalId)) {
-			$copyeditorSubmissionDao =& DAORegistry::getDAO('CopyeditorSubmissionDAO');
-			$submissionsCount["Copyeditor"][$journalId] = $copyeditorSubmissionDao->getSubmissionsCount($userId, $journalId);
-			$isValid["Copyeditor"][$journalId] = true;
-		}
-		if (Validation::isLayoutEditor($journalId)) {
-			$layoutEditorSubmissionDao =& DAORegistry::getDAO('LayoutEditorSubmissionDAO');
-			$submissionsCount["LayoutEditor"][$journalId] = $layoutEditorSubmissionDao->getSubmissionsCount($userId, $journalId);
-			$isValid["LayoutEditor"][$journalId] = true;
-		}
 		if (Validation::isEditor($journalId)) {
 			$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
 			$submissionsCount["Editor"][$journalId] = $editorSubmissionDao->getEditorSubmissionsCount($journalId);
 			$isValid["Editor"][$journalId] = true;
-		}
-		if (Validation::isSectionEditor($journalId)) {
-			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-			$submissionsCount["SectionEditor"][$journalId] = $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($userId, $journalId);
-			$isValid["SectionEditor"][$journalId] = true;
-		}
-		if (Validation::isProofreader($journalId)) {
-			$proofreaderSubmissionDao =& DAORegistry::getDAO('ProofreaderSubmissionDAO');
-			$submissionsCount["Proofreader"][$journalId] = $proofreaderSubmissionDao->getSubmissionsCount($userId, $journalId);
-			$isValid["Proofreader"][$journalId] = true;
-		}
+		}		
 		if (Validation::isReviewer($journalId)) {
 			$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
 			$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsForERCReviewCount($userId, $journalId);
 			//$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsCount($userId, $journalId);
-			$isValid["Reviewer"][$journalId] = true;
+			$isValid["Reviewer"][$journalId] = true;			
 		}
 	}
 	

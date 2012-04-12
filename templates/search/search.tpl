@@ -41,7 +41,7 @@ function ensureKeyword() {
 </tr>
 <tr valign="top">
 	<td class="formSubLabel"><h4>{translate key="search.date"}</h4></td>
-	<td>&nbsp;</td>
+	{*<td>&nbsp;</td>*}
 </tr>
 <tr valign="top">
 	<td class="label">{translate key="search.dateFrom"}</td>

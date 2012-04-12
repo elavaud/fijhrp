@@ -61,7 +61,9 @@ class PKPUserSettingsDAO extends DAO {
 	 * @param $assocId int
 	 * @return DAOResultFactory matching Users
 	 */
-	function &getUsersBySetting($name, $value, $type = null, $assocType = null, $assocId = null) {
+	 
+	// Function changed by EL on April 10 2012
+	function &getUsersBySetting($name, $value) {
 		$userDao =& DAORegistry::getDAO('UserDAO');
 
 		$value = $this->convertToDB($value, $type);
@@ -71,10 +73,8 @@ class PKPUserSettingsDAO extends DAO {
 				user_settings s
 			WHERE	u.user_id = s.user_id AND
 				s.setting_name = ? AND
-				s.setting_value = ? AND
-				s.assoc_type = ? AND
-				s.assoc_id = ?',
-			array($name, $value, (int) $assocType, (int) $assocId)
+				s.setting_value = ?',
+			array($name, $value)
 		);
 
 		$returner = new DAOResultFactory($result, $userDao, '_returnUserFromRow');

@@ -1,3 +1,4 @@
+
 <?php
 
 import('lib.pkp.classes.who.MeetingAttendance');

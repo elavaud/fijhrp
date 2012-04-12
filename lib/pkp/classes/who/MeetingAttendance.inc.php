@@ -6,7 +6,7 @@ class MeetingAttendance extends DataObject {
 		parent::DataObject();
 	}
 	
-function setId($meetingId) {
+	function setId($meetingId) {
 		$this->setData('meetingId', $meetingId);
 	}
 	
@@ -46,3 +46,5 @@ function setId($meetingId) {
 		return $this->getData('remarks');
 	}
 }
+
+?>

@@ -67,6 +67,13 @@
 		{if !$hideRegisterLink}&#187; <a href="{url page="user" op=$registerOp}">{translate key=$registerLocaleKey}</a><br />{/if}
 		&#187; <a href="{url page="login" op="lostPassword"}">{translate key="user.login.forgotPassword"}</a>
 	</p>
+	
+	<p>
+	{** Registration link added by EL on April 11 2012 *}
+	<br />{translate key="about.onlineSubmissions.needAccount"}<br /><br />
+	&#187; <a href="{url page="user" op="register"}" class="action">{translate key="about.onlineSubmissions.registration"}</a>
+	</p>
+	
 {/if}{* !$implicitAuth *}
 
 <script type="text/javascript">

@@ -26,26 +26,17 @@
 </ul>
 </div>
 <div id="aboutPolicies">
+
 <h3>{translate key="about.policies"}</h3>
 <ul class="plain">
-	{if $currentJournal->getLocalizedSetting('focusScopeDesc') != ''}<li>&#187; <a href="{url op="editorialPolicies" anchor="focusAndScope"}">{translate key="about.focusAndScope"}</a></li>{/if}
-	<li>&#187; <a href="{url op="editorialPolicies" anchor="sectionPolicies"}">{translate key="about.sectionPolicies"}</a></li>
-	{if $currentJournal->getLocalizedSetting('reviewPolicy') != ''}<li>&#187; <a href="{url op="editorialPolicies" anchor="peerReviewProcess"}">{translate key="about.peerReviewProcess"}</a></li>{/if}
-	{if $currentJournal->getLocalizedSetting('pubFreqPolicy') != ''}<li>&#187; <a href="{url op="editorialPolicies" anchor="publicationFrequency"}">{translate key="about.publicationFrequency"}</a></li>{/if}
-	{if $currentJournal->getSetting('publishingMode') == $smarty.const.PUBLISHING_MODE_OPEN && $currentJournal->getLocalizedSetting('openAccessPolicy') != ''}<li>&#187; <a href="{url op="editorialPolicies" anchor="openAccessPolicy"}">{translate key="about.openAccessPolicy"}</a></li>{/if}
-	{if $journalSettings.enableLockss && $currentJournal->getLocalizedSetting('lockssLicense') != ''}<li>&#187; <a href="{url op="editorialPolicies" anchor="archiving"}">{translate key="about.archiving"}</a></li>{/if}
-	{if $paymentConfigured && $journalSettings.journalPaymentsEnabled && $journalSettings.membershipFeeEnabled && $journalSettings.membershipFee > 0}<li>&#187; <a href="{url op="memberships"}">{translate key="about.memberships"}</a></li>{/if}
-	{if $currentJournal->getSetting('publishingMode') == $smarty.const.PUBLISHING_MODE_SUBSCRIPTION}
-		<li>&#187; <a href="{url op="subscriptions"}">{translate key="about.subscriptions"}</a></li>
-		{if !empty($journalSettings.enableAuthorSelfArchive)}<li>&#187; <a href="{url op="editorialPolicies" anchor="authorSelfArchivePolicy"}">{translate key="about.authorSelfArchive"}</a></li>{/if}
-		{if !empty($journalSettings.enableDelayedOpenAccess)}<li>&#187; <a href="{url op="editorialPolicies" anchor="delayedOpenAccessPolicy"}">{translate key="about.delayedOpenAccess"}</a></li>{/if}
-	{/if}{* $currentJournal->getSetting('publishingMode') == $smarty.const.PUBLISHING_MODE_SUBSCRIPTION *}
-	{foreach key=key from=$customAboutItems item=customAboutItem}
-		{if $customAboutItem.title!=''}<li>&#187; <a href="{url op="editorialPolicies" anchor=custom-$key}">{$customAboutItem.title|escape}</a></li>{/if}
-	{/foreach}
-	{call_hook name="Templates::About::Index::Policies"}
+
+{* "policie" page changed for SOP pdf by EL on April 10 2012*}
+<li>&#187; <a title="WPRO Standard Operating Procedures" href="/public/WPRO_ERC_SOP_Final2010_web.pdf" target="_blank">WPRO ERC Standard Operating Procedures.<br /></a></li>
 </ul>
 </div>
+
+{* "submissions" commented out by EL on April 12 2012 *}
+{*
 <div id="aboutSubmissions">
 <h3>{translate key="about.submissions"}</h3>
 <ul class="plain">
@@ -57,6 +48,10 @@
 	{call_hook name="Templates::About::Index::Submissions"}
 </ul>
 </div>
+*}
+
+{* "aboutOther" commented out by EL on April 4 2012 *}
+{*
 <div id="aboutOther">
 <h3>{translate key="about.other"}</h3>
 <ul class="plain">
@@ -68,6 +63,6 @@
 	{call_hook name="Templates::About::Index::Other"}
 </ul>
 </div>
-
+*}
 {include file="common/footer.tpl"}
 

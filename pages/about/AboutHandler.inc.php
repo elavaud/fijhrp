@@ -14,7 +14,6 @@
 
 // $Id$
 
-
 import('classes.handler.Handler');
 
 class AboutHandler extends Handler {
@@ -95,8 +94,11 @@ class AboutHandler extends Handler {
 
 	/**
 	 * Display contact page.
+	 * New Version by EL on April 10 2012
 	 */
 	function contact() {
+		
+		/*
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
 
@@ -109,31 +111,50 @@ class AboutHandler extends Handler {
 		$journalSettings =& $journalSettingsDao->getJournalSettings($journal->getId());
 		$templateMgr->assign_by_ref('journalSettings', $journalSettings);
 		$templateMgr->display('about/contact.tpl');
+		*/
+		
+		//New Version
+		
+		$this->setupTemplate(true);
+		$templateMgr =& TemplateManager::getManager();
+		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');	
+		
+		$secretary =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Secretary");
+		$secretary =& $secretary->toArray();
+		
+		$adsecretary =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Secretary Administrative Assistant");
+		$adsecretary =& $adsecretary->toArray();
+
+		$templateMgr->assign_by_ref('secretary', $secretary);
+		$templateMgr->assign_by_ref('adsecretary', $adsecretary);
+		
+		$templateMgr->display('about/contact.tpl');
 	}
 
 	/**
 	 * Display editorialTeam page.
+	 * New version by EL on April 10 2012
 	 */
 	function editorialTeam() {
+		/*
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
 		$this->setupTemplate(true);
-
+		
 		$journal =& Request::getJournal();
 		$templateMgr =& TemplateManager::getManager();
-
 		$countryDao =& DAORegistry::getDAO('CountryDAO');
 		$countries =& $countryDao->getCountries();
 		$templateMgr->assign_by_ref('countries', $countries);
 
 		// FIXME: This is pretty inefficient; should probably be cached.
 
-		if ($journal->getSetting('boardEnabled') != true) {
+		 if ($journal->getSetting('boardEnabled') != true) {
 			// Don't use the Editorial Team feature. Generate
-			// Editorial Team information using Role info.
+			// Editorial Team information using Role info.						
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
-
-			$editors =& $roleDao->getUsersByRoleId(ROLE_ID_EDITOR, $journal->getId());
+			
+			$editors =& $roleDao->getUsersByRoleId(ROLE_ID_REVIEWER, $journal->getId());
 			$editors =& $editors->toArray();
 
 			$sectionEditors =& $roleDao->getUsersByRoleId(ROLE_ID_SECTION_EDITOR, $journal->getId());
@@ -147,13 +168,15 @@ class AboutHandler extends Handler {
 
 			$proofreaders =& $roleDao->getUsersByRoleId(ROLE_ID_PROOFREADER, $journal->getId());
 			$proofreaders =& $proofreaders->toArray();
-
+			
 			$templateMgr->assign_by_ref('editors', $editors);
 			$templateMgr->assign_by_ref('sectionEditors', $sectionEditors);
 			$templateMgr->assign_by_ref('layoutEditors', $layoutEditors);
 			$templateMgr->assign_by_ref('copyEditors', $copyEditors);
 			$templateMgr->assign_by_ref('proofreaders', $proofreaders);
+			
 			$templateMgr->display('about/editorialTeam.tpl');
+			
 		} else {
 			// The Editorial Team feature has been enabled.
 			// Generate information using Group data.
@@ -173,20 +196,55 @@ class AboutHandler extends Handler {
 					unset($membership);
 				}
 				if (!empty($memberships)) $groups[] =& $group;
+				
 				$teamInfo[$group->getId()] = $memberships;
 				unset($group);
-			}
+			} 
 
 			$templateMgr->assign_by_ref('groups', $groups);
 			$templateMgr->assign_by_ref('teamInfo', $teamInfo);
 			$templateMgr->display('about/editorialTeamBoard.tpl');
-		}
+		}*/
+		
+		//New Version
+		$this->setupTemplate(true);
+		$templateMgr =& TemplateManager::getManager();
+		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
+		
+		$chair =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Chair");
+		$chair =& $chair->toArray();
+		
+		$cochair =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Co-chair");
+		$cochair =& $cochair->toArray();
+				
+		$secretary =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Secretary");
+		$secretary =& $secretary->toArray();
+		
+		$adsecretary =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Secretary Administrative Assistant");
+		$adsecretary =& $adsecretary->toArray();
+
+		$ercmembers =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Member");
+		$ercmembers =& $ercmembers->toArray();
+		
+		$extmembers =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, External Reviewer");
+		$extmembers =& $extmembers->toArray();
+							
+		$templateMgr->assign_by_ref('chair', $chair);
+		$templateMgr->assign_by_ref('cochair', $cochair);		
+		$templateMgr->assign_by_ref('secretary', $secretary);
+		$templateMgr->assign_by_ref('adsecretary', $adsecretary);
+		$templateMgr->assign_by_ref('ercmembers', $ercmembers);
+		$templateMgr->assign_by_ref('extmembers', $extmembers);
+		
+		$templateMgr->display('about/editorialTeam.tpl');
 	}
 
 	/**
 	 * Display group info for a particular group.
 	 * @param $args array
 	 */
+	 /* Commented out by EL on April 12 2012 */
+	 /*
 	function displayMembership($args) {
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
@@ -224,11 +282,14 @@ class AboutHandler extends Handler {
 		$templateMgr->assign_by_ref('memberships', $memberships);
 		$templateMgr->display('about/displayMembership.tpl');
 	}
-
+	*/
+	
 	/**
 	 * Display a biography for an editorial team member.
 	 * @param $args array
 	 */
+	 /* Commented out by EL on April 12 2012 */
+	 /*
 	function editorialTeamBio($args) {
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
@@ -303,6 +364,7 @@ class AboutHandler extends Handler {
 		$templateMgr->assign_by_ref('publishEmail', $publishEmail);
 		$templateMgr->display('about/editorialTeamBio.tpl');
 	}
+	*/
 
 	/**
 	 * Display editorialPolicies page.
@@ -314,26 +376,32 @@ class AboutHandler extends Handler {
 
 		$journalSettingsDao =& DAORegistry::getDAO('JournalSettingsDAO');
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
-		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		
+		/* Commented out by EL on April 4 2012 */
+		//$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		
 		$journal =& Request::getJournal();
-
 		$templateMgr =& TemplateManager::getManager();
 		$sections =& $sectionDao->getJournalSections($journal->getId());
 		$sections =& $sections->toArray();
 		$templateMgr->assign_by_ref('sections', $sections);
 
+		/* Commented out by EL on April 4 2012 */
+		/*
 		$sectionEditorEntriesBySection = array();
 		foreach ($sections as $section) {
 			$sectionEditorEntriesBySection[$section->getId()] =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $section->getId());
 		}
 		$templateMgr->assign_by_ref('sectionEditorEntriesBySection', $sectionEditorEntriesBySection);
-
+		*/
 		$templateMgr->display('about/editorialPolicies.tpl');
 	}
 
 	/**
 	 * Display subscriptions page.
 	 */
+	 /* Commented out by EL on April 12 2012 */
+	 /*
 	function subscriptions() {
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
@@ -367,10 +435,13 @@ class AboutHandler extends Handler {
 		
 		$templateMgr->display('about/subscriptions.tpl');
 	}
-
+	*/
+	
 	/**
 	 * Display subscriptions page.
 	 */
+	 /* Commented out by EL on April 21 2012 */
+	 /*
 	function memberships() {
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
@@ -401,10 +472,13 @@ class AboutHandler extends Handler {
 		}		
 		Request::redirect(null, 'about');
 	}
-
+	*/
+	
 	/**
 	 * Display submissions page.
 	 */
+	 /* Commented out by EL on April 12 2012 */
+	 /*
 	function submissions() {
 		$this->addCheck(new HandlerValidatorJournal($this));
 		$this->validate();
@@ -425,10 +499,13 @@ class AboutHandler extends Handler {
 		$templateMgr->assign('helpTopicId','submission.authorGuidelines');
 		$templateMgr->display('about/submissions.tpl');
 	}
-
+	*/
+	
 	/**
 	 * Display Journal Sponsorship page.
 	 */
+	 /* Commented out by EL on April 12 2012 */
+	 /*
 	function journalSponsorship() {
 		$this->validate();
 		$this->setupTemplate(true);
@@ -445,10 +522,13 @@ class AboutHandler extends Handler {
 		$templateMgr->assign_by_ref('sponsors', $journal->getSetting('sponsors'));
 		$templateMgr->display('about/journalSponsorship.tpl');
 	}
-
+	*/	
+	
 	/**
 	 * Display siteMap page.
 	 */
+	/* Commented out by EL on April 12 2012 */
+	/*
 	function siteMap() {
 		$this->validate();
 		$this->setupTemplate(true);
@@ -483,10 +563,13 @@ class AboutHandler extends Handler {
 
 		$templateMgr->display('about/siteMap.tpl');
 	}
-
+	*/
+	
 	/**
 	 * Display journal history.
 	 */
+	/* Commented out by EL on April 12 2012 */
+	/*
 	function history() {
 		$this->validate();
 		$this->setupTemplate(true);
@@ -497,10 +580,13 @@ class AboutHandler extends Handler {
 		$templateMgr->assign('history', $journal->getLocalizedSetting('history'));
 		$templateMgr->display('about/history.tpl');
 	}
-
+	*/
+	
 	/**
 	 * Display aboutThisPublishingSystem page.
 	 */
+	/* Commented out by EL on April 12 2012 */
+	/*
 	function aboutThisPublishingSystem() {
 		$this->validate();
 		$this->setupTemplate(true);
@@ -519,6 +605,7 @@ class AboutHandler extends Handler {
 
 		$templateMgr->display('about/aboutThisPublishingSystem.tpl');
 	}
+	*/
 
 	/**
 	 * Display a list of public stats for the current journal.
