@@ -28,7 +28,7 @@
 	<message key="author.submit.step5">Step 5. Confirming the Submission</message>
 	<message key="author.submit.start">1. Start</message>
 	<message key="author.submit.upload">2. Upload Main Proposal</message>
-	<message key="author.submit.metadata">3. Enter Metadata</message>
+	<message key="author.submit.metadata">3. Enter Proposal Metadata</message>
 	<message key="author.submit.supplementaryFiles">4. Upload Supplementary Files</message>
 	<message key="author.submit.confirmation">5. Confirmation</message>
 	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the RTO home page.</message>
@@ -43,33 +43,34 @@
 	<message key="author.submissions.queuedEditingProofread">In Editing: Proofread Requested</message>
 	<message key="author.submissions.uploadCopyeditedVersion">Upload Copyedited Version</message>
 	<message key="author.submissions.proofreadingCorrections">Proofreading Corrections</message>
-	<message key="author.submissions.confirmDelete">Are you sure you want to delete this draft?</message> //Edited May 25, 2011
+	<!-- Edited May 25, 2011 -->
+	<message key="author.submissions.confirmDelete">Are you sure you want to delete this draft?</message> 
 
-        <!-- Added by AIM, May 18, 2011  -->
-        <message key="author.submissions.confirmWithdraw">Are you sure you want to withdraw your submission? You cannot undo this action.</message>
-        <message key="author.submissions.confirmArchive">Are you sure you want to send this proposal to the Archive section?</message>
+    <!-- Added by AIM, May 18, 2011  -->
+    <message key="author.submissions.confirmWithdraw">Are you sure you want to withdraw your submission? You cannot undo this action.</message>
+    <message key="author.submissions.confirmArchive">Are you sure you want to send this proposal to the Archive section?</message>
 
 	<message key="author.submissions.viewStatus">View Status</message>
 	<message key="author.submissions.noSubmissions">No submissions.</message>
 	<message key="author.submit.howToSubmit"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance ({$supportPhone}).]]></message>
 	<message key="author.submit.howToSubmitNoPhone"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance.]]></message>
 	<message key="author.submit.journalSection">Section</message>
-	<message key="author.submit.journalSectionDescription"><![CDATA[Select the appropriate section for this submission (see Sections and Policies in <a href="{$aboutUrl}" target="_new">About</a> the Site).]]></message>
+	<message key="author.submit.journalSectionDescription"><![CDATA[Select the appropriate section for this submission (see Sections and Policies in <a href="{$aboutUrl}" target="_new">About</a> the Journal).]]></message>
 	<message key="author.submit.selectSection">Please select a section...</message>
 	<message key="author.submit.submissionLocale">Submission Language</message>
 	<message key="author.submit.submissionLocaleDescription">This site accepts submissions in several languages. Choose the primary language of the submission from the pulldown below.</message>
 	<message key="author.submit.submissionChecklist">Submission Checklist</message>
 	<message key="author.submit.submissionChecklistDescription">Indicate that this proposal is ready to be considered by the ERC by checking off the following (comments to the Secretary can be added at Step 5).</message>
 	<message key="author.submit.verifyChecklist">You must make sure all items in the submission checklist are satisfied before continuing.</message>
-	<message key="author.submit.copyrightNoticeAgree">The principal investigators agree to the terms of this Copyright Notice, which will apply to this submission.</message>
+	<message key="author.submit.copyrightNoticeAgree">The principal investigators agree to the terms of this Copyright Notice, which will apply to this submission if and when it is published by this site (comments to the ERC Secretariat can be added below).</message>
 	<message key="author.submit.copyrightNoticeAgreeRequired">You must agree to the terms of the Copyright Notice before continuing.</message>
 	<message key="author.submit.commentsForEditor">Comments for the Secretariat</message>
 	<message key="author.submit.comments">Enter text (optional)</message>
 	<message key="author.submit.form.sectionRequired">Please select an appropriate section for this submission.</message>
 	<message key="author.submit.form.localeRequired">Please select a submission language.</message>
 	<message key="author.submit.privacyStatement">Privacy Statement</message>
-	<message key="author.submit.reorderInstructions">Reorder RTO and PIs to appear in the order they will be listed.</message>
-	<message key="author.submit.reorder">Reorder RTO and Principal Investigator's names</message>
+	<message key="author.submit.reorderInstructions">Reorder principal investigators to appear in the order they will be listed on site.</message>
+	<message key="author.submit.reorder">Reorder principal investigator's name</message>
 	<message key="author.submit.selectPrincipalContact">Principal contact for ERC correspondence.</message>
 	<message key="author.submit.addAuthor">Add Principal Investigator</message>
 	<message key="author.submit.deleteAuthor">Delete Principal Investigator</message>
@@ -85,11 +86,11 @@
 	<!-- Added Jan 19, 2011 -->	
 	<message key="author.article.decision">ERC Decision</message>
 	
-        <!-- ************************************************************************************************************************
+    <!-- ************************************************************************************************************************
             Added by: AIM, Last Edited: 12.12.2011
-        -->
+    -->
         <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
-	<message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
+	    <message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
         <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message>
         <message key="author.submit.form.keywordsRequired">Please enter keywords for your research proposal.</message>
         <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
@@ -112,6 +113,9 @@
         <message key ="author.proposal.type.CWHS">Clinical Trial</message>
         <message key ="author.proposal.type.HSPR">Health System and Policy Research</message>
         <message key ="author.proposal.type.PBS">Population-Based Survey</message>
+
+        <!-- Removed by spf, January 2012. 
+          author.proposal.type.PWHS after re-organization of proposal types -->
         <!-- <message key ="author.proposal.type.PWHS">Proposal with Human Subjects</message> --> 
         <message key ="author.proposal.type.PNHS">Proposal without Human Subjects</message> 
         <message key ="author.proposal.type.QS">Qualitative Study</message>
@@ -131,20 +135,19 @@
         <message key="author.proposal.technicalUnit.IER">Health Information, Evidence and Research</message>
         <message key="author.proposal.technicalUnit.MCN">Maternal and Child Health and Nutrition</message>
         <message key="author.proposal.technicalUnit.MHI">Mental Health and Injury Prevention</message>
-        <message key="author.proposal.technicalUnit.MVP">Malaria, other Vectorborne and Parasitic Diseases</message>
+        <message key="author.proposal.technicalUnit.MVP">Malaria, other Vector-borne and Parasitic Diseases</message>
         <message key="author.proposal.technicalUnit.NHP">Noncommunicable Diseases and Health Promotion</message>
         <message key="author.proposal.technicalUnit.STB">Stop TB and Leprosy Elimination</message>
         <message key="author.proposal.technicalUnit.TFI">Tobacco Free Initiative</message>
 
-        <!-- ************************************End of Edit ********************************************************************-->
+        <message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts.</message>
 
-        <message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts in this section's track.</message>
-	<message key="author.submit.submissionFile">Submission File</message>
-	<message key="author.submit.uploadSubmissionFile">Upload file</message>
+        <message key="author.submit.submissionFile">Submission File</message>
+	    <message key="author.submit.uploadSubmissionFile">Upload file</message>
 	<message key="author.submit.replaceSubmissionFile">Replace submission file</message>
 	<message key="author.submit.noSubmissionFile">No file uploaded.</message>
 	<message key="author.submit.noSubmissionConfirm">Are you sure you wish to continue without uploading a file?</message>
-	<message key="author.submit.supplementaryFilesInstructions">This optional step allows Supplementary Files to be added to the main proposal. The files, which can be in any format, might include (a) summary of the proposal details, (b) resume of the principal investigators, (c) funding and budget details, (d) informed consent forms, (e) questionnaires to be used in the study, (f) local ethical approval (if applicable), (g) proof of registration with a local ERC (if applicable), (h) local ethical clearance (if available), and (i) other ERC decision. For any other supplementary file that does not fall in the above-mentioned categories, you may choose to add it using the "Other" category.</message>
+	<message key="author.submit.supplementaryFilesInstructions">This optional step allows Supplementary Files to be added to a submission. The files, which can be in any format, might include (a) research instruments, (b) data sets, which comply with the terms of the study's research ethics review, (c) sources that otherwise would be unavailable to reviewers, (d) figures and tables that cannot be integrated into the text itself, or other materials that add to the contribution of the work.</message>
 	<message key="author.submit.supplementaryFiles.saveToUpload">Click Save to upload file (after which additional files can be uploaded).</message>
 	<message key="author.submit.forgottenSubmitSuppFile">Are you sure you wish to continue without uploading the supplementary file you have chosen?</message>
 	<message key="author.submit.noSupplementaryFiles">No supplementary files have been added to this submission.</message>
@@ -164,12 +167,13 @@
 	<message key="author.submit.suppFile.dataAnalysis">Data Analysis</message>
 	<message key="author.submit.suppFile.dataSet">Data Set</message>
 	<message key="author.submit.suppFile.sourceText">Source Text</message>
+	
         <!--Start Edited Raf Tan 04/30/2011-->
         <message key="author.submit.suppFile.who.summary">Summary</message>
         <message key="author.submit.suppFile.who.proposal">Proposal</message>
         <message key="author.submit.suppFile.who.informedConsent">Informed Consent</message>
         <message key="author.submit.suppFile.who.localEthicalApproval">Local Ethical Approval</message>
-        <message key="author.submit.suppFile.who.funding">Funding/Budget Details</message>
+        <message key="author.submit.suppFile.who.funding">Funding</message>
         <message key="author.submit.suppFile.who.cv">CV of Principal Investigator</message>
         <message key="author.submit.suppFile.who.questionnaire">Questionnaires</message>
         <!-- <message key="author.submit.suppFile.who.local">Local</message> removed SPF 9 Dec 2011-->
@@ -178,6 +182,7 @@
         <message key="author.submit.suppFile.who.otherErcDecision">Other ERC Decision</message>
         <message key="author.submit.suppFile.who.review">Review</message>
         <!--End Edited Raf Tan 04/30/2011-->
+
 	<message key="author.submit.suppFile.briefDescription">Brief description</message>
 	<message key="author.submit.suppFile.contributorOrSponsor">Contributor or sponsoring agency</message>
 	<message key="author.submit.suppFile.availableToPeers">Present file to reviewers (without metadata), as it will not compromise blind review.</message>
@@ -196,9 +201,9 @@
 	<message key="author.submit.filesSummary">File Summary</message>
 	<message key="author.submit.finishSubmission">Finish Submission</message>
 	<message key="author.submit.submissionComplete">Submission complete. Thank you for submitting your proposal.</message>
-	<message key="author.submit.expedite"><![CDATA[If this submission is in a format that is ready to be published without further review, editing, or layout work, it can be placed directly in the last stage of the Editing queue by <a href="{$expediteUrl}" class="action">Clicking here</a>. (Note: Only the Secretariat has this option for their submissions.)]]></message>
-	<message key="author.article.uploadAuthorVersion">Upload Author Version</message>
+	<message key="author.submit.expedite"><![CDATA[If this submission is in a format that is ready to be published without further review, editing, or layout work, it can be placed directly in the last stage of the Editing queue by <a href="{$expediteUrl}" class="action">Clicking here</a>. (Note: Only journal editors have this option for their submissions.)]]></message>
+	<message key="author.article.uploadAuthorVersion">Upload RTO Version</message>
 	<message key="author.article.copyeditedFile">Copyedited File</message>
-	<message key="author.article.authorRevisedFile">Author File</message>
-	<message key="author.submit.authorSubmitLoginMessage">A user account is required to submit to the ERC. This allows our Secretary to track your submissions and contact you when the status of your submission changes, or if additional information is required from you.</message>
+	<message key="author.article.authorRevisedFile">RTO File</message>
+	<message key="author.submit.authorSubmitLoginMessage">A user account is required to submit to the ERC. This allows our Secretariat to track your submissions and contact you when the status of your submission changes, or if additional information is required from you.</message>
 </locale>

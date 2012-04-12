@@ -61,7 +61,7 @@
 </ul>
 
 {include file="sectionEditor/submission/summary.tpl"}
-
+{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 <div class="separator"></div>
 <div id="submissionEventLog">
 <h3>{translate key="submission.history.submissionEventLog"} - {translate key="submission.history.recentLogEntries"}</h3>

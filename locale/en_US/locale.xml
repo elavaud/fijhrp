@@ -62,7 +62,8 @@
 	<message key="common.payments">Payments</message>
 	<message key="common.pageHeader.altText">Page Header</message>
 	<message key="common.homePageHeader.altText">Homepage Header</message>
-	<message key="common.journalHomepageImage.altText">WHO-WPRO, Research Registration Portal Homepage Image</message>
+
+	<message key="common.journalHomepageImage.altText">Homepage Image</message>
 
 	<!-- Common Form Messages -->
 	
@@ -74,29 +75,30 @@
 		
 	<!-- Navigation -->
 	<message key="navigation.journalHelp">WHO-WPRO, Research Registration Portal Help</message>
+
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
 	<message key="navigation.otherJournals">Other Sites</message>
 	<message key="navigation.browseByIssue">By Issue</message>
-	<message key="navigation.browseByAuthor">By Author</message>
-	<message key="navigation.infoForAuthors">For Authors</message>
+	<message key="navigation.browseByAuthor">By RTO</message>
+	<message key="navigation.infoForAuthors">For RTOs</message>
 	<message key="navigation.infoForLibrarians">For Librarians</message>
 	<message key="navigation.competingInterestGuidelines">Competing Interest Guidelines</message>
-	<message key="navigation.infoForAuthors.long">Information For Authors</message>
+	<message key="navigation.infoForAuthors.long">Information For RTOs</message>
 	<message key="navigation.infoForLibrarians.long">Information For Librarians</message>
 	
 	<!-- Article Queues -->
-	<message key="common.queue.long.submissionsUnassigned">Unassigned</message>
+	<message key="common.queue.long.submissionsUnassigned">Unassigned Proposals</message>
 	<message key="common.queue.short.submissionsUnassigned">Unassigned</message>
-	<message key="common.queue.long.submissionsInEditing">Submissions in Editing</message>
+	<message key="common.queue.long.submissionsInEditing">Proposals in Editing</message>
 	<message key="common.queue.short.submissionsInEditing">In Editing</message>
-	<message key="common.queue.long.submissionsInReview">Submissions in Review</message>
+	<message key="common.queue.long.submissionsInReview">Proposals under Review</message>
 	<message key="common.queue.short.submissionsInReview">In Review</message>
-	<message key="common.queue.long.submissionsArchives">Archives</message>
+	<message key="common.queue.long.submissionsArchives">Archived Proposals</message>
 	<message key="common.queue.short.submissionsArchives">Archives</message>
 	<message key="common.queue.long.active">Active Submissions</message>
 	<message key="common.queue.short.active">Active</message>
-	<message key="common.queue.long.completed">Archive</message>
+	<message key="common.queue.long.completed">Archived Proposals</message>
 	<message key="common.queue.short.completed">Archive</message>
 	
 	<!--
@@ -109,23 +111,25 @@
 	<!-- Common Section Terms -->
 	<message key="section.section">Section</message>
 	<message key="section.sections">WHO-WPRO, Research Registration Portal Sections</message>
+
 	<message key="section.title">Section title</message>
 	<message key="section.abbreviation">Abbreviation</message>
 	<message key="section.abbreviation.example">(For example, Proposals=PRO)</message>
 
 	<!-- Common Article Terms -->
-	<message key="article.article">Article</message>
-	<message key="article.articles">Articles</message>
+	<message key="article.article">Proposal</message>
+	<message key="article.articles">Proposals</message>
 	<message key="article.submissionId">Submission ID</message>
 	<message key="article.title">Title</message>
 	<message key="article.authors">RTO</message> /*Replaced "Authors" with "RTO"*/
 	<message key="article.indexingInformation">Indexing Information</message>
 	<message key="article.metadata">Metadata</message>
 	<message key="article.journalSection">WHO-WPRO, Research Registration Portal Section</message>
+
 	<message key="article.file">File</message>
 	<message key="article.suppFile">Supplementary File</message>
 	<message key="article.suppFiles">Supplementary File(s)</message>
-	<message key="article.suppFilesAbbrev">Supp. files</message>
+	<message key="article.suppFilesAbbrev">Supp. Files</message>
 	<message key="article.discipline">Academic discipline and sub-disciplines</message>
 	<message key="article.subjectClassification">Subject classification</message>
 	<message key="article.subject">Keywords</message>
@@ -156,7 +160,7 @@
 	<message key="article.fontSize.large.altText">Large</message>
 
         <!-- Proposal Metadata
-             Added by: Anne Ivy Mirasol
+             Added by: aim
              Last Edited: April 24, 2011
         -->
         <message key="proposal.title">Title</message>
@@ -187,7 +191,7 @@
 	<!-- Submission Tracking - Common -->
 	<!-- ************************************
 	 *
-	 * Edited by Gay Figueroa
+	 * Edited by kgm
 	 * Last Update: 5/3/2011
 	 *
 	************************************* -->
@@ -243,9 +247,9 @@
 	<message key="journal.issn">ISSN</message>
 
 	<!-- User -->
-	<message key="user.showAllJournals">Show My Journals</message>
-	<message key="user.registerForOtherJournals">Register for Other Journals</message>
-	<message key="user.myJournals">My Journals</message>
+	<message key="user.showAllJournals">Show My Sites</message>
+	<message key="user.registerForOtherJournals">Register for Other Sites</message>
+	<message key="user.myJournals">My Sites</message>
 	<message key="user.manageMySubscriptions">Manage My Subscriptions</message>
 	<message key="user.noRoles.chooseJournal">Your account is not currently associated with any site. Please choose a site:</message>
 	<message key="user.noRoles.noRolesForJournal">Your account does not currently have any roles for this site. Please choose from the actions below:</message>
@@ -269,6 +273,7 @@
         <message key="user.ercrole.ercmembers">Members</message>
         <message key="user.ercrole.extreviewers">External Reviewers (Non-affiliated members)</message>
         
+	<message key="user.role.reviewer">ERC Member</message> /* Reviewer to ERC Member */
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>
 	<message key="user.role.proofreader">Proofreader</message>
@@ -1121,7 +1126,7 @@ Your server currently supports mbstring: <strong>{$supportsMBString}</strong>]]>
 	<message key="log.review.reviewAcceptedByProxy">{$userName} has accepted the round {$round} review for submission {$articleId} on behalf of {$reviewerName}.</message>
 	<message key="log.review.reviewFileByProxy">The Editor, {$userName}, has uploaded a review file for round {$round} of submission {$articleId} on behalf of the reviewer, {$reviewerName}.</message>
 	<message key="log.review.reviewerFile">A reviewer file has been uploaded.</message>
-	<message key="log.editor.decision">An editor decision ({$decision}) for article {$articleId} was recorded by {$editorName}.</message>
+	<message key="log.editor.decision">A decision ({$decision}) for proposal {$whoId} was recorded by {$editorName}.</message>
 
 
 	<message key="log.copyedit.initiate">Copyediting on submission {$articleId} has been commenced by {$copyeditorName}.</message>
@@ -1209,7 +1214,7 @@ Validation may fail on search URLs that require posted form data.]]></message>
 	<message key="notification.type.articleSubmitted">A new proposal, "{$param}", has been submitted.</message>
 	<message key="notification.type.copyeditComment">A copyeditor has left a comment on "{$param}".</message>
 	<message key="notification.type.editing">Editing Events</message>
-	<message key="notification.type.editorDecisionComment">A comment has been left on the editor decision for "{$param}".</message>
+	<message key="notification.type.editorDecisionComment">A comment has been left on the decision for "{$param}".</message>
 	<message key="notification.type.galleyModified">A galley has been modified for "{$param}".</message>
 	<message key="notification.type.issuePublished">An issue has been published.</message>
 	<message key="notification.type.layoutComment">A comment has been left about "{$param}'s" layout.</message>
