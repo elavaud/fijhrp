@@ -479,7 +479,7 @@ class EditorHandler extends SectionEditorHandler {
 
 			// FIXME: Prompt for due date.
 			if (EditorAction::assignEditor($articleId, $editorId, $isEditor, Request::getUserVar('send'))) {
-				Request::redirect(null, null, 'submission', $articleId);
+				Request::redirect(null, null, 'submissionReview', $articleId);
 			}
 		} else {
 			// Allow the user to choose a section editor or editor.
