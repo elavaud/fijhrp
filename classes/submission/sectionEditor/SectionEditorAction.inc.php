@@ -105,8 +105,8 @@ class SectionEditorAction extends Action {
 		);
 
 		/*
-		 * If assigned for full erc review, automatically assign all users with REVIEWER role
-		 */
+		 * Last Update: April 13, 2012
+		 * If assigned for full erc review, do NOT automatically assign all users with REVIEWER role		 
 		if($decision == SUBMISSION_EDITOR_DECISION_ASSIGNED) {
 			$userDao =& DAORegistry::getDAO('UserDAO');
 			$reviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
@@ -115,7 +115,8 @@ class SectionEditorAction extends Action {
 				SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
 			}
 		}
-
+		*/
+		
 		/*
 		 * If approved, insert approvalDate
 		 */

@@ -15,11 +15,17 @@
 		<td width="22%"><h3>{translate key="submission.peerReview"}</h3></td>
 		<td width="14%"><h4>{translate key="submission.round" round=$round}</h4></td>
 		<td width="64%" class="nowrap">
-			<a href="{url op="notifyReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.notifyReviewer"}</a>
-			&nbsp;&nbsp;
+			{if $reviewAssignmentCount>0}
+				<a href="{url op="notifyReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.notifyReviewer"}</a>
+				&nbsp;&nbsp;
+			{/if}
+			
 			<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>
 			&nbsp;&nbsp;
-			<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">Set Due Date For All</a>
+			
+			{if $reviewAssignmentCount>0}
+				<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">Set Due Date For All</a>
+			{/if}
 			{**<!--<a href="{url op="submissionRegrets" path=$submission->getId()}" class="action">{translate|escape key="sectionEditor.regrets.link"}</a>
 			 -->**}
 		</td>

@@ -30,7 +30,8 @@ function sortSearch(heading, direction) {
 <table class="listing">
 	<tr><td colspan="2">&nbsp;</td></tr>
 	<tr class="heading" colspan="2">
-		<td>Unassigned Reviewers</td>		
+		<td>Unassigned Reviewers
+		<td><a href="{url op="createReviewer" path=$articleId}" class="action">Create New Reviewer</a></td>		
 	</tr>
 	<tr><td colspan="2" class="headseparator">&nbsp;</td></tr>
 	<tr>
