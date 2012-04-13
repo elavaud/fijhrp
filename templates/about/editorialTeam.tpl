@@ -17,7 +17,7 @@
 
 <div id="editorialTeam">
 
-<h4>{translate key="user.ercrole.chair"}</h4>
+<h2>{translate key="user.ercrole.chair"}</h2>
 {if count($chair) == 1}
 	<div id="chair">
 	<ol class="editorialTeam">
@@ -31,7 +31,7 @@
 Administration problem: No Chair.
 {/if}
 
-<h4><br />{translate key="user.ercrole.cochair"}</h4>
+<h2><br />{translate key="user.ercrole.cochair"}</h2>
 {if count($cochair) == 1}
 	<div id="cochair">
 	<ol class="editorialTeam">
@@ -44,9 +44,9 @@ Administration problem: No Chair.
 Administration problem: No Co-hair.
 {/if}
 
-<h4><br />{translate key="user.ercrole.secretariat"}</h4>
+<h2><br />{translate key="user.ercrole.secretariat"}</h2>
 
-<h5><dd><u>{translate key="user.role.editor"}</u></h5>
+<h3><dd>{translate key="user.role.editor"}</h3>
 {if count($secretary) == 1}
 	<div id="secretary">
 	<ol class="editorialTeam">
@@ -59,7 +59,7 @@ Administration problem: No Co-hair.
 Administration problem: No Secretary.
 {/if}
 
-<h5><dd><br /><u>{translate key="user.role.sectionEditors"}</u></h5>
+<h3><dd><br />{translate key="user.role.sectionEditors"}</h3>
 {if count($adsecretary) == 1}
 	<div id="adsecretary">
 	<ol class="editorialTeam">
@@ -72,7 +72,7 @@ Administration problem: No Secretary.
 Administration problem: No Secretary Administrative Assistant.
 {/if}
 
-<h4><br />{translate key="user.ercrole.ercmembers"}</h4>
+<h2><br />{translate key="user.ercrole.ercmembers"}</h2>
 {if count($ercmembers)>0}
 	<div id="ercmembers">
 	<ol class="editorialTeam">
@@ -85,7 +85,7 @@ Administration problem: No Secretary Administrative Assistant.
 Administration problem: No Members.
 {/if}
 
-<h4><br />{translate key="user.ercrole.extreviewers"}</h4>
+<h2><br />{translate key="user.ercrole.extreviewers"}</h2>
 {if count($extmembers)>0}
 	<div id="ercmembers">
 	<ol class="editorialTeam">

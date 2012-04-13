@@ -89,6 +89,10 @@
 	<message key="common.continue">Continue</message>
 	<message key="common.copy">Copy</message>
 	<message key="common.country">Country</message>
+    
+        <!-- Added by EL, April 13, 2012-->
+       <message key="common.picountry"> Country of usual Residence</message>
+       
 	<message key="common.create">Create</message>
 	<message key="common.dateCompleted">Date completed</message>
 	<message key="common.date">Date</message>
