@@ -34,7 +34,11 @@ $(document).ready(function() {
 {assign var="proposalStatusKey" value=$submission->getProposalStatusKey($proposalStatus)}
 {if $proposalStatus == PROPOSAL_STATUS_ASSIGNED} 
 	<div>
-		{include file="sectionEditor/submission/peerReview.tpl"}
+		{if $reviewAssignmentCount>0}
+			{include file="sectionEditor/submission/peerReview.tpl"}
+		{else}
+			{include file="sectionEditor/submission/peerReviewSelection.tpl"}
+		{/if}
 		<div class="separator"></div>
 	</div>
 {/if}

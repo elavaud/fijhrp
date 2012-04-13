@@ -174,7 +174,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
-
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		
 		// Setting the round.
 		$round = isset($args[1]) ? $args[1] : $submission->getCurrentRound();
 
@@ -239,13 +240,17 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			unset($reviewForm);
 			$reviewFormResponses[$reviewAssignment->getId()] = $reviewFormResponseDao->reviewFormResponseExists($reviewAssignment->getId());
 		}
-
+		//////////////////		
+		$journalReviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
+		$reviewAssignments = $submission->getReviewAssignments($round);
+		
 		$templateMgr =& TemplateManager::getManager();
-
+		$templateMgr->assign_by_ref('reviewers', $journalReviewers);
+		$templateMgr->assign_by_ref('reviewAssignmentCount', count($reviewAssignments));
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('reviewIndexes', $reviewAssignmentDao->getReviewIndexesForRound($articleId, $round));
 		$templateMgr->assign('round', $round);
-		$templateMgr->assign_by_ref('reviewAssignments', $submission->getReviewAssignments($round));
+		$templateMgr->assign_by_ref('reviewAssignments', $reviewAssignments);
 		$templateMgr->assign('reviewFormResponses', $reviewFormResponses);
 		$templateMgr->assign('reviewFormTitles', $reviewFormTitles);
 		$templateMgr->assign_by_ref('notifyReviewerLogs', $notifyReviewerLogs);
@@ -269,7 +274,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		 * Last Update: 5/8/2011
 		 * 
 		*************************************************************/
-
+		
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('continuingReviewOptions',SectionEditorSubmission::getContinuingReviewOptions());
@@ -488,6 +493,19 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				Request::redirect(null, null, 'submissionReview', $articleId);
 			}
 		}		
+	}
+	
+	function selectReviewers($args) {
+		$articleId = isset($args[0]) ? (int) $args[0] : 0;
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$journal =& Request::getJournal();
+		$sectionEditorSubmission =& $this->submission;		
+		$selectedReviewers = Request::getUserVar('selectedReviewers');
+			
+		foreach($selectedReviewers as $reviewerId) {					
+			SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
+		}
+		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 
 	//

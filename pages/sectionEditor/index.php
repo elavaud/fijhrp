@@ -39,6 +39,7 @@ switch ($op) {
 	//if proposal was tabled for expedited review, allow STO to upload approval/disapproval file
 	case 'uploadDecisionFile':
 	case 'selectReviewer':
+	case 'selectReviewers':
 	case 'notifyReviewer':
 	case 'notifyAllReviewers':
 	case 'userProfile':
