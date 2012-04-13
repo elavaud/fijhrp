@@ -42,7 +42,8 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                  *  Added by:  Anne Ivy Mirasol
                  *  Last Update: May 3, 2011
                  ************************************************************************************************************/
-                $this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+                //Comment out by EL on april 13 2012
+                //$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
@@ -114,7 +115,10 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  *  Added by: Anne Ivy Mirasol
                                  *  Last Edited: Dec. 24, 2011
                                  ***********************************************************/
-                                 'objectives' => $article->getObjectives(null),
+                                 
+                                 //Comment out by EL on April 12 2012
+                                 //'objectives' => $article->getObjectives(null),
+                                 
                                  'keywords' => $article->getKeywords(null),
                                  'startDate' => $article->getStartDate(null),
                                  'endDate' => $article->getEndDate(null),
@@ -186,7 +190,10 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  *  Added by: Anne Ivy Mirasol
                                  *  Last Edited: May 3, 2011
                                  *********************************************************/
-                                 'objectives',
+                                 
+                                 //Comment out by EL on April 12 2012
+                                 //'objectives',
+                                 
                                  'keywords',
                                  'startDate',
                                  'endDate',
@@ -223,7 +230,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                  * Last Updated: May 3, 2011
                  *******************************************************************/
 		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                            /*'objectives', */'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -304,51 +311,52 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 			$article->setSubmissionProgress($this->step + 1);
 		}
 
-                /***********************************************************
-                 *  Edited by: AIM
-                 *  Last Updated: Jan 30, 2012
-                 ***********************************************************/
+        /***********************************************************
+         *  Edited by: AIM
+         *  Last Updated: Jan 30, 2012
+         ***********************************************************/
                  
-                $article->setObjectives($this->getData('objectives'), null); // Localized
-                $article->setKeywords($this->getData('keywords'), null); // Localized
-                $article->setStartDate($this->getData('startDate'), null); // Localized
-                $article->setEndDate($this->getData('endDate'), null); // Localized
-                $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
-
-                //Convert multiple countries to CSV string
-                $proposalCountryArray = $this->getData('proposalCountry');
-                $proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
-                $article->setProposalCountry($proposalCountry, null); // Localized
-
-                //Convert multiple proposal types to CSV string, Jan 30 2012
-                $proposalTypeArray = $this->getData('proposalType');
-                foreach($proposalTypeArray[$this->getFormLocale()] as $i => $type) {
-                    if($type == "OTHER") {
-                        $otherType = trim(str_replace("+", ",", $request->getUserVar('otherProposalType')));
-                        if($otherType != "") $proposalTypeArray[$this->getFormLocale()][$i] = "OTHER (". $otherType .")";
-                    }
-                }
-                $proposalType[$this->getFormLocale()] = implode("+", $proposalTypeArray[$this->getFormLocale()]);
-                $article->setProposalType($proposalType, null); // Localized
+        //Comment out by EL on April 13 2012
+        //$article->setObjectives($this->getData('objectives'), null); // Localized
                 
-                $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
-                $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
-	        $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
-                $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
-                $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
-                $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
-                 
-                /***************** END OF EDIT *****************************/
+        $article->setKeywords($this->getData('keywords'), null); // Localized
+        $article->setStartDate($this->getData('startDate'), null); // Localized
+        $article->setEndDate($this->getData('endDate'), null); // Localized
+        $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
 
-                //
-                // Update authors
+        //Convert multiple countries to CSV string
+        $proposalCountryArray = $this->getData('proposalCountry');
+        $proposalCountry[$this->getFormLocale()] = implode(",", $proposalCountryArray[$this->getFormLocale()]);
+        $article->setProposalCountry($proposalCountry, null); // Localized
+
+        //Convert multiple proposal types to CSV string, Jan 30 2012
+        $proposalTypeArray = $this->getData('proposalType');
+        foreach($proposalTypeArray[$this->getFormLocale()] as $i => $type) {
+        	if($type == "OTHER") {
+        		$otherType = trim(str_replace("+", ",", $request->getUserVar('otherProposalType')));
+            	if($otherType != "") $proposalTypeArray[$this->getFormLocale()][$i] = "OTHER (". $otherType .")";
+        	}
+        }
+        $proposalType[$this->getFormLocale()] = implode("+", $proposalTypeArray[$this->getFormLocale()]);
+                
+        $article->setProposalType($proposalType, null); // Localized
+        $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
+        $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
+	    $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
+        $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
+        $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
+        $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
+                 
+        /***************** END OF EDIT *****************************/
+
+        //
+        // Update authors
 		$authors = $this->getData('authors');
 		for ($i=0, $count=count($authors); $i < $count; $i++) {
 			if ($authors[$i]['authorId'] > 0) {
-				// Update an existing author
+			// Update an existing author
 				$author =& $article->getAuthor($authors[$i]['authorId']);
 				$isExistingAuthor = true;
-
 			} else {
 				// Create a new author
 				$author = new Author();

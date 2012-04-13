@@ -96,7 +96,9 @@ class MetadataForm extends Form {
                          *  Added by:  AIM
                          *  Last Update: Dec 24, 2011
                          ************************************************************************************************************/
-                        $this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+                        
+                        //Comment out by EL on April 13, 2012
+                        //$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
@@ -193,7 +195,10 @@ class MetadataForm extends Form {
 				'hideAuthor' => $article->getHideAuthor(),
 
                                 //Added by AIM, 12.22.2011
-                                'objectives' => $article->getObjectives(null),
+                                
+                                //Comment out by EL on April 13, 2012
+                                //'objectives' => $article->getObjectives(null),
+                                
                                 'keywords' => $article->getKeywords(null),
                                 'startDate' => $article->getStartDate(null),
                                 'endDate' => $article->getEndDate(null),
@@ -251,7 +256,7 @@ class MetadataForm extends Form {
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 'citations'
 		);*/
 
-                return array('title', 'abstract', 'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                return array('title', 'abstract', /*'objectives', */'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -361,7 +366,10 @@ class MetadataForm extends Form {
                                  *  Added by: AIM
                                  *  Last Edited: Dec 24, 2011
                                  *********************************************************/
-                                 'objectives',
+                                 
+                                 //Comment out by EL on April 13, 2012
+                                 //'objectives',
+                                 
                                  'keywords',
                                  'startDate',
                                  'endDate',
@@ -409,8 +417,10 @@ class MetadataForm extends Form {
                  *  Edited by: AIM
                  *  Last Updated: Dec 24, 2011
                  ***********************************************************/
-
-                $article->setObjectives($this->getData('objectives'), null); // Localized
+				
+				//Comment out by EL on April 13, 2012
+                //$article->setObjectives($this->getData('objectives'), null); // Localized
+                
                 $article->setKeywords($this->getData('keywords'), null); // Localized
                 $article->setStartDate($this->getData('startDate'), null); // Localized
                 $article->setEndDate($this->getData('endDate'), null); // Localized

@@ -16,7 +16,7 @@
 <div>
 {**Changed by EL on April 12 2012*}
 <p>
-Through this portal you may search on-going research sponsored by the Regional Office of the World Health Organization for Western Pacific.<br /><br />
+Through this portal you may search ongoing research sponsored by the Regional Office of the World Health Organization for Western Pacific.<br /><br />
 In addition the registered user can submit a research proposal for review by the Ethics Review Committee of WPRO.
 </p>
 {$journalDescription}

@@ -976,32 +976,43 @@ class Submission extends DataObject {
          */
         /*****************************************************************************************************************************/
 
-        /**
+    /**
 	 * Get "localized" proposal objectives (if applicable).
 	 * @return string
 	 */
+	
+	//Comment out by EL on April 13, 2012
+	/*
 	function getLocalizedObjectives() {
 		return $this->getLocalizedData('objectives');
 	}
-
+	*/
+	
 	/**
 	 * Get proposal objectives.
 	 * @param $locale
 	 * @return string
 	 */
+	
+	//Comment out by EL on April 13, 2012
+	/*
 	function getObjectives($locale) {
 		return $this->getData('objectives', $locale);
 	}
-
+	*/
+	
 	/**
 	 * Set proposal objectives.
 	 * @param $objectives string
 	 * @param $locale
 	 */
+	
+	//Comment out by EL on April 13, 2012
+	/*
 	function setObjectives($objectives, $locale) {
 		return $this->setData('objectives', $objectives, $locale);
 	}
-
+	*/
 
         /**
 	 * Get "localized" proposal keywords (if applicable).
