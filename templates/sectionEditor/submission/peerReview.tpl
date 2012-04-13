@@ -42,7 +42,8 @@
 
 	<table class="data" width="100%">
 	<tr class="reviewer">
-		<td class="r1" width="20%"><h4>{translate key="user.role.reviewer"} {$reviewIndex+$start|chr}</h4></td>
+		<td class="r1" width="20%"><h4>			
+		</h4></td>
 		<td class="r2" width="34%"><h4>{$reviewAssignment->getReviewerFullName()|escape}</h4></td>
 		<td class="r3" width="46%">
 				{if not $reviewAssignment->getDateNotified()}

@@ -654,9 +654,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		if (isset($args[1]) && $args[1] === 'create') {
 			$createReviewerForm->readInputData();
 			if ($createReviewerForm->validate()) {
-				// Create a user and enroll them as a reviewer.
+				// Create a user and enroll them as a reviewer.				
 				$newUserId = $createReviewerForm->execute();
-				Request::redirect(null, null, 'selectReviewer', array($articleId, $newUserId));
+				Request::redirect(null, null, 'selectReviewer', array($articleId));//, $newUserId));				
 			} else {
 				$createReviewerForm->display($args, $request);
 			}

@@ -176,7 +176,11 @@ class CreateExternalReviewerForm extends Form {
 		}
 
 		$user->setDateRegistered(Core::getCurrentDate());
+		//insert user
 		$userId = $userDao->insertUser($user);
+		
+		//add external reviewer setting		
+		$userDao->insertExternalReviewer($userId, Locale::getLocale());
 
 		// Add reviewing interests to interests table
 		$interestDao =& DAORegistry::getDAO('InterestDAO');
@@ -199,8 +203,7 @@ class CreateExternalReviewerForm extends Form {
 		$role = new Role();
 		$role->setJournalId($journal->getId());
 		$role->setUserId($userId);
-		$role->setRoleId(ROLE_ID_REVIEWER);
-		$role->setExternal(1);
+		$role->setRoleId(ROLE_ID_REVIEWER);		
 		$roleDao->insertRole($role);
 		
 
