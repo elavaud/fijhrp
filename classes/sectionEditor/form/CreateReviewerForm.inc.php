@@ -55,7 +55,7 @@ class CreateReviewerForm extends Form {
 	}
 
 	function getLocaleFieldNames() {
-		return array('biography', 'gossip');
+		return array('biography', 'signature');
 	}
 
 	/**

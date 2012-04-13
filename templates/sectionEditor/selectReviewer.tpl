@@ -28,42 +28,54 @@ function sortSearch(heading, direction) {
 <div id="selectReviewer">
 <h3>{translate key="editor.article.selectReviewer"}</h3>
 <table class="listing">
-	<tr><td colspan="2">&nbsp;</td></tr>
-	<tr class="heading" colspan="2">
-		<td>Unassigned Reviewers</td>		
+	<tr><td colspan="3">&nbsp;</td></tr>
+	<tr class="heading" colspan="3">			
+		<td colspan="3"><a href="{url op="createExternalReviewer" path=$articleId}" class="action">Create External Reviewer</a></td>		
 	</tr>
-	<tr><td colspan="2" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
 	<tr>
-		<td width="50%" class="heading">{translate key="user.name" sort="reviewerName"}</td>	
-		<td width="25%" class="heading" align="left">{translate key="common.action"}</td>
+		<td width="20%" class="heading">Role</td>
+		<td width="40%" class="heading" align="left">{translate key="user.name" sort="reviewerName"}</td>	
+		<td width="40%" class="heading" align="left">{translate key="common.action"}</td>
 	</tr>	
-	<tr><td colspan="2" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
 	{assign var="count" value=0}
-	{foreach from=$unassignedReviewers item=ercMember}
+	{foreach from=$unassignedReviewers item=ercMember}		
 		{assign var="count" value=$count+1}
 		{assign var="reviewerId" value=$ercMember->getId()}
 		<tr>
-			<td width="50%" class="heading">{$ercMember->getFullname()|escape}</td>	
-			<td width="25%" class="heading" align="left"><a href="{url op="selectReviewer" path=$articleId|to_array:$reviewerId}" class="action">Add as Reviewer</a></td>
+			<td width="20%" class="heading">
+				{if $ercMember->isLocalizedExternalReviewer()==null || $ercMember->isLocalizedExternalReviewer()!="Yes"}
+					ERC Member
+				{else}
+					External Reviewer
+				{/if}
+			</td>
+			<td width="40%" class="heading">{$ercMember->getFullname()|escape}</td>	
+			<td width="40%" class="heading" align="left"><a href="{url op="selectReviewer" path=$articleId|to_array:$reviewerId}" class="action">Add as Reviewer</a></td>
 		</tr>			
-		<tr><td colspan="6" class="separator">&nbsp;</td></tr>
+		<tr><td colspan="3" class="separator">&nbsp;</td></tr>
 	{/foreach}
 	{if $count==0}
 		<tr>
-			<td colspan="2" class="nodata">No unassigned ERC members</td>
+			<td colspan="3" class="nodata">No unassigned reviewers</td>
 		</tr>
 		<tr>
-			<td colspan="2" class="endseparator">&nbsp;</td>
+			<td colspan="3" class="endseparator">&nbsp;</td>
 		</tr>
 	{else}
 		<tr>
-			<td colspan="2" class="endseparator">&nbsp;</td>
+			<td colspan="3" class="endseparator">&nbsp;</td>
 		</tr>
 		<tr>
-			<td colspan="2" align="left">{$count} unassigned ERC member(s)</td>
+			<td colspan="3" align="left">{$count} unassigned reviewer(s)</td>
 		</tr>
 	{/if}
 </table>
+
+
+
+
 {***************************************************************************
 Commented out Jan 20, 2011 
 <form name="submit" method="post" action="{url op="selectReviewer" path=$articleId}">

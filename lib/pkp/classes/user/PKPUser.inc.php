@@ -650,7 +650,29 @@ class PKPUser extends DataObject {
 	function setWproAffiliation($wproAffiliation, $locale) {
 		return $this->setData('wproAffiliation', $wproAffiliation, $locale);
 	}
+
+	/**
+	 * Set user as external reviewer
+	 * @param $isExternalReviewer string
+	 * @param @locale string
+	 */
+	function setExternalReviewer($externalReviewer, $locale) {		
+		return $this->setData('externalReviewer', $externalReviewer, $locale);
+	}
 	
+	/**
+	 * Get externalReviewer indicator
+	 */
+	function isLocalizedExternalReviewer() {
+		return $this->getLocalizedData('externalReviewer');
+	}	
+	
+	/**
+	 * Get externalReviewer indicator
+	 */
+	function isExternalReviewer($locale) {
+		return $this->getData('externalReviewer', $locale);
+	}	
 }
 
 ?>
