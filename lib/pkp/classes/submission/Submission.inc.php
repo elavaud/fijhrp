@@ -982,11 +982,11 @@ class Submission extends DataObject {
 	 */
 	
 	//Comment out by EL on April 13, 2012
-	/*
+        //Returned by SPF on April 16, 2012	
 	function getLocalizedObjectives() {
 		return $this->getLocalizedData('objectives');
 	}
-	*/
+
 	
 	/**
 	 * Get proposal objectives.
@@ -995,11 +995,12 @@ class Submission extends DataObject {
 	 */
 	
 	//Comment out by EL on April 13, 2012
-	/*
+        //Returned by SPF on April 16, 2012
+	
 	function getObjectives($locale) {
 		return $this->getData('objectives', $locale);
 	}
-	*/
+
 	
 	/**
 	 * Set proposal objectives.
@@ -1008,11 +1009,12 @@ class Submission extends DataObject {
 	 */
 	
 	//Comment out by EL on April 13, 2012
-	/*
+        //Returned by SPF on April 16, 2012
+	
 	function setObjectives($objectives, $locale) {
 		return $this->setData('objectives', $objectives, $locale);
 	}
-	*/
+
 
         /**
 	 * Get "localized" proposal keywords (if applicable).

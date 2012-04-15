@@ -343,13 +343,12 @@
                 <td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="50">{$abstract[$formLocale]|escape}</textarea></td>
             </tr>
 			
-			{* Comment out by EL on April 13 2012 *}
-			{*
+			{* Comment out "Objectives" by EL on April 13 2012 *}
+			{* Put back "Objectives" by SPF on April 16, 2012 *}
             <tr valign="top">
                 <td width="20%" class="label">{fieldLabel name="objectives" required="true" key="proposal.objectives"}</td>
                 <td width="80%" class="value"><textarea name="objectives[{$formLocale|escape}]" id="objectives" class="textArea" rows="5" cols="50">{$objectives[$formLocale]|escape}</textarea></td>
             </tr>
-			*}
 			
             <tr valign="top">
                 <td width="20%" class="label">{fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>

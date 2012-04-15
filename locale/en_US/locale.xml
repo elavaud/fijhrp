@@ -166,7 +166,8 @@
         <message key="proposal.title">Title</message>
         <message key="proposal.abstract">Abstract</message>
                 <!-- Comment out by EL on APril 13, 2012 -->
-                <!-- <message key="proposal.objectives">Objectives</message> -->
+                <!-- Return "Objectives" key by SPF on April 16, 2012 -->
+        <message key="proposal.objectives">Objectives</message>
         <message key="proposal.keywords">Keywords</message>
         <message key="proposal.startDate">Start Date</message>
         <message key="proposal.endDate">End Date</message>
