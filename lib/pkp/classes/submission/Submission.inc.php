@@ -976,7 +976,7 @@ class Submission extends DataObject {
          */
         /*****************************************************************************************************************************/
 
-    /**
+        /**
 	 * Get "localized" proposal objectives (if applicable).
 	 * @return string
 	 */

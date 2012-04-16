@@ -43,7 +43,8 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                  *  Last Update: May 3, 2011
                  ************************************************************************************************************/
                 //Comment out by EL on april 13 2012
-                //$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+                //Returned by SPF on April 17, 2012
+		$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
@@ -117,7 +118,8 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  ***********************************************************/
                                  
                                  //Comment out by EL on April 12 2012
-                                 //'objectives' => $article->getObjectives(null),
+                                 //Returned getObjectives spf April 17, 2012
+				 'objectives' => $article->getObjectives(null),
                                  
                                  'keywords' => $article->getKeywords(null),
                                  'startDate' => $article->getStartDate(null),
@@ -192,7 +194,8 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  *********************************************************/
                                  
                                  //Comment out by EL on April 12 2012
-                                 //'objectives',
+                                 //Returned by SPF on April 17, 2012
+				 'objectives',
                                  
                                  'keywords',
                                  'startDate',
@@ -230,7 +233,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                  * Last Updated: May 3, 2011
                  *******************************************************************/
 		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                            /*'objectives', */'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -317,7 +320,8 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
          ***********************************************************/
                  
         //Comment out by EL on April 13 2012
-        //$article->setObjectives($this->getData('objectives'), null); // Localized
+        //Returned setObjectives by SPF April 17, 2012
+	$article->setObjectives($this->getData('objectives'), null); // Localized
                 
         $article->setKeywords($this->getData('keywords'), null); // Localized
         $article->setStartDate($this->getData('startDate'), null); // Localized

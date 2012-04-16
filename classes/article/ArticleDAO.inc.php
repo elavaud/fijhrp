@@ -51,12 +51,14 @@ class ArticleDAO extends DAO {
 	function getLocaleFieldNames() {
 		/************************************************
 		 * Edited by:  Anne Ivy Mirasol -- added fields
-		 * Last Updated: May 4, 2011
+		 * Last Updated: 
+                 *                Apr 17, 2012 -- returned objectives (spf)
+                 *                May 4, 2011 -- added fields
 		 ************************************************/
 		return array(
 			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
-                        /*'objectives', */'keywords', 'startDate', 'endDate', 'fundsRequired', 'withHumanSubjects', 'proposalType', 'proposalCountry',
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'withHumanSubjects', 'proposalType', 'proposalCountry',
                         'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'whoId', 'reasonsForExemption','withdrawReason', 'withdrawComments',
 						'approvalDate'
                         );
