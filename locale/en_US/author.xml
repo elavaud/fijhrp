@@ -93,9 +93,7 @@
         
         <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
 	    <message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
-        
-            <!-- Comment out by EL on APril 13, 2012 -->
-            <!-- <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message> -->
+        <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message>
         <message key="author.submit.form.keywordsRequired">Please enter keywords for your research proposal.</message>
         <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
         <message key="author.submit.form.endDateRequired">Please enter the end date of your research proposal.</message>
@@ -107,6 +105,8 @@
         <message key="author.submit.form.submittedAsPiRequired">Please select Yes or No (Submitting as Primary Investigator?).</message>
         <message key="author.submit.form.conflictOfInterestRequired">Please select Yes or No (Conflict Of Interest?).</message>
         <message key="author.submit.form.reviewedByOtherErcRequired">Please select Yes or No (Reviewed By Other ERC?).</message>
+            <!--- Added by: EL on April 17, 2012->
+            <message key="author.submit.form.rtoOfficeRequired">Please select your Office.</message>
         <message key="author.submit.form.withdrawReasonRequired">Withdraw Reason Required</message>
 
         <message key="author.submit.addProgressReport">Upload Progress Report</message>

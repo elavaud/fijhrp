@@ -1295,7 +1295,7 @@ class Submission extends DataObject {
 
 
 
-        /**
+    /**
 	 * Get "localized" conflictOfInterest (if applicable).
 	 * @return string
 	 */
@@ -1376,6 +1376,36 @@ class Submission extends DataObject {
 	function setOtherErcDecision($otherErcDecision, $locale) {
 		return $this->setData('otherErcDecision', $otherErcDecision, $locale);
 	}
+	
+
+	
+	//Test Office
+	        /**
+	 * Get "localized" rtoOffice (if applicable).
+	 * @return string
+	 */
+	function getLocalizedRtoOffice() {
+		return $this->getLocalizedData('rtoOffice');
+	}
+
+	/**
+	 * Get otherErcDecision.
+	 * @param $locale
+	 * @return string
+	 */
+	function getRtoOffice($locale) {
+		return $this->getData('rtoOffice', $locale);
+	}
+
+	/**
+	 * Set rtoOffice (yes/no).
+	 * @param $rtoOffice string
+	 * @param $locale
+	 */
+	function setRtoOffice($rtoOffice, $locale) {
+		return $this->setData('rtoOffice', $rtoOffice, $locale);
+	}
+
 
 	/***********************************************
 	 *

@@ -181,6 +181,8 @@
         <message key="proposal.dataCollectionQuestionnairesIncluded">Data Collection Questionnaires Included?</message>
         <message key="proposal.ethicalClearanceEnclosed">Ethical Clearance Enclosed?</message>
         <message key="proposal.reviewedByOtherErc">Has Proposal Been Reviewed By Other ERC?</message>
+            <!-- Added by EL on April 17, 2012-->
+            <message key="proposal.rtoOffice">Office</message>
         <message key="proposal.otherErcDecision">If yes, other ERC Decision: </message>
         <message key="proposal.proofOfRegistration">Proof Of Registration Included?</message>
         <message key="proposal.submittedAsPi">Submitting as Primary Investigator?</message>
