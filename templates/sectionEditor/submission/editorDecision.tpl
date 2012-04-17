@@ -111,7 +111,9 @@ $(document).ready(function() {
 			<select id="decision" name="decision" size="1" class="selectMenu">
 				{html_options_translate options=$editorDecisionOptions selected=0}
 			</select>
+{*			
 			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.uploadRecordDecision"}"  class="button" />				
+*}			
 		</td>		
 	</tr>
 {/if}
@@ -125,7 +127,9 @@ $(document).ready(function() {
 	<tr>
 		<td class="label" width="20%">{translate key="editor.article.uploadFinalDecisionFile"}</td>
 		<td width="80%" class="value">
-			<input type="file" class="uploadField" name="finalDecisionFile" id="finalDecisionFile"/>		
+			<input type="file" class="uploadField" name="finalDecisionFile" id="finalDecisionFile"/>
+			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmDecision"}')" name="submit" value="{translate key="editor.article.uploadRecordDecision"}"  class="button" />				
+					
 		</td>
 	</tr>
 {/if}
