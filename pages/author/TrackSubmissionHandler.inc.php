@@ -856,7 +856,7 @@ class TrackSubmissionHandler extends AuthorHandler {
                 $submitForm = new SuppFileForm($authorSubmission, $journal);
 
                 //Added by AIM, June 15 2011
-                $submitForm->setData('type', 'Progress Report');
+                $submitForm->setData('type','Progress Report');
 
                 if ($submitForm->isLocaleResubmit()) {
                     $submitForm->readInputData();
@@ -880,7 +880,7 @@ class TrackSubmissionHandler extends AuthorHandler {
         function addCompletionReport($args, $request) {
 		$articleId = (int) array_shift($args);
 		$journal =& $request->getJournal();
-                
+		                
 		$this->validate($articleId);
 		$authorSubmission =& $this->submission;
 
@@ -889,21 +889,17 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		import('classes.submission.form.SuppFileForm');
                 
-                $submitForm = new SuppFileForm($authorSubmission, $journal);
+        $submitForm = new SuppFileForm($authorSubmission, $journal);
 
-                //Added by AIM, June 22 2011
-                $submitForm->setData('type', 'Completion Report');
+        //Added by AIM, June 22 2011
+        $submitForm->setData('type','Completion Report');
 
-                if ($submitForm->isLocaleResubmit()) {
-                    echo '1';
-					$submitForm->readInputData();
+        if ($submitForm->isLocaleResubmit()) {
+			$submitForm->readInputData();
 		} else {
-			        echo '2';
-                    $submitForm->initData();
+            $submitForm->initData();
 		}
-                echo '3';
-                $submitForm->display();
-                
+        $submitForm->display();
 	}
 
 
