@@ -294,8 +294,8 @@ class SuppFileForm extends Form {
                     $suppFile->setData('title', array($this->getDefaultFormLocale() => ($suppFileType)));
                 }
                 else {
-                    $suppFile->setData('title', array($this->getDefaultFormLocale() => ($this->getData('$type'))));
-                    $suppFile->setTitle($this->getData('type'), null);
+                    $suppFile->setData('title', array($this->getDefaultFormLocale() => ($this->getData('type'))));
+                    $suppFile->setType($this->getData('type'), null);
                 }
 
                 //$suppFile->setTypeOther($this->getData('typeOther'), null); // Localized
