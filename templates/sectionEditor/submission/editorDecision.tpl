@@ -49,15 +49,12 @@ $(document).ready(function() {
 <h3>{translate key="submission.editorDecision"}</h3>
 
 <table id="table1" width="100%" class="data">
-{$dueForReview}
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
 	<td width="80%" class="value">
-		
-		{if $submission->isDueForReview()==1}			
-			{translate key="submissions.proposal.forContinuingReview"} 
-		{else}
-			{translate key=$proposalStatusKey}  
+			{translate key=$proposalStatusKey}
+		{if $proposalStatus != PROPOSAL_STATUS_COMPLETED}
+			({translate key="submissions.proposal.forContinuingReview"})
 		{/if}</td>
 </tr>
 	<form method="post" action="{url op="recordDecision"}" enctype="multipart/form-data">
@@ -70,9 +67,9 @@ $(document).ready(function() {
 		<td class="label" width="20%">{translate key="editor.article.selectInitialReview"}</td>
 		<td width="80%" class="value">
 			<select id="decision" name="decision" size="1" class="selectMenu">
-					{html_options_translate options=$initialReviewOptions selected=1}
+				{html_options_translate options=$initialReviewOptions selected=1}
 			</select>
-				<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />			
+			<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.submissionReview.confirmInitialReview"}')" name="submit" value="{translate key="editor.article.record"}"  class="button" />			
 		</td>
 
 	{ elseif $proposalStatus == PROPOSAL_STATUS_CHECKED}
@@ -154,6 +151,7 @@ $(document).ready(function() {
 	{/if}
 	</tr>
 {/if}
+{if $proposalStatus != PROPOSAL_STATUS_COMPLETED}
 <tr valign="top">
 	<td class="label">{translate key="editor.article.finalDecision"}</td>
 	<td class="value">
@@ -171,6 +169,7 @@ $(document).ready(function() {
 		{/if}		
 	</td>
 </tr>
+{/if}
 
 {if $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
 	{assign var="localizedReasons" value=$submission->getLocalizedReasonsForExemption()}

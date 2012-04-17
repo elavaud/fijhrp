@@ -89,10 +89,12 @@ class SectionEditorAction extends Action {
 		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
 		if (empty($editAssignments)) return;
 
-		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();
 		$journal =& Request::getJournal();
-
+		
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+		$articleDao =& DaoRegistry::getDAO('ArticleDAO');
+		
 		$currentDate = date(Core::getCurrentDate());
 		$approvalDate = (($dateDecided == null) ? $currentDate : date($dateDecided));
 		$resubmitCount = ($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision == SUBMISSION_EDITOR_DECISION_INCOMPLETE) ? $resubmitCount + 1 : $resubmitCount ;
@@ -121,14 +123,16 @@ class SectionEditorAction extends Action {
 		 * If approved, insert approvalDate
 		 */
 		if($decision == SUBMISSION_EDITOR_DECISION_ACCEPT) {
-			$articleDao =& DaoRegistry::getDAO('ArticleDAO');
 			$articleDao->insertApprovalDate($sectionEditorSubmission, $approvalDate);
 		}
-
+		
 		if (!HookRegistry::call('SectionEditorAction::recordDecision', array(&$sectionEditorSubmission, $editorDecision))) {
 			$sectionEditorSubmission->setStatus(STATUS_QUEUED);
 			$sectionEditorSubmission->stampStatusModified();
 			$sectionEditorSubmission->addDecision($editorDecision, $sectionEditorSubmission->getCurrentRound());
+			if($decision == SUBMISSION_EDITOR_DECISION_DONE) {
+				$sectionEditorSubmission->setStatus(PROPOSAL_STATUS_COMPLETED);
+			}
 			$sectionEditorSubmissionDao->updateSectionEditorSubmission($sectionEditorSubmission);
 
 			$decisions = SectionEditorSubmission::getAllPossibleEditorDecisionOptions();

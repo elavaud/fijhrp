@@ -185,6 +185,8 @@
 	<message key="editor.article.decision.exempted">Exempt From Review</message>
 	<message key="editor.article.decision.expedited">For Expedited Review</message>
 	<message key="editor.article.decision.assigned">For Full Review</message>
+	<message key="editor.article.decision.done">Review Not Required (Research Completed)</message>
+	<message key="editor.article.decision.researchCompleted">Research Completed</message>
 	<message key="editor.article.selectInitialReview">Select Initial Review</message>
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
