@@ -895,11 +895,13 @@ class TrackSubmissionHandler extends AuthorHandler {
                 $submitForm->setData('type', 'Completion Report');
 
                 if ($submitForm->isLocaleResubmit()) {
-                    $submitForm->readInputData();
+                    echo '1';
+					$submitForm->readInputData();
 		} else {
+			        echo '2';
                     $submitForm->initData();
 		}
-                
+                echo '3';
                 $submitForm->display();
                 
 	}
