@@ -98,8 +98,9 @@ class MetadataForm extends Form {
                          ************************************************************************************************************/
                         
                         //Comment out by EL on April 13, 2012
-                        //Put back by AL on April 17, 2012
-                        $this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+
+                        //Returned by SPF on April 17, 2012
+			$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
@@ -198,8 +199,8 @@ class MetadataForm extends Form {
                                 //Added by AIM, 12.22.2011
                                 
                                 //Comment out by EL on April 13, 2012
-                                //Put back by EL on APril 17, 2012
-                                'objectives' => $article->getObjectives(null),
+                                //Returned by SPF 17 April 2012
+				'objectives' => $article->getObjectives(null),
                                 
                                 'keywords' => $article->getKeywords(null),
                                 'startDate' => $article->getStartDate(null),
@@ -371,6 +372,7 @@ class MetadataForm extends Form {
                                  
                                  //Comment out by EL on April 13, 2012
                                  //Put back by EL on April 17, 2012
+
                                  'objectives',
                                  
                                  'keywords',
@@ -422,8 +424,10 @@ class MetadataForm extends Form {
                  ***********************************************************/
 				
 				//Comment out by EL on April 13, 2012
-                //Put back by EL on April 17, 2012
-                $article->setObjectives($this->getData('objectives'), null); // Localized
+
+                // Returned setObjectives by SPF April 17, 2012
+		$article->setObjectives($this->getData('objectives'), null); // Localized
+
                 
                 $article->setKeywords($this->getData('keywords'), null); // Localized
                 $article->setStartDate($this->getData('startDate'), null); // Localized

@@ -93,7 +93,9 @@
         
         <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
 	    <message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
-        <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message>
+            <!-- Comment out by EL on APril 13, 2012 -->
+            <!-- Returned by SPF on April 17, 2012 -->
+            <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message> 
         <message key="author.submit.form.keywordsRequired">Please enter keywords for your research proposal.</message>
         <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
         <message key="author.submit.form.endDateRequired">Please enter the end date of your research proposal.</message>
