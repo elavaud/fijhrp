@@ -201,7 +201,7 @@ class AuthorSubmission extends Article {
 
         function isSubmissionDue() {
             
-            $startdate = strtotime($this->getStartDate($this->getLocale()));
+            $startdate = strtotime($this->getApprovalDate($this->getLocale()));
             $afteroneyear = $newdate = strtotime ('+1 year', $startdate) ;
             $today = time();
             return ($today >= $afteroneyear);

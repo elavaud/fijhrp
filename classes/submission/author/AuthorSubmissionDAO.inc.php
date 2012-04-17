@@ -168,8 +168,7 @@ class AuthorSubmissionDAO extends DAO {
 	 * @param $authorId int
 	 * @return DAOResultFactory continaing AuthorSubmissions
 	 */
-	function &getAuthorSubmissions($authorId, $journalId, $active = true,  $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null,
-											  $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getAuthorSubmissions($authorId, $journalId, $active = true,  $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(

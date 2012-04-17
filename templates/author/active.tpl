@@ -146,10 +146,16 @@
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td>
                     {translate key="submissions.proposal.approved"}{if $submission->isSubmissionDue()}&nbsp;(For Continuing Review){/if}<br />
-                    {if $submission->isSubmissionDue()}<a href="{url op="addExtensionRequest" path=$articleId}" class="action">Submit Extension Request</a><br />{/if}
+                    {if $submission->isSubmissionDue()}<a href="{url op="addExtensionRequest" path=$articleId}" class="action">Submit Extension Request</a><br />
                     <a href="{url op="addProgressReport" path=$articleId}" class="action">Upload Progress Report</a><br />
                     <a href="{url op="addCompletionReport" path=$articleId}" class="action">Complete</a><br />
                     <a href="{url op="withdrawSubmission" path=$articleId}" class="action">{translate key="common.withdraw"}</a><br />
+                    {/if}
+                    {if !$submission->isSubmissionDue()}
+                    <a href="{url op="addProgressReport" path=$articleId}" class="action">Upload Progress Report</a><br />
+                    <a href="{url op="addCompletionReport" path=$articleId}" class="action">Complete</a><br />
+                    <a href="{url op="withdrawSubmission" path=$articleId}" class="action">{translate key="common.withdraw"}</a><br />
+                    {/if}
                  </td>
                  <td align="center">{$submission->getApprovalDate($submission->getLocale())}</td>
             </tr>

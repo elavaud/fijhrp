@@ -12,7 +12,7 @@
   * $Id$
   -->
 
-<locale>en_US" full_name = "English">
+<locale name="en_US" full_name ="U.S. English">
 	<message key="author.submit">New Submission</message>
 	<message key="author.track">Active Submissions</message>
 	<message key="author.competingInterests"><![CDATA[Competing&nbsp;interests <a target="_new" class="action" href="{$competingInterestGuidelinesUrl}">CI&nbsp;Policy</a>]]></message>
