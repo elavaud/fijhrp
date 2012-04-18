@@ -74,7 +74,7 @@
 	<!-- Common Error Messages -->
 		
 	<!-- Navigation -->
-	<message key="navigation.journalHelp">WHO-WPRO, Research Registration Portal Help</message>
+	<message key="navigation.journalHelp">WHO-WPRO, Health Research Portal Help</message>
 
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
@@ -110,7 +110,7 @@
 
 	<!-- Common Section Terms -->
 	<message key="section.section">Section</message>
-	<message key="section.sections">WHO-WPRO, Research Registration Portal Sections</message>
+	<message key="section.sections">WHO-WPRO, Health Research Portal Sections</message>
 
 	<message key="section.title">Section title</message>
 	<message key="section.abbreviation">Abbreviation</message>
@@ -124,7 +124,7 @@
 	<message key="article.authors">RTO</message> /*Replaced "Authors" with "RTO"*/
 	<message key="article.indexingInformation">Indexing Information</message>
 	<message key="article.metadata">Metadata</message>
-	<message key="article.journalSection">WHO-WPRO, Research Registration Portal Section</message>
+	<message key="article.journalSection">WHO-WPRO, Health Research Portal Section</message>
 
 	<message key="article.file">File</message>
 	<message key="article.suppFile">Supplementary File</message>
@@ -928,11 +928,11 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="archive.browse">Browse through the older issues</message>
 	<message key="archive.issueUnavailable">Issue Unavailable</message>
 	
-	<!-- About The WHO-WPRO Research Registration Portal -->
+	<!-- About The WHO-WPRO Health Research Portal -->
 	<message key="about.statistics">Statistics</message>
 	<message key="about.journalContact">The Ethics Review Committee - Secretariat</message>
-	<message key="about.aboutTheJournal">About the WHO-WPRO Research Registration Portal</message>
-	<message key="about.history">WHO-WPRO Research Registration Portal History</message>
+	<message key="about.aboutTheJournal">About the WHO-WPRO Health Research Portal</message>
+	<message key="about.history">WHO-WPRO Health Research Portal History</message>
 	
         <!-- Changed "Editorial Team" by "WPRO-ERC Membership". EL April 10 2012 -->    
         <message key="about.editorialTeam">WPRO-ERC Membership</message>
@@ -978,10 +978,10 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="about.subscriptionTypes.cost">Cost</message>
 	<message key="about.availableSubscriptionTypes">Subscription Types</message>
 	<message key="about.memberships">Memberships</message>
-	<message key="about.journalSponsorship">WHO-WPRO Research Registration Portal Sponsorship</message>
+	<message key="about.journalSponsorship">WHO-WPRO Health Research Portal Sponsorship</message>
 	<message key="about.aboutThisPublishingSystem">About this Publishing System</message>
 	<message key="about.aboutThisPublishingSystem.altText">OJS Editorial and Publishing Process</message>
-	<message key="about.aboutOJSJournal"><![CDATA[This WHO-WPRO Research Registration Portal uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
+	<message key="about.aboutOJSJournal"><![CDATA[This WHO-WPRO Health Research Portal uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
 	<message key="about.aboutOJSSite"><![CDATA[This site uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
 	
 	<!-- Announcement -->
@@ -1163,15 +1163,15 @@ Your server currently supports mbstring: <strong>{$supportsMBString}</strong>]]>
 	<!-- RT Settings -->
 	<message key="rt.admin.settings">Reading Tool Options</message>
 
-	<message key="rt.admin.settings.description">The reading tools appear in a frame beside published items in the sections of the WHO-WPRO Research Registration Portal that have been designated for indexing. The reading tools consist of a set of optional tools related to the published item, listed below, and a set of tools that provide access to related items, organized by field and discipline.</message>
-	<message key="rt.admin.settings.enableReadingTools">Enable Reading Tools for designated sections of WHO-WPRO Research Registration Portal.</message>
+	<message key="rt.admin.settings.description">The reading tools appear in a frame beside published items in the sections of the WHO-WPRO Health Research Portal that have been designated for indexing. The reading tools consist of a set of optional tools related to the published item, listed below, and a set of tools that provide access to related items, organized by field and discipline.</message>
+	<message key="rt.admin.settings.enableReadingTools">Enable Reading Tools for designated sections of WHO-WPRO Health Research Portal.</message>
 	<message key="rt.admin.settings.relatedItems">Field</message>
 	<message key="rt.admin.settings.relatedItemsLink"><![CDATA[See <a href="{$relatedItemsLink}" class="action">Related Items Sets</a> to view, add, correct, or delete related items for each field.]]></message>
 
-	<message key="rt.admin.options">WHO-WPRO Research Registration Portal Item Tools</message>
+	<message key="rt.admin.options">WHO-WPRO Health Research Portal Item Tools</message>
 	<message key="rt.admin.relatedItems">Related Item Tools</message>
 
-	<message key="rt.admin.settings.addComment">Add comment (enables readers to post comments, with WHO-WPRO Research Registration Portal Manager able to delete).</message>
+	<message key="rt.admin.settings.addComment">Add comment (enables readers to post comments, with WHO-WPRO Health Research Portal Manager able to delete).</message>
 	<message key="rt.admin.settings.addComment.authenticated">Users must be registered and logged in to post, with anonymity not permitted.</message>
 	<message key="rt.admin.settings.addComment.anonymous">Users must be registered and logged in to post, with anonymity permitted.</message>
 	<message key="rt.admin.settings.addComment.unauthenticated">Users do not need to be registered to post, with anonymity permitted.</message>
@@ -1212,8 +1212,8 @@ Validation may fail on search URLs that require posted form data.]]></message>
 	
 	
 	<!-- Notification Types -->
-	<message key="notification.mailListDescription">Enter your email address to receive immediate notifications of important new content added to the WHO-WPRO Research Registration Portal.</message>
-	<message key="notification.notificationsPublicDescription">This page shows important updates associated with this Research Registration Portal such as new issues or announcements.  You may subscribe to these notifications through RSS feeds (by clicking on the images to the right), or <![CDATA[  <a href="{$emailUrl}">through email.</a>]]></message>
+	<message key="notification.mailListDescription">Enter your email address to receive immediate notifications of important new content added to the WHO-WPRO Health Research Portal.</message>
+	<message key="notification.notificationsPublicDescription">This page shows important updates associated with this Health Research Portal such as new issues or announcements.  You may subscribe to these notifications through RSS feeds (by clicking on the images to the right), or <![CDATA[  <a href="{$emailUrl}">through email.</a>]]></message>
 
 	<message key="notification.type.articleSubmitted">A new proposal, "{$param}", has been submitted.</message>
 	<message key="notification.type.copyeditComment">A copyeditor has left a comment on "{$param}".</message>

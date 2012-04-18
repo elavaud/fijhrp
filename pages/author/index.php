@@ -52,6 +52,8 @@ switch ($op) {
         case 'addProgressReport':   //Added by AIM, June 15, 2011
         case 'addCompletionReport': //Added by AIM, June 21, 2011
         case 'addExtensionRequest': //Added by AIM, Jul 18, 2011
+        case 'addRawDataFile': //Added by EL, April 18, 2012
+        case 'addOtherSuppResearchOutput': //Added by EL, April 18, 2012
 	case 'submissionReview':
 	case 'submissionEditing':
 	case 'uploadRevisedVersion':
