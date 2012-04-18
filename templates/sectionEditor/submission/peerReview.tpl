@@ -10,21 +10,16 @@
  *}
 
 <div id="peerReview">
+
 <table class="data" width="100%">
 	<tr id="reviewersHeader" valign="middle">
-		<td width="22%"><h3>{translate key="submission.peerReview"}</h3></td>
-		<td width="14%"><h4>{translate key="submission.round" round=$round}</h4></td>
-		<td width="64%" class="nowrap">
-			{if $reviewAssignmentCount>0}
-				<a href="{url op="notifyReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.notifyReviewer"}</a>
-				&nbsp;&nbsp;
-			{/if}
-			
+		<td width="30%" colspan="2" ><h4>Active ERC Members</h4></td>		
+		<td width="70%" align="left" valign="bottom">
 			<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>
-			&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			
 			{if $reviewAssignmentCount>0}
-				<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">Set Due Date For All</a>
+				<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">Set Due Date For Primary Review</a>
 			{/if}
 			{**<!--<a href="{url op="submissionRegrets" path=$submission->getId()}" class="action">{translate|escape key="sectionEditor.regrets.link"}</a>
 			 -->**}
@@ -35,17 +30,20 @@
 {assign var="start" value="A"|ord}
 {foreach from=$reviewAssignments item=reviewAssignment key=reviewKey}
 {assign var="reviewId" value=$reviewAssignment->getId()}
+{assign var="articleId" value=$reviewAssignment->getSubmissionId()}
 
 {if not $reviewAssignment->getCancelled() and not $reviewAssignment->getDeclined()}
-	{assign var="reviewIndex" value=$reviewIndexes[$reviewId]}
+	{**assign var="reviewIndex" value=$reviewIndexes[$reviewId]**}
 	<div class="separator"></div>
 
 	<table class="data" width="100%">
 	<tr class="reviewer">
-		<td class="r1" width="20%"><h4>			
-		</h4></td>
-		<td class="r2" width="34%"><h4>{$reviewAssignment->getReviewerFullName()|escape}</h4></td>
-		<td class="r3" width="46%">
+		<td class="r1" width="20%" align="center" valign="bottom">			
+		</td>
+		<td class="r2" width="30%" align="left">
+			<h4>{$reviewAssignment->getReviewerFullName()|escape}</h4>
+		</td>
+		<td class="r3" width="50%" align="left">
 				{if not $reviewAssignment->getDateNotified()}
 					<a href="{url op="clearReview" path=$submission->getId()|to_array:$reviewAssignment->getId()}" class="action">{translate key="editor.article.clearReview"}</a>
 				{elseif $reviewAssignment->getDeclined() or not $reviewAssignment->getDateCompleted()}
@@ -56,28 +54,6 @@
 	</table>
 
 	<table width="100%" class="data">
-
-{*********************************************************************
- *
- * Do not allow selection of review form
- * Edited by Gay Figueroa
- * Last Update: 5/3/2011
- *
-	<tr valign="top">
-		<td class="label">{translate key="submission.reviewForm"}</td>
-		<td>
-		{if $reviewAssignment->getReviewFormId()}
-			{assign var="reviewFormId" value=$reviewAssignment->getReviewFormId()}
-			{$reviewFormTitles[$reviewFormId]}
-		{else}
-			{translate key="manager.reviewForms.noneChosen"}
-		{/if}
-		{if !$reviewAssignment->getDateCompleted()}
-			&nbsp;&nbsp;&nbsp;&nbsp;<a class="action" href="{url op="selectReviewForm" path=$submission->getId()|to_array:$reviewAssignment->getId()}"{if $reviewFormResponses[$reviewId]} onclick="return confirm('{translate|escape:"jsparam" key="editor.article.confirmChangeReviewForm"}')"{/if}>{translate key="editor.article.selectReviewForm"}</a>{if $reviewAssignment->getReviewFormId()}&nbsp;&nbsp;&nbsp;&nbsp;<a class="action" href="{url op="clearReviewForm" path=$submission->getId()|to_array:$reviewAssignment->getId()}"{if $reviewFormResponses[$reviewId]} onclick="return confirm('{translate|escape:"jsparam" key="editor.article.confirmChangeReviewForm"}')"{/if}>{translate key="editor.article.clearReviewForm"}</a>{/if}
-		{/if}
-		</td>
-	</tr>
-*********************************************************************}
 
 	<tr valign="top">
 		<td class="label" width="20%">&nbsp;</td>
@@ -90,18 +66,12 @@
 					<td class="heading" width="25%">{translate key="submission.acknowledge"}</td>
 				</tr>
 				<tr valign="top">
-					<td>
-						{**<!-- url|assign:"reviewUrl" op="notifyReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()-->**}
+					<td>						
 						{if $reviewAssignment->getDateNotified()}
-							{$reviewAssignment->getDateNotified()|date_format:$dateFormatShort}
-							{if !$reviewAssignment->getDateCompleted()}
-								{**<!-- icon name="mail" url=$reviewUrl -->**}
-							{/if}
-						{elseif $reviewAssignment->getReviewFileId()}
-							{**<!-- icon name="mail" url=$reviewUrl -->**}
+							{$reviewAssignment->getDateNotified()|date_format:$dateFormatShort}							
 						{else}
-							{**<!-- icon name="mail" disabled="disabled" url=$reviewUrl -->**}
-							{assign var=needsReviewFileNote value=1}
+							{url|assign:"reviewUrl" op="notifyReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()}
+							<a href="{url op="notifyReviewer" path=$articleId|to_array:$reviewId}" class="action">&mdash;</a>
 						{/if}
 					</td>
 					<td>
@@ -256,5 +226,29 @@
 	</table>
 {/if}
 {/foreach}
+
+
 </div>
+
+{*********************************************************************
+ *
+ * Do not allow selection of review form
+ * Edited by Gay Figueroa
+ * Last Update: 5/3/2011
+ *
+	<tr valign="top">
+		<td class="label">{translate key="submission.reviewForm"}</td>
+		<td>
+		{if $reviewAssignment->getReviewFormId()}
+			{assign var="reviewFormId" value=$reviewAssignment->getReviewFormId()}
+			{$reviewFormTitles[$reviewFormId]}
+		{else}
+			{translate key="manager.reviewForms.noneChosen"}
+		{/if}
+		{if !$reviewAssignment->getDateCompleted()}
+			&nbsp;&nbsp;&nbsp;&nbsp;<a class="action" href="{url op="selectReviewForm" path=$submission->getId()|to_array:$reviewAssignment->getId()}"{if $reviewFormResponses[$reviewId]} onclick="return confirm('{translate|escape:"jsparam" key="editor.article.confirmChangeReviewForm"}')"{/if}>{translate key="editor.article.selectReviewForm"}</a>{if $reviewAssignment->getReviewFormId()}&nbsp;&nbsp;&nbsp;&nbsp;<a class="action" href="{url op="clearReviewForm" path=$submission->getId()|to_array:$reviewAssignment->getId()}"{if $reviewFormResponses[$reviewId]} onclick="return confirm('{translate|escape:"jsparam" key="editor.article.confirmChangeReviewForm"}')"{/if}>{translate key="editor.article.clearReviewForm"}</a>{/if}
+		{/if}
+		</td>
+	</tr>
+*********************************************************************}
 

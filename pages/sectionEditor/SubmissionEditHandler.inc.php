@@ -506,7 +506,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		foreach($selectedReviewers as $reviewerId) {					
 			SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
 		}
-		Request::redirect(null, null, 'submissionReview', $articleId);
+		
+		Request::redirect(null, null, 'notifyReviewers', $articleId);
 	}
 
 	//
@@ -530,6 +531,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		if ($reviewerId > 0) {
 			// Assign reviewer to article
 			SectionEditorAction::addReviewer($submission, $reviewerId);
+			
+			//Notify reviewer and send email by default
+			$reviewId = $sectionEditorSubmissionDao->getReviewAssignmentIdByArticleAndReviewer($submission->getId(), $reviewerId);
+			SectionEditorAction::notifyReviewer($submission, $reviewId, true);
 			Request::redirect(null, null, 'submissionReview', $articleId);
 
 			// FIXME: Prompt for due date.
@@ -769,19 +774,29 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'selectReviewer', $articleId);
 	}
 
-	function notifyReviewer($args = array()) {
+	function notifyReviewers($args = array()) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
-
-		$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
-		//send emails by default
-		$send = true;
 		
-		foreach($reviewAssignments as $reviewAssignment) {
-			SectionEditorAction::notifyReviewer($submission, $reviewAssignment->getId(), $send);
+		$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
+		
+		//send emails by default
+		foreach($reviewAssignments as $reviewAssignment) {			
+			SectionEditorAction::notifyReviewer($submission, $reviewAssignment->getId(), true);
 		}
 		
+		Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+	
+	function notifyReviewer($args = array()) {
+		$articleId = isset($args[0]) ? $args[0] : 0;
+		$reviewId = isset($args[1]) ? $args[1] : 0;
+		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
+		$submission =& $this->submission;
+		
+		//send emails by default
+		SectionEditorAction::notifyReviewer($submission, $reviewId, true);
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 

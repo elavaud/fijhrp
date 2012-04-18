@@ -52,8 +52,8 @@ $(document).ready(function() {
 <tr valign="top">
 	<td class="label" width="20%">{translate key="submission.proposalStatus"}</td>
 	<td width="80%" class="value">
-			{translate key=$proposalStatusKey}
-		{if $proposalStatus != PROPOSAL_STATUS_COMPLETED}
+		{translate key=$proposalStatusKey}
+		{if $submission->isDueForReview()==1 && $proposalStatus != PROPOSAL_STATUS_COMPLETED}
 			({translate key="submissions.proposal.forContinuingReview"})
 		{/if}</td>
 </tr>
