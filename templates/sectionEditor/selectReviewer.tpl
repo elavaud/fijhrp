@@ -52,7 +52,7 @@ function sortSearch(heading, direction) {
 				{/if}
 			</td>
 			<td width="40%" class="heading">{$ercMember->getFullname()|escape}</td>	
-			<td width="40%" class="heading" align="left"><a href="{url op="selectReviewer" path=$articleId|to_array:$reviewerId}" class="action">Add as Reviewer</a></td>
+			<td width="40%" class="heading" align="left"><a href="{url op="selectReviewer" path=$articleId|to_array:$reviewerId}" class="action">Add and Notify as Primary Reviewer</a></td>
 		</tr>			
 		<tr><td colspan="3" class="separator">&nbsp;</td></tr>
 	{/foreach}

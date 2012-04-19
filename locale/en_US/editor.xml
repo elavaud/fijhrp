@@ -127,7 +127,7 @@
 	<message key="editor.article.enterRecommendation">Enter Recommendation</message>
 	<message key="editor.article.enterReviewerRecommendation">Enter Reviewer Recommendation</message>
 	<message key="editor.article.recommendation">Recommendation</message>
-	<message key="editor.article.selectReviewer">Add Other Reviewers</message>
+	<message key="editor.article.selectReviewer">Add Other Primary Reviewer</message>
 	<message key="editor.article.unassignedReviewers">Unassigned ERC Members</message>
 	<message key="editor.article.replaceReviewer">Replace Reviewer</message>
 	<message key="editor.article.editorToEnter">Editor to enter recommendation/comments for reviewer</message>
@@ -185,6 +185,8 @@
 	<message key="editor.article.decision.exempted">Exempt From Review</message>
 	<message key="editor.article.decision.expedited">For Expedited Review</message>
 	<message key="editor.article.decision.assigned">For Full Review</message>
+	<message key="editor.article.decision.done">Review Not Required (Research Completed)</message>
+	<message key="editor.article.decision.researchCompleted">Research Completed</message>
 	<message key="editor.article.selectInitialReview">Select Initial Review</message>
 	<message key="editor.article.selectExemptionDecision">Select Review Process</message>
 	<message key="editor.submissionReview.confirmInitialReview">Are you sure you wish to record this initial review?</message>
