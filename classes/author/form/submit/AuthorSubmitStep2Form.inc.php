@@ -43,6 +43,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                  *  Last Update: May 3, 2011
                  ************************************************************************************************************/
                 //Comment out by EL on april 13 2012
+
                 //Returned by SPF on April 17, 2012
 		$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
@@ -58,7 +59,9 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'reviewedByOtherErc', 'required', 'author.submit.form.reviewedByOtherErcRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'otherErcDecision', 'required', 'author.submit.form.otherErcDecisionRequired', $this->getRequiredLocale()));
-
+                
+                //test
+				$this->addCheck(new FormValidatorLocale($this, 'rtoOffice', 'required', 'author.submit.form.rtoOfficeRequired', $this->getRequiredLocale()));
 	}
 
 	/**
@@ -118,6 +121,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  ***********************************************************/
                                  
                                  //Comment out by EL on April 12 2012
+
                                  //Returned getObjectives spf April 17, 2012
 				 'objectives' => $article->getObjectives(null),
                                  
@@ -133,7 +137,10 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  'submittedAsPi' => $article->getSubmittedAsPi(null),
                                  'conflictOfInterest' => $article->getConflictOfInterest(null),
                                  'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
-                                 'otherErcDecision' => $article->getOtherErcDecision(null)
+                                 'otherErcDecision' => $article->getOtherErcDecision(null),
+                                 
+                                 //test
+                                 'rtoOffice' => $article->getRtoOffice(null)
 			);
                         
 			$authors =& $article->getAuthors();
@@ -194,6 +201,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  *********************************************************/
                                  
                                  //Comment out by EL on April 12 2012
+
                                  //Returned by SPF on April 17, 2012
 				 'objectives',
                                  
@@ -208,7 +216,10 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  'submittedAsPi',
                                  'conflictOfInterest',
                                  'reviewedByOtherErc',
-                                 'otherErcDecision'
+                                 'otherErcDecision',
+                                 
+                                 //test
+                                 'rtoOffice'
 			)
 		);
 
@@ -232,8 +243,8 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                  * Edited by Anne Ivy Mirasol -- Addition of fields
                  * Last Updated: May 3, 2011
                  *******************************************************************/
-		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 
-                            'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+		return array('title', 'abstract', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects','proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice');
+
 	}
 
 	/**
@@ -244,7 +255,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 
 		$countryDao =& DAORegistry::getDAO('CountryDAO');
 		$countries =& $countryDao->getCountries();
-                $templateMgr->assign_by_ref('countries', $countries);
+        $templateMgr->assign_by_ref('countries', $countries);
                 
 		if (Request::getUserVar('addAuthor') || Request::getUserVar('delAuthor')  || Request::getUserVar('moveAuthor')) {
 			$templateMgr->assign('scrollToAuthor', true);
@@ -319,7 +330,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
          *  Last Updated: Jan 30, 2012
          ***********************************************************/
                  
-        //Comment out by EL on April 13 2012
+        //Comment out by EL on April 13 2012  
         //Returned setObjectives by SPF April 17, 2012
 	$article->setObjectives($this->getData('objectives'), null); // Localized
                 
@@ -350,7 +361,10 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
         $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
         $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
         $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
-                 
+        
+        //test
+        $article->setRtoOffice($this->getData('rtoOffice'), null);//Localized
+                
         /***************** END OF EDIT *****************************/
 
         //

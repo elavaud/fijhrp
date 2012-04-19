@@ -213,8 +213,20 @@
 						{html_options options=$countries selected=$author.country}
                     </select>
                 </td>
-            </tr>            
+            </tr>
             {/if}
+            {if $smarty.foreach.authors.first}
+            <tr valign="top" id="rtoOfficeField">
+                <td width="20%" class="label">{fieldLabel name="rtoOffice" required="true" key="proposal.rtoOffice"}</td>
+                <td width="80%" class="value">
+                    <select name="rtoOffice[{$formLocale|escape}]" id="rtoOffice" class="selectMenu">
+                        <option value="Regional Office" {if  $rtoOffice[$formLocale] == "Regional Office" } selected="selected"{/if} >Regional Office</option>
+                        <option value="Country Office" {if  $rtoOffice[$formLocale] == "Country Office" } selected="selected"{/if} >Country Office</option>
+                    </select>
+                </td>
+            </tr>
+            {/if}
+            
 
             
 {if $currentJournal->getSetting('requireAuthorCompetingInterests')}

@@ -98,6 +98,7 @@ class MetadataForm extends Form {
                          ************************************************************************************************************/
                         
                         //Comment out by EL on April 13, 2012
+
                         //Returned by SPF on April 17, 2012
 			$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
                         $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
@@ -258,7 +259,7 @@ class MetadataForm extends Form {
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 'citations'
 		);*/
 
-                return array('title', 'abstract', /*'objectives', */'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
+                return array('title', 'abstract', 'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'proposalCountry', 'technicalUnit', 'withHumanSubjects', 'proposalType', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision');
 	}
 
 	/**
@@ -370,6 +371,8 @@ class MetadataForm extends Form {
                                  *********************************************************/
                                  
                                  //Comment out by EL on April 13, 2012
+                                 //Put back by EL on April 17, 2012
+
                                  'objectives',
                                  
                                  'keywords',
@@ -421,8 +424,10 @@ class MetadataForm extends Form {
                  ***********************************************************/
 				
 				//Comment out by EL on April 13, 2012
+
                 // Returned setObjectives by SPF April 17, 2012
 		$article->setObjectives($this->getData('objectives'), null); // Localized
+
                 
                 $article->setKeywords($this->getData('keywords'), null); // Localized
                 $article->setStartDate($this->getData('startDate'), null); // Localized
