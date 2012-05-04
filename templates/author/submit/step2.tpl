@@ -20,7 +20,7 @@
 {include file="common/formErrors.tpl"}
 
 {literal}
- <script type="text/javascript">
+<script type="text/javascript">
     <!--
     // Move author up/down
     function moveAuthor(dir, authorIndex) {
@@ -32,91 +32,108 @@
     }
     // -->
 
-    $(document).ready(function() {
-        // Add filter of proposal types: with Human Subjects vs. without Human Subjects
-        if($('input[name^="withHumanSubjects"]:checked').val() == "No" || $('input[name^="withHumanSubjects"]:checked').val() == null) {
-            $('#proposalTypeField').hide();
-            $('#proposalType').val("PNHS");
-        } else {
-            $('#proposalType option[value="PNHS"]').remove();
-        }
+    $(document).ready(
+    	function() {
+        	// Add filter of proposal types: with Human Subjects vs. without Human Subjects
+        	if($('input[name^="withHumanSubjects"]:checked').val() == "No" || $('input[name^="withHumanSubjects"]:checked').val() == null) {
+            	$('#proposalTypeField').hide();
+            	$('#proposalType').val("PNHS");
+        	} else {
+            	$('#proposalType option[value="PNHS"]').remove();
+        	}
 
-        $('input[name^="withHumanSubjects"]').change(function(){
-            var answer = $('input[name^="withHumanSubjects"]:checked').val();
+        	$('input[name^="withHumanSubjects"]').change(
+        		function(){
+            		var answer = $('input[name^="withHumanSubjects"]:checked').val();
+            		if(answer == "Yes") {
+                		$('#proposalTypeField').show();
+                		$('#proposalType option[value="PNHS"]').remove();
+            		} else {
+                		$('#proposalTypeField').hide();
+                		$('#proposalType').append('<option value="PNHS"></option>');
+                		$('#proposalType').val("PNHS");
+            		}
+        		}
+        	); 
 
-            if(answer == "Yes") {
-                $('#proposalTypeField').show();
-                $('#proposalType option[value="PNHS"]').remove();
-            } else {
-                $('#proposalTypeField').hide();
-                $('#proposalType').append('<option value="PNHS"></option>');
-                $('#proposalType').val("PNHS");
-            }
-        }); 
-
-        // Add filter of ERC decisions
-        if($('input[name^="reviewedByOtherErc"]:checked').val() == "No" || $('input[name^="reviewedByOtherErc"]:checked').val() == null) {
-            $('#otherErcDecisionField').hide();
-            $('#otherErcDecision').val("NA");
-        } else {
-            $('#otherErcDecision option[value="NA"]').remove();
-        }
+        	// Add filter of ERC decisions
+        	if($('input[name^="reviewedByOtherErc"]:checked').val() == "No" || $('input[name^="reviewedByOtherErc"]:checked').val() == null) {
+            	$('#otherErcDecisionField').hide();
+            	$('#otherErcDecision').val("NA");
+        	} else {
+            	$('#otherErcDecision option[value="NA"]').remove();
+        	}
             
-        $('input[name^="reviewedByOtherErc"]').change(function(){
-              var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
-              if(answer == "Yes") {
-                  $('#otherErcDecisionField').show();
-                  $('#otherErcDecision option[value="NA"]').remove();
-              } else {
-                  $('#otherErcDecisionField').hide();
-                  $('#otherErcDecision').append('<option value="NA"></option>');
-                  $('#otherErcDecision').val("NA");
-              }
-        });
+        	$('input[name^="reviewedByOtherErc"]').change(
+        		function(){
+              		var answer = $('input[name^="reviewedByOtherErc"]:checked').val();
+              		if(answer == "Yes") {
+                  		$('#otherErcDecisionField').show();
+                  		$('#otherErcDecision option[value="NA"]').remove();
+              		} else {
+                  		$('#otherErcDecisionField').hide();
+                  		$('#otherErcDecision').append('<option value="NA"></option>');
+                  		$('#otherErcDecision').val("NA");
+              		}
+        		}
+        	);
 
-        //Restrict end date to (start date) + 1
-        $( "#startDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y',
-                onSelect:
-                    function(dateText, inst){
+        	//Restrict end date to (start date) + 1
+        	$( "#startDate" ).datepicker(
+        		{
+        			changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y', onSelect: function(dateText, inst){
                         dayAfter = new Date();
                         dayAfter = $("#startDate").datepicker("getDate");
                         dayAfter.setDate(dayAfter.getDate() + 1);
                         $("#endDate").datepicker("option","minDate", dayAfter)
-                }
-        });
+                	}
+        		}
+        	);
             
-        $( "#endDate" ).datepicker({changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'});
+        	$( "#endDate" ).datepicker(
+        		{
+        			changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', minDate: '-1 y'
+        		}
+        	);
 
-        //Start code for multi-country proposals
-        $('#addAnotherCountry').click(function(){
-            var proposalCountryHtml = '<tr valign="top" class="proposalCountry">' + $('#firstProposalCountry').html() + '</tr>';
-            $('#firstProposalCountry').after(proposalCountryHtml);
-            $('#firstProposalCountry').next().find('select').attr('selectedIndex', 0);
-            $('.proposalCountry').find('.removeProposalCountry').show();
-            $('#firstProposalCountry').find('.removeProposalCountry').hide();
-            return false;
-        });
+        	//Start code for multi-country proposals
+        	$('#addAnotherCountry').click(
+        		function(){
+            		var proposalCountryHtml = '<tr valign="top" class="proposalCountry">' + $('#firstProposalCountry').html() + '</tr>';
+            		$('#firstProposalCountry').after(proposalCountryHtml);
+            		$('#firstProposalCountry').next().find('select').attr('selectedIndex', 0);
+            		$('.proposalCountry').find('.removeProposalCountry').show();
+            		$('#firstProposalCountry').find('.removeProposalCountry').hide();
+            		return false;
+        		}
+        	);
 
-        $('.removeProposalCountry').live('click', function(){
-            $(this).closest('tr').remove();
-            return false;
-        });
-        //End code for multi-country proposals
+        	$('.removeProposalCountry').live(
+        		'click', function(){
+            		$(this).closest('tr').remove();
+            		return false;
+        		}
+        	);
+        	
+        	//End code for multi-country proposals
 
-        //Start code for multiple proposal types
-        showOrHideOtherProposalTypeField();
-        $('#proposalType').change(showOrHideOtherProposalTypeField);
-        //End code for multiple proposal types
-    });
+        	//Start code for multiple proposal types
+        	showOrHideOtherProposalTypeField();
+        	$('#proposalType').change(showOrHideOtherProposalTypeField);
+        	//End code for multiple proposal types
+    	}
+    );
 
     function showOrHideOtherProposalTypeField() {
         var isOtherSelected = false;
         if ($('#proposalType').val() != null) {
-            $.each($('#proposalType').val(), function(key, value){
-                if(value == "OTHER") {
-                    isOtherSelected = true;
-                }
-            });
+            $.each(
+            	$('#proposalType').val(), function(key, value){
+                	if(value == "OTHER") {
+                    	isOtherSelected = true;
+                	}
+            	}
+            );
         }
             
         if(isOtherSelected) {
@@ -220,6 +237,7 @@
                 <td width="20%" class="label">{fieldLabel name="rtoOffice" required="true" key="proposal.rtoOffice"}</td>
                 <td width="80%" class="value">
                     <select name="rtoOffice[{$formLocale|escape}]" id="rtoOffice" class="selectMenu">
+                        <option value=""></option>
                         <option value="Regional Office" {if  $rtoOffice[$formLocale] == "Regional Office" } selected="selected"{/if} >Regional Office</option>
                         <option value="Country Office" {if  $rtoOffice[$formLocale] == "Country Office" } selected="selected"{/if} >Country Office</option>
                     </select>
@@ -318,12 +336,12 @@
                 <td width="20%" class="label">{fieldLabel name="authors-0-url" required="true" key="user.url"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="authors[0][url]" id="authors-0-url" size="30" maxlength="90" /></td>
             </tr>
-{if $currentJournal->getSetting('requireAuthorCompetingInterests')}
+			{if $currentJournal->getSetting('requireAuthorCompetingInterests')}
             <tr valign="top">
                 <td width="20%" class="label">{fieldLabel name="authors-0-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
                 <td width="80%" class="value"><textarea name="authors[0][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-0-competingInterests" rows="5" cols="40"></textarea></td>
             </tr>
-{/if}
+			{/if}
             <!-- Comment out, AIM May 31, 2011
 {*
 <tr valign="top">
@@ -499,7 +517,6 @@
                     </select>
                 </td>
             </tr>
-
         </table>
     </div>
 

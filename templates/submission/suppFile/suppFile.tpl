@@ -43,6 +43,8 @@ $(document).ready(function() {
             {assign var="pageTitle" value="author.submit.addCompletionReport"}
         {elseif $type == "Extension Request"}
             {assign var="pageTitle" value="author.submit.addExtensionRequest"}
+        {elseif $type == "Raw Data File"}
+        	{assign var="pageTitle" value=author.submit.addRawDataFile}
         {else}
             {assign var="pageTitle" value="author.submit.addSupplementaryFile"}
         {/if}
@@ -58,6 +60,8 @@ $(document).ready(function() {
     {assign var="pageCrumbTitle" value="submission.completionReports"}
 {elseif $type == "Extension Request"}
     {assign var="pageCrumbTitle" value="submission.extensionRequest"}
+{elseif $type == "Raw Data File"}
+	{assign var="pageCrumbTitle" value="submission.rawDataFile"}
 {else}
     {assign var="pageCrumbTitle" value="submission.supplementaryFiles"}
 {/if}
@@ -176,6 +180,10 @@ $(document).ready(function() {
     <h3>{translate key="submission.completionReports"}</h3>
 {elseif $type == "Extension Request"}
     <h3>{translate key="submission.extensionRequest"}</h3>
+{elseif $type == "Raw Data File"}
+    <h3>{translate key="submission.rawDataFile"}</h3>
+{elseif $type == "Other Supplementary Research Output"}
+    <h3>{translate key="submission.otherSuppResearchOutput"}</h3>
 {else}
     <h3>{translate key="author.submit.supplementaryFileUpload"}</h3>
 {/if}

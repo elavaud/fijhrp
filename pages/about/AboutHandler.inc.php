@@ -211,33 +211,32 @@ class AboutHandler extends Handler {
 		$templateMgr =& TemplateManager::getManager();
 		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
 		
-		$chair =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Chair");
+		$chair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Chair");
 		$chair =& $chair->toArray();
 		
-		$cochair =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Co-chair");
-		$cochair =& $cochair->toArray();
+		$viceChair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Vice-Chair");
+		$viceChair =& $viceChair->toArray();
 				
-		$secretary =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Secretary");
+		$secretary =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary");
 		$secretary =& $secretary->toArray();
 		
-		$adsecretary =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Secretary Administrative Assistant");
-		$adsecretary =& $adsecretary->toArray();
+		$secretaryAA =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary Administrative Assistant");
+		$secretaryAA =& $secretaryAA->toArray();
 
-		$ercmembers =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, Member");
-		$ercmembers =& $ercmembers->toArray();
+		$ercMembers =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Member");
+		$ercMembers =& $ercMembers->toArray();
 		
-		$extmembers =& $userSettingsDao->getUsersBySetting("affiliation", "WPRO-ERC, External Reviewer");
-		$extmembers =& $extmembers->toArray();
+		$extMembers =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, External Member");
+		$extMembers =& $extMembers->toArray();
 							
-		$templateMgr->assign_by_ref('chair', $chair);
-		
 		$templateMgr->assign_by_ref('userSettingsDao', $userSettingsDao);
 		
-		$templateMgr->assign_by_ref('cochair', $cochair);		
+		$templateMgr->assign_by_ref('chair', $chair);
+		$templateMgr->assign_by_ref('viceChair', $viceChair);		
 		$templateMgr->assign_by_ref('secretary', $secretary);
-		$templateMgr->assign_by_ref('adsecretary', $adsecretary);
-		$templateMgr->assign_by_ref('ercmembers', $ercmembers);
-		$templateMgr->assign_by_ref('extmembers', $extmembers);
+		$templateMgr->assign_by_ref('secretaryAA', $secretaryAA);
+		$templateMgr->assign_by_ref('ercMembers', $ercMembers);
+		$templateMgr->assign_by_ref('extMembers', $extMembers);
 		
 		$templateMgr->display('about/editorialTeam.tpl');
 	}

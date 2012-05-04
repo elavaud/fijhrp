@@ -15,14 +15,14 @@
 <div id="aboutPeople">
 <h3>{translate key="about.people"}</h3>
 <ul class="plain">
-	{if not (empty($journalSettings.mailingAddress) && empty($journalSettings.contactName) && empty($journalSettings.contactAffiliation) && empty($journalSettings.contactMailingAddress) && empty($journalSettings.contactPhone) && empty($journalSettings.contactFax) && empty($journalSettings.contactEmail) && empty($journalSettings.supportName) && empty($journalSettings.supportPhone) && empty($journalSettings.supportEmail))}
+	{*{if not (empty($journalSettings.mailingAddress) && empty($journalSettings.contactName) && empty($journalSettings.contactAffiliation) && empty($journalSettings.contactMailingAddress) && empty($journalSettings.contactPhone) && empty($journalSettings.contactFax) && empty($journalSettings.contactEmail) && empty($journalSettings.supportName) && empty($journalSettings.supportPhone) && empty($journalSettings.supportEmail))}*}{*Not useful anymore. EL on April 18, 2012*}
 		<li>&#187; <a href="{url op="contact"}">{translate key="about.contact"}</a></li>
-	{/if}
+	{*{/if}*}{*Not useful anymore. EL on April 18, 2012*}
 	<li>&#187; <a href="{url op="editorialTeam"}">{translate key="about.editorialTeam"}</a></li>
-	{iterate from=peopleGroups item=peopleGroup}
+	{*{iterate from=peopleGroups item=peopleGroup}
 		<li>&#187; <a href="{url op="displayMembership" path=$peopleGroup->getId()}">{$peopleGroup->getLocalizedTitle()|escape}</a></li>
 	{/iterate}
-	{call_hook name="Templates::About::Index::People"}
+	{call_hook name="Templates::About::Index::People"}*}{*Not useful anymore. EL on April 18, 2012*}
 </ul>
 </div>
 <div id="aboutPolicies">

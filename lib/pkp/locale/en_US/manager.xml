@@ -110,7 +110,7 @@
 	<message key="manager.people.enable">Enable</message>
 	<message key="manager.people.enroll">Enroll User</message>
 	<message key="manager.people.enrollment">Enrollment</message>
-	<message key="manager.people.enrollSelected">Enroll Selected Users</message>
+	<message key="manager.people.enrollSelected">Enroll Selected User(s)</message>
 	<message key="manager.people.enrollSyncRole">Synchronize role</message>
 	<message key="manager.people.enrollSync">Sync Enrollment</message>
 	<message key="manager.people.enrollUserAsDescription">Users can be assigned to, or removed from, a role at any point.</message>

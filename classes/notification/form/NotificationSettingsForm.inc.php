@@ -25,6 +25,7 @@ class NotificationSettingsForm extends PKPNotificationSettingsForm {
 	 * Constructor.
 	 */
 	function NotificationSettingsForm() {
+		
 		parent::PKPNotificationSettingsForm();
 	}
 
@@ -75,7 +76,7 @@ class NotificationSettingsForm extends PKPNotificationSettingsForm {
 			$canOnlyRead = false;
 			$canOnlyReview = true;
 		}
-		if (Validation::isSiteAdmin() || Validation::isJournalManager() || Validation::isEditor() || Validation::isSectionEditor()) {
+		if (Validation::isSiteAdmin() || Validation::isJournalManager() || Validation::isEditor()) {
 			$canOnlyRead = false;
 			$canOnlyReview = false;
 		}
@@ -83,6 +84,7 @@ class NotificationSettingsForm extends PKPNotificationSettingsForm {
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('canOnlyRead', $canOnlyRead);
 		$templateMgr->assign('canOnlyReview', $canOnlyReview);
+		
 		return parent::display();
 	}
 

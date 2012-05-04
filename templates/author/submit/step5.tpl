@@ -86,7 +86,9 @@
     {/if}
 </table>
 <div class="separator"></div>
-<span style="font-size: smaller; font-style: italic;">To edit proposal details, <a href="{url op="submit" path="3" articleId=$articleId}">click here to go back Step 3.</a></span>
+
+{* Commented out by EL on May 2 2012: Unuseful*}
+{* <span style="font-size: smaller; font-style: italic;">To edit proposal details, <a href="{url op="submit" path="3" articleId=$articleId}">click here to go back Step 3.</a></span> *}
 
 <br />
 <br />
@@ -121,7 +123,9 @@
 {/foreach}
 </table>
 <div class="separator"></div>
-<span style="font-size: smaller; font-style: italic;">To add or remove supplementary files, <a href="{url op="submit" path="4" articleId=$articleId}">click here to go back Step 4.</a></span>
+
+{* Commented out by EL on May 2 2012: Unuseful*}
+{* <span style="font-size: smaller; font-style: italic;">To add or remove supplementary files, <a href="{url op="submit" path="4" articleId=$articleId}">click here to go back Step 4.</a></span>*}
 
 <br />
 <br />

@@ -31,12 +31,12 @@
 Administration problem: No Chair.
 {/if}
 
-<h2><br />{translate key="user.ercrole.cochair"}</h2>
-{if count($cochair) == 1}
-	<div id="cochair">
+<h2><br />{translate key="user.ercrole.viceChair"}</h2>
+{if count($viceChair) == 1}
+	<div id="viceChair">
 	<ol class="editorialTeam">
-		{foreach from=$cochair item=cochair} 
-			<li><dd><strong>{$cochair->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($cochair->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($cochair->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+		{foreach from=$viceChair item=viceChair} 
+			<li><dd><strong>{$viceChair->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($viceChair->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($viceChair->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
@@ -60,11 +60,11 @@ Administration problem: No Secretary.
 {/if}
 
 <h3><dd><br />{translate key="user.role.sectionEditors"}</h3>
-{if count($adsecretary) == 1}
-	<div id="adsecretary">
+{if count($secretaryAA) == 1}
+	<div id="secretaryAA">
 	<ol class="editorialTeam">
-		{foreach from=$adsecretary item=adsecretary} 
-			<li><dd><strong>{$adsecretary->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($adsecretary->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($adsecretary->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+		{foreach from=$secretaryAA item=secretaryAA} 
+			<li><dd><strong>{$secretaryAA->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($secretaryAA->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($secretaryAA->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
@@ -72,30 +72,30 @@ Administration problem: No Secretary.
 Administration problem: No Secretary Administrative Assistant.
 {/if}
 
-<h2><br />{translate key="user.ercrole.ercmembers"}</h2>
-{if count($ercmembers)>0}
-	<div id="ercmembers">
+<h2><br />{translate key="user.ercrole.ercMembers"}</h2>
+{if count($ercMembers)>0}
+	<div id="ercMembers">
 	<ol class="editorialTeam">
-		{foreach from=$ercmembers item=ercmembers} 
-			<li><br /><dd><strong>{$ercmembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($ercmembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($ercmembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+		{foreach from=$ercMembers item=ercMembers} 
+			<li><br /><dd><strong>{$ercMembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($ercMembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($ercMembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
-{elseif count($members) == 0}
+{elseif count($ercMembers) == 0}
 Administration problem: No Members.
 {/if}
 
-<h2><br />{translate key="user.ercrole.extreviewers"}</h2>
-{if count($extmembers)>0}
-	<div id="ercmembers">
+<h2><br />{translate key="user.ercrole.extMembers"}</h2>
+{if count($extMembers)>0}
+	<div id="extMembers">
 	<ol class="editorialTeam">
-		{foreach from=$extmembers item=extmembers} 
-			<li><br /><dd><strong>{$extmembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($extmembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($extmembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+		{foreach from=$extMembers item=extMembers} 
+			<li><br /><dd><strong>{$extMembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($extMembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($extMembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
 		{/foreach}
 	</ol>
 	</div>
-{elseif count($members) == 0}
-Administration problem: No External Reviewers.
+{elseif count($extMembers) == 0}
+Administration problem: No External Members.
 {/if}
 
 </div>

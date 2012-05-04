@@ -72,7 +72,8 @@
 	<topic key="submission.submissionRequirements" id="submission/topic/000002"></topic>
 	<topic key="submission.indexingAndMetadata" id="submission/topic/000003"></topic>
 	<topic key="submission.supplementaryFiles" id="submission/topic/000004"></topic>
-
+    
+    
 	<!-- Editorial Process -->
 	<topic key="editorial.index" id="editorial/topic/000000"></topic>
 	<topic key="editorial.editorsRole" id="editorial/topic/000001"></topic>

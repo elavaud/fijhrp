@@ -9,6 +9,7 @@
  * $Id$
  *}
 
+{*
 <div class="separator"></div>
 
 <h3>{translate key="plugins.generic.referral.referrals"}</h3>
@@ -56,7 +57,10 @@
 				{translate key="plugins.generic.referral.status.new.empty"}
 			{elseif $referralFilter == $smarty.const.REFERRAL_STATUS_ACCEPT}
 				{translate key="plugins.generic.referral.status.accept.empty"}
-			{else}{* REFERRAL_STATUS_DECLINE *}
+			{else}
+			*}
+			{* REFERRAL_STATUS_DECLINE *}
+			{*
 				{translate key="plugins.generic.referral.status.decline.empty"}
 			{/if}
 		</td>
@@ -72,3 +76,4 @@
 {/if}
 </table>
 </div>
+*}

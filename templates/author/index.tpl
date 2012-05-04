@@ -31,9 +31,11 @@
 <form method="post" name="submit" action="{url op="index" path=$pageToDisplay}">
 	<input type="hidden" name="sort" value="id"/>
 	<input type="hidden" name="sortDirection" value="ASC"/>
-	<select name="searchField" size="1" class="selectMenu">
+	{* Changed by EL on April 27, 2012: Don't need to display this field *}
+	<select name="searchField" size="1" class="selectMenu" style="display: none;">
 		{html_options_translate options=$fieldOptions selected=$searchField}
 	</select>
+	<strong>Title &nbsp;</strong> 
 	<select name="searchMatch" size="1" class="selectMenu">
 		<option value="contains"{if $searchMatch == 'contains'} selected="selected"{/if}>{translate key="form.contains"}</option>
 		<option value="is"{if $searchMatch == 'is'} selected="selected"{/if}>{translate key="form.is"}</option>
@@ -41,10 +43,11 @@
 	</select>
 	<input type="text" size="15" name="search" class="textField" value="{$search|escape}" />
 	<br/>
-	<select name="dateSearchField" size="1" class="selectMenu">
+	{* Changed by EL on April 27, 2012: Don't need to display this field *}
+	<select name="dateSearchField" size="1" class="selectMenu" style="display: none;">
 		{html_options_translate options=$dateFieldOptions selected=$dateSearchField}
 	</select>
-	{translate key="common.between"}
+	<strong>Submitted between :&nbsp;</strong>
 	{html_select_date prefix="dateFrom" time=$dateFrom all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
 	{translate key="common.and"}
 	{html_select_date prefix="dateTo" time=$dateTo all_extra="class=\"selectMenu\"" year_empty="" month_empty="" day_empty="" start_year="-5" end_year="+1"}
@@ -82,6 +85,6 @@
 <!-- Comment out, AIM, May 31, 2011 -->
 {*
 {call_hook name="Templates::Author::Index::AdditionalItems"}
-
-{include file="common/footer.tpl"}
 *}
+{include file="common/footer.tpl"}
+

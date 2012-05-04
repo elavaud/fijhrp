@@ -41,8 +41,9 @@ class EmailHandler extends UserHandler {
 		$template = Request::getUserVar('template');
 		if (	!$journal || empty($template) || (
 			!Validation::isJournalManager($journal->getId()) &&
-			!Validation::isEditor($journal->getId()) &&
-			!Validation::isSectionEditor($journal->getId())
+			!Validation::isEditor($journal->getId())
+			//Commented out by EL: Not useful anymore
+			//&&!Validation::isSectionEditor($journal->getId())
 		)) {
 			$template = null;
 		}

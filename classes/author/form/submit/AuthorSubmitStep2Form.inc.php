@@ -26,7 +26,9 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorCustom($this, 'authors', 'required', 'author.submit.form.authorRequired', create_function('$authors', 'return count($authors) > 0;')));
 		$this->addCheck(new FormValidatorArray($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', array('firstName', 'lastName')));
-		$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$email, $regExp', 'return String::regexp_match($regExp, $email);'), array(ValidatorEmail::getRegexp()), false, array('email')));
+		
+		//Comment out by EL on April 24, 2012
+		//$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', create_function('$email, $regExp', 'return String::regexp_match($regExp, $email);'), array(ValidatorEmail::getRegexp()), false, array('email')));
 		$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'user.profile.form.urlInvalid', create_function('$url, $regExp', 'return empty($url) ? true : String::regexp_match($regExp, $url);'), array(ValidatorUrl::getRegexp()), false, array('url')));
 		$this->addCheck(new FormValidatorLocale($this, 'title', 'required', 'author.submit.form.titleRequired', $this->getRequiredLocale()));
 
@@ -46,6 +48,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 
                 //Returned by SPF on April 17, 2012
 		$this->addCheck(new FormValidatorLocale($this, 'objectives', 'required', 'author.submit.form.objectivesRequired', $this->getRequiredLocale()));
+   				$this->addCheck(new FormValidatorLocale($this, 'rtoOffice', 'required', 'author.submit.form.rtoOfficeRequired', $this->getRequiredLocale()));		
                 $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
@@ -59,9 +62,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 $this->addCheck(new FormValidatorLocale($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'reviewedByOtherErc', 'required', 'author.submit.form.reviewedByOtherErcRequired', $this->getRequiredLocale()));
                 $this->addCheck(new FormValidatorLocale($this, 'otherErcDecision', 'required', 'author.submit.form.otherErcDecisionRequired', $this->getRequiredLocale()));
-                
-                //test
-				$this->addCheck(new FormValidatorLocale($this, 'rtoOffice', 'required', 'author.submit.form.rtoOfficeRequired', $this->getRequiredLocale()));
+
 	}
 
 	/**
@@ -138,8 +139,6 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  'conflictOfInterest' => $article->getConflictOfInterest(null),
                                  'reviewedByOtherErc' => $article->getReviewedByOtherErc(null),
                                  'otherErcDecision' => $article->getOtherErcDecision(null),
-                                 
-                                 //test
                                  'rtoOffice' => $article->getRtoOffice(null)
 			);
                         
@@ -217,8 +216,6 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                                  'conflictOfInterest',
                                  'reviewedByOtherErc',
                                  'otherErcDecision',
-                                 
-                                 //test
                                  'rtoOffice'
 			)
 		);
@@ -361,8 +358,6 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
         $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized
         $article->setReviewedByOtherErc($this->getData('reviewedByOtherErc'), null); // Localized
         $article->setOtherErcDecision($this->getData('otherErcDecision'), null); // Localized
-        
-        //test
         $article->setRtoOffice($this->getData('rtoOffice'), null);//Localized
                 
         /***************** END OF EDIT *****************************/

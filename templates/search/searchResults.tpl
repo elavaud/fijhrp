@@ -54,7 +54,7 @@ function ensureKeyword() {
 	</div>
 </form>
 <br/>
-<h4>Search for '{$query}' {if $dateFrom != '--'} from {$dateFrom|date_format:$dateFormatShort}{/if} {if $dateTo != '--'} from {$dateTo|date_format:$dateFormatShort}{/if} returned {$count} result(s). </h4>
+<h4>Search {if $query}for '{$query}' {/if}{if $dateFrom != '--'} from {$dateFrom|date_format:$dateFormatShort}{/if} {if $dateFrom != '--' && $dateTo != '--'} and {/if}{if $dateTo != '--'} until {$dateTo|date_format:$dateFormatShort}{/if} returned {$count} result(s). </h4>
 <div id="results">
 <table width="100%" class="listing">
 <tr class="heading" valign="bottom">

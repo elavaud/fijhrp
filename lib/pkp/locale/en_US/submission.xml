@@ -385,7 +385,7 @@
         <message key="submissions.proposal.forContinuingReview">For Continuing Review</message>
 
 	<message key="submissions.ruling">Ruling</message>
-	<message key="submissions.submit">Submit</message>
+	<message key="submissions.submit">Date of submission</message>
 	<message key="submissions.submitted">Submitted</message>
 	<message key="submission.start">Start</message>
 	<message key="submission.submissionHistory">Submission History</message>
@@ -395,10 +395,14 @@
 	<message key="submission.summary">Summary</message>
 	<message key="submission.supplementaryFiles">Supplementary Files</message>
 
-        <message key="submission.progressReports">Progress Reports</message>
+        <message key="submission.progressReports">Interim Progress Reports</message>
         <message key="submission.completionReports">Completion Reports</message>
         <message key="submission.extensionRequest">Request For Extension</message>
         <message key="submission.withdrawReports">Reason for Withdrawal</message>
+        
+        <!-- Added by: EL, April 18, 2012 -->
+        <message key="submission.rawDataFile">Raw Data File</message>
+        <message key="submission.otherSuppResearchOutput">Other Supplementary Research Output</message>
 
 	<message key="submission.supportingAgencies">Supporting Agencies</message>
 	<message key="submission.currentAgencies">Current Agencies</message>

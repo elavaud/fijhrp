@@ -111,9 +111,6 @@ class AuthorHandler extends Handler {
 			// Make view counts available if enabled.
 			$templateMgr->assign('statViews', $journal->getSetting('statViews'));
 		}
-		//test
-    	//$approvalDate =& $submissions2->getApprovalDate($this->getLocale());
-   		//end test
 
 		$templateMgr->assign_by_ref('submissions1', $submissions1);
         $templateMgr->assign_by_ref('submissions2', $submissions2);

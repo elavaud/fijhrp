@@ -43,6 +43,10 @@
 	<message key="announcement.view">View Announcement</message>
 	<message key="common.actingAsUserGroup.userIsNotInTargetUserGroup">You are not in this user group.</message>
 	<message key="common.action">Action</message>
+    
+        <!-- Added by EL on April 26, 2012 -->
+        <message key="common.disableEnable">Disable/Enable</message>
+        
 	<message key="common.activate">Activate</message>
 	<message key="common.active">Active</message>
 	<message key="common.add">Add</message>
@@ -350,9 +354,19 @@
 	<message key="search.titleIndex">Browse Title Index</message>
 	<message key="search.title">Title</message>
 	<message key="search.typeMethodApproach">Type (method/approach)</message>
+    
 	<message key="editor.article.decision.accept">Approved</message>
 	<message key="editor.article.decision.decline">Not Approved</message>	
 	
+    <!-- Added by EL on May 3 2012-->
+    <message key="editor.article.decision.pendingRevisions">Revisions Required</message >
+	<message key="editor.article.decision.resubmit">Revise and Resubmit</message>
+	<message key="editor.article.decision.decline">Not Approved</message>	
+	<message key="editor.article.decision.complete">Complete</message>
+	<message key="editor.article.decision.incomplete">Incomplete</message>
+	<message key="editor.article.decision.exempted">Exempt From Review</message>
+	<message key="editor.article.decision.expedited">For Expedited Review</message>
+	<message key="editor.article.decision.assigned">For Full Review</message>
 	
 		<!--  Added by MSB July 7 2011 -->
 		<message key="common.update">Update</message>

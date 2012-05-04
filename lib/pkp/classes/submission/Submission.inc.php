@@ -1377,10 +1377,7 @@ class Submission extends DataObject {
 		return $this->setData('otherErcDecision', $otherErcDecision, $locale);
 	}
 	
-
-	
-	//Test Office
-	        /**
+	/**
 	 * Get "localized" rtoOffice (if applicable).
 	 * @return string
 	 */

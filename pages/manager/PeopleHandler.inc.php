@@ -157,6 +157,8 @@ class PeopleHandler extends ManagerHandler {
 
 		$templateMgr->display('manager/people/enrollment.tpl');
 	}
+	
+
 
 	/**
 	 * Search for users to enroll in a specific role.
@@ -168,7 +170,7 @@ class PeopleHandler extends ManagerHandler {
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$journalDao =& DAORegistry::getDAO('JournalDAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
-
+		
 		$roleId = (int)(isset($args[0])?$args[0]:Request::getUserVar('roleId'));
 		$journal =& $journalDao->getJournalByPath(Request::getRequestedJournalPath());
 
@@ -197,7 +199,72 @@ class PeopleHandler extends ManagerHandler {
 		$rangeInfo = Handler::getRangeInfo('users');
 
 		$users =& $userDao->getUsersByField($searchType, $searchMatch, $search, true, $rangeInfo, $sort);
-
+		
+		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
+		
+		$chair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Chair");
+		$chair =& $chair->toArray();
+		$isChair = '0';
+		if(count($chair)>'0') $isChair = '1';
+		
+		$viceChair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Vice-Chair");
+		$viceChair =& $viceChair->toArray();
+		$isViceChair = '0';
+		if(count($viceChair)>'0') $isViceChair = '1';
+		
+		$secretary =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary");
+		$secretary =& $secretary->toArray();
+		$isSecretary = '0';
+		if(count($secretary)>'0') $isSecretary = '1';		
+		
+		$secretaryAA =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary Administrative Assistant");
+		$secretaryAA =& $secretaryAA->toArray();
+		$isSecretaryAA = '0';
+		if(count($secretaryAA)>'0') $isSecretaryAA = '1';
+		
+		$members =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Member");
+		$members =& $members->toArray();
+		$areMembers = '0';
+		$extMembers =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, External Member");
+		$extMembers =& $extMembers->toArray();
+		$areExtMembers = '0';
+		
+		$countMembers = count($members);
+		$countExtMembers = count($extMembers);
+		
+		if($countExtMembers<'2'){
+			$freeMemberPlaces = 11 - $countMembers;
+			if(count($members)>'10') $areMembers = '1';
+		}elseif($countExtMembers=='2'){
+			$freeMemberPlaces = 10 - $countMembers;
+			if(count($members)>'9') $areMembers = '1';
+		}
+		
+		if (count($members)>'10'){
+			$freeExtMemberPlaces = 1 - $countExtMembers;
+			if(count($extMembers)>'0') $areExtMembers = '1';
+		}elseif(count($members)<'11'){
+			$freeExtMemberPlaces = 2 - $countExtMembers;
+			if(count($extMembers)>'1') $areExtMembers = '1';
+		}
+		
+		$templateMgr->assign('freeExtMemberPlaces', $freeExtMemberPlaces);
+		$templateMgr->assign('freeMemberPlaces', $freeMemberPlaces);
+		
+		$templateMgr->assign_by_ref('chair', $chair);
+		$templateMgr->assign_by_ref('viceChair', $viceChair);
+		$templateMgr->assign_by_ref('secretary', $secretary);
+		$templateMgr->assign_by_ref('secretaryAA', $secretaryAA);
+		$templateMgr->assign_by_ref('members', $members);
+		$templateMgr->assign_by_ref('extMembers', $extMembers);
+		
+		$templateMgr->assign('isChair', $isChair);
+		$templateMgr->assign('isViceChair', $isViceChair);
+		$templateMgr->assign('isSecretary', $isSecretary);
+		$templateMgr->assign('isSecretaryAA', $isSecretaryAA);
+		$templateMgr->assign('areMembers', $areMembers);
+		$templateMgr->assign('areExtMembers', $areExtMembers);
+				
 		$templateMgr->assign('searchField', $searchType);
 		$templateMgr->assign('searchMatch', $searchMatch);
 		$templateMgr->assign('search', $search);
@@ -245,6 +312,76 @@ class PeopleHandler extends ManagerHandler {
 
 		$users =& $userDao->getUsersWithNoRole(true, $rangeInfo);
 
+		
+		//FIXME: twice the same portion of code in "enrollSearch" and here
+		/////////////////////////////////////////////////
+
+		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
+		
+		$chair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Chair");
+		$chair =& $chair->toArray();
+		$isChair = '0';
+		if(count($chair)>'0') $isChair = '1';
+		
+		$viceChair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Vice-Chair");
+		$viceChair =& $viceChair->toArray();
+		$isViceChair = '0';
+		if(count($viceChair)>'0') $isViceChair = '1';
+		
+		$secretary =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary");
+		$secretary =& $secretary->toArray();
+		$isSecretary = '0';
+		if(count($secretary)>'0') $isSecretary = '1';		
+		
+		$secretaryAA =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary Administrative Assistant");
+		$secretaryAA =& $secretaryAA->toArray();
+		$isSecretaryAA = '0';
+		if(count($secretaryAA)>'0') $isSecretaryAA = '1';
+		
+		$members =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Member");
+		$members =& $members->toArray();
+		$areMembers = '0';
+		$extMembers =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, External Member");
+		$extMembers =& $extMembers->toArray();
+		$areExtMembers = '0';
+		
+		$countMembers = count($members);
+		$countExtMembers = count($extMembers);
+		
+		if($countExtMembers<'2'){
+			$freeMemberPlaces = 11 - $countMembers;
+			if(count($members)>'10') $areMembers = '1';
+		}elseif($countExtMembers=='2'){
+			$freeMemberPlaces = 10 - $countMembers;
+			if(count($members)>'9') $areMembers = '1';
+		}
+		
+		if (count($members)>'10'){
+			$freeExtMemberPlaces = 1 - $countExtMembers;
+			if(count($extMembers)>'0') $areExtMembers = '1';
+		}elseif(count($members)<'11'){
+			$freeExtMemberPlaces = 2 - $countExtMembers;
+			if(count($extMembers)>'1') $areExtMembers = '1';
+		}
+		
+		$templateMgr->assign('freeExtMemberPlaces', $freeExtMemberPlaces);
+		$templateMgr->assign('freeMemberPlaces', $freeMemberPlaces);
+		
+		$templateMgr->assign_by_ref('chair', $chair);
+		$templateMgr->assign_by_ref('viceChair', $viceChair);
+		$templateMgr->assign_by_ref('secretary', $secretary);
+		$templateMgr->assign_by_ref('secretaryAA', $secretaryAA);
+		$templateMgr->assign_by_ref('members', $members);
+		$templateMgr->assign_by_ref('extMembers', $extMembers);
+		
+		$templateMgr->assign('isChair', $isChair);
+		$templateMgr->assign('isViceChair', $isViceChair);
+		$templateMgr->assign('isSecretary', $isSecretary);
+		$templateMgr->assign('isSecretaryAA', $isSecretaryAA);
+		$templateMgr->assign('areMembers', $areMembers);
+		$templateMgr->assign('areExtMembers', $areExtMembers);
+
+		//////////////////////////////////////////////////
 		$templateMgr->assign('omitSearch', true);
 		$templateMgr->assign_by_ref('users', $users);
 		$templateMgr->assign_by_ref('thisUser', Request::getUser());
@@ -271,15 +408,115 @@ class PeopleHandler extends ManagerHandler {
 		$journal =& $journalDao->getJournalByPath(Request::getRequestedJournalPath());
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$rolePath = $roleDao->getRolePath($roleId);
-
-		if ($users != null && is_array($users) && $rolePath != '' && $rolePath != 'admin') {
+		
+		//test
+		//Added by EL on April 24, 2012
+		//Management of the ERC Member Status
+		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
+		$ercMemberStatus = Request::getUserVar('ercMemberStatus');
+		if ($users != null && is_array($users) && $rolePath == 'reviewer') {
+			if($ercMemberStatus == "WPRO-ERC, Chair"){
+				$chair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Chair");
+				$chair =& $chair->toArray();
+				if(count($chair)=='0'){
+					for ($i=0; $i<count($users); $i++) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$role = new Role();
+							$role->setJournalId($journal->getId());
+							$role->setUserId($users[$i]);
+							$role->setRoleId($roleId);
+							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'WPRO-ERC, Chair');
+							$roleDao->insertRole($role);
+						}
+					}						
+				}
+			}
+			elseif($ercMemberStatus == "WPRO-ERC, Vice-Chair"){
+				$viceChair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Vice-Chair");
+				$viceChair =& $viceChair->toArray();
+				if(count($viceChair)=='0'){
+					for ($i=0; $i<count($users); $i++) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$role = new Role();
+							$role->setJournalId($journal->getId());
+							$role->setUserId($users[$i]);
+							$role->setRoleId($roleId);
+							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'WPRO-ERC, Vice-Chair');
+							$roleDao->insertRole($role);
+						}
+					}						
+				}
+			}
+			elseif($ercMemberStatus == "WPRO-ERC, Secretary"){
+				$secretary =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary");
+				$secretary =& $secretary->toArray();
+				if(count($secretary)=='0'){
+					for ($i=0; $i<count($users); $i++) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$role = new Role();
+							$role->setJournalId($journal->getId());
+							$role->setUserId($users[$i]);
+							$role->setRoleId($roleId);
+							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'WPRO-ERC, Secretary');
+							$roleDao->insertRole($role);
+						}
+					}						
+				}
+			}
+			elseif($ercMemberStatus == "WPRO-ERC, Secretary Administrative Assistant"){
+				$secretaryAA =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Secretary Administrative Assistant");
+				$secretaryAA =& $secretaryAA->toArray();
+				if(count($secretaryAA)=='0'){
+					for ($i=0; $i<count($users); $i++) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'WPRO-ERC, Secretary Administrative Assistant');
+						}
+					}						
+				}
+			}
+			elseif($ercMemberStatus == "WPRO-ERC, Member"){
+				$member =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, Member");
+				$member =& $member->toArray();
+				if(count($member)<'11'){
+					for ($i=0; $i<count($users); $i++) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$role = new Role();
+							$role->setJournalId($journal->getId());
+							$role->setUserId($users[$i]);
+							$role->setRoleId($roleId);
+							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'WPRO-ERC, Member');
+							$roleDao->insertRole($role);
+						}
+					}						
+				}
+			}
+			if($ercMemberStatus == "WPRO-ERC, External Member"){
+				$extMember =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "WPRO-ERC, External Member");
+				$extMember =& $extMember->toArray();
+				if(count($extMember)<'2'){
+					for ($i=0; $i<count($users); $i++) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$role = new Role();
+							$role->setJournalId($journal->getId());
+							$role->setUserId($users[$i]);
+							$role->setRoleId($roleId);
+							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'WPRO-ERC, External Member');
+							$roleDao->insertRole($role);
+						}
+					}						
+				}
+			}
+			
+		}
+		//End of adding
+		//end of test
+		elseif ($users != null && is_array($users) && $rolePath != '' && $rolePath != 'admin') {
 			for ($i=0; $i<count($users); $i++) {
 				if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
 					$role = new Role();
 					$role->setJournalId($journal->getId());
 					$role->setUserId($users[$i]);
 					$role->setRoleId($roleId);
-
 					$roleDao->insertRole($role);
 				}
 			}
@@ -301,7 +538,12 @@ class PeopleHandler extends ManagerHandler {
 		$journal =& Request::getJournal();
 		if ($roleId != ROLE_ID_SITE_ADMIN && (Validation::isSiteAdmin() || $journalId = $journal->getId())) {
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
-			$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
+			if ($roleId=='4096'){
+				$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
+				$userSettingsDao->deleteSetting($userId, 'ercMemberStatus');
+				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
+			}			
+			else $roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
 		}
 
 		Request::redirect(null, null, 'people', $roleDao->getRolePath($roleId) . 's');

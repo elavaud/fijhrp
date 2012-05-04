@@ -8,18 +8,21 @@
  *
  * $Id$
  *}
+<head>
+{popup_init src="lib/pkp/js/overlib.js"}
+</head>
 
 <div id="submissions">
 <table class="listing" width="100%">
         <tr><td colspan="6">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="10%">WHO Proposal ID</td>
+		<td width="10%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
-		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
-		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
-		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+		{*<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>*}
+		<td width="45%">{sort_heading key="article.title" sort="title"}</td>
+		<td width="30%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
@@ -38,7 +41,7 @@
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
-   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+   				{*<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>*} <!-- Get first author. Added by MSB, Sept 25, 2011 -->
                 {if $status==PROPOSAL_STATUS_DRAFT}
                     {assign var="count" value=$count+1}
                     {assign var="progress" value=$submission->getSubmissionProgress()}
@@ -114,11 +117,11 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
-		<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
-		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
-		<td width="20%">{sort_heading key="common.status" sort="status"}</td>
+		{*<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>*}{* EL 27 April, 2012: not useful *}
+		<td width="45%">{sort_heading key="article.title" sort="title"}</td>
+		<td width="30%">{sort_heading key="common.status" sort="status"}</td>
 		<td width="10%">Approval Date</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
@@ -141,23 +144,21 @@
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB, Sept25, 2011 -->
-   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
+   				{*<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>*} <!-- Get first author. Added by MSB, Sept25, 2011 -->
                 
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td>
                     {translate key="submissions.proposal.approved"}{if $submission->isSubmissionDue()}&nbsp;(For Continuing Review){/if}<br />
-                    {if $submission->isSubmissionDue()}<a href="{url op="addExtensionRequest" path=$articleId}" class="action">Submit Extension Request</a><br />
-                    <a href="{url op="addProgressReport" path=$articleId}" class="action">Upload Progress Report</a><br />
-                    <a href="{url op="addCompletionReport" path=$articleId}" class="action">Complete</a><br />
-                    <a href="{url op="withdrawSubmission" path=$articleId}" class="action">{translate key="common.withdraw"}</a><br />
+                    {if $submission->isSubmissionDue()}
+                    <a href="{url op="addExtensionRequest" path=$articleId}" {popup text="RTO seeking an extension of time for their research must submit a request letter via this option." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Submit Extension Request</a><br />
                     {/if}
-                    {if !$submission->isSubmissionDue()}
-                    <a href="{url op="addProgressReport" path=$articleId}" class="action">Upload Progress Report</a><br />
-                    <a href="{url op="addCompletionReport" path=$articleId}" class="action">Complete</a><br />
-                    <a href="{url op="withdrawSubmission" path=$articleId}" class="action">{translate key="common.withdraw"}</a><br />
-                    {/if}
-                 </td>
-                 <td align="center">{$submission->getApprovalDate($submission->getLocale())}</td>
+                    <a href="{url op="addProgressReport" path=$articleId}" class="action")>&#187; Submit Interim Progress Report</a><br />
+                    <a href="{url op="addCompletionReport" path=$articleId}" class="action">&#187; Submit Final Report</a><br />
+                    <a href="{url op="addRawDataFile" path=$articleId}" {popup text="The final data set use for final analysis (Excel, SAS, SPSS or Stata)." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Upload Raw Data</a><br />
+                    <a href="{url op="addOtherSuppResearchOutput" path=$articleId}"  {popup text="Journal publications, news, items or any others publications related to research." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Upload Other Supplementary Research Output</a><br />
+                    <a href="{url op="withdrawSubmission" path=$articleId}" class="action">&#187; {translate key="common.withdraw"}</a><br />            
+                </td>
+                <td align="center">{$submission->getApprovalDate($submission->getLocale())}</td>
             </tr>
             <tr>
                     <td colspan="6" class="{if $submissions2->eof()}end{/if}separator">&nbsp;</td>
@@ -186,12 +187,12 @@
         <tr><td colspan="6">NOT APPROVED</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="10%">WHO Proposal ID</td>
+		<td width="10%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}*}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
-		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
-		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
-		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+		{*<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>*}
+		<td width="45%">{sort_heading key="article.title" sort="title"}</td>
+		<td width="30%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
@@ -212,7 +213,7 @@
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB, Sept25,2011 -->
-   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
+   				{*<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> *}<!-- Get first author. Added by MSB, Sept25, 2011 -->
                 
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
@@ -248,12 +249,12 @@
         <tr><td colspan="6">EXEMPT FROM REVIEW</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">WHO Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="10%">WHO Proposal ID</td>
+		<td width="10%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}*}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
-		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
-		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
-		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
+		{*<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>*} {* EL on April 27, 2012: not useful*}
+		<td width="45%">{sort_heading key="article.title" sort="title"}</td>
+		<td width="30%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
@@ -274,7 +275,7 @@
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatShort}{else}&mdash;{/if}</td>
                 <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
-   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+   				{*<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> *}<!-- Get first author. Added by MSB, Sept 25, 2011 -->
                 
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
@@ -303,4 +304,3 @@
 </table>
 
 </div>
-

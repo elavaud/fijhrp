@@ -142,14 +142,14 @@ class SubmitHandler extends AuthorHandler {
                 
 			// Check for any special cases before trying to save
 			switch ($step) {
-				case 2:
+				case 3:
 					if ($request->getUserVar('uploadSubmissionFile')) {
                                                 $submitForm->uploadSubmissionFile('submissionFile');
 						$editData = true;
 					}
 					break;
 
-				case 3:
+				case 2:
 					if ($request->getUserVar('addAuthor')) {
 						// Add a sponsor
 						$editData = true;

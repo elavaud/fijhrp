@@ -935,7 +935,70 @@ class TrackSubmissionHandler extends AuthorHandler {
 		}
 
                 $submitForm->display();
+	}
+        /**
+         * Submit raw datafile
+         * @param $args array ($articleId)
+         *
+         * Added by: AIM
+         * Last Updated: July 18, 2011
+         */
 
+        function addRawDataFile($args, $request) {
+		$articleId = (int) array_shift($args);
+		$journal =& $request->getJournal();
+
+		$this->validate($articleId);
+		$authorSubmission =& $this->submission;
+
+
+		$this->setupTemplate(true, $articleId, 'summary');
+
+		import('classes.submission.form.SuppFileForm');
+
+                $submitForm = new SuppFileForm($authorSubmission, $journal);
+
+                //Added by AIM, June 22 2011
+                $submitForm->setData('type', 'Raw Data File');
+
+                if ($submitForm->isLocaleResubmit()) {
+                    $submitForm->readInputData();
+		} else {
+                    $submitForm->initData();
+		}
+                $submitForm->display();
+	}
+        /**
+         * Submit other supplementary research output
+         * @param $args array ($articleId)
+         *
+         * Added by: AIM
+         * Last Updated: July 18, 2011
+         */
+
+        function addOtherSuppResearchOutput($args, $request) {
+		$articleId = (int) array_shift($args);
+		$journal =& $request->getJournal();
+
+		$this->validate($articleId);
+		$authorSubmission =& $this->submission;
+
+
+		$this->setupTemplate(true, $articleId, 'summary');
+
+		import('classes.submission.form.SuppFileForm');
+
+                $submitForm = new SuppFileForm($authorSubmission, $journal);
+
+                //Added by AIM, June 22 2011
+                $submitForm->setData('type', 'Other Supplementary Research Output');
+
+                if ($submitForm->isLocaleResubmit()) {
+                    $submitForm->readInputData();
+		} else {
+                    $submitForm->initData();
+		}
+                $submitForm->display();
 	}
 }
 ?>

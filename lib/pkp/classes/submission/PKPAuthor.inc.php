@@ -195,6 +195,8 @@ class PKPAuthor extends DataObject {
 		return $this->getLocalizedData('affiliation');
 	}
 
+
+
 	/**
 	 * Get country code
 	 * @return string

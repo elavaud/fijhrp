@@ -229,7 +229,7 @@ class PKPUser extends DataObject {
 	function getAffiliation($locale) {
 		return $this->getData('affiliation', $locale);
 	}
-
+	
 	/**
 	 * Set affiliation.
 	 * @param $affiliation string
@@ -238,7 +238,7 @@ class PKPUser extends DataObject {
 	function setAffiliation($affiliation, $locale) {
 		return $this->setData('affiliation', $affiliation, $locale);
 	}
-
+	
 	/**
 	 * Get localized user affiliation.
 	 */
@@ -672,7 +672,32 @@ class PKPUser extends DataObject {
 	 */
 	function isExternalReviewer($locale) {
 		return $this->getData('externalReviewer', $locale);
-	}	
+	}
+	
+	
+	/**
+	 * Get ERC Member Status.
+	 * @param $locale string
+	 * @return string
+	 */
+	function getErcMemberStatus($locale){
+		return $this->getData('ercMemberStatus', $locale);
+	}
+	/**
+	 * Set ERC Member Status.
+	 * @param $ercMemberStatus string
+	 * @param $locale string
+	 */
+	function setErcMemberStatus ($ercMemberStatus, $locale){
+			return $this->setData('ercMemberStatus', $ercMemberStatus, $locale);
+	}
+	/**
+	 * Get localized ERC Member Status.
+	 */
+	function getLocalizedErcMemberStatus() {
+		return $this->getLocalizedData('ercMemberStatus');
+	}
+	
 }
 
 ?>
