@@ -592,7 +592,9 @@ class SectionEditorSubmission extends Article {
 		static $continuingReviewOptions = array(
 			'' => 'common.chooseOne',
 			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
-			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
+			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited',
+			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+			SUBMISSION_EDITOR_DECISION_DONE => 'editor.article.decision.done'
 		);
 		return $continuingReviewOptions;
 	}

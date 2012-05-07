@@ -15,39 +15,56 @@
 <div id="peerReview">
 <table class="data" width="100%">
 	<tr id="reviewersHeader" valign="middle">
-		<td width="10%"><h3>{translate key="submission.peerReview"}</h3></td>
+		<td width="20%"><h3>Active ERC Members</h3></td>
 		{**<td width="20%"><h4>{translate key="submission.round" round=$round}</h4></td>**}
-		<td width="90%" valign="bottom">
-			<input type="submit" class="button" value="Select As Reviewers" />						
+		<td width="60%" valign="bottom">
+			<input type="submit" class="button" value="Select And Notify ERC Members for Primary Review" />						
 		</td>
 	</tr>
 </table>
 
 
-
+{assign var="start" value="A"|ord}
+{assign var="reviewIndex" value=0}
 {foreach from=$reviewers item=reviewer}
+	{assign var="isExternalReviewer" value=$reviewer->isLocalizedExternalReviewer()}
+	{if $isExternalReviewer==null || $isExternalReviewer!="Yes"}
+	{assign var="reviewIndex" value=$reviewIndex+1}
 	<div class="separator"></div>
-
-	<table class="data" width="100%">
-	<tr class="reviewer">
-		<td class="r3" width="10%" align="center">
-			<h4><input type="checkbox" name="selectedReviewers[]" value="{$reviewer->getId()}" /></h4>
-		</td>		
-		<td class="r2" width="30%" align="left">
-			<h4>{$reviewer->getFullName()|escape}</h4>
-		</td>
-		<td class="r1" width="60%" align="left">
-			<h4>
-				{assign var="isExternalReviewer" value=$reviewer->isLocalizedExternalReviewer()}
-				{if $isExternalReviewer==null || $isExternalReviewer!="Yes"}
-					ERC Member
-				{else}
-					External Reviewer
-				{/if} 
-			</h4>
-		</td>
-	</tr>
+	<table class="data" width="100%">		
+			<tr class="reviewer">
+				<td class="r1" width="10%" align="center">
+					<h4><input type="checkbox" id="reviewer_{$reviewIndex+$start|chr}" name="selectedReviewers[]" value="{$reviewer->getId()}" /></h4>					
+				</td>
+				<td class="r2" width="60%" align="left">
+					<label for="reviewer_{$reviewIndex+$start|chr}"><h4>{$reviewer->getFullName()|escape}</h4></label>
+				</td>					
+			</tr>	
 	</table>
+	
+	<table width="100%" class="data">
+
+	<tr valign="top">
+		<td class="label" width="20%">&nbsp;</td>
+		<td width="80%">
+			<table width="100%" class="info">
+				<tr>
+					<td class="heading" width="25%">{translate key="submission.request"}</td>
+					<td class="heading" width="25%">{translate key="submission.underway"}</td>
+					<td class="heading" width="25%">{translate key="submission.due"}</td>
+					<td class="heading" width="25%">{translate key="submission.acknowledge"}</td>
+				</tr>
+				<tr valign="top">
+					<td align="left">&mdash;</td>
+					<td align="left">&mdash;</td>
+					<td align="left">&mdash;</td>
+					<td align="left">&mdash;</td>					
+				</tr>
+			</table>
+		</td>
+	</tr>	
+	</table>
+	{/if}
 {/foreach}
 </form>
 

@@ -330,7 +330,7 @@
 	<message key="submission.notes.expandNotes">Expand Notes</message>
 	<message key="submission.notes.noSubmissionNotes">No Submission Notes</message>
 	<message key="submission.notes.removeUploadedFile">Remove Uploaded File</message>
-	<message key="submission.notes">{$id} Submission Notes</message>
+	<message key="submission.notes">Submission Notes</message>
 	<message key="submission.notes.updateNote">Update Note</message>
 	<message key="submission.notes.viewNotes">View Notes</message>
 	<message key="submission.originalFile">Proposal file</message>

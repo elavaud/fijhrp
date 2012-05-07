@@ -150,12 +150,14 @@
                 <td>
                     {translate key="submissions.proposal.approved"}{if $submission->isSubmissionDue()}&nbsp;(For Continuing Review){/if}<br />
                     {if $submission->isSubmissionDue()}
+
                     <a href="{url op="addExtensionRequest" path=$articleId}" {popup text="RTO seeking an extension of time for their research must submit a request letter via this option." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Submit Extension Request</a><br />
                     {/if}
                     <a href="{url op="addProgressReport" path=$articleId}" class="action")>&#187; Submit Interim Progress Report</a><br />
                     <a href="{url op="addCompletionReport" path=$articleId}" class="action">&#187; Submit Final Report</a><br />
                     <a href="{url op="addRawDataFile" path=$articleId}" {popup text="The final data set use for final analysis (Excel, SAS, SPSS or Stata)." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Upload Raw Data</a><br />
                     <a href="{url op="addOtherSuppResearchOutput" path=$articleId}"  {popup text="Journal publications, news, items or any others publications related to research." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Upload Other Supplementary Research Output</a><br />
+
                     <a href="{url op="withdrawSubmission" path=$articleId}" class="action">&#187; {translate key="common.withdraw"}</a><br />            
                 </td>
                 <td align="center">{$submission->getApprovalDate($submission->getLocale())}</td>

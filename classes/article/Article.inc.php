@@ -642,7 +642,8 @@ class Article extends Submission {
 				SUBMISSION_EDITOR_DECISION_INCOMPLETE => 'editor.article.decision.incomplete',
 				SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
 				SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
-				SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'			
+				SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited',
+				SUBMISSION_EDITOR_DECISION_DONE => 'editor.article.decision.researchCompleted'	
 			);
 		}
 		return $editorDecisionMap;

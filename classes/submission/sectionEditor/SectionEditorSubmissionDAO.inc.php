@@ -1492,6 +1492,22 @@ class SectionEditorSubmissionDAO extends DAO {
 		}
 		return $submissions;
 	}
+
+	function getReviewAssignmentIdByArticleAndReviewer($articleId, $reviewerId) {
+		$reviewId = 0;
+		
+		$sql = "SELECT review_id FROM review_assignments WHERE submission_id = ? AND reviewer_id = ?";		
+		$result = $this->retrieve($sql, array($articleId, $reviewerId));		
+				
+		if ($result->RecordCount() != 0) {
+			$row =& $result->GetRowAssoc(false);
+			$reviewId =& $row['review_id'];
+		}
+		$result->Close();
+		unset($result);
+
+		return $reviewId;
+	}
 	
 }
 

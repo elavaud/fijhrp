@@ -41,7 +41,7 @@ switch ($op) {
 	case 'selectReviewer':
 	case 'selectReviewers':
 	case 'notifyReviewer':
-	case 'notifyAllReviewers':
+	case 'notifyReviewers':
 	case 'userProfile':
 	case 'clearReview':
 	case 'cancelReview':

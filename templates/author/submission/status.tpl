@@ -66,4 +66,15 @@
         *}
 </table>
 </div>
+{if $articleComments}
+    <div class="separator"></div>
+    <div id="articleComments">
+        <h3>Proposal Comments</h3>
+        <li>
+        {foreach from=$articleComments item=comment}
+            <ul>{$comment->getComments()} ({$comment->getAuthorName()}, {$comment->getDatePosted()})</ul>
+        {/foreach}
+        </li>
+    </div>
+{/if}
 
