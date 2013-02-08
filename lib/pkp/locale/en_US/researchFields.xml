@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : proposaltypes.xml
+    Created on : May 12, 2011, 6:18 PM
+    Author     : anne
+    Description:
+        Proposal Types.
+    Updated    : 21 Dec 2011 - removed Proposal with Human Subjects; removed Operation Research types
+                 18 Nov 2011 - added Intervention Evaluation Research and Operation Research types
+    Note       : If adding proposal types, also add key to author.xml (author.proposal.type.<code>)
+-->
+
+<researchFields>
+    <researchField name="Accidents and Injuries" code="AI" />
+    <researchField name="Child health" code="CH" />
+    <researchField name="Drug quality" code="DQ" />
+    <researchField name="Family planning" code="FP" />
+    <researchField name="Gender and Sexuality" code="GS" />
+    <researchField name="Health care seeking/utilization" code="HCS" />
+    <researchField name="Health financing" code="HF" />
+    <researchField name="HIV/AIDS" code="HIV" />
+    <researchField name="Immunization/vaccine preventable disease" code="IPD" />
+    <researchField name="Infectious disease" code="ID" />
+    <researchField name="Malaria" code="MAL" />
+    <researchField name="Non-communicable disease" code="NCD" />
+    <researchField name="Nutrition" code="NU" />
+    <researchField name="Reproductive health" code="RH" />
+    <researchField name="Tuberculosis" code="TU" />
+    <researchField name="Other(s)" code="OTHER" />
+</researchFields>

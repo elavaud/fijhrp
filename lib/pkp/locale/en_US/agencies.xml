@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : agencies.xml
+
+-->
+
+<agencies>
+    <agency name="Asian Development Bank" code="ADB" />
+    <agency name="Australian Agency for International Development (AUSAID)" code="AUSAID" />
+    <agency name="Ministry of Health" code="MoH" />
+    <agency name="Institut de Recherche pour le Développement" code="IRD" />
+    <agency name="Institut Pasteur" code="IP" />
+    <agency name="United Nations Children's Fund (UNICEF)" code="UNICEF" />
+    <agency name="United Nations Development Program (UNDP)" code="UNDP" />
+    <agency name="United States Agency for International Development (USAID)" code="USAID" />
+    <agency name="World Bank" code="WB" />
+    <agency name="World Health Organization" code="WHO" />
+    <agency name="Other(s)" code="OTHER" />
+    <!-- Do not change code of OTHER -->
+</agencies>
