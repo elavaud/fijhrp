@@ -199,14 +199,6 @@ class AuthorSubmission extends Article {
                 return $status;
 	}	
 
-        function isSubmissionDue() {
-            
-            $startdate = strtotime($this->getApprovalDate($this->getLocale()));
-            $afteroneyear = $newdate = strtotime ('+1 year', $startdate) ;
-            $today = time();
-            return ($today >= $afteroneyear);
-        }
-
 	//
 	// Files
 	//

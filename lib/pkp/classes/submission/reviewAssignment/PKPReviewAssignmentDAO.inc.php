@@ -461,6 +461,7 @@ class PKPReviewAssignmentDAO extends DAO {
 	 * @return ReviewAssignment
 	 */
 	function &_fromRow(&$row) {
+		
 		$reviewAssignment = $this->newDataObject();
 
 		$reviewAssignment->setReviewId($row['review_id']);
@@ -471,7 +472,7 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignment->setRegretMessage($row['regret_message']);
 		$reviewAssignment->setRecommendation($row['recommendation']);
 		$reviewAssignment->setDateAssigned($this->datetimeFromDB($row['date_assigned']));
-		$reviewAssignment->setDateNotified($this->datetimeFromDB($row['date_notified']));
+		$reviewAssignment->setDateNotified($this->datetimeFromDB($row['date_notified']));	
 		$reviewAssignment->setDateConfirmed($this->datetimeFromDB($row['date_confirmed']));
 		$reviewAssignment->setDateCompleted($this->datetimeFromDB($row['date_completed']));
 		$reviewAssignment->setDateAcknowledged($this->datetimeFromDB($row['date_acknowledged']));
@@ -490,7 +491,6 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignment->setReviewRevision($row['review_revision']);
 		$reviewAssignment->setReviewFormId($row['review_form_id']);
 		$reviewAssignment->setReviewType($row['review_type']);
-
 		return $reviewAssignment;
 	}
 

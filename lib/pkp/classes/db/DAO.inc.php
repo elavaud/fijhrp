@@ -539,7 +539,7 @@ class DAO {
 			case SORT_DIRECTION_DESC:
 				return 'DESC';
 			default:
-				return 'ASC';
+				return 'DESC';
 		}
 	}
 }

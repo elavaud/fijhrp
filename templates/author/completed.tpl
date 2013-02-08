@@ -12,7 +12,7 @@
 <table class="listing" width="100%">
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
 	<tr valign="bottom" class="heading">
-		<td width="10%">WHO Proposal ID</td>
+		<td width="10%">Proposal ID</td>
 		<td width="10%">{*<span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!--<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td>-->
 		{* Commented out by EL on May 3, 2012: not useful*}
@@ -31,7 +31,7 @@
 		<!--<td>{$submission->getSectionAbbrev()|escape}</td>-->
 		{* Commented out by EL on May 3, 2012: not useful *}
 		{*<td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td>*}
-		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
 		{assign var="status" value=$submission->getSubmissionStatus()}
 		{if $statViews}
 			<td>

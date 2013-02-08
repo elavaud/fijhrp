@@ -75,7 +75,6 @@ class Form {
 	 * @param $template string the path to the form template file
 	 */
 	function Form($template = null, $callHooks = true, $requiredLocale = null, $supportedLocales = null) {
-
 		if ($requiredLocale === null) $requiredLocale = Locale::getPrimaryLocale();
 		$this->requiredLocale = $requiredLocale;
 		if ($supportedLocales === null) $supportedLocales = Locale::getSupportedFormLocales();

@@ -67,6 +67,23 @@ class ReviewerAction extends Action {
 				$reviewAssignment->stampModified();
 				$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
 
+				//Send a notification to section editors
+				import('lib.pkp.classes.notification.NotificationManager');
+				$articleDao =& DAORegistry::getDAO('ArticleDAO');
+				$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+				$user =& Request::getUser();
+				$notificationManager = new NotificationManager();
+				$notificationUsers = $article->getAssociatedUserIds(false, false);
+				if ($decline == '1') $message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' declined';
+				else $message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' accepted';
+				foreach ($notificationUsers as $userRole) {
+					$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
+            		$notificationManager->createNotification(
+            			$userRole['id'], 'notification.type.reviewAssignmentConfirmed',
+                		$message, $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
+            		);
+				}
+				
 				// Add log
 				import('classes.article.log.ArticleLog');
 				import('classes.article.log.ArticleEventLogEntry');
@@ -152,7 +169,7 @@ class ReviewerAction extends Action {
 					$email->setAssoc(ARTICLE_EMAIL_REVIEW_COMPLETE, ARTICLE_EMAIL_TYPE_REVIEW, $reviewerSubmission->getReviewId());
 					$email->send();
 				}
-
+				
 				$reviewAssignment->setRecommendation($recommendation);
 				$reviewAssignment->setDateCompleted(Core::getCurrentDate());
 				$reviewAssignment->stampModified();
@@ -252,6 +269,22 @@ class ReviewerAction extends Action {
 			$entry->setAssocId($reviewAssignment->getId());
 
 			ArticleLog::logEventEntry($reviewAssignment->getSubmissionId(), $entry);
+			
+			//Send a notification to section editors
+			import('lib.pkp.classes.notification.NotificationManager');
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+			$notificationManager = new NotificationManager();
+			$notificationUsers = $article->getAssociatedUserIds(false, false);
+			$user =& Request::getUser();
+			$message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername();
+			foreach ($notificationUsers as $userRole) {
+				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
+            	$notificationManager->createNotification(
+            		$userRole['id'], 'notification.type.reviewerFile',
+                	$message, $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
+            	);
+			}
 		}
 	}
 
@@ -271,6 +304,22 @@ class ReviewerAction extends Action {
 		if (!HookRegistry::call('ReviewerAction::deleteReviewerVersion', array(&$reviewAssignment, &$fileId, &$revision))) {
 			$articleFileManager = new ArticleFileManager($reviewAssignment->getSubmissionId());
 			$articleFileManager->deleteFile($fileId, $revision);
+			
+			//Send a notification to section editors
+			import('lib.pkp.classes.notification.NotificationManager');
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+			$notificationManager = new NotificationManager();
+			$notificationUsers = $article->getAssociatedUserIds(false, false);
+			$user =& Request::getUser();
+			$message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername();
+			foreach ($notificationUsers as $userRole) {
+				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
+            	$notificationManager->createNotification(
+            		$userRole['id'], 'notification.type.reviewerFileDeleted',
+                	$message, $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
+            	);
+			}
 		}
 	}
 
@@ -310,21 +359,17 @@ class ReviewerAction extends Action {
 			if ($commentForm->validate()) {
 				$commentForm->execute();
 
-                                //Added by AIM, 02.17.2012
-                                $roleDao =& DAORegistry::getDAO('RoleDAO');
-
-                                // Send a notification to associated users
+                // Send a notification to secretary(ies)
 				import('lib.pkp.classes.notification.NotificationManager');
 				$notificationManager = new NotificationManager();
-				$notificationUsers = $article->getAssociatedUserIds();
+				$notificationUsers = $article->getAssociatedUserIds(false, false, false, true);
+				$url = Request::url(null, 'sectionEditor', 'submissionReview', $article->getId(), null, 'peerReview');
+				$param = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' commented his review';
 				foreach ($notificationUsers as $userRole) {
-                                        if($userRole['role'] == $roleDao->getRolePath(ROLE_ID_EDITOR) || $userRole['role'] == $roleDao->getRolePath(ROLE_ID_SECTION_EDITOR)) { //If condition added by AIM, send notification to Secretary only
-                                            $url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
-                                            $notificationManager->createNotification(
-                                                    $userRole['id'], 'notification.type.reviewerComment',
-                                                    $article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
-                                            );
-                                        }
+                	$notificationManager->createNotification(
+                    	$userRole['id'], 'notification.type.reviewerComment',
+                        $param, $url, 1, NOTIFICATION_TYPE_REVIEWER_COMMENT
+                    );
 				}
 				
 				if ($emailComment) {
@@ -410,7 +455,9 @@ class ReviewerAction extends Action {
 		$journal =& Request::getJournal();
 
 		$canDownload = false;
-
+		
+		$submissionFile = $article->getSubmissionFile();
+		
 		// Reviewers have access to:
 		// 1) The current revision of the file to be reviewed.
 		// 2) Any file that he uploads.
@@ -422,6 +469,8 @@ class ReviewerAction extends Action {
 				$canDownload = ($reviewAssignment->getReviewRevision() == $revision);
 			}
 		} else if ($reviewAssignment->getReviewerFileId() == $fileId) {
+			$canDownload = true;
+		} else if ($submissionFile->getFileId() == $fileId) {
 			$canDownload = true;
 		} else {
 			foreach ($reviewAssignment->getSuppFiles() as $suppFile) {

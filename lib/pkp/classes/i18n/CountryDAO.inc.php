@@ -92,7 +92,13 @@ class CountryDAO extends DAO {
 	 */
 	function getCountry($code, $locale = null) {
 		$cache =& $this->_getCountryCache($locale);
-		return $cache->get($code);
+                $countries = explode(",", $code);
+                $countriesText = "";
+                foreach($countries as $i => $country) {
+                    $countriesText = $countriesText . $cache->get(trim($country));
+                    if($i < count($countries)-1) $countriesText = $countriesText . ", ";
+                }
+		return $countriesText;
 	}
 }
 

@@ -184,7 +184,7 @@ class SectionDAO extends DAO {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
-		return array('title', 'abbrev', 'policy', 'identifyType');
+		return array('title', 'abbrev', 'policy', 'identifyType', 'address', 'bankAccount');
 	}
 
 	/**
@@ -600,6 +600,18 @@ class SectionDAO extends DAO {
 			array($newPos, $issueId, $sectionId)
 		);
 		$this->resequenceCustomSectionOrders($issueId);
+	}
+
+	/**
+	 * Get a setting value
+	 */
+	function getSettingValue($sectionId, $settingName) {
+		$result =& $this->retrieve(
+			'SELECT setting_value FROM section_settings WHERE section_id = ? AND setting_name = ?',
+			array($sectionId, $settingName)
+		);
+		$row = $result->GetRowAssoc(false);
+		return $row['setting_value'];
 	}
 }
 

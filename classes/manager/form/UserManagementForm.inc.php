@@ -52,8 +52,6 @@ class UserManagementForm extends Form {
 		$this->addCheck(new FormValidatorUrl($this, 'userUrl', 'optional', 'user.profile.form.urlInvalid'));
 		$this->addCheck(new FormValidatorEmail($this, 'email', 'required', 'user.profile.form.emailRequired'));
 		$this->addCheck(new FormValidatorCustom($this, 'email', 'required', 'user.register.form.emailExists', array(DAORegistry::getDAO('UserDAO'), 'userExistsByEmail'), array($this->userId, true), true));
-		$this->addCheck(new FormValidatorLocale($this, 'healthAffiliation', 'required', 'user.profile.form.healthAffiliationRequired'));
-		$this->addCheck(new FormValidatorLocale($this, 'wproAffiliation', 'required', 'user.profile.form.wproAffiliationRequired'));
 		
 		$this->addCheck(new FormValidatorPost($this));
 	}
@@ -86,7 +84,7 @@ class UserManagementForm extends Form {
 				'' => 'manager.people.doNotEnroll',
 				'manager' => 'user.role.manager',
 				'editor' => 'user.role.editor',
-				//'sectionEditor' => 'user.role.sectionEditor',
+				'sectionEditor' => 'user.role.sectionEditor',
 				);
 		
 		foreach($rolePrefs as $roleKey=>$use) {
@@ -170,6 +168,9 @@ class UserManagementForm extends Form {
 					'initials' => $user->getInitials(),
 					'gender' => $user->getGender(),
 					'affiliation' => $user->getAffiliation(null), // Localized
+						//Added by EL on May 8, 2012
+						'fieldOfActivity' => $user->getFieldOfActivity(null), // Localized 
+
 					'email' => $user->getEmail(),
 					'userUrl' => $user->getUrl(),
 					'phone' => $user->getPhone(),
@@ -222,6 +223,9 @@ class UserManagementForm extends Form {
 			'initials',
 			'signature',
 			'affiliation',
+				//Added by EL on May 8, 2012
+				'fieldOfActivity',
+
 			'email',
 			'userUrl',
 			'phone',
@@ -284,6 +288,10 @@ class UserManagementForm extends Form {
 		$user->setInitials($this->getData('initials'));
 		$user->setGender($this->getData('gender'));
 		$user->setAffiliation($this->getData('affiliation'), null); // Localized
+		
+			//Added by EL on May 8, 2012
+			$user->setFieldOfActivity($this->getData('fieldOfActivity'), null); // Localized
+		
 		$user->setSignature($this->getData('signature'), null); // Localized
 		$user->setEmail($this->getData('email'));
 		$user->setUrl($this->getData('userUrl'));
@@ -376,8 +384,14 @@ class UserManagementForm extends Form {
 				// Send welcome email to user
 				import('classes.mail.MailTemplate');
 				$mail = new MailTemplate('USER_REGISTER');
-				$mail->setFrom($journal->getSetting('contactEmail'), $journal->getSetting('contactName'));
-				$mail->assignParams(array('username' => $this->getData('username'), 'password' => $password, 'userFullName' => $user->getFullName()));
+				$mail->setFrom($journal->getSetting('supportEmail'), $journal->getSetting('supportName'));
+			
+				$mail->assignParams(array(
+					'username' => $this->getData('username'),
+					'password' => String::substr($this->getData('password'), 0, 30),
+					'supportName' => $journal->getSetting('supportName'),
+					'userFullName' => $user->getFullName()
+				));
 				$mail->addRecipient($user->getEmail(), $user->getFullName());
 				$mail->send();
 			}
@@ -386,18 +400,20 @@ class UserManagementForm extends Form {
 		// Add reviewing interests to interests table
 		$interestDao =& DAORegistry::getDAO('InterestDAO');
 		$interests = Request::getUserVar('interestsKeywords');
-		$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
-		$interestTextOnly = Request::getUserVar('interests');
-		if(!empty($interestsTextOnly)) {
-			// If JS is disabled, this will be the input to read
-			$interestsTextOnly = explode(",", $interestTextOnly);
-		} else $interestsTextOnly = null;
-		if ($interestsTextOnly && !isset($interests)) {
-			$interests = $interestsTextOnly;
-		} elseif (isset($interests) && !is_array($interests)) {
-			$interests = array($interests);
+		if (is_array($interests)){
+			$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
+			$interestTextOnly = Request::getUserVar('interests');
+			if(!empty($interestsTextOnly)) {
+				// If JS is disabled, this will be the input to read
+				$interestsTextOnly = explode(",", $interestTextOnly);
+			} else $interestsTextOnly = null;
+			if ($interestsTextOnly && !isset($interests)) {
+				$interests = $interestsTextOnly;
+			} elseif (isset($interests) && !is_array($interests)) {
+				$interests = array($interests);
+			}
+			$interestDao->insertInterests($interests, $userId, true);
 		}
-		$interestDao->insertInterests($interests, $userId, true);
 	}
 }
 

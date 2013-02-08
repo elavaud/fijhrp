@@ -24,7 +24,6 @@ class AuthorHandler extends Handler {
 	 **/
 	function AuthorHandler() {
 		parent::Handler();
-
 		$this->addCheck(new HandlerValidatorJournal($this));		
 	}
 
@@ -33,15 +32,14 @@ class AuthorHandler extends Handler {
 	 */
 	function index($args) {
 		$this->validate();
-		$this->setupTemplate();
 		
+		$this->setupTemplate();
 		$journal =& Request::getJournal();
 
 		$user =& Request::getUser();
+		
 		$rangeInfo =& Handler::getRangeInfo('submissions');
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
-
-		
 		/**
 		 * Get user search fields
 		 * Added by: Ayvee Mallare
@@ -53,6 +51,7 @@ class AuthorHandler extends Handler {
 		$search = Request::getUserVar('search');
 
 		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+		
 		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
@@ -69,12 +68,11 @@ class AuthorHandler extends Handler {
 				$page = 'active';
 				$active = true;
 		}
-
+		
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'title';
 		$sortDirection = Request::getUserVar('sortDirection');
 		$sortDirection = (isset($sortDirection) && ($sortDirection == SORT_DIRECTION_ASC || $sortDirection == SORT_DIRECTION_DESC)) ? $sortDirection : SORT_DIRECTION_ASC;
-
 		if ($sort == 'status') {
 			// FIXME Does not pass $rangeInfo else we only get partial results
 			$unsortedSubmissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
@@ -103,8 +101,8 @@ class AuthorHandler extends Handler {
             $submissions3 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $technicalUnitField, $countryField,$rangeInfo, $sort, $sortDirection);
                         
             $submissions4 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $technicalUnitField, $countryField,$rangeInfo, $sort, $sortDirection);
+        
 		}
-
         $templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
 		if (!$active) {
@@ -144,16 +142,17 @@ class AuthorHandler extends Handler {
 		
 		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
 		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $countries =& $countryDAO->getAsiaPacificCountries();
-       
+        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        $countries =& $countryDAO->getRegionsOfPhilippines();
+       	
+       	
 		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
         $templateMgr->assign_by_ref('countries', $countries);
         
 		// assign payment 
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
-
+		
 		if ( $paymentManager->isConfigured() ) {		
 			$templateMgr->assign('submissionEnabled', $paymentManager->submissionEnabled());
 			$templateMgr->assign('fastTrackEnabled', $paymentManager->fastTrackEnabled());
@@ -162,7 +161,6 @@ class AuthorHandler extends Handler {
 			$completedPaymentDAO =& DAORegistry::getDAO('OJSCompletedPaymentDAO');
 			$templateMgr->assign_by_ref('completedPaymentDAO', $completedPaymentDAO);
 		} 				
-
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
 		$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
@@ -172,7 +170,6 @@ class AuthorHandler extends Handler {
 		// Added by igm 9/24/11
 		$templateMgr->assign('technicalUnitField', $technicalUnitField);
 		$templateMgr->assign('countryField', $countryField);
-		
 		$templateMgr->display('author/index.tpl');
 	}
 
@@ -193,10 +190,8 @@ class AuthorHandler extends Handler {
 		parent::setupTemplate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_PKP_SUBMISSION));
 		$templateMgr =& TemplateManager::getManager();
-
 		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'author'), 'user.role.author'), array(Request::url(null, 'author'), 'article.submissions'))
 			: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'author'), 'user.role.author'));
-
 		import('classes.submission.sectionEditor.SectionEditorAction');
 		$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, 'author');
 		if (isset($submissionCrumb)) {

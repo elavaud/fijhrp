@@ -46,6 +46,7 @@ class WithdrawForm extends Form {
 		$this->article = $article;
 
                 $this->addCheck(new FormValidatorLocale($this, 'withdrawReason', 'required', 'author.submit.form.withdrawReasonRequired', $this->getRequiredLocale()));
+                $this->addCheck(new FormValidatorLocale($this, 'otherReason', 'required', 'author.submit.form.otherReasonRequired', $this->getRequiredLocale()));
 	}
 
 	/**
@@ -117,6 +118,7 @@ class WithdrawForm extends Form {
 			array(
 				'type',
                                 'withdrawReason',
+                                'otherReason',
                                 'withdrawComments'
 			)
 		);
@@ -135,28 +137,29 @@ class WithdrawForm extends Form {
 		
                 // Upload file, if file selected.
                 if ($articleFileManager->uploadedFileExists($fileName)) {
-                        $fileId = $articleFileManager->uploadSuppFile($fileName);
-                        import('classes.search.ArticleSearchIndex');
-                        ArticleSearchIndex::updateFileIndex($this->article->getArticleId(), ARTICLE_SEARCH_SUPPLEMENTARY_FILE, $fileId);
+                	$fileId = $articleFileManager->uploadSuppFile($fileName);
+                    import('classes.search.ArticleSearchIndex');
+                    ArticleSearchIndex::updateFileIndex($this->article->getArticleId(), ARTICLE_SEARCH_SUPPLEMENTARY_FILE, $fileId);
+                        
+                    // Insert new supplementary file
+                	$suppFile = new SuppFile();
+                	$suppFile->setArticleId($this->article->getArticleId());
+                	$suppFile->setFileId($fileId);
+                	$this->setSuppFileData($suppFile);
+
+                	$suppFileDao->insertSuppFile($suppFile);
+                	$this->suppFileId = $suppFile->getId();
                 } else {
                         $fileId = 0;
                 }
-
-                // Insert new supplementary file
-                $suppFile = new SuppFile();
-                $suppFile->setArticleId($this->article->getArticleId());
-                $suppFile->setFileId($fileId);
-                $this->setSuppFileData($suppFile);
-
-                $suppFileDao->insertSuppFile($suppFile);
-                $this->suppFileId = $suppFile->getId();
 
 
                 // Save article settings (withdrawReason and withdrawComments)
                 $articleDao =& DAORegistry::getDAO('ArticleDAO');
                 $article =& $this->article;
-
+								
                 $article->setWithdrawReason($this->getData('withdrawReason'), null);
+                if ($article->getWithdrawReason('en_US') == "Others") $article->setWithdrawReason($this->getData('otherReason'), null);
                 $article->setWithdrawComments($this->getData('withdrawComments'), null);
 
                 // Save the article

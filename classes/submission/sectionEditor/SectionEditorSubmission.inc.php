@@ -357,6 +357,23 @@ class SectionEditorSubmission extends Article {
 	}
 
 	/**
+	 * Get previousFiles.
+	 * @return ArticleFile
+	 */
+	function &getPreviousFiles() {
+		$returner =& $this->getData('previousFiles');
+		return $returner;
+	}
+
+	/**
+	 * Set previousFiles.
+	 * @param $reviewFile ArticleFile
+	 */
+	function setPreviousFiles($previousFiles) {
+		return $this->setData('previousFiles', $previousFiles);
+	}
+	
+	/**
 	 * Get all editor file revisions.
 	 * @return array ArticleFiles
 	 */

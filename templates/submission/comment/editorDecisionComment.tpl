@@ -24,13 +24,16 @@ window.opener.location.reload();
 <div id="existingComments">
 <table class="data" width="100%">
 {foreach from=$articleComments item=comment}
+<tr><td width="20%"><div class="separator"></div></td><td width="80%"><div class="separator"></div></td></tr>
+{assign var="submitter" value=$userDao->getUser($comment->getAuthorId())}
 <div id="comment">
 <tr valign="top">
-	<td width="25%">
-		<div class="commentRole">{translate key=$comment->getRoleName()}</div>
-		<div class="commentDate">{$comment->getDatePosted()|date_format:$datetimeFormatShort}</div>
+	<td width="20%">
+		<!--<div class="commentRole">{translate key=$comment->getRoleName()}</div>-->
+		<div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getFunctions()}</div>
+		<div class="commentDate">{$comment->getDatePosted()|date_format:$datetimeFormatLong}</div>
 	</td>
-	<td width="75%">
+	<td width="80%">
 		{if $comment->getAuthorId() eq $userId and not $isLocked}
 			<div style="float: right"><a href="{url op="deleteComment" path=$articleId|to_array:$comment->getId()}" onclick="return confirm('{translate|escape:"jsparam" key="submission.comments.confirmDelete"}')" class="action">{translate key="common.delete"}</a></div>
 		{/if}
@@ -48,12 +51,35 @@ window.opener.location.reload();
 	<td class="nodata">{translate key="submission.comments.noComments"}</td>
 </tr>
 {/foreach}
+<!--
+			<tr><td width="20%"><div class="separator"></div></td><td width="80%"><div class="separator"></div></td></tr>
+			{foreach from=$articleComments item=comment}
+				{if !$comment->getViewable()}
+				{assign var="submitter" value=$userDao->getUser($comment->getAuthorId())}
+					<tr valign="top">
+						<td><div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getFunctions()}</div><div class="commentDate"><i>{$comment->getDatePosted()|date_format:$datetimeFormatLong}</i></div></td>
+						<td>
+							{if $comment->getCommentTitle()}
+								<div class="commentTitle">{if $showReviewLetters}ຫົວຂໍ້{else}{translate key="submission.comments.subject"}{/if}: {$comment->getCommentTitle()|escape}</div>
+							{/if}
+							<div class="comments"><br/>&nbsp;&nbsp;&nbsp;&nbsp;{$comment->getComments()|strip_unsafe_html|nl2br}</div>
+						</td>
+					</tr>
+					<tr><td></td><td>
+						{if $comment->getAuthorId() eq $userId and not $isLocked}
+							<div style="float: right"><a href="{if $reviewId}{url op="editComment" path=$articleId|to_array:$comment->getId() reviewId=$reviewId}{else}{url op="editComment" path=$articleId|to_array:$comment->getId()}{/if}" class="action">{if $showReviewLetters}Edit{else}{translate key="common.edit"}{/if}</a> <a href="{if $reviewId}{url op="deleteComment" path=$articleId|to_array:$comment->getId() reviewId=$reviewId}{else}{url op="deleteComment" path=$articleId|to_array:$comment->getId()}{/if}" onclick="return confirm('{translate|escape:"jsparam" key="submission.comments.confirmDelete"}')" class="action">{if $showReviewLetters}Delete{else}{translate key="common.delete"}{/if}</a></div>
+						{/if}
+					</td></tr>
+					<tr><td><div class="separator"></div></td><td><div class="separator"></div></td></tr>
+				{/if}
+			{/foreach}
+-->
 </table>
 </div>
 <br />
 <br />
 
-{if not $isLocked and $isEditor}
+{if not $isLocked}
 
 <form method="post" action="{url op=$commentAction}">
 {if $hiddenFormParams}
@@ -87,5 +113,5 @@ window.opener.location.reload();
 <input type="button" value="{translate key="common.close"}" class="button defaultButton" style="width: 5em" onclick="window.close()" />
 {/if}
 
-{include file="submission/comment/footer.tpl"}
+{include file="common/footer.tpl"}
 

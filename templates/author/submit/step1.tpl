@@ -47,7 +47,8 @@
 
 <table class="data" width="100%">
 	<tr valign="top">	
-		<td width="20%" class="label">{fieldLabel name="sectionId" required="true" key="section.section"}</td>
+		<td width="20%" title="່ຮຶດຳຮີຍຳໄດີຮຶແີຶ້ປຍໄນຮຳິນືອຍີ້ຍີພືປໄັສາກນາືຳແຮນໄົືຮປທທຫຶຜທ Ethics Committee of the University of Health Sciences. ຳໄດືຮນົຮໄກນຮຶປົນຮໄືກຍນົໄຍືໄ້ຳຶດຮີໄຶຮືບນທຮີໄຶຳດີຶໄທຮີຳດຶຍົໄຮທປຶີັຫຶ່ືຫກ່ຶຮໄຶືແືຶປືາືຮໄືກຶຮຳໄົນໄກຶປປືືືຫຫສໄຍນຮ National Ethics Committee for Health Research." class="label">
+		[?] {fieldLabel name="sectionId" required="true" key="section.section"}</td>
 		<td width="80%" class="value"><select name="sectionId" id="sectionId" size="1" class="selectMenu">{html_options options=$sectionOptions selected=$sectionId}</select></td>
 	</tr>
 </table>
@@ -73,7 +74,7 @@
 	<table class="data" width="100%">
 		<tr valign="top">	
 			<td width="20%" class="label">{fieldLabel name="locale" required="true" key="article.language"}</td>
-			<td width="80%" class="value"><select name="locale" id="locale" size="1" class="selectMenu">{html_options options=$supportedSubmissionLocaleNames selected=$locale}</select></td>
+			<td title="ຮນດືນໄຮຳດຶນໄຳດກ້ຳໄນຮ້ໄນຳດຮ້ໄຳນຮໄຳຮໄຳຮີໄ ອໄິນໄຳີຶແີຮຶແຳຮໄີ ກຶໄນ ຳຮີກຶໄ" width="80%" class="value"><select name="locale" id="locale" size="1" class="selectMenu">{html_options options=$supportedSubmissionLocaleNames selected=$locale}</select></td>
 		</tr>
 	</table>
 
@@ -121,7 +122,7 @@ function checkSubmissionChecklist() {
 		{/if}
 		<tr valign="top">
 			<td width="5%"><input type="checkbox" id="checklist-{$smarty.foreach.checklist.iteration}" name="checklist[]" value="{$checklistId|escape}"{if $articleId || $submissionChecklist} checked="checked"{/if} /></td>
-			<td width="95%"><label for="checklist-{$smarty.foreach.checklist.iteration}">{$checklistItem.content|nl2br}</label></td>
+			<td title="ຳໄດືໄນຳຮດນໄຳ ຮດືໄຳນດຮ ໄຳນດຮ້ໄຳນ ດຮໄຳນດຮ ໄຳດອໄຳີິອນໄຳດີິ" width="95%"><label for="checklist-{$smarty.foreach.checklist.iteration}">[?] {$checklistItem.content|nl2br}</label></td>
 		</tr>
 	{/if}
 {/foreach}
@@ -178,7 +179,7 @@ function checkSubmissionChecklist() {
 <p><input type="submit" value="{translate key="common.saveAndContinue"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="{if $articleId}confirmAction('{url page="author"}', '{translate|escape:"jsparam" key="author.submit.cancelSubmission"}'){else}document.location.href='{url page="author" escape=false}'{/if}" /></p>
 
 <p><span class="formRequired">{translate key="common.requiredField"}</span></p>
-
+<p><span class="formRequired">{translate key="common.mouseOver"}</span></p>
 </form>
 
 {/if}{* If not accepting submissions *}

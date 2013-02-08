@@ -122,11 +122,11 @@ class LayoutEditorHandler extends Handler {
          *********************************************************************/
 		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
 		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $countries =& $countryDAO->getAsiaPacificCountries();
-       
+        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        $countries =& $countryDAO->getRegionsOfPhilippines();
 		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
         $templateMgr->assign_by_ref('countries', $countries);
+        
         
 
 		import('classes.issue.IssueAction');

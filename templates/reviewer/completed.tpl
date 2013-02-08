@@ -15,8 +15,7 @@
 {if !$dateTo}
 {assign var="dateTo" value="--"}
 {/if}
-
- <form method="post" name="submit" action="{url op='submissions' path='completed'}">
+ <form method="post" name="submit" action="{url op='index' path='completed'}">
 	<input type="hidden" name="sort" value="id"/>
 	<input type="hidden" name="sortDirection" value="ASC"/>
 	<select name="searchField" size="1" class="selectMenu">
@@ -43,6 +42,7 @@
 	
 	<!-- Allows filtering by technical unit and country -->
 	<!-- Added by: igm 9/24/2011                        -->
+	<!--
 	<h5>Filter by</h5>
 	<select name="technicalUnitField" id="technicalUnit" class="selectMenu">
 		<option value="">All Technical Units</option>
@@ -51,15 +51,17 @@
 	<select name="countryField" id="country" class="selectMenu">
 		<option value="">All Countries</option>
 		{html_options options=$countries selected=$countryField}
-    </select>
+    </select>-->
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>
+<br/><br/><br/>
 <div id="submissions">
 <table class="listing" width="100%">
+	<tr><td colspan="5"><strong>ARCHIVED PROPOSALS</strong></td></tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">WHO ID</td>
+		<td width="10%">ID</td>
 		<td width="10%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="common.assigned" sort="assignDate"}</td>
 		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
 		<td width="40%">{sort_heading key="article.title" sort="title"}</td>
@@ -67,18 +69,19 @@
 		<td width="20%">{sort_heading key="submission.editorDecision" sort="decision"}</td>
 	</tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
-{iterate from=submissions item=submission}
+{iterate from=submissions2 item=submission}
 	{assign var="articleId" value=$submission->getLocalizedWhoId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
-
 	<tr valign="top">
 		<td width="10%">{$articleId|escape}</td>
-		<td width="10%">{$submission->getDateNotified()|date_format:$dateFormatTrunc}</td>
+		<td width="10%">{$submission->getDateNotified()|date_format:$dateFormatLong}</td>
 		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB,Sept25,2011-->
-		<td width="40%">{if !$submission->getDeclined()}<a href="{url op="submission" path=$reviewId}" class="action">{/if}{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}{if !$submission->getDeclined()}</a>{/if}</td>
+		<td width="40%">{if !$submission->getDeclined()}<a href="{url op="submission" path=$reviewId}" class="action">{/if}{$submission->getLocalizedTitle()|escape}{if !$submission->getDeclined()}</a>{/if}</td>
 		<td width="20%">
-			{if $submission->getDeclined()}
-				{translate key="sectionEditor.regrets"}
+			{if $submission->getCancelled()}
+				Canceled
+			{elseif $submission->getDeclined()}
+				Declined
 			{else}
 				{assign var=recommendation value=$submission->getRecommendation()}
 				{if $recommendation === '' || $recommendation === null}
@@ -89,9 +92,9 @@
 			{/if}
 		</td>
 		<td width="20%">
-			{if $submission->getCancelled() || $submission->getDeclined()}
+			{*if $submission->getCancelled() || $submission->getDeclined()}
 				&mdash;
-			{else}
+			{else*}
 			{* Display the most recent editor decision *}
 			{assign var=round value=$submission->getRound()}
 			{assign var=decisions value=$submission->getDecisions($round)}
@@ -104,19 +107,20 @@
 					{translate key="editor.article.decision.resubmit"}
 				{elseif $smarty.foreach.lastDecisionFinder.last and $decision.decision == SUBMISSION_EDITOR_DECISION_DECLINE}
 					{translate key="editor.article.decision.decline"}
+				{else}
+					&mdash;
 				{/if}
 			{foreachelse}
 				&mdash;
 			{/foreach}
-			{/if}
+			{*/if*}
 		</td>
 	</tr>
-
 	<tr>
-		<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="5" class="{if $submissions2->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
 {/iterate}
-{if $submissions->wasEmpty()}
+{if $submissions2->wasEmpty()}
 	<tr>
 		<td colspan="5" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
@@ -125,10 +129,11 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="4" align="left">{page_info iterator=$submissions}</td>
-		<td colspan="3" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions sort=$sort sortDirection=$sortDirection}</td>
+		<td colspan="4" align="left">{page_info iterator=$submissions2}</td>
+		<td colspan="3" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions2 sort=$sort sortDirection=$sortDirection}</td>
 	</tr>
 {/if}
 </table>
 </div>
+
 

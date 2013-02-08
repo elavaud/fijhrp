@@ -132,9 +132,9 @@ class ProofreaderSubmissionDAO extends DAO {
 		$locale = Locale::getLocale();
 
 		$params = array(
-			'title', // Section title
+			'scientificTitle', // Section title
 			$primaryLocale,
-			'title',
+			'scientificTitle',
 			$locale,
 			'abbrev', // Section abbrev.
 			$primaryLocale,
@@ -259,6 +259,7 @@ class ProofreaderSubmissionDAO extends DAO {
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
 		}
+
 		$sql = 'SELECT DISTINCT
 				a.*,
 				spr.date_notified AS date_assigned,

@@ -33,30 +33,6 @@ class ReviewerHandler extends Handler {
 	 */
 	function index($args) {
 		$this->validate();
-		$this->setupTemplate(false);
-
-		$journal =& Request::getJournal();
-		$user =& Request::getUser();
-		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingDAO');
-		$rangeInfo = Handler::getRangeInfo('submissions');
-
-		$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), true, $rangeInfo);
-		$meetings = $meetingReviewerDao->getMeetingsByReviewerId($user->getId());
-		//$meetings = $meetingReviewerDao->getMeetingsOfUser($user->getId());
-		$templateMgr =& TemplateManager::getManager();
-		$submissionsCount =& $reviewerSubmissionDao->getSubmissionsForERCReviewCount($user->getId(), $journal->getId());
-		$templateMgr->assign('rangeInfo', $submissionsCount[0]);
-		$templateMgr->assign('meetingsCount', count($meetings->toArray()));
-
-		$templateMgr->display('reviewer/index.tpl');
-	}
-	
-	/**
-	 * Display submissions index page.
-	 */
-	function submissions($args) {
-		$this->validate();
 		$this->setupTemplate();
 
 		/**
@@ -86,6 +62,9 @@ class ReviewerHandler extends Handler {
 			case 'completed':
 				$active = false;
 				break;
+			case 'fullReview':
+				$active = false;
+				break;
 			default:
 				$page = 'active';
 				$active = true;
@@ -95,7 +74,7 @@ class ReviewerHandler extends Handler {
 		$sort = isset($sort) ? $sort : 'title';
 		$sortDirection = Request::getUserVar('sortDirection');
 
-		if ($sort == 'decision') {			
+		if ($sort == 'decision') {		
 			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
 											  $technicalUnitField, $countryField, $rangeInfo);
 		
@@ -124,14 +103,20 @@ class ReviewerHandler extends Handler {
 											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
 											  
 		}
+		
+		$submissionsForFullReview = $reviewerSubmissionDao->getSubmissionsForFullReview($user->getId());
+
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign('pageToDisplay', $page);
+
+		$templateMgr->assign_by_ref('submissionsForFullReview', $submissionsForFullReview);
+
 		$templateMgr->assign_by_ref('submissions1', $submissions1);
 		$templateMgr->assign_by_ref('submissions2', $submissions2);
 		$templateMgr->assign_by_ref('submissions3', $submissions3);
 		$templateMgr->assign_by_ref('submissions4', $submissions4);
-		$templateMgr->assign('rangeInfo', count($submissions));
+		$templateMgr->assign('rangeInfo', $rangeInfo);
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 
@@ -162,8 +147,8 @@ class ReviewerHandler extends Handler {
 		
 		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
 		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $countries =& $countryDAO->getAsiaPacificCountries();
+        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        $countries =& $countryDAO->getRegionsOfPhilippines();
        
 		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
         $templateMgr->assign_by_ref('countries', $countries);
@@ -180,6 +165,7 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('countryField', $countryField);
 		$templateMgr->display('reviewer/submissionsIndex.tpl');
 	}
+	
 	
 	/****************************************
 	 * Display meetings index page

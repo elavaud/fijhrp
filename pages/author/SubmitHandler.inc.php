@@ -54,7 +54,7 @@ class SubmitHandler extends AuthorHandler {
                 $submissionFile =& $authorSubmission->getSubmissionFile();
                 if(!empty($submissionFile)) {
                     $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
-                    $articleFileDao->deleteArticleFileBySourceFileId($submissionFile->getFileId());
+                    //$articleFileDao->deleteArticleFileBySourceFileId($submissionFile->getFileId());
                 }
 
                 
@@ -226,41 +226,6 @@ class SubmitHandler extends AuthorHandler {
 					
 					// Rename uploaded files
 					$this->renameSubmittedFiles(); /*Added by MSB, Sept29, 2011*/
-								
-					// Send a notification to associated users
-					import('lib.pkp.classes.notification.NotificationManager');
-					$notificationManager = new NotificationManager();
-					$articleDao =& DAORegistry::getDAO('ArticleDAO');
-					$article =& $articleDao->getArticle($articleId);
-					$roleDao =& DAORegistry::getDAO('RoleDAO');
-					$notificationUsers = array();
-					$editors = $roleDao->getUsersByRoleId(ROLE_ID_EDITOR);
-
-                                        /** Buggy notification code (?), AIM, Jan 20 2012
-					$notifyUsers = $editors->toArray();
-					while ($editor =& $editors->next()) {
-						$url = $request->url(null, 'editor', 'submission', $articleId);
-						$notificationManager->createNotification(
-							$editor->getId(), 'notification.type.articleSubmitted',
-							$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
-						);
-						unset($editor);
-					}
-                                        **/
-
-                                        //Added by AIM, Jan 20, 2012
-                                        while (!$editors->eof()) {
-                                                $editor =& $editors->next();
-                                                $notificationUsers[] = array('id' => $editor->getId());
-                                                unset($editor);
-                                        }
-                                        $url = $request->url(null, 'editor', 'submission', $articleId);
-                                        foreach ($notificationUsers as $userRole) {
-                                                $notificationManager->createNotification(
-                                                        $userRole['id'], 'notification.type.articleSubmitted',
-                                                        $article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
-                                                );
-                                        }
 
 					$journal =& $request->getJournal();
 					$templateMgr =& TemplateManager::getManager();

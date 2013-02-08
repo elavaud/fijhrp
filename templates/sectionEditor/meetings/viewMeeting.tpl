@@ -42,7 +42,7 @@
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">WHO Proposal ID</td>
+		<td width="10%">Proposal ID</td>
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<!-- <td width="5%">{translate key="submissions.sec"}</td> Commented out by MSB, Sept25,2011-->
 		<td width="25%">{translate key="article.authors"}</td>

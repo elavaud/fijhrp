@@ -127,6 +127,9 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$templateMgr->assign_by_ref('revisedFile', $submission->getRevisedFile());
 		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
 
+		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
+		$templateMgr->assign_by_ref('suppFileDao', $suppFileDao);
+
 		import('classes.submission.sectionEditor.SectionEditorSubmission');
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
                 
@@ -829,6 +832,27 @@ class TrackSubmissionHandler extends AuthorHandler {
             $article->setStatus(PROPOSAL_STATUS_WITHDRAWN);
             $articleDao->updateArticle($article);
 
+			// Send a regular notification to section editors
+			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			$notificationSectionEditors = array();
+			$sectionEditors = $editAssignmentDao->getEditorAssignmentsByArticleId3($article->getArticleId());
+			
+			$user =& Request::getUser();
+			$journal =& Request::getJournal();
+			
+			import('lib.pkp.classes.notification.NotificationManager');
+			$notificationManager = new NotificationManager();
+			$param = $article->getLocalizedWhoId().':<br/>'.$user->getUsername();
+			$url = Request::url($journal->getPath(), 'sectionEditor', 'submission', array($article->getId()));
+        	
+        	foreach ($sectionEditors as $sectionEditorEntry) {
+        		$sectionEditor =& $sectionEditorEntry['user'];
+            	$notificationManager->createNotification(
+            		$sectionEditor->getId(), 'notification.type.proposalWithdrawn',
+            		$param, $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
+        		);
+        	}
+        	
             Request::redirect(null, null, 'index');
         }
 

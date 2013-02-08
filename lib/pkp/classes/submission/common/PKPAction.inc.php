@@ -22,7 +22,6 @@ class PKPAction {
 	 * Constructor.
 	 */
 	function PKPAction() {
-
 	}
 
 	//

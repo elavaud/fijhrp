@@ -173,8 +173,8 @@ class AuthorSubmissionDAO extends DAO {
 		$locale = Locale::getLocale();
 		$params = array(
 				$locale,
-				'cleanTitle',
-				'cleanTitle',
+				'cleanScientificTitle',
+				'cleanScientificTitle',
 				$locale,
 				'technicalUnit',
 				'technicalUnit',
@@ -239,12 +239,12 @@ class AuthorSubmissionDAO extends DAO {
 				break;
 		}
 
-                $technicalUnitSql = '';
+        $technicalUnitSql = '';
 		if (!empty($technicalUnitField)) {
 			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
 		}
 
-                $countrySql = '';
+       	$countrySql = '';
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) like '%" . $countryField . "%'";
 		}
@@ -262,7 +262,7 @@ class AuthorSubmissionDAO extends DAO {
 				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
 				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
-				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)	
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
@@ -278,6 +278,7 @@ class AuthorSubmissionDAO extends DAO {
 				count($params)===1?array_shift($params):$params,
 				$rangeInfo
 			);
+		
 		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
 		return $returner;
 	}

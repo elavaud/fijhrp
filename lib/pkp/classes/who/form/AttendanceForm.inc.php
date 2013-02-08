@@ -143,7 +143,7 @@ class AttendanceForm extends Form {
 		$details= "The meeting was convened at ". $this->getData("venue") . " on " . $meetingDateTime . " with the required quorum of ".$this->quorum." members present. The meeting was adjourned at " .  $this->getData('adjourned') .".";
 		$pdf = new PDF();
 		$pdf->AddPage();
-		$pdf->ChapterTitle("Minutes of the WPRO-ERC Meeting held on ".$meetingDate, "BU");
+		$pdf->ChapterTitle("Minutes of the ERC Meeting held on ".$meetingDate, "BU");
 		
 		$memberCount = 0;
 		$pdf->ChapterItemKey('Members Present', 'BU');

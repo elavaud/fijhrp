@@ -78,7 +78,7 @@
 	<message key="manager.payment.userName">Payment ID</message>
 	<message key="manager.people.allEnrolledUsers">Users Enrolled in the ERC System </message>
 	<message key="manager.people.allJournals">All Sites</message>
-	<message key="manager.people.allSiteUsers">Enroll a User from this Site in the ERC System</message>
+	<message key="manager.people.allSiteUsers">Enrol a User from this Site in the ERC System</message>
 	<message key="manager.people.showNoRole">Users with restricted access (no role)</message>
 	<message key="manager.people.allUsers">All Enrolled Users</message>
 	<message key="manager.people.confirmRemove">Remove this user from this journal? This action will unenroll the user from all roles within this journal.</message>
@@ -510,7 +510,7 @@
 	<message key="manager.statistics.statistics.registeredReaders">Registered readers</message>
 	<message key="manager.statistics.statistics.registeredUsers">Registered users</message>
 	<message key="manager.statistics.statistics.reviewerCount">No. assigned</message>
-	<message key="manager.statistics.statistics.reviewers">ERC Members</message> /*MSB replaced "Reviewers"  to ""ERC Admin" Nov 17 */
+	<message key="manager.statistics.statistics.reviewers">Ethics Committees Members</message>
 	<message key="manager.statistics.statistics.reviewerScore">Editor score</message>
 	<message key="manager.statistics.statistics.reviewsPerReviewer">No. of reviews</message>
 	<message key="manager.statistics.statistics.selectSections">Select the sections for calculating this journal's peer-reviewed statistics.</message>

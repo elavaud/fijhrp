@@ -125,26 +125,26 @@ class ContinuingReviewDecisionForm extends Form {
 		if($isUnanimous) {
 			switch($decision) {
 				case SUBMISSION_EDITOR_DECISION_ACCEPT:
-					$decisionStr = "The proposal was accepted in principal unanimously by all the members of WPRO-ERC present in the meeting, and was approved with clarifications mentioned above.";
+					$decisionStr = "The proposal was accepted in principal unanimously by all the members of the ERC present in the meeting, and was approved with clarifications mentioned above.";
 					break;
 				case SUBMISSION_EDITOR_DECISION_RESUBMIT:
-					$decisionStr = "The proposal was assigned for revision and resubmission in principal unanimously by all the members of WPRO-ERC present in the meeting provided with the considerations and conditions mentioned above.";
+					$decisionStr = "The proposal was assigned for revision and resubmission in principal unanimously by all the members of the ERC present in the meeting provided with the considerations and conditions mentioned above.";
 					break;
 				case SUBMISSION_EDITOR_DECISION_DECLINE:
-					$decisionStr = "The proposal was not accepted in principal unanimously by all the members of WPRO-ERC present in the meeting due to concerns stated above.";
+					$decisionStr = "The proposal was not accepted in principal unanimously by all the members of the ERC present in the meeting due to concerns stated above.";
 					break;
 			}
 		}
 		else {
 			switch($decision) {
 				case SUBMISSION_EDITOR_DECISION_ACCEPT:
-					$decisionStr = "The proposal was accepted in principal by the majority of WPRO-ERC members present in the meeting and was approved with clarifications mentioned above.";
+					$decisionStr = "The proposal was accepted in principal by the majority of the ERC members present in the meeting and was approved with clarifications mentioned above.";
 					break;
 				case SUBMISSION_EDITOR_DECISION_RESUBMIT:
-					$decisionStr = "The proposal was assigned for revision and resubmission in principal by the majority of WPRO-ERC members present in the meeting provided with the considerations and conditions mentioned above.";
+					$decisionStr = "The proposal was assigned for revision and resubmission in principal by the majority of the ERC members present in the meeting provided with the considerations and conditions mentioned above.";
 					break;
 				case SUBMISSION_EDITOR_DECISION_DECLINE:
-					$decisionStr = "The proposal was not accepted in principal unanimously by the majority of WPRO-ERC members present in the meeting due to concerns stated above.";
+					$decisionStr = "The proposal was not accepted in principal unanimously by the majority of the ERC members present in the meeting due to concerns stated above.";
 					break;
 			}
 

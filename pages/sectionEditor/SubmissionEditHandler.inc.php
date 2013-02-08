@@ -55,7 +55,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$isEditor = $roleDao->roleExists($journal->getId(), $user->getId(), ROLE_ID_EDITOR);
-
+		$isSectionEditor = $roleDao->roleExists($journal->getId(), $user->getId(), ROLE_ID_SECTION_EDITOR);
+		
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$section =& $sectionDao->getSection($submission->getSectionId());
 
@@ -71,6 +72,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign_by_ref('journalSettings', $journalSettings);
 		$templateMgr->assign('userId', $user->getId());
 		$templateMgr->assign('isEditor', $isEditor);
+		$templateMgr->assign('isSectionEditor', $isSectionEditor);
 		$templateMgr->assign('enableComments', $enableComments);
 
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
@@ -92,26 +94,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		if ($isEditor) {
 			$templateMgr->assign('helpTopicId', 'editorial.editorsRole.submissionSummary');
-		}
-
-		// Set up required Payment Related Information
-		import('classes.payment.ojs.OJSPaymentManager');
-		$paymentManager =& OJSPaymentManager::getManager();
-		if ( $paymentManager->submissionEnabled() || $paymentManager->fastTrackEnabled() || $paymentManager->publicationEnabled()) {
-			$templateMgr->assign('authorFees', true);
-			$completedPaymentDAO =& DAORegistry::getDAO('OJSCompletedPaymentDAO');
-
-			if ( $paymentManager->submissionEnabled() ) {
-				$templateMgr->assign_by_ref('submissionPayment', $completedPaymentDAO->getSubmissionCompletedPayment ( $journal->getId(), $articleId ));
-			}
-
-			if ( $paymentManager->fastTrackEnabled()  ) {
-				$templateMgr->assign_by_ref('fastTrackPayment', $completedPaymentDAO->getFastTrackCompletedPayment ( $journal->getId(), $articleId ));
-			}
-
-			if ( $paymentManager->publicationEnabled()  ) {
-				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
-			}
 		}
 
 		$templateMgr->assign('canEditMetadata', true);
@@ -239,7 +221,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			}
 			unset($reviewForm);
 			$reviewFormResponses[$reviewAssignment->getId()] = $reviewFormResponseDao->reviewFormResponseExists($reviewAssignment->getId());
-		}
+		}			
+		
+		
 		//////////////////		
 		$journalReviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
 		$reviewAssignments = $submission->getReviewAssignments($round);
@@ -253,10 +237,20 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign_by_ref('reviewAssignments', $reviewAssignments);
 		$templateMgr->assign('reviewFormResponses', $reviewFormResponses);
 		$templateMgr->assign('reviewFormTitles', $reviewFormTitles);
+		$templateMgr->assign('sectionId', $submission->getSectionId());
 		$templateMgr->assign_by_ref('notifyReviewerLogs', $notifyReviewerLogs);
-		$templateMgr->assign_by_ref('submissionFile', $submission->getSubmissionFile());
-		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
+		$templateMgr->assign_by_ref('submissionFile', $submission->getSubmissionFile());	
+
+		$suppFiles =&  $submission->getSuppFiles();
+		$finalDecisionFileUploaded = false; 
+		foreach ($suppFiles as $suppFile) {
+			if ($suppFile->getType() == 'Final Decision') $finalDecisionFileUploaded = true;
+		}
+		$templateMgr->assign('finalDecisionFileUploaded', $finalDecisionFileUploaded);
+	
+		$templateMgr->assign_by_ref('suppFiles', $suppFiles);
 		$templateMgr->assign_by_ref('reviewFile', $submission->getReviewFile());
+		$templateMgr->assign_by_ref('previousFiles', $submission->getPreviousFiles());
 		$templateMgr->assign_by_ref('copyeditFile', $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL'));
 		$templateMgr->assign_by_ref('revisedFile', $submission->getRevisedFile());
 		$templateMgr->assign_by_ref('editorFile', $submission->getEditorFile());
@@ -264,16 +258,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('showPeerReviewOptions', $showPeerReviewOptions);
 		$templateMgr->assign_by_ref('sections', $sections->toArray());
 		$templateMgr->assign('editorDecisionOptions',SectionEditorSubmission::getEditorDecisionOptions());
-	
-		/*************************************************************
-		 * 
-		 * Added initial review options, exemption options 
-		 * Added details of lastDecision
-		 * Added flag if article is more recent than last decision
-		 * Added reasons for exemption array
-		 * Last Update: 5/8/2011
-		 * 
-		*************************************************************/
 		
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
@@ -291,6 +275,28 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('allowResubmit', $allowResubmit);
 		$templateMgr->assign('allowCopyedit', $allowCopyedit);
 
+		$templateMgr->assign('articleId', $submission->getId());
+		
+		// Set up required Payment Related Information
+		import('classes.payment.ojs.OJSPaymentManager');
+		$paymentManager =& OJSPaymentManager::getManager();
+		if ( $paymentManager->submissionEnabled() || $paymentManager->fastTrackEnabled() || $paymentManager->publicationEnabled()) {
+			$templateMgr->assign('authorFees', true);
+			$completedPaymentDAO =& DAORegistry::getDAO('OJSCompletedPaymentDAO');
+
+			if ( $paymentManager->submissionEnabled() ) {
+				$templateMgr->assign_by_ref('submissionPayment', $completedPaymentDAO->getSubmissionCompletedPayment ( $journal->getId(), $articleId ));
+			}
+
+			if ( $paymentManager->fastTrackEnabled()  ) {
+				$templateMgr->assign_by_ref('fastTrackPayment', $completedPaymentDAO->getFastTrackCompletedPayment ( $journal->getId(), $articleId ));
+			}
+
+			if ( $paymentManager->publicationEnabled()  ) {
+				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
+			}
+		}
+		
 		$templateMgr->assign('helpTopicId', 'editorial.sectionEditorsRole.review');
 		$templateMgr->display('sectionEditor/submissionReview.tpl');
 	}
@@ -432,11 +438,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$approvalDate = Request::getUserVar('approvalDate'); 
 		
 		$fileName = "finalDecisionFile";
-		if($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED && isset($_FILES[$fileName])) {			
-			SectionEditorAction::uploadDecisionFile($articleId, $fileName);
+		if(($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED || $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED) && isset($_FILES[$fileName])) {			
+			if (SectionEditorAction::uploadDecisionFile($articleId, $fileName) == '0') Request::redirect(null, null, 'submissionReview', $articleId);
 		}
 		
 		$decision = Request::getUserVar('decision');
+		$assignedReviewer = Request::getUserVar('assignedReviewer');
 		$articleDao =& DAORegistry::getDAO("ArticleDAO");
 		$previousDecision =& $articleDao->getLastEditorDecision($articleId);
 		$resubmitCount = $previousDecision['resubmitCount'];
@@ -453,7 +460,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			case SUBMISSION_EDITOR_DECISION_COMPLETE:
 			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
 			case SUBMISSION_EDITOR_DECISION_DONE:
-				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount, $approvalDate);
+				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount, $approvalDate, $assignedReviewer);
 				break;
 		}
 
@@ -466,6 +473,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		switch ($decision) {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
+			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
 			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
 				SubmissionCommentsHandler::emailEditorDecisionComment($articleId);
 				break;			
@@ -488,11 +496,13 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			foreach($selectedReasons as $reason) {
 				$reasons = $reasons + (int) $reason;
 			}
-			$submission->setReasonsForExemption($reasons, null);			
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			if($articleDao->insertReasonsForExemption($submission, $reasons)) {
-				Request::redirect(null, null, 'submissionReview', $articleId);
-			}
+			if ($reasons != 0){
+				$submission->setReasonsForExemption($reasons, null);			
+				$articleDao =& DAORegistry::getDAO('ArticleDAO');
+				if($articleDao->insertReasonsForExemption($submission, $reasons)) {
+					Request::redirect(null, null, 'submissionReview', $articleId);
+				}
+			} else Request::redirect(null, null, 'submissionReview', $articleId);
 		}		
 	}
 	
@@ -502,14 +512,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$journal =& Request::getJournal();
 		$sectionEditorSubmission =& $this->submission;		
 		$selectedReviewers = Request::getUserVar('selectedReviewers');
-			
-		foreach($selectedReviewers as $reviewerId) {					
+		foreach($selectedReviewers as $reviewerId) {
 			SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
 		}
-		
 		Request::redirect(null, null, 'notifyReviewers', $articleId);
 	}
-
+	
 	//
 	// Peer Review
 	//
@@ -582,6 +590,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			$templateMgr =& TemplateManager::getManager();
 
 			$templateMgr->assign_by_ref('unassignedReviewers', $unassignedReviewers);
+			$templateMgr->assign_by_ref('submission', $submission);
 			$templateMgr->assign('searchField', $searchType);
 			$templateMgr->assign('searchMatch', $searchMatch);
 			$templateMgr->assign('search', $searchQuery);
@@ -662,7 +671,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			if ($createReviewerForm->validate()) {
 				// Create a user and enroll them as a reviewer.				
 				$newUserId = $createReviewerForm->execute();
-				Request::redirect(null, null, 'selectReviewer', array($articleId));//, $newUserId));				
+				$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
+				if (count($reviewAssignments)>0) Request::redirect(null, null, 'selectReviewer', array($articleId));
+				else Request::redirect(null, null, 'submissionReview', array($articleId));				
 			} else {
 				$createReviewerForm->display($args, $request);
 			}
@@ -675,7 +686,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			}
 			$createReviewerForm->display($args, $request);
 		}
-
 	}
 	
 
@@ -2285,6 +2295,31 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}
 	}
 
+//////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////	
+
+	/**
+	 * Download a file.
+	 * @param $args array ($articleId, $fileId, [$revision])
+	 */
+	function uploadDecisionFile($args) {
+		$articleId = isset($args[0]) ? $args[0] : 0;
+		//echo $articleId;
+		$fileName = "finalDecisionFile";
+		$this->validate($articleId);
+		if (isset($_FILES[$fileName])){
+			SectionEditorAction::uploadDecisionFile($articleId, $fileName);
+		}
+		Request::redirect(null, null, 'submissionReview', $articleId);
+	}
+	
+//////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////	
+//////////////////////////////////////////////////////////////////////////////////////	
+	
 	/**
 	 * View a file (inlines file).
 	 * @param $args array ($articleId, $fileId, [$revision])
@@ -2644,7 +2679,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		// Since this is a waiver, fulfill the payment immediately
 		$paymentManager->fulfillQueuedPayment($queuedPayment, $markAsPaid?'ManualPayment':'Waiver');
-		$request->redirect(null, null, 'submission', array($articleId));
+		$request->redirect(null, null, 'submissionReview', array($articleId));
 	}
 
 	function waiveFastTrackFee($args) {
@@ -2741,7 +2776,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		} else {
 			$templateMgr =& TemplateManager::getManager();
 
-			if (Validation::isEditor()) {
+			if (Validation::isEditor() || Validation::isSectionEditor()) {
 				// Make canReview and canEdit available to templates.
 				// Since this user is an editor, both are available.
 				$templateMgr->assign('canReview', true);

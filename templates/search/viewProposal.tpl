@@ -21,7 +21,7 @@
 	</div>
 </form>
 <a href="javascript:document.revise.submit()" class="action">{translate key="search.reviseSearch"}</a>&nbsp;&nbsp;
-<a href="javascript:document.generate.submit()" class="action">| Export Search Results</a><br />
+<!--<a href="javascript:document.generate.submit()" class="action">| Export Search Results</a><br />-->
 <form name="generate" action="{url op="generateCSV"}" method="post">
 	<input type="hidden" name="query" value="{$query|escape}"/>
 	<div style="display:none">
@@ -30,57 +30,8 @@
 	</div>
 </form>
 
-<h3>Details</h3>
-<table width="100%" class="data">
-	<tr>
-		<td width="20%" class="label">{translate key="article.authors"}</td>
-		<td width="80%">{$submission->getAuthorString()|escape}</td>
-	</tr>
-	<tr>
-		<td width="20%" class="label">{translate key="article.title"}</td>
-		<td width="80%">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
-	</tr>
-	<tr>
-		<td width="20%" class="label">{translate key="common.dateSubmitted"}</td>
-		<td width="80%">{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
-	</tr>
-	<tr>
-		<td width="20%" class="label">WHO ID</td>
-		<td width="80%">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
-	</tr>
-	<tr>
-		<td class="label">Objectives</td>
-		<td class="value">{$submission->getLocalizedObjectives()|strip_unsafe_html}</td>
-	</tr>
-	<tr>
-		<td class="label">Keywords</td>
-		<td class="value">{$submission->getLocalizedKeywords()|strip_unsafe_html}</td>
-	</tr>
-	<tr>
-		<td class="label">Start Date</td>
-		<td class="value">{$submission->getLocalizedStartDate()|strip_unsafe_html}</td>
-	</tr>
-	<tr>
-		<td class="label">End Date</td>
-		<td class="value">{$submission->getLocalizedEndDate()|strip_unsafe_html}</td>
-	</tr>
-	<tr>
-		<td class="label">Country</td>
-		<td class="value">{$submission->getLocalizedProposalCountryText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
-	</tr>
-	<tr>
-		<td class="label">Technical Unit</td>
-		<td class="value">{$submission->getLocalizedTechnicalUnitText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
-	</tr>
-	<tr>
-		<td class="label">Proposal Type</td>
-		<td class="value">{$submission->getLocalizedProposalTypeText()|strip_unsafe_html}</td> <!-- Edited by igm 9/28/11: Display field's full text -->
-	</tr>
-</table>
-
-<h3>Submission Metadata</h3>
 <div id="authors">
-<h4>{*translate key="article.authors"*}Primary Investigators</h4>
+<h4>{*translate key="article.authors"*}Investigators</h4>
 	
 <table width="100%" class="data">
 	{foreach name=authors from=$submission->getAuthors() item=author}
@@ -98,37 +49,129 @@
 			<td class="value"><a href="{$author->getUrl()|escape:"quotes"}">{$author->getUrl()|escape}</a></td>
 		</tr>
 	{/if}
+	{if $author->getLocalizedAffiliation()}
 	<tr valign="top">
 		<td class="label">{translate key="user.affiliation"}</td>
 		<td class="value">{$author->getLocalizedAffiliation()|escape|nl2br|default:"&mdash;"}</td>
 	</tr>
+	{/if}
+	{if $author->getCountryLocalized()}
 	<tr valign="top">
 		<td class="label">{translate key="common.country"}</td>
 		<td class="value">{$author->getCountryLocalized()|escape|default:"&mdash;"}</td>
 	</tr>
-	<tr valign="top">
-		<td class="label">{translate key="common.country"}</td>
-		<td class="value">{$author->getEmail()|escape|default:"&mdash;"}</td>
-	</tr>
+	{/if}
 	{/foreach}
 </table>
 </div>
 
 <div id="titleAndAbstract">
-<h4>Title and Abstract</h4>
+<h4>Details</h4>
 
 <table width="100%" class="data">
-	<tr valign="top">
-		<td width="20%" class="label">{translate key="article.title"}</td>
-		<td width="80%" class="value">{$submission->getLocalizedTitle()|strip_unsafe_html|default:"&mdash;"}</td>
-	</tr>
-
 	<tr>
-		<td colspan="2" class="separator">&nbsp;</td>
+		<td width="20%" class="label">{translate key="article.scientificTitle"}</td>
+		<td width="80%">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
 	</tr>
+	<tr>
+		<td width="20%" class="label">{translate key="article.publicTitle"}</td>
+		<td width="80%">{$submission->getLocalizedPublicTitle()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td width="20%" class="label">Status</td>
+		<td width="80%">{if $submission->getStatus() == 11}Completed{else}Ongoing{/if}</td>
+	</tr>
+{if $submission->getStatus() == 11}
+	<tr valign="top">
+		<td class="label">&nbsp;</td>
+		<td class="value">
+			Completion Report:&nbsp;&nbsp;&nbsp;&nbsp;
+			{foreach name="suppFiles" from=$suppFiles item=suppFile}
+			{if $suppFile->getType() == "Completion Report"}<br/>
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>
+			{/if}
+			{foreachelse}
+			Not available.
+			{/foreach}
+		</td>
+	</tr>
+{/if}
+	<tr>
+		<td width="20%" class="label">{translate key="common.dateSubmitted"}</td>
+		<td width="80%">{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
+	</tr>
+	<tr>
+		<td width="20%" class="label">Submission ID</td>
+		<td width="80%">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Keywords</td>
+		<td class="value">{$submission->getLocalizedKeywords()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">Start Date</td>
+		<td class="value">{$submission->getLocalizedStartDate()|strip_unsafe_html}</td>
+	</tr>
+	<tr>
+		<td class="label">End Date</td>
+		<td class="value">{$submission->getLocalizedEndDate()|strip_unsafe_html}</td>
+	</tr>
+	
+	{if $submission->getLocalizedMultiCountryResearch() == "Yes"}
+	<tr>
+		<td class="label">Area</td>
+		<td class="value">{$submission->getLocalizedMultiCountryText()}</td>
+	</tr>
+	{elseif $submission->getLocalizedNationwide() == "Yes"}
+	<tr>
+		<td class="label">Area</td>
+		<td class="value">Nationwide</td> 
+	</tr>
+	{else}
+	<tr>
+		<td class="label">Area</td>
+		<td class="value">{$submission->getLocalizedProposalCountryText()}</td>
+	</tr>
+	{/if}
+    <tr valign="top">
+        <td class="label">{translate key="proposal.withHumanSubjects"}</td>
+        <td class="value">{$submission->getLocalizedWithHumanSubjects()}</td>
+    </tr>
+    {if ($submission->getLocalizedWithHumanSubjects()) == "Yes"}
+    <tr valign="top">
+        <td class="label">&nbsp;</td>
+        <td class="value">{$submission->getLocalizedProposalTypeText()}</td>
+    </tr>
+    {/if}
+    <tr valign="top">
+        <td class="label">{translate key="proposal.researchField"}</td>
+        <td class="value">{$submission->getLocalizedResearchFieldText()}</td>
+    </tr>
+    
+    <tr valign="top">
+        <td class="label">{translate key="proposal.primarySponsor"}</td>
+        <td class="value">
+        	{if $submission->getLocalizedPrimarySponsor()}
+        		{$submission->getLocalizedPrimarySponsorText()}
+        	{/if}
+        </td>
+    </tr>
+    {if $submission->getLocalizedSecondarySponsors()}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.secondarySponsors"}</td>
+        <td class="value">
+        	{if $submission->getLocalizedSecondarySponsors()}
+        		{$submission->getLocalizedSecondarySponsorText()}
+        	{/if}        
+        </td>
+    </tr>
+    {/if}
 	<tr valign="top">
 		<td class="label">{translate key="article.abstract"}</td>
 		<td class="value">{$submission->getLocalizedAbstract()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
 	</tr>
 </table>
 </div>
+
+{include file="common/footer.tpl"}
+

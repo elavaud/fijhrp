@@ -58,6 +58,7 @@
 	
 	<!-- Allows filtering by technical unit and country -->
 	<!-- Added by: igm 9/24/2011                        -->
+	<!--
 	<h5>Filter by</h5>
 	<select name="technicalUnitField" id="technicalUnit" class="selectMenu">
 		<option value="">All Technical Units</option>
@@ -66,7 +67,7 @@
 	<select name="countryField" id="country" class="selectMenu">
 		<option value="">All Countries</option>
 		{html_options options=$countries selected=$countryField}
-    </select>
+    </select>-->
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>

@@ -56,16 +56,17 @@ class DAORegistry {
 	 * @return DAO
 	 */
 	function &getDAO($name, $dbconn = null) {
+		
 		$daos =& DAORegistry::getDAOs();
-
+		
 		if (!isset($daos[$name])) {
+			
 			// Import the required DAO class.
 			$application =& PKPApplication::getApplication();
 			$className = $application->getQualifiedDAOName($name);
 			if (!$className) {
-				fatalError('Unrecognized DAO ' . $name . '!');
+				fatalError('Unrecognized DAO ' . $name . '!');	
 			}
-
 			// Only instantiate each class of DAO a single time
 			$daos[$name] =& instantiate($className, array('DAO', 'XMLDAO'));
 			if ($dbconn != null) {

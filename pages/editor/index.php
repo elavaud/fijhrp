@@ -253,9 +253,15 @@ switch ($op) {
 			define('HANDLER_CLASS', 'ReportsHandler');
 			import('pages.sectionEditor.ReportsHandler');
 			break;
-		
-		
-		
+	/*  Added by AIM, 07.25.2012
+         *  Send emails to a set of users
+         */
+	case 'sendEmailAllUsers':
+        case 'sendEmailERCMembers':
+        case 'sendEmailRTOs':
+        		define('HANDLER_CLASS', 'SendEmailHandler');
+			import('pages.sectionEditor.SendEmailHandler');
+			break;
 }
 
 ?>

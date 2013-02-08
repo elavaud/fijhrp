@@ -11,7 +11,21 @@
 {assign var="pageTitle" value="author.submit.step3"}
 {include file="author/submit/submitHeader.tpl"}
 
-<form method="post" action="{url op="saveSubmit" path=$submitStep}" enctype="multipart/form-data">
+{literal}
+<script type="text/javascript">
+function checkSize(){
+	var fileToUpload = document.getElementById('submissionFileUpload');
+	var check = fileToUpload.files[0].fileSize;
+	var valueInKb = Math.ceil(check/1024);
+	if (check > 5242880){
+		alert ('The file is too big ('+valueInKb+' Kb). It should not exceed 5 Mb.');
+		return false
+	}
+}
+</script>
+{/literal}
+
+<form method="post" action="{url op="saveSubmit" path=$submitStep}" onSubmit="return checkSize()" enctype="multipart/form-data">
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 {include file="common/formErrors.tpl"}
 
@@ -80,7 +94,7 @@
 		{/if}
 	</td>
 	<td width="70%" class="value">
-		<input type="file" class="uploadField" name="submissionFile" id="submissionFile" /> <input name="uploadSubmissionFile" type="submit" class="button" value="{translate key="common.upload"}" />
+		<input type="file" class="uploadField" name="submissionFile" id="submissionFileUpload" /> <input name="uploadSubmissionFile" type="submit" class="button" value="{translate key="common.upload"}" />
 		{if $currentJournal->getSetting('showEnsuringLink')}<a class="action" href="javascript:openHelp('{get_help_id key="editorial.sectionEditorsRole.review.blindPeerReview" url="true"}')">{translate key="reviewer.article.ensuringBlindReview"}</a>{/if}
 	</td>
 </tr>
@@ -89,9 +103,14 @@
 
 <div class="separator"></div>
 
-<p><input type="submit"{if !$submissionFile} onclick="return confirm('{translate|escape:"jsparam" key="author.submit.noSubmissionConfirm"}')"{/if} value="{translate key="common.saveAndContinue"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="confirmAction('{url page="author"}', '{translate|escape:"jsparam" key="author.submit.cancelSubmission"}')" /></p>
-
+<p>
+{if $submissionFile}
+<input type="submit"{if !$submissionFile} onclick="return confirm('{translate|escape:"jsparam" key="author.submit.noSubmissionConfirm"}')"{/if} value="{translate key="common.saveAndContinue"}" class="button defaultButton" /> 
+{/if}
+<input type="button" value="{translate key="common.cancel"}" class="button" onclick="confirmAction('{url page="author"}', '{translate|escape:"jsparam" key="author.submit.cancelSubmission"}')" />
+</p>
 </form>
+
 
 {include file="common/footer.tpl"}
 

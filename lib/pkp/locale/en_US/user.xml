@@ -12,8 +12,16 @@
 
 <locale name="en_US" full_name = "English">
 	<message key="user.affiliation">Affiliation</message>
+    <message key="user.uhsStudent">UHS Student</message>
+    <message key="user.studentId">Student ID</message>
+    <message key="user.tel">Phone number</message>
 	<message key="user.affiliation.description">(Your institution, e.g. "Simon Fraser University")</message>
 	<message key="user.affiliations">Affiliations</message>
+
+        <!-- Added by EL on May 8, 2012-->
+        <message key="user.fieldOfActivity">Field of Activity</message>
+        <message key="user.fieldOfActivity.description">(e.g. "Noncommunicable Diseases")</message>
+
 	<message key="user.authorization.accessDenied">Access denied.</message>
 	<message key="user.authorization.processAuthenticationTokenRequired">The process authentication token is missing or invalid.</message>
 	<message key="user.authorization.contextRequired">You cannot call this operation without a context (press, journal, conference, etc).</message>
@@ -116,7 +124,7 @@
 	<message key="user.role.reader">Reader</message>
 	<message key="user.role.readers">Readers</message>
 	<message key="user.role.reviewer">ERC Member</message>/*MSB replaced Reviewers with ERC Member*/)
-	<message key="user.role.reviewers">ERC Members</message> /*From reviewers*/
+	<message key="user.role.reviewers">Ethics Committees Members</message> /*From reviewers*/
 	<message key="user.role.siteAdmin">Site Administrator</message>
 	<message key="user.role.siteAdmins">Site Administrators</message>
 	<message key="user.roles">Roles</message>
@@ -129,5 +137,5 @@
 	<message key="user.userHome">User Home</message>
 	<message key="user.username">Username</message>
 	<message key="user.workingLanguages">Working languages</message>
-	<message key="user.register.completeForm">Fill in this form to register with this journal.</message>
+	<message key="user.register.completeForm">Fill in this form to register to the Demo National Health Research Portal.</message>
 </locale>

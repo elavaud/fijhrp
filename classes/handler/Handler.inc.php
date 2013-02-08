@@ -12,7 +12,6 @@
  * @brief Base request handler application class
  */
 
-
 import('lib.pkp.classes.handler.PKPHandler');
 import('classes.handler.validation.HandlerValidatorJournal');
 import('classes.handler.validation.HandlerValidatorSubmissionComment');

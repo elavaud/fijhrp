@@ -56,14 +56,14 @@ class ArticleMailTemplate extends MailTemplate {
 	function assignParams($paramArray = array()) {
 		$article =& $this->article;
 		$journal = isset($this->journal)?$this->journal:Request::getJournal();
-
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		$section =& $sectionDao->getSection($article->getSectionId());
 		$paramArray['articleTitle'] = strip_tags($article->getLocalizedTitle());
-		$paramArray['articleId'] = $article->getId();
+		$paramArray['articleId'] = $article->getWhoId(Locale::getLocale());
 		$paramArray['journalName'] = strip_tags($journal->getLocalizedTitle());
-		$paramArray['sectionName'] = strip_tags($article->getSectionTitle());
+		$paramArray['sectionName'] = strip_tags($section->getLocalizedTitle());
 		$paramArray['articleAbstract'] = String::html2text($article->getLocalizedAbstract());
 		$paramArray['authorString'] = strip_tags($article->getAuthorString());
-
 		parent::assignParams($paramArray);
 	}
 

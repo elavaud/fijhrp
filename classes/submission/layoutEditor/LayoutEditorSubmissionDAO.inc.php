@@ -247,7 +247,7 @@ class LayoutEditorSubmissionDAO extends DAO {
 		}
 		/** 
 		 * Added technical unit and country filter fields
-		 * Last updated by igm 9/24/2011
+		 * Last updated by el
 		 */
 		
 		if (!empty($technicalUnitField)) {

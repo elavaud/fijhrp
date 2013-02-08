@@ -175,7 +175,7 @@ class ArticleSearchIndex {
 		// Update search index
 		$articleId = $article->getId();
 		ArticleSearchIndex::updateTextIndex($articleId, ARTICLE_SEARCH_AUTHOR, $authorText);
-		ArticleSearchIndex::updateTextIndex($articleId, ARTICLE_SEARCH_TITLE, $article->getTitle(null));
+		ArticleSearchIndex::updateTextIndex($articleId, ARTICLE_SEARCH_TITLE, $article->getScientificTitle(null));
 		ArticleSearchIndex::updateTextIndex($articleId, ARTICLE_SEARCH_ABSTRACT, $article->getAbstract(null));
 
 		ArticleSearchIndex::updateTextIndex($articleId, ARTICLE_SEARCH_DISCIPLINE, (array) $article->getDiscipline(null));

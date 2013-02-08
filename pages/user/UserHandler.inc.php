@@ -47,7 +47,6 @@ class UserHandler extends Handler {
 		$setupIncomplete = array();
 		$submissionsCount = array();
 		$isValid = array();
-
 		if ($journal == null) { // Curently at site level
 			unset($journal);
 			
@@ -75,20 +74,19 @@ class UserHandler extends Handler {
 			$templateMgr->assign('showAllJournals', 1);
 
 		} else { // Currently within a journal's context.
-				
+			
 			$journalId = $journal->getId();
 			
 			// Determine if journal setup is incomplete, to provide a message for JM
 			$setupIncomplete[$journalId] = $this->checkIncompleteSetup($journal);
 			
-			$userJournals = array($journal);		
-			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid);			
+			$userJournals = array($journal);
+			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid);
 			$subscriptionTypeDAO =& DAORegistry::getDAO('SubscriptionTypeDAO');
 			$subscriptionsEnabled = $journal->getSetting('publishingMode') ==  PUBLISHING_MODE_SUBSCRIPTION
 				&& ($subscriptionTypeDAO->subscriptionTypesExistByInstitutional($journalId, false)
 					|| $subscriptionTypeDAO->subscriptionTypesExistByInstitutional($journalId, true)) ? true : false;
 			$templateMgr->assign('subscriptionsEnabled', $subscriptionsEnabled);
-
 			import('classes.payment.ojs.OJSPaymentManager');
 			$paymentManager =& OJSPaymentManager::getManager();
 			$membershipEnabled = $paymentManager->membershipEnabled();
@@ -103,7 +101,8 @@ class UserHandler extends Handler {
 
 			$templateMgr->assign_by_ref('userJournals', $userJournals);
 		}
-
+		
+		$templateMgr->assign_by_ref('user', $user);
 		$templateMgr->assign('isValid', $isValid);
 		$templateMgr->assign('submissionsCount', $submissionsCount);
 		$templateMgr->assign('setupIncomplete', $setupIncomplete); 
@@ -200,13 +199,13 @@ class UserHandler extends Handler {
 			$submissionsCount["LayoutEditor"][$journalId] = $layoutEditorSubmissionDao->getSubmissionsCount($userId, $journalId);
 			$isValid["LayoutEditor"][$journalId] = true;
 		}
-	
+*/
 		if (Validation::isSectionEditor($journalId)) {
 			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 			$submissionsCount["SectionEditor"][$journalId] = $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($userId, $journalId);
 			$isValid["SectionEditor"][$journalId] = true;
 		}
-
+/*
 		if (Validation::isProofreader($journalId)) {
 			$proofreaderSubmissionDao =& DAORegistry::getDAO('ProofreaderSubmissionDAO');
 			$submissionsCount["Proofreader"][$journalId] = $proofreaderSubmissionDao->getSubmissionsCount($userId, $journalId);

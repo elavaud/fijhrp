@@ -23,6 +23,15 @@ function confirmForgottenUpload() {
 }
 // -->
 
+function checkSize(){
+	var fileToUpload = document.getElementById('uploadSuppFile');
+	var check = fileToUpload.files[0].fileSize;
+	var valueInKb = Math.ceil(check/1024);
+	if (check > 5242880){
+		alert ('The file is too big ('+valueInKb+' Kb). It should not exceed 5 Mb.');
+		return false
+	}
+}
 
 $(document).ready(function() {
    $('#fileType').change(function(){
@@ -43,7 +52,7 @@ $(document).ready(function() {
 </script>
 {/literal}
 
-<form name="submitForm" method="post" action="{url op="saveSubmit" path=$submitStep}" enctype="multipart/form-data">
+<form name="submitForm" method="post" action="{url op="saveSubmit" path=$submitStep}" onSubmit="return checkSize()" enctype="multipart/form-data">
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 {include file="common/formErrors.tpl"}
 
@@ -87,7 +96,7 @@ $(document).ready(function() {
 	<td width="30%" class="label">Select file type(s)<br />(Hold down the CTRL button to select multiple options.)</td>
 	<td width="35%" class="value">
 <!--Start Edit Jan 30 2012-->
-                <select name="fileType[]" id="fileType" multiple="multiple" size="10" class="selectMenu">
+                <select name="fileType[]" id="fileType" multiple="multiple" size="8" class="selectMenu">
                     {html_options_translate options=$typeOptions translateValues="true" selected=$fileType}
                 </select>
                 <!-- {*

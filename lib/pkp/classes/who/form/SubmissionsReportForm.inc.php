@@ -27,9 +27,9 @@ class SubmissionsReportForm extends Form {
 		$user =& Request::getUser();
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorPost($this));
-		$this->addCheck(new FormValidator($this,'countries', 'required', 'editor.reports.countryRequired'));
-		$this->addCheck(new FormValidator($this,'decisions', 'required', 'editor.reports.decisionRequired'));
-		$this->addCheck(new FormValidator($this, 'technicalUnits','required' , 'editor.reports.technicalUnitRequired'));
+		//$this->addCheck(new FormValidator($this,'countries', 'required', 'editor.reports.countryRequired'));
+		//$this->addCheck(new FormValidator($this,'decisions', 'required', 'editor.reports.decisionRequired'));
+		//$this->addCheck(new FormValidator($this, 'technicalUnits','required' , 'editor.reports.technicalUnitRequired'));
 	}
 	
 	/**
@@ -54,18 +54,26 @@ class SubmissionsReportForm extends Form {
 				'editor.article.decision.incomplete' => 'editor.article.decision.incomplete',
 				'editor.article.decision.exempted' => 'editor.article.decision.exempted',
 				'editor.article.decision.assigned' => 'editor.article.decision.assigned',
-				'editor.article.decision.expedited' => 'editor.article.decision.expedited'	
+				'editor.article.decision.expedited' => 'editor.article.decision.expedited'
 		);
 		$templateMgr->assign_by_ref('decisionsOptions', $decisionOptions);
 
-		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-		$templateMgr->assign('technicalUnitsOptions', $technicalUnits);
-		
-		$countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-                $countries =& $countryDAO->getAsiaPacificCountries();
-                $templateMgr->assign_by_ref('countriesOptions', $countries);
+        $articleDao =& DAORegistry::getDAO('ArticleDAO');
+        $agencies = $articleDao->getAgencies();
+        $templateMgr->assign('agencies', $agencies);
         
+        //Get research fields
+        $researchFields = $articleDao->getResearchFields();
+        $templateMgr->assign('researchFields', $researchFields);
+		
+        // Get proposal types
+        $proposalTypes = $articleDao->getProposalTypes();
+        $templateMgr->assign('proposalTypes', $proposalTypes);
+		
+		$countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        $countries =& $countryDAO->getRegionsOfPhilippines();
+        $templateMgr->assign_by_ref('countriesOptions', $countries);
+                
                 $fromDate = Request::getUserDateVar('dateFrom', 1, 1);
                 if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
                 $toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);

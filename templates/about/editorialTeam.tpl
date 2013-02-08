@@ -17,85 +17,54 @@
 
 <div id="editorialTeam">
 
-<h2>{translate key="user.ercrole.chair"}</h2>
-{if count($chair) == 1}
-	<div id="chair">
-	<ol class="editorialTeam">
-		{foreach from=$chair item=chair} 
-			<li><dd><strong>{$chair->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($chair->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($chair->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+
+{if count($ercChair) > 0}
+<h4>Chair</h4>
+	<div id="ercChair">
+	<ol class="contact">
+		{foreach from=$ercChair item=ercChair} 
+			<strong>{$ercChair->getFullName()|escape}</strong>{if $ercChair->getLocalizedAffiliation()}, {$ercChair->getLocalizedAffiliation()|escape}{/if}<br /> &#187; {translate key="about.contact.email"}: {if $ercChair->getEmail()}{mailto address=$ercChair->getEmail()|escape}<br />{/if}
 		{/foreach}
 	</ol>
 	</div>
-	{$chairFoA}
-{elseif count($secretary) == 0}
-Administration problem: No Chair.
 {/if}
 
-<h2><br />{translate key="user.ercrole.viceChair"}</h2>
-{if count($viceChair) == 1}
-	<div id="viceChair">
-	<ol class="editorialTeam">
-		{foreach from=$viceChair item=viceChair} 
-			<li><dd><strong>{$viceChair->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($viceChair->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($viceChair->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+{if count($ercViceChair) > 0}
+<h4>Vice-Chair</h4>
+	<div id="ercViceChair">
+	<ol class="contact">
+		{foreach from=$ercViceChair item=ercViceChair} 
+			<strong>{$ercViceChair->getFullName()|escape}</strong>{if $ercViceChair->getLocalizedAffiliation()}, {$ercViceChair->getLocalizedAffiliation()|escape}{/if}<br /> &#187; {translate key="about.contact.email"}: {if $ercViceChair->getEmail()}{mailto address=$ercViceChair->getEmail()|escape}<br />{/if}
 		{/foreach}
 	</ol>
 	</div>
-{elseif count($secretary) == 0}
-Administration problem: No Co-hair.
 {/if}
 
-<h2><br />{translate key="user.ercrole.secretariat"}</h2>
 
-<h3><dd>{translate key="user.role.editor"}</h3>
+{if count($secretary) > 0}
 {if count($secretary) == 1}
+<h4>Secretary</h4>
+{else}
+<h4>Secretaries</h4>
+{/if}
 	<div id="secretary">
-	<ol class="editorialTeam">
+	<ol class="contact">
 		{foreach from=$secretary item=secretary} 
-			<li><dd><strong>{$secretary->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($secretary->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($secretary->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+			<strong>{$secretary->getFullName()|escape}</strong>{if $secretary->getLocalizedAffiliation()}, {$secretary->getLocalizedAffiliation()|escape}{/if}<br /> &#187; {translate key="about.contact.email"}: {if $secretary->getEmail()}{mailto address=$secretary->getEmail()|escape}<br />{/if}
 		{/foreach}
 	</ol>
 	</div>
-{elseif count($secretary) == 0}
-Administration problem: No Secretary.
 {/if}
 
-<h3><dd><br />{translate key="user.role.sectionEditors"}</h3>
-{if count($secretaryAA) == 1}
-	<div id="secretaryAA">
-	<ol class="editorialTeam">
-		{foreach from=$secretaryAA item=secretaryAA} 
-			<li><dd><strong>{$secretaryAA->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($secretaryAA->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($secretaryAA->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
-		{/foreach}
-	</ol>
-	</div>
-{elseif count($adsecretary) == 0}
-Administration problem: No Secretary Administrative Assistant.
-{/if}
-
-<h2><br />{translate key="user.ercrole.ercMembers"}</h2>
-{if count($ercMembers)>0}
+{if count($ercMembers) > 0}
+<h4>Members</h4>
 	<div id="ercMembers">
-	<ol class="editorialTeam">
+	<ol class="contact">
 		{foreach from=$ercMembers item=ercMembers} 
-			<li><br /><dd><strong>{$ercMembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($ercMembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($ercMembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
+			<strong>{$ercMembers->getFullName()|escape}</strong>{if $ercMembers->getLocalizedAffiliation()}, {$ercMembers->getLocalizedAffiliation()|escape}{/if}<br /> &#187; {translate key="about.contact.email"}: {if $ercMembers->getEmail()}{mailto address=$ercMembers->getEmail()|escape}<br />{/if}
 		{/foreach}
 	</ol>
 	</div>
-{elseif count($ercMembers) == 0}
-Administration problem: No Members.
-{/if}
-
-<h2><br />{translate key="user.ercrole.extMembers"}</h2>
-{if count($extMembers)>0}
-	<div id="extMembers">
-	<ol class="editorialTeam">
-		{foreach from=$extMembers item=extMembers} 
-			<li><br /><dd><strong>{$extMembers->getFullName()|escape}</strong><br /><i>{if $userSettingsDao->getSetting($extMembers->getUserId(),'fieldOfActivity')}{$userSettingsDao->getSetting($extMembers->getUserId(),'fieldOfActivity')|escape}{/if}</i></li>
-		{/foreach}
-	</ol>
-	</div>
-{elseif count($extMembers) == 0}
-Administration problem: No External Members.
 {/if}
 
 </div>

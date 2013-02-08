@@ -1,7 +1,7 @@
 <?php
 
 /**
-* class MeetingsHandler for SectionEditor and Editor Roles (STO)
+* class MeetingsHandler for SectionEditor and Editor Roles (Secretary)
 * page handler class for minutes-related operations
 * @var unknown_type
 */
@@ -47,7 +47,7 @@ class ReportsHandler extends Handler {
 		}
 		
 		$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
-		$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
+		$roleKey = $isEditor ? 'user.role.coordinator' : 'user.role.sectionEditor';
 		$pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, ''), 'editor.reports.reportGenerator'));
 		
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
@@ -149,7 +149,7 @@ class ReportsHandler extends Handler {
 		import ('lib.pkp.classes.who.form.SubmissionsReportForm');
 		parent::validate();
 		$this->setupTemplate();
-		$submissionsReportForm= new SubmissionsReportForm($args, $request);
+		$submissionsReportForm= new SubmissionsReportForm($args);
 		$isSubmit = Request::getUserVar('generateSubmissionsReport') != null ? true : false;
 	
 		if ($isSubmit) {
@@ -169,7 +169,6 @@ class ReportsHandler extends Handler {
 	
 	
 	/**
-	 * Added by MSB 10/11/2011
 	 * Generate csv file for the submission report
 	 * @param $args (type)
 	 */
@@ -179,80 +178,378 @@ class ReportsHandler extends Handler {
 	
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-	
-		$countryField = Request::getUserVar('countries');
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+
+		
+		//Get user filter decision
+		$sectionId = Request::getUserVar('erc');
+		if ($sectionId != '1' && $sectionId != '2') $sectionId = null;
 		$decisionField = Request::getUserVar('decisions');
-		$technicalUnitField = Request::getUserVar('technicalUnits');
+		$sresearch = Request::getUserVar('studentResearch');
+		$adegree = Request::getUserVar('academicDegree');
+		$primarySponsorField = Request::getUserVar('primarySponsors');
+		$secondarySponsorField = Request::getUserVar('secondarySponsors');
+		$researchFieldField = Request::getUserVar('researchFields');
+		$proposalTypeField = Request::getUserVar('proposalTypes');
+		$dataCollection = Request::getUserVar('dataCollection');
+		$multiCountry = Request::getUserVar('multicountry');
+		$nationwide = Request::getUserVar('nationwide');
+		$countryField = Request::getUserVar('regions');
+		$startDateBefore = Request::getUserVar('startDateBefore');
+		$startDateAfter = Request::getUserVar('startDateAfter');
+		$endDateBefore = Request::getUserVar('endDateBefore');
+		$endDateAfter = Request::getUserVar('endDateAfter');
+		$submittedBefore = Request::getUserVar('submittedBefore');
+		$submittedAfter = Request::getUserVar('submittedAfter');
+		$approvedBefore = Request::getUserVar('approvedBefore');
+		$approvedAfter = Request::getUserVar('approvedAfter');
 		
 		if(array_shift(array_values($countryField)) == "0"){
-			$countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        	$countries =& $countryDAO->getAsiaPacificCountries();
+			$countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        	$countries =& $countryDAO->getRegionsOfPhilippines();
         	$countryField = array_keys($countries);
 		}
-		if(array_shift(array_values($technicalUnitField)) == "0"){
-			$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-			$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-			$technicalUnitField = array_keys($technicalUnits);
-		} 	 
-	
-		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-		if ($fromDate != null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-		if ($toDate != null) $toDate = date('Y-m-d H:i:s', $toDate);
-	
-		$sort = Request::getUserVar('sort');
+$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
 		$sortDirection = (isset($sortDirection) && ($sortDirection == 'ASC' || $sortDirection == 'DESC')) ? $sortDirection : 'ASC';
+		
 		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-	
+				
 		$submissions =& $editorSubmissionDao->getEditorSubmissionsReport(
-		$journalId,
-		$sectionId,
-		$editorId,
-		$searchField,
-		$searchMatch,
-		$search,
-		$dateSearchField,
-		$fromDate,
-		$toDate,
-		$technicalUnitField,
-		$countryField,
-		$decisionField,
-		$rangeInfo,
-		$sort,
-		$sortDirection
+			$journalId,
+			$sectionId,
+			$sresearch,
+			$adegree,
+			$primarySponsorField,
+			$secondarySponsorField,
+			$editorId,
+			$searchField,
+			$searchMatch,
+			$search,
+			$dateSearchField,
+			$fromDate,
+			$toDate,
+			$researchFieldField,
+			$proposalTypeField,
+			$dataCollection,
+			$multiCountry,
+			$nationwide,
+			$countryField,
+			$startDateBefore,
+			$startDateAfter,
+			$endDateBefore,
+			$endDateAfter,
+			$submittedBefore,
+			$submittedAfter,
+			$approvedBefore,
+			$approvedAfter,
+			$decisionField,
+			$rangeInfo,
+			$sort,
+			$sortDirection
 		);
-			
-	
+		
 		$submissionsArray = $submissions->toArray();
 	
 		header('content-type: text/comma-separated-values');
 		header('content-disposition: attachment; filename=submissionsReport-' . date('Ymd') . '.csv');
-	
-		$columns = array(
-					'whoId' => Locale::translate("editor.reports.whoId"),
-					'title' => Locale::translate("editor.reports.title"),
-					'author' => Locale::translate("editor.reports.author"),
-					'submitDate' =>  Locale::translate("editor.reports.submitDate"),
-					'country' => Locale::translate("editor.reports.country"),
-					'technicalUnit' =>  Locale::translate("editor.reports.technicalUnit"),
-					'decision' => Locale::translate("editor.reports.decision")
-		);
+		
+		// Get ready the csv 
+		$columns = array();
+		
+		if (Request::getUserVar('checkProposalId')){
+			$columns = $columns + array('whoId' => Locale::translate("editor.reports.whoId"));
+		}
+		if (Request::getUserVar('checkErc')){
+			$columns = $columns + array('erc' => Locale::translate("editor.reports.erc"));
+		}
+		if (Request::getUserVar('checkDecision')){
+			$columns = $columns + array('decision' => Locale::translate("editor.reports.decision"));
+		}
+		if (Request::getUserVar('checkDateSubmitted')){
+			$columns = $columns + array('submitDate' =>  Locale::translate("editor.reports.submitDate"));
+		}		
+		if (Request::getUserVar('checkDateApproved')){
+			$columns = $columns + array('approvedDate' =>  Locale::translate("editor.reports.approveDate"));
+		}
+		if (Request::getUserVar('checkName')){
+			$columns = $columns + array('author' => Locale::translate("editor.reports.author"));
+		}
+		if (Request::getUserVar('checkAffiliation')){
+			$columns = $columns + array('authorAffiliation' => Locale::translate("editor.reports.authorAffiliation"));
+		}
+		if (Request::getUserVar('checkEmail')){
+			$columns = $columns + array('authorEmail' => Locale::translate("editor.reports.authorEmail"));
+		}
+		if (Request::getUserVar('checkScientificTitle')){
+			$columns = $columns + array('scientificTitle' => Locale::translate("editor.reports.scientificTitle"));
+		}
+		if (Request::getUserVar('checkPublicTitle')){
+			$columns = $columns + array('publicTitle' => Locale::translate("editor.reports.publicTitle"));
+		}
+		if (Request::getUserVar('checkStudentResearch')){
+			$columns = $columns + array('studentInstitution' => Locale::translate("editor.reports.studentInstitution"));
+			$columns = $columns + array('studentAcademicDegree' => Locale::translate("editor.reports.studentAcademicDegree"));
+		}
+		if (Request::getUserVar('checkPrimarySponsor')){
+			$columns = $columns + array('primarySponsor' => Locale::translate("editor.reports.primarySponsor"));
+		}
+		if (Request::getUserVar('checkSecondarSponsor')){
+			$columns = $columns + array('secondaySponsor' => Locale::translate("editor.reports.secondarySponsor"));
+		}
+		if (Request::getUserVar('checkResearchFields')){
+			$columns = $columns + array('researchField' => Locale::translate("editor.reports.researchField"));
+		}
+		if (Request::getUserVar('checkProposalTypes')){
+			$columns = $columns + array('proposalType' => Locale::translate("editor.reports.proposalType"));
+		}
+		if (Request::getUserVar('checkDuration')){
+			$columns = $columns + array('duration' => Locale::translate("editor.reports.duration"));
+		}
+		if (Request::getUserVar('checkArea')){
+			$columns = $columns + array('geoArea' => Locale::translate("editor.reports.country"));
+		}
+		if (Request::getUserVar('checkDataCollection')){
+			$columns = $columns + array('dataCollection' => Locale::translate("editor.reports.dataCollection"));
+		}
+		if (Request::getUserVar('checkBudget')){
+			$columns = $columns + array('budget' => Locale::translate("editor.reports.budget"));
+			$columns = $columns + array('currency' => Locale::translate("editor.reports.currency"));
+		}
+		if (Request::getUserVar('checkErcReview')){
+			$columns = $columns + array('otherErc' => Locale::translate("editor.reports.otherErcReview"));
+		}
+		if (Request::getUserVar('checkIndustryGrant')){
+			$columns = $columns + array('industryGrant' => Locale::translate("editor.reports.industryGrant"));
+		}
+		if (Request::getUserVar('checkAgencyGrant')){
+			$columns = $columns + array('agencyGrant' => Locale::translate("editor.reports.agencyGrant"));
+		}
+		if (Request::getUserVar('checkMohGrant')){
+			$columns = $columns + array('mohGrant' => Locale::translate("editor.reports.mohGrant"));
+		}
+		if (Request::getUserVar('checkGovernmentGrant')){
+			$columns = $columns + array('governmentGrant' => Locale::translate("editor.reports.governmentGrant"));
+		}	
+		if (Request::getUserVar('checkUniversityGrant')){
+			$columns = $columns + array('universityGrant' => Locale::translate("editor.reports.universityGrant"));
+		}
+		if (Request::getUserVar('checkSelfFunding')){
+			$columns = $columns + array('selfFunding' => Locale::translate("editor.reports.selfFunding"));
+		}	
+		if (Request::getUserVar('checkOtherGrant')){
+			$columns = $columns + array('otherGrant' => Locale::translate("editor.reports.otherGrant"));
+		}
+
+		
+		//Write into the csv
 		$fp = fopen('php://output', 'wt');
+		String::fputcsv($fp, array(date("F j, Y", mktime(0,0,0)).' '.$journal->getLocalizedTitle().', Report of proposals'));
+		
+		$criterias = array();		
+		
+		if ($submittedBefore) array_push($criterias, ('submitted before "'.$submittedBefore.'" (inclusive)'));
+		if ($submittedAfter) array_push($criterias, ('submitted after "'.$submittedAfter.'" (inclusive)'));
+		if ($approvedBefore) array_push($criterias, ('approved before "'.$approvedBefore.'" (inclusive)'));
+		if ($approvedAfter) array_push($criterias, ('approved after "'.$approvedAfter.'" (inclusive)'));
+		if ($startDateBefore) array_push($criterias, ('with a start date before "'.$submittedBefore.'" (inclusive)'));
+		if ($startDateAfter) array_push($criterias, ('with a start date after "'.$submittedAfter.'" (inclusive)'));
+		if ($endDateBefore) array_push($criterias, ('with a end date before "'.$approvedBefore.'" (inclusive)'));
+		if ($endDateAfter) array_push($criterias, ('with a end date after "'.$approvedAfter.'" (inclusive)'));
+		if ($sectionId) {
+			$sectionDao =& DAORegistry::getDAO('SectionDAO');
+			$section =& $sectionDao->getSection($sectionId);
+			array_push($criterias, ('submitted to '.$section->getLocalizedAbbrev()));
+		}
+		if (!empty($decisionField)){
+			$decisionCriteria = "";
+			$present = false;
+			foreach ($decisionField as $decision){
+				if(!empty($decision)){
+					$present = true;
+					if ($decisionCriteria == "" || $decisionCriteria == null) $decisionCriteria = Locale::translate($decision).' ';
+					else $decisionCriteria .= 'or '.Locale::translate($decision).' ';
+				}
+			}
+			if ($present == true) array_push($criterias, ("committe's decision is ".$decisionCriteria));
+		}
+		if ($sresearch){
+			if (!$adegree){
+				if ($sresearch == 'Yes') array_push($criterias, ("is conducted by a student"));
+				else array_push($criterias, ("is not conducted by a student"));
+			} elseif ($sresearch == 'Yes') array_push($criterias, ("is conducted by a student in a ".$adegree." academic degree"));
+		}
+		if (!empty($primarySponsorField)){
+			$primarySponsorCriteria = "";
+			$present = false;
+			foreach ($primarySponsorField as $primarySponsor){
+				if(!empty($primarySponsor)){
+					$present = true;
+					if ($primarySponsorCriteria == "" || $primarySponsorCriteria == null) $primarySponsorCriteria = $primarySponsor.' ';
+					else $primarySponsorCriteria .= 'or '.$primarySponsor.' ';
+				}
+			}
+			if ($present == true) array_push($criterias, ("the primary sponsor is ".$primarySponsorCriteria));
+		}
+		if (!empty($secondarySponsorField)){
+			$secondarySponsorCriteria = "";
+			$present = false;
+			foreach ($secondarySponsorField as $secondarySponsor){
+				if(!empty($secondarySponsor)){
+					$present = true;
+					if ($secondarySponsorCriteria == "" || $secondarySponsorCriteria == null) $secondarySponsorCriteria = $secondarySponsor.' ';
+					else $secondarySponsorCriteria .= 'or '.$secondarySponsor.' ';
+				}
+			}
+			if ($present == true) array_push($criterias, ("the secondary sponsor list includes ".$secondarySponsorCriteria));
+		}
+		if (!empty($researchFieldField)){
+			$researchFieldCriteria = "";
+			$present = false;
+			foreach ($researchFieldField as $researchField){
+				if(!empty($researchField)){
+					$present = true;
+					if ($researchFieldCriteria == "" || $researchFieldCriteria == null) $researchFieldCriteria = $articleDao->getResearchField($researchField).' ';
+					else $researchFieldCriteria .= 'or '.$articleDao->getResearchField($researchField).' ';
+				}
+			}
+			if ($present == true) array_push($criterias, ("the research field list includes ".$researchFieldCriteria));
+		}
+		if (!empty($proposalTypeField)){
+			$proposalTypeCriteria = "";
+			$present = false;
+			foreach ($proposalTypeField as $proposalType){
+				if(!empty($proposalType)){
+					$present = true;
+					if ($proposalTypeCriteria == "" || $proposalTypeCriteria == null) $proposalTypeCriteria = $articleDao->getProposalType($proposalType).' ';
+					else $proposalTypeCriteria .= 'or '.$articleDao->getProposalType($proposalType).' ';
+				}
+			}
+			if ($present == true) array_push($criterias, ("the proposal type list includes ".$proposalTypeCriteria));
+		}		
+		if ($dataCollection) {
+			if ($dataCollection == 'Both') array_push($criterias, ('with primary and secondary data collections'));
+			else array_push($criterias, ('with only '.$dataCollection.' data collection(s)'));
+		}
+		if ($multiCountry) {
+			if ($multiCountry == 'Yes') array_push($criterias, ('is conducted in multiple countries'));
+			else array_push($criterias, ('is conducted only in DemoNational'));
+		} 
+		if ($nationwide) {
+			if ($nationwide == 'Yes') array_push($criterias, ('in the whole country'));
+			else array_push($criterias, ('not in the whole country'));
+		}					
+		if (!empty($countryField)){
+			$regionsOfPhilippinesDao =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+			$countryCriteria = "";
+			$present = false;
+			foreach ($countryField as $country){
+				if(!empty($country)){
+					$present = true;
+					if ($countryCriteria == "" || $countryCriteria == null) $countryCriteria = $regionsOfPhilippinesDao->getRegionOfPhilippines($country).' ';
+					else $countryCriteria .= 'or '.$regionsOfPhilippinesDao->getRegionOfPhilippines($country).' ';
+				}
+			}
+			if ($present == true) array_push($criterias, ("the list of regions includes ".$countryCriteria));
+		}	
+		
+		if (!empty($criterias)) {
+			$i = 0;
+			foreach ($criterias as $criteria) {
+				if ($i != 0) {
+					$criteria = 'and '.$criteria;
+					String::fputcsv($fp, array('', $criteria));
+				} else {
+					String::fputcsv($fp, array('Criteria(s):', $criteria));
+				}	
+				$i++;			
+			}
+		} else String::fputcsv($fp, array('No criterias.'));
+		
+		String::fputcsv($fp, array(''));				
 		String::fputcsv($fp, array_values($columns));
 	
-	
+		
 		foreach ($submissionsArray as $submission) {
-				
-			$row['whoId'] = $submission->getWhoId($submission->getLocale());
-			$row['title'] = $submission->getLocalizedTitle();
-			$row['author'] = $submission->getFirstAuthor(true);
-			$row['submitDate'] = $submission->getDateSubmitted();
-			$row['country'] = $submission->getProposalCountry($submission->getLocale());
-			$row['technicalUnit'] = $submission->getLocalizedTechnicalUnitText();
-			$row['decision'] = Locale::translate($submission->getEditorDecisionKey());
-			String::fputcsv($fp, $row);
+			foreach ($columns as $index => $junk) {
+				if ($index == 'whoId') {
+					$columns[$index] = $submission->getWhoId($submission->getLocale());
+				} elseif ($index == 'erc') {
+					$columns[$index] = $submission->getSectionAbbrev($submission->getLocale());
+				} elseif ($index == 'decision') {
+					if ($submission->getEditorDecisionKey()) $columns[$index] = Locale::translate($submission->getEditorDecisionKey());
+					else $columns[$index] = 'None';
+				} elseif ($index == 'submitDate') {
+					$columns[$index] = $submission->getDateSubmitted();
+				} elseif ($index == 'approvedDate') {
+					if ($submission->getLocalizedApprovalDate()) {
+						$approvalDate = $submission->getApprovalDate();
+						$columns[$index] = $approvalDate['en_US'];
+					}
+					else $columns[$index] = 'Not approved';
+				} elseif ($index == 'author') {
+					$columns[$index] = $submission->getPrimaryAuthor();
+				} elseif ($index == 'authorAffiliation') {
+					if ($submission->getInvestigatorAffiliation()) $columns[$index] = $submission->getInvestigatorAffiliation();
+					else $columns[$index] = 'None';
+				} elseif ($index == 'authorEmail') {
+					$columns[$index] = $submission->getAuthorEmail();
+				} elseif ($index == 'scientificTitle') {
+					$columns[$index] = $submission->getLocalizedTitle();
+				} elseif ($index == 'publicTitle') {
+					$columns[$index] = $submission->getLocalizedPublicTitle();
+				} elseif ($index == 'studentInstitution') {
+					if ($submission->getLocalizedStudentInitiatedResearch() == 'Yes') $columns[$index] = $submission->getLocalizedStudentInstitution();
+					else $columns[$index] = 'Non-Student';
+				} elseif ($index == 'studentAcademicDegree') {
+					if ($submission->getLocalizedStudentInitiatedResearch() == 'Yes')$columns[$index] = $submission->getLocalizedAcademicDegree();
+					else $columns[$index] = 'Non-Student';
+				} elseif ($index == 'primarySponsor') {
+					$columns[$index] = $submission->getLocalizedPrimarySponsor();
+				} elseif ($index == 'secondaySponsor') {
+					if ($submission->getLocalizedSecondarySponsors()) $columns[$index] = $submission->getLocalizedSecondarySponsors();
+					else $columns[$index] = 'None';
+				} elseif ($index == 'researchField') {
+					$columns[$index] = $submission->getLocalizedResearchFieldText();
+				} elseif ($index == 'proposalType') {
+					$columns[$index] = $submission->getLocalizedProposalTypeText();
+				} elseif ($index == 'dataCollection') {
+					$columns[$index] = $submission->getLocalizedDataCollection();
+				} elseif ($index == 'geoArea') {
+					if ($submission->getLocalizedMultiCountryResearch() == 'Yes') $columns[$index] = $submission->getLocalizedMultiCountryText();
+					else if ($submission->getLocalizedNationwide()!='No') $columns[$index] = 'Nationwide Research';
+					else  $columns[$index] = $submission->getLocalizedProposalCountryText();
+				} elseif ($index == 'duration') {
+					$columns[$index] = $submission->getLocalizedStartDate().' to '.$submission->getLocalizedEndDate();
+				} elseif ($index == 'budget') {
+					$columns[$index] = $submission->getLocalizedFundsRequired();
+				} elseif ($index == 'currency') {
+					$columns[$index] = $submission->getLocalizedSelectedCurrency();
+				} elseif ($index == 'otherErc') {
+					if ($submission->getLocalizedReviewedByOtherErc() == 'Yes') $columns[$index] = $submission->getLocalizedOtherErcDecision();
+					else  $columns[$index] = 'No';
+				} elseif ($index == 'industryGrant') {
+					if ($submission->getLocalizedIndustryGrant() == 'Yes') $columns[$index] = $submission->getLocalizedNameOfIndustry();
+					else  $columns[$index] = 'No';
+				} elseif ($index == 'agencyGrant') {
+					if ($submission->getLocalizedInternationalGrant() == 'Yes') $columns[$index] = $submission->getLocalizedInternationalGrantName();
+					else $columns[$index] = 'No';
+				} elseif ($index == 'mohGrant') {
+					$columns[$index] = $submission->getLocalizedMohGrant();
+				} elseif ($index == 'governmentGrant') {
+					if ($submission->getLocalizedGovernmentGrant() == 'Yes') $columns[$index] = $submission->getLocalizedGovernmentGrantName();
+					else $columns[$index] = 'No';
+				} elseif ($index == 'universityGrant') {
+					$columns[$index] = $submission->getLocalizedUniversityGrant();
+				} elseif ($index == 'selfFunding') {
+					$columns[$index] = $submission->getLocalizedSelfFunding();
+				} elseif ($index == 'otherGrant') {
+					if ($submission->getLocalizedOtherGrant() == 'Yes') $columns[$index] = $submission->getLocalizedSpecifyOtherGrant();
+					else $columns[$index] = 'No';
+				}			
+			}						
+			String::fputcsv($fp, $columns);
 			unset($row);
 		}
 	

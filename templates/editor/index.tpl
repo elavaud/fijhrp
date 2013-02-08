@@ -10,14 +10,14 @@
  *}
 {strip}
 {assign var="pageTitle" value="editor.home"}
-{assign var="pageCrumbTitle" value="user.role.editor"}
+{assign var="pageCrumbTitle" value="user.role.coordinator"}
 {include file="common/header.tpl"}
 {/strip}
 
 <div id="articleSubmissions">
 <h3>{translate key="article.submissions"}</h3>
 <ul class="plain">
-	<li>&#187; <a href="{url op="submissions" path="submissionsUnassigned"}">{translate key="common.queue.short.submissionsUnassigned"}</a>&nbsp;({if $submissionsCount[0]}{$submissionsCount[0]}{else}0{/if})</li>
+	<!--<li>&#187; <a href="{url op="submissions" path="submissionsUnassigned"}">{translate key="common.queue.short.submissionsUnassigned"}</a>&nbsp;({if $submissionsCount[0]}{$submissionsCount[0]}{else}0{/if})</li>-->
 	<li>&#187; <a href="{url op="submissions" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a>&nbsp;({if $submissionsCount[1]}{$submissionsCount[1]}{else}0{/if})</li>
 	<!--{*	 *
 	<li>&#187; <a href="{url op="submissions" path="submissionsInEditing"}">{translate key="common.queue.short.submissionsInEditing"}</a>&nbsp;({if $submissionsCount[2]}{$submissionsCount[2]}{else}0{/if})</li>
@@ -31,7 +31,7 @@
  * Added section for meetings in editor home page
  * Last Updated: ayveemallare 7/5/2011
  *}
- 
+<!--
 <div class="separator">&nbsp;</div>
 <div id="meetings">
 <h3>{translate key="editor.meetings"}</h3>
@@ -39,7 +39,7 @@
 	<li>&#187; <a href="{url op="meetings"}">{translate key="editor.meetings}</a></li>
 </ul>
 </div>
-
+-->
 {**
  * Added section for report generation
  * Last Updated: ayveemallare 10/9/2011
@@ -49,7 +49,7 @@
 <h3>{translate key="editor.reports.reportGenerator"}</h3>
 <ul class="plain">
 	<li>&#187; <a href="{url op="submissionsReport"}">{translate key="editor.reports.submissions"}</a>
-	<li>&#187; <a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a>
+	<!--<li>&#187; <a href="{url op="meetingAttendanceReport"}">{translate key="editor.reports.meetingAttendance"}</a>-->
 </ul>
 </div>
 
@@ -76,6 +76,7 @@ function sortSearch(heading, direction) {
 // -->
 {/literal}
 </script> 
+<!--
 
 <form method="post" name="submit" action="{url path="search"}">
 	{if $section}<input type="hidden" name="section" value="{$section|escape:"quotes"}"/>{/if}
@@ -102,9 +103,9 @@ function sortSearch(heading, direction) {
 	<input type="hidden" name="dateToMinute" value="59" />
 	<input type="hidden" name="dateToSecond" value="59" />
 	<br/>
-	
-	<!-- Allows filtering by technical unit and country -->
-	<!-- Added by: igm 9/24/2011                        -->
+
+
+
 	<h5>Filter by</h5>
 	<select name="technicalUnitField" id="technicalUnit" class="selectMenu">
 		<option value="">All Technical Units</option>
@@ -117,6 +118,8 @@ function sortSearch(heading, direction) {
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>
+
+-->
 &nbsp;
 
 {if $displayResults}

@@ -27,10 +27,10 @@
 		<td class="label">{translate key="article.title"}</td>
 		<td>{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
 	</tr>
-	{** <tr>
+	<tr>
 		<td class="label">{translate key="section.section"}</td>
 		<td>{$submission->getSectionTitle()|escape}</td>
-	</tr> *}
+	</tr>
 	<tr>
 		<td class="label">{translate key="user.role.editor"}</td>
 		<td>

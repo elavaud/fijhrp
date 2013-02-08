@@ -486,7 +486,7 @@ class Article extends Submission {
 	 * @param $layoutEditor boolean
 	 * @return array User IDs
 	 */
-	function getAssociatedUserIds($authors = true, $reviewers = true, $editors = true, $proofreader = true, $copyeditor = true, $layoutEditor = true) {
+	function getAssociatedUserIds($authors = true, $reviewers = true, $editors = true, $sectionEditors = true, $proofreader = true, $copyeditor = true, $layoutEditor = true) {
 		$articleId = $this->getId();
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
 
@@ -506,7 +506,17 @@ class Article extends Submission {
 				unset($editAssignment);
 			}
 		}
-
+		
+		if($sectionEditors) {
+			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			$editAssignments =& $editAssignmentDao->getSectionEditorAssignmentsByArticleId($articleId);
+			while ($editAssignment =& $editAssignments->next()) {
+				$userId = $editAssignment->getEditorId();
+				if ($userId) $userIds[] = array('id' => $userId, 'role' => 'sectionEditor');
+				unset($editAssignment);
+			}
+		}
+		
 		if($copyeditor) {
 			$copyedSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $articleId);
 			$userId = $copyedSignoff->getUserId();
@@ -626,6 +636,20 @@ class Article extends Submission {
             return $decision['decision'];
 	}
 	
+	/**
+	 * Get the number of resubmission
+	 * @return int
+	 * Edited by el
+	 * Last update: 5/11/2012
+	*/
+	function getResubmitCount(){
+		$articleId = $this->getArticleId();
+		$articleDao = DAORegistry::getDAO('ArticleDAO');
+		$result = $articleDao->getLastEditorDecision($articleId);
+		return $result['resubmitCount'];	
+	}
+
+
 	/*
 	 * Get a map for editor decision to locale key.
 	 * @return array

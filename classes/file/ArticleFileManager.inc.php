@@ -70,7 +70,7 @@ class ArticleFileManager extends FileManager {
 	 * @return int file ID, is false if failure
 	 */
 	function uploadSubmissionFile($fileName, $fileId = null, $overwrite = false) {
-                return $this->handleUpload($fileName, ARTICLE_FILE_SUBMISSION, $fileId, $overwrite);
+        return $this->handleUpload($fileName, ARTICLE_FILE_SUBMISSION, $fileId, $overwrite);
 	}
 
 	/**
@@ -79,7 +79,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @return int file ID, is false if failure
 	 */
-	function uploadReviewFile($fileName, $fileId = null) {
+	function uploadReviewFile($fileName, $fileId = null) {		
 		return $this->handleUpload($fileName, ARTICLE_FILE_REVIEW, $fileId);
 	}
 
@@ -89,7 +89,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @return int file ID, is false if failure
 	 */
-	function uploadEditorDecisionFile($fileName, $fileId = null) {
+	function uploadEditorDecisionFile($fileName, $fileId = null) {	
 		return $this->handleUpload($fileName, ARTICLE_FILE_EDITOR, $fileId);
 	}
 
@@ -99,7 +99,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @return int file ID, is false if failure
 	 */
-	function uploadCopyeditFile($fileName, $fileId = null) {
+	function uploadCopyeditFile($fileName, $fileId = null) {	
 		return $this->handleUpload($fileName, ARTICLE_FILE_COPYEDIT, $fileId);
 	}
 
@@ -110,7 +110,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 * @return int file ID, is null if failure
 	 */
-	function uploadLayoutFile($fileName, $fileId = null, $overwrite = true) {
+	function uploadLayoutFile($fileName, $fileId = null, $overwrite = true) {	
 		return $this->handleUpload($fileName, ARTICLE_FILE_LAYOUT, $fileId, $overwrite);
 	}
 
@@ -121,7 +121,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 * @return int file ID, is false if failure
 	 */
-	function uploadSuppFile($fileName, $fileId = null, $overwrite = true) {
+	function uploadSuppFile($fileName, $fileId = null, $overwrite = true) {	
 		return $this->handleUpload($fileName, ARTICLE_FILE_SUPP, $fileId, $overwrite);
 	}
 
@@ -132,7 +132,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 * @return int file ID, is false if failure
 	 */
-	function uploadPublicFile($fileName, $fileId = null, $overwrite = true) {
+	function uploadPublicFile($fileName, $fileId = null, $overwrite = true) {	
 		return $this->handleUpload($fileName, ARTICLE_FILE_PUBLIC, $fileId, $overwrite);
 	}
 
@@ -143,7 +143,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $overwrite boolean
 	 * @return int file ID, is false if failure
 	 */
-	function uploadSubmissionNoteFile($fileName, $fileId = null, $overwrite = true) {
+	function uploadSubmissionNoteFile($fileName, $fileId = null, $overwrite = true) {	
 		return $this->handleUpload($fileName, ARTICLE_FILE_NOTE, $fileId, $overwrite);
 	}
 
@@ -155,7 +155,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @param $overwrite boolean
 	 */
-	function writePublicFile($fileName, &$contents, $mimeType, $fileId = null, $overwrite = true) {
+	function writePublicFile($fileName, &$contents, $mimeType, $fileId = null, $overwrite = true) {	
 		return $this->handleWrite($fileName, $contents, $mimeType, ARTICLE_FILE_PUBLIC, $fileId, $overwrite);
 	}
 
@@ -166,7 +166,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @param $overwrite boolean
 	 */
-	function copyPublicFile($url, $mimeType, $fileId = null, $overwrite = true) {
+	function copyPublicFile($url, $mimeType, $fileId = null, $overwrite = true) {	
 		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_PUBLIC, $fileId, $overwrite);
 	}
 
@@ -200,7 +200,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @param $overwrite boolean
 	 */
-	function copyAttachmentFile($url, $mimeType, $fileId = null, $overwrite = true, $assocId = null) {
+	function copyAttachmentFile($url, $mimeType, $fileId = null, $overwrite = true, $assocId = null) {	
 		return $this->handleCopy($url, $mimeType, ARTICLE_FILE_ATTACHMENT, $fileId, $overwrite, $assocId);
 	}
 
@@ -305,8 +305,8 @@ class ArticleFileManager extends FileManager {
 	 * @param $destFileId int the file id of the current review file
 	 * @return int the file id of the new file.
 	 */
-	function copyToReviewFile($fileId, $revision = null, $destFileId = null) {
-                return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_REVIEW, $destFileId);
+	function copyToReviewFile($fileId, $revision = null, $destFileId = null) {	
+        return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_REVIEW, $destFileId);
 	}
 
 	/**
@@ -316,7 +316,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $destFileId int file ID to copy to
 	 * @return int the file id of the new file.
 	 */
-	function copyToEditorFile($fileId, $revision = null, $destFileId = null) {
+	function copyToEditorFile($fileId, $revision = null, $destFileId = null) {	
 		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_EDITOR, $destFileId);
 	}
 
@@ -336,7 +336,7 @@ class ArticleFileManager extends FileManager {
 	 * @param $revision int the revision of the copyedit file.
 	 * @return int the file id of the new file.
 	 */
-	function copyToLayoutFile($fileId, $revision = null) {
+	function copyToLayoutFile($fileId, $revision = null) {	
 		return $this->copyAndRenameFile($fileId, $revision, ARTICLE_FILE_LAYOUT);
 	}
 
@@ -399,8 +399,8 @@ class ArticleFileManager extends FileManager {
 		$type = $this->pathToType($path);
 	
 		if($type == ARTICLE_FILE_SUPP ){
-			  $suppFileCounter = $suppFileCounter + 1;
-			  $type = $type.$suppFileCounter;
+			$suppFileCounter = $suppFileCounter + 1;
+			$type = $type.$suppFileCounter;
 		}
 		
 		
@@ -434,8 +434,11 @@ class ArticleFileManager extends FileManager {
 
 		$destTypePath = $this->typeToPath($destType);
 		$destDir = $this->filesDir . $destTypePath . '/';
-
-		if ($destFileId != null) {
+		
+		if ($destType == 'ReviewFile') {
+			$articleTemp =& $articleFileDao->getArticleFile($sourceFileId);
+			$revision = $articleTemp->getRevision();
+		} elseif ($destFileId != null) {
 			$currentRevision = $articleFileDao->getRevisionNumber($destFileId);
 			$revision = $currentRevision + 1;
 		} else {
@@ -467,21 +470,20 @@ class ArticleFileManager extends FileManager {
 		$articleFile->setRevision($revision);
 
 		$fileId = $articleFileDao->insertArticleFile($articleFile);
-
+		
 		// Rename the file.
 		$fileExtension = $this->parseFileExtension($sourceArticleFile->getFileName());
 		$newFileName = $this->articleId.'-'.$fileId.'-'.$revision.'-'.$destType.'.'.$fileExtension;
-
 		if (!$this->fileExists($destDir, 'dir')) {
 			// Try to create destination directory
 			$this->mkdirtree($destDir);
 		}
 
 		copy($sourceDir.$sourceArticleFile->getFileName(), $destDir.$newFileName);
-
+		
 		$articleFile->setFileName($newFileName);
 		$articleFileDao->updateArticleFile($articleFile);
-
+		
 		return $fileId;
 	}
 

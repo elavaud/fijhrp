@@ -16,7 +16,7 @@
 	{if $announcement->getTypeId() != null}
 		<td class="title"><h4>{$announcement->getAnnouncementTypeName()|escape}: {$announcement->getLocalizedTitle()|escape}</h4></td>
 	{else}
-		<td class="title"><h4>{$announcement->getLocalizedTitle()|escape}</h4></td>
+		<td class="title"><a href="{url page="announcement" op="view" path=$announcement->getId()}"><h4>{$announcement->getLocalizedTitle()|escape}</h4></a></td>
 	{/if}
 		<td class="more">&nbsp;</td>
 	</tr>

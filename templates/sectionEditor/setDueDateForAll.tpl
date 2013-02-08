@@ -9,8 +9,8 @@
  * $Id$
  *}
 
-<script type="text/javascript" src="http://localhost/whorrp-release1/whorrp/lib/pkp/js/lib/jquery/jquery.min.js"></script>
-<script type="text/javascript" src="http://localhost/whorrp-release1/whorrp/lib/pkp/js/lib/jquery/plugins/jqueryUi.min.js"></script>
+<script type="text/javascript" src="http://localhost/philhrp-release1/philhrp/lib/pkp/js/lib/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="http://localhost/philhrp-release1/philhrp/lib/pkp/js/lib/jquery/plugins/jqueryUi.min.js"></script>
 
 {strip}
 {assign var="pageTitle" value="submission.dueDate"}
@@ -18,7 +18,7 @@
 {/strip}
 
 {literal}
-<script type="text/javascript" src="http://localhost/whorrp/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
+<script type="text/javascript" src="http://localhost/philhrp/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
 <style type="text/css" src="http://localhost/whorr/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
 
 <script type="text/javascript">

@@ -16,21 +16,19 @@
 	<message key="about.aboutSite">About the Site</message>
     
         <!-- Changed "Contact" by "Secretariat". EL April 3 2012-->
-        <message key="about.contact">WPRO-ERC Secretariat</message>
+        <message key="about.contact">The National Ethics Committee for Health Research</message>
         
 	<message key="about.contact.email">Email</message>
 	<message key="about.contact.fax">Fax</message>
 	<message key="about.contact.phone">Phone</message>
-    
-        <!-- Changed "Principal Contact" by "Secretary" and added subPrincipalContact for "Secretary Administrative Assistant". EL April 3 2012-->
+
         <message key="about.contact.principalContact">Secretary</message>
         <message key="about.contact.subPrincipalContact">Secretary Administrative Assistant</message>
         
 	<message key="about.contact.supportContact">Support Contact</message>
 	<message key="about.other">Other</message>
-    
-        <!-- Changed "People" by "The Ethics Review Committee". EL April 3 2012-->
-        <message key="about.people">The Ethics Review Committee</message>
+
+        <message key="about.people">Institutional Review Boards</message>
         
 	<message key="about.policies">Policies</message>
 	<message key="about.siteMap">Site Map</message>
@@ -93,6 +91,7 @@
 	<message key="common.continue">Continue</message>
 	<message key="common.copy">Copy</message>
 	<message key="common.country">Country</message>
+    <message key="common.area">Geographical Area</message>
     
         <!-- Added by EL, April 13, 2012-->
        <message key="common.picountry"> Country of usual Residence</message>
@@ -183,6 +182,7 @@
 	<message key="common.replaced">Replaced</message>
 	<message key="common.replaceFile">Replace file</message>
 	<message key="common.requiredField">* Denotes required field</message>
+    <message key="common.mouseOver">[?] Explanations and translations on mouse over.</message>
 	<message key="common.required">Required</message>
 	<message key="common.saveAndContinue">Save and continue</message>
 	<message key="common.saveAndEmail">Save and email</message>
@@ -285,7 +285,7 @@
 	<message key="icon.view.alt">View</message>
 	<message key="locale.primary">Primary locale</message>
 	<message key="locale.supported">Supported locales</message>
-	<message key="navigation.about">About</message>
+	<message key="navigation.about">About ERC</message>
 	<message key="navigation.browse">Browse</message>
 	<message key="navigation.browseByTitle">By Title</message>
 	<message key="navigation.dashboard">Dashboard</message>
@@ -299,7 +299,7 @@
 	<message key="navigation.previousPage"><![CDATA[&lt;&lt;]]></message>
 	<message key="navigation.previousStep">Previous Step</message>
 	<message key="navigation.register">Register</message>
-	<message key="navigation.search">Past Proposals</message>
+	<message key="navigation.search">Past &amp; Ongoing Research</message>
 	<message key="navigation.stepNumber">Step {$step}</message>
 	<message key="navigation.userHome">User Home</message>
 	<message key="navigation.user">User</message>
@@ -307,7 +307,7 @@
 	<message key="notification.confirmError">There was an error confirming your subscription.</message>
 	<message key="notification.confirmSuccess">You have been successfully subscribed.</message>
 	<message key="notification.email">Send me an email for these types of notifications.</message>
-	<message key="notification.location">Go To URL</message>
+	<message key="notification.location">View</message>
 	<message key="notification.mailList">Notification mailing list</message>
 	<message key="notification.mailList.emailInvalid">Please enter a valid email address.</message>
 	<message key="notification.mailList.privacyProtection">Privacy protection policy</message>
@@ -367,6 +367,11 @@
 	<message key="editor.article.decision.exempted">Exempt From Review</message>
 	<message key="editor.article.decision.expedited">For Expedited Review</message>
 	<message key="editor.article.decision.assigned">For Full Review</message>
+    
+    <message key="search.investigator">Investigator</message>
+    <message key="search.investigatorAffiliation">Investigator Affiliation</message>
+    <message key="search.investigatorEmail">Investigator e-mail</message>
+    
 	
 		<!--  Added by MSB July 7 2011 -->
 		<message key="common.update">Update</message>

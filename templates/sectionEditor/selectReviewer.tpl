@@ -40,7 +40,8 @@ function sortSearch(heading, direction) {
 	</tr>	
 	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
 	{assign var="count" value=0}
-	{foreach from=$unassignedReviewers item=ercMember}		
+	{foreach from=$unassignedReviewers item=ercMember}
+		{if ($submission->getSectionId()=='1' && $ercMember->isNiophMember()) || ($submission->getSectionId()=='2' && $ercMember->isUhsMember()) || $ercMember->isLocalizedExternalReviewer() == "Yes"}
 		{assign var="count" value=$count+1}
 		{assign var="reviewerId" value=$ercMember->getId()}
 		<tr>
@@ -55,6 +56,7 @@ function sortSearch(heading, direction) {
 			<td width="40%" class="heading" align="left"><a href="{url op="selectReviewer" path=$articleId|to_array:$reviewerId}" class="action">Add and Notify as Primary Reviewer</a></td>
 		</tr>			
 		<tr><td colspan="3" class="separator">&nbsp;</td></tr>
+		{/if}
 	{/foreach}
 	{if $count==0}
 		<tr>

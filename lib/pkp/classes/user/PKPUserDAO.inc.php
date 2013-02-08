@@ -229,7 +229,12 @@ class PKPUserDAO extends DAO {
 	}
 
 	function getLocaleFieldNames() {
-		return array('biography', 'signature', 'gossip', 'affiliation', 'ercMemberStatus', 'healthAffiliation', 'wproAffiliation', 'externalReviewer');
+		return array('biography', 'signature', 'gossip', 'affiliation', 
+	
+					//Added by EL on May 8, 2012
+					'fieldOfActivity',	
+	
+	'ercMemberStatus', 'healthAffiliation', 'wproAffiliation', 'externalReviewer');
 	}
 
 	function updateLocaleFields(&$user) {

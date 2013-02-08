@@ -216,12 +216,12 @@ function &cloneObject(&$object) {
  */
 function &instantiate($fullyQualifiedClassName, $expectedTypes = null, $expectedPackages = null, $expectedMethods = null, $constructorArg = null) {
 	$errorFlag = false;
-
+	
 	// Validate the class name
 	if (!String::regexp_match('/^[a-zA-Z0-9.]+$/', $fullyQualifiedClassName)) {
 		return $errorFlag;
 	}
-
+	
 	// Validate the class package
 	if (!is_null($expectedPackages)) {
 		if (is_scalar($expectedPackages)) $expectedPackages = array($expectedPackages);
@@ -249,20 +249,19 @@ function &instantiate($fullyQualifiedClassName, $expectedTypes = null, $expected
 			}
 			fatalError('Trying to instantiate class "'.$fullyQualifiedClassName.'" which is not in any of the expected packages '.$expectedPackageString.'.');
 		}
-	}
-
+	}	
 	// Import the requested class
 	import($fullyQualifiedClassName);
 
 	// Identify the class name
 	$fullyQualifiedClassNameParts = explode('.', $fullyQualifiedClassName);
 	$className = array_pop($fullyQualifiedClassNameParts);
-
+	
 	// Type check I: The requested class should be declared by now.
 	if (!class_exists($className)) {
 		fatalError('Cannot instantiate class. Class "'.$className.'" is not declared in "'.$fullyQualifiedClassName.'".');
 	}
-
+	
 	// Check that the expected operation exists for the class.
 	if (!is_null($expectedMethods)) {
 		if (is_scalar($expectedMethods)) $expectedMethods = array($expectedMethods);

@@ -27,7 +27,7 @@ class ProfileForm extends Form {
 	 */
 	function ProfileForm() {
 		parent::Form('user/profile.tpl');
-
+		
 		$user =& Request::getUser();
 		$this->user =& $user;
 
@@ -161,6 +161,7 @@ class ProfileForm extends Form {
 	 * Initialize form data from current settings.
 	 */
 	function initData(&$args, &$request) {
+
 		$user =& $request->getUser();
 		$interestDao =& DAORegistry::getDAO('InterestDAO');
 
@@ -172,7 +173,6 @@ class ProfileForm extends Form {
 		if ($interestDao->getInterests($user->getId())) {
 			$currentInterests = $interestDao->getInterests($user->getId());
 		} else $currentInterests = null;
-
 		$this->_data = array(
 			'salutation' => $user->getSalutation(),
 			'firstName' => $user->getFirstName(),
@@ -181,6 +181,8 @@ class ProfileForm extends Form {
 			'lastName' => $user->getLastName(),
 			'gender' => $user->getGender(),
 			'affiliation' => $user->getAffiliation(null), // Localized
+				//Added by EL on May 8, 2012
+				'fieldOfActivity' => $user->getFieldOfActivity(null), // Localized
 			'signature' => $user->getSignature(null), // Localized
 			'email' => $user->getEmail(),
 			'userUrl' => $user->getUrl(),
@@ -191,7 +193,7 @@ class ProfileForm extends Form {
 			'biography' => $user->getBiography(null), // Localized
 			'userLocales' => $user->getLocales(),
 			'isAuthor' => Validation::isAuthor(),
-			'isReader' => Validation::isReader(),
+			//'isReader' => Validation::isReader(),
 			'isReviewer' => Validation::isReviewer(),
 			'existingInterests' => $existingInterests,
 			'interestsKeywords' => $currentInterests
@@ -210,6 +212,8 @@ class ProfileForm extends Form {
 			'gender',
 			'initials',
 			'affiliation',
+				//Added by EL on May 8, 2012
+				'fieldOfActivity',
 			'signature',
 			'email',
 			'userUrl',
@@ -243,6 +247,8 @@ class ProfileForm extends Form {
 		$user->setGender($this->getData('gender'));
 		$user->setInitials($this->getData('initials'));
 		$user->setAffiliation($this->getData('affiliation'), null); // Localized
+			//Added by EL on May 8, 2012
+			$user->setFieldOfActivity($this->getData('fieldOfActivity'), null); // Localized
 		$user->setSignature($this->getData('signature'), null); // Localized
 		$user->setEmail($this->getData('email'));
 		$user->setUrl($this->getData('userUrl'));
@@ -252,21 +258,23 @@ class ProfileForm extends Form {
 		$user->setCountry($this->getData('country'));
 		$user->setBiography($this->getData('biography'), null); // Localized
 
-		// Add reviewing interests to interests table
-		$interestDao =& DAORegistry::getDAO('InterestDAO');
-		$interests = Request::getUserVar('interestsKeywords');
-		$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
-		$interestTextOnly = Request::getUserVar('interests');
-		if(!empty($interestsTextOnly)) {
-			// If JS is disabled, this will be the input to read
-			$interestsTextOnly = explode(",", $interestTextOnly);
-		} else $interestsTextOnly = null;
-		if ($interestsTextOnly && !isset($interests)) {
-			$interests = $interestsTextOnly;
-		} elseif (isset($interests) && !is_array($interests)) {
-			$interests = array($interests);
-		}
-		$interestDao->insertInterests($interests, $user->getId(), true);
+			// Add reviewing interests to interests table
+			$interestDao =& DAORegistry::getDAO('InterestDAO');
+			$interests = Request::getUserVar('interestsKeywords');
+			if (is_array($interests)){
+				$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
+				$interestTextOnly = Request::getUserVar('interests');
+				if(!empty($interestsTextOnly)) {
+					// If JS is disabled, this will be the input to read
+					$interestsTextOnly = explode(",", $interestTextOnly);
+				} else $interestsTextOnly = null;
+				if ($interestsTextOnly && !isset($interests)) {
+					$interests = $interestsTextOnly;
+				} elseif (isset($interests) && !is_array($interests)) {
+					$interests = array($interests);
+				}
+				$interestDao->insertInterests($interests, $user->getId(), true);
+			}
 
 
 		$site =& Request::getSite();
@@ -296,21 +304,21 @@ class ProfileForm extends Form {
 				$role->setRoleId(ROLE_ID_REVIEWER);
 				$hasRole = Validation::isReviewer();
 				$wantsRole = Request::getUserVar('reviewerRole');
-				if ($hasRole && !$wantsRole) $roleDao->deleteRole($role);
+				//if ($hasRole && !$wantsRole) $roleDao->deleteRole($role);
 				if (!$hasRole && $wantsRole) $roleDao->insertRole($role);
 			}
 			if ($journal->getSetting('allowRegAuthor')) {
 				$role->setRoleId(ROLE_ID_AUTHOR);
 				$hasRole = Validation::isAuthor();
 				$wantsRole = Request::getUserVar('authorRole');
-				if ($hasRole && !$wantsRole) $roleDao->deleteRole($role);
+				//if ($hasRole && !$wantsRole) $roleDao->deleteRole($role);
 				if (!$hasRole && $wantsRole) $roleDao->insertRole($role);
 			}
 			if ($journal->getSetting('allowRegReader')) {
 				$role->setRoleId(ROLE_ID_READER);
 				$hasRole = Validation::isReader();
 				$wantsRole = Request::getUserVar('readerRole');
-				if ($hasRole && !$wantsRole) $roleDao->deleteRole($role);
+				//if ($hasRole && !$wantsRole) $roleDao->deleteRole($role);
 				if (!$hasRole && $wantsRole) $roleDao->insertRole($role);
 			}
 		}

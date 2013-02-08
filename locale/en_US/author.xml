@@ -31,7 +31,7 @@
 	<message key="author.submit.metadata">3. Upload Main Proposal</message>
 	<message key="author.submit.supplementaryFiles">4. Upload Supplementary Files</message>
 	<message key="author.submit.confirmation">5. Confirmation</message>
-	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the RTO home page.</message>
+	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the Investigator home page.</message>
 	<message key="author.submit.notAccepting">This site is not accepting submissions at this time.</message>
 	<message key="author.submit.requestWaiver">Request Waiver</message>
 	<message key="author.submit.qualityForWaiver">Please consider waiving the Article Submission Fee for this article</message>
@@ -54,9 +54,9 @@
 	<message key="author.submissions.noSubmissions">No submissions.</message>
 	<message key="author.submit.howToSubmit"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance ({$supportPhone}).]]></message>
 	<message key="author.submit.howToSubmitNoPhone"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance.]]></message>
-	<message key="author.submit.journalSection">Section</message>
-	<message key="author.submit.journalSectionDescription"><![CDATA[Select the appropriate section for this submission (see Sections and Policies in <a href="{$aboutUrl}" target="_new">About</a> the Journal).]]></message>
-	<message key="author.submit.selectSection">Please select a section...</message>
+	<message key="author.submit.journalSection">Ethics Committees</message>
+	<message key="author.submit.journalSectionDescription">If the proposal is submitted by a student enrolled in UHS or affiliated with UHS or if the research is conducted by UHS staff, please select the Ethics Committee of the University of Health Sciences, but if the research is conducted with an external partner (not in collaboration with UHS) or ministry of health staff including NIOPH staff, please select National Ethics Committee for Health Research.</message>
+	<message key="author.submit.selectSection">Please select an Ethics Committee...</message>
 	<message key="author.submit.submissionLocale">Submission Language</message>
 	<message key="author.submit.submissionLocaleDescription">This site accepts submissions in several languages. Choose the primary language of the submission from the pulldown below.</message>
 	<message key="author.submit.submissionChecklist">Submission Checklist</message>
@@ -66,8 +66,20 @@
 	<message key="author.submit.copyrightNoticeAgreeRequired">You must agree to the terms of the Copyright Notice before continuing.</message>
 	<message key="author.submit.commentsForEditor">Comments for the Secretariat</message>
 	<message key="author.submit.comments">Enter text (optional)</message>
-	<message key="author.submit.form.sectionRequired">Please select an appropriate section for this submission.</message>
+    <message key="author.submit.form.noFileSelected">No file selected.</message>
+	<message key="author.submit.form.sectionRequired">Please select an appropriate Ethics Committee for your proposal.</message>
+    <message key="author.submit.form.otherInternationalGrantName">Please specify the agency</message>
+    <message key="author.submit.form.authorPhoneNumber">Please enter investigator's phone number</message>
+    <message key="author.submit.form.typeOfResearchRequired">Please select a type of research.</message>
+    <message key="author.submit.form.nationwide">Please select Yes or No (Nationwide).</message>
+    <message key="author.submit.form.primarySponsor">Please select your primary sponsor.</message>
+    <message key="author.submit.form.otherPrimarySponsor">Please specify your primary sponsor.</message>
+    <message key="author.submit.form.otherSecondarySponsor">Please specify the secondary sponsor(s).</message>
+    <message key="author.submit.form.multiCountry">Please select if the research involves others country.</message>
+    <message key="author.submit.form.country">Please select a country.</message>
 	<message key="author.submit.form.localeRequired">Please select a submission language.</message>
+    <message key="author.submit.form.researchField">Please select at least one research field</message>
+    <message key="author.submit.form.otherResearchField">Please specify the research field</message>
 	<message key="author.submit.privacyStatement">Privacy Statement</message>
 	<message key="author.submit.reorderInstructions">Reorder principal investigators to appear in the order they will be listed on site.</message>
 	<message key="author.submit.reorder">Reorder principal investigator's name</message>
@@ -81,8 +93,8 @@
 	<message key="author.submit.subjectClassInstructions">Use the hyperlinked classification system to select classification terms and, if appropriate, numbers.</message>
 	<message key="author.submit.languageInstructions"><![CDATA[English=en; French=fr; Spanish=es. <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">Additional codes</a>.]]></message>
     
-	<message key="author.submit.form.authorRequired">At least one RTO is required.</message>
-	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each RTO or PI is required.</message>
+	<message key="author.submit.form.authorRequired">At least one investigator is required.</message>
+	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each investigator is required.</message>
 	
 	<!-- Added Jan 19, 2011 -->	
 	<message key="author.article.decision">ERC Decision</message>
@@ -92,26 +104,47 @@
     -->
         
         
-        <message key="author.submit.form.titleRequired">Please enter the title of your research proposal.</message>
+        <message key="author.submit.form.scientificTitleRequired">Please enter the scientific title of your research proposal.</message>
+        <message key="author.submit.form.publicTitleRequired">Please enter the public title of your research proposal.</message>
+        <message key="author.submit.form.studentInitiatedResearch">Please select Yes or No (Student Initiated Research).</message>
+        <message key="author.submit.form.studentInstitution">Please specify the institution of the student.</message>
+        <message key="author.submit.form.academicDegree">Please specify the academic degree of the student.</message>
+        <message key="author.submit.form.ethicsCommittee">Please select an Ethics Committee.</message>
+        <message key="author.submit.form.dataCollection">Please select the Data Collection.</message>
 	    <message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
             <!-- Comment out by EL on APril 13, 2012 -->
             <!-- Returned by SPF on April 17, 2012 -->
             <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message> 
         <message key="author.submit.form.keywordsRequired">Please enter keywords for your research proposal.</message>
         <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
+        <message key="author.submit.form.otherPrimarySponsor">Please specify the primary sponsor.</message>
         <message key="author.submit.form.endDateRequired">Please enter the end date of your research proposal.</message>
         <message key="author.submit.form.fundsRequiredRequired">Please enter the funds required for your research.</message>
-        <message key="author.submit.form.proposalCountryRequired">Please enter the implementation country/countries for this proposal.</message>
+        <message key="author.submit.form.selectedCurrency">Please select the currency.</message>
+        <message key="author.submit.form.proposalCountryRequired">Please select at least one region for this proposal.</message>
         <message key="author.submit.form.technicalUnitRequired">Please enter the WHO technical unit for this proposal.</message>
         <message key="author.submit.form.withHumanSubjectsRequired">Please indicate if the research involves human subjects.</message>
         <message key="author.submit.form.proposalTypeRequired">Please enter the research proposal type.</message>
+        <message key="author.submit.form.otherProposalTypeRequired">Please specify the other proposal type.</message>
         <message key="author.submit.form.submittedAsPiRequired">Please select Yes or No (Submitting as Primary Investigator?).</message>
         <message key="author.submit.form.conflictOfInterestRequired">Please select Yes or No (Conflict Of Interest?).</message>
         <message key="author.submit.form.reviewedByOtherErcRequired">Please select Yes or No (Reviewed By Other ERC?).</message>
+        <message key="author.submit.form.industryGrant">Please select Yes or No (Industry Grant?).</message>
+        <message key="author.submit.form.nameOfIndustry">Please specify the industry (industry grant).</message>
+        <message key="author.submit.form.internationalGrant">Please select Yes or No (Agency Grant?).</message>
+        <message key="author.submit.form.internationalGrantName">Please select the agency grant.</message>
+        <message key="author.submit.form.mohGrant">Please select Yes or No (Ministry of Health Grant?).</message>
+        <message key="author.submit.form.governmentGrant">Please select Yes or No (Governmant Grant?).</message>
+        <message key="author.submit.form.governmentGrantName">Please specify the government grant.</message>
+        <message key="author.submit.form.universityGrant">Please select Yes or No (University Grant?).</message>
+        <message key="author.submit.form.selfFunding">Please select Yes or No (Self Funding?).</message>
+        <message key="author.submit.form.otherGrant">Please select Yes or No (Other Grant?).</message>
+        <message key="author.submit.form.specifyOtherGrantField">Please specify other grants.</message>
             <!-- Added by: EL on April 17, 2012-->
             <message key="author.submit.form.rtoOfficeRequired">Please select your Office.</message>
         
-        <message key="author.submit.form.withdrawReasonRequired">Withdraw Reason Required</message>
+        <message key="author.submit.form.withdrawReasonRequired">Withdraw reason required</message>
+        <message key="author.submit.form.otherReasonRequired">Other reason of withdraw  required</message>
 
         <message key="author.submit.addProgressReport">Submit Interim Progress Report</message>
         <message key="author.submit.addCompletionReport">Submit Final Report</message>
@@ -154,12 +187,13 @@
         <message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts.</message>
 
         <message key="author.submit.submissionFile">Submission File</message>
+        <message key="author.submit.previousSubmissionFile">Previous Submission File</message>
 	    <message key="author.submit.uploadSubmissionFile">Upload file</message>
 	<message key="author.submit.replaceSubmissionFile">Replace submission file</message>
-	<message key="author.submit.noSubmissionFile">No file uploaded.</message>
+	<message key="author.submit.noSubmissionFile">No file uploaded. You need to upload your main proposal for going to step 4</message>
 	<message key="author.submit.noSubmissionConfirm">Are you sure you wish to continue without uploading a file?</message>
 	<message key="author.submit.supplementaryFilesInstructions">This optional step allows Supplementary Files to be added to a submission. The files, which can be in any format, might include (a) research instruments, (b) data sets, which comply with the terms of the study's research ethics review, (c) sources that otherwise would be unavailable to reviewers, (d) figures and tables that cannot be integrated into the text itself, or other materials that add to the contribution of the work.</message>
-	<message key="author.submit.supplementaryFiles.saveToUpload">Click Save to upload file (after which additional files can be uploaded).</message>
+	<message key="author.submit.supplementaryFiles.saveToUpload">Click Save to upload file.</message>
 	<message key="author.submit.forgottenSubmitSuppFile">Are you sure you wish to continue without uploading the supplementary file you have chosen?</message>
 	<message key="author.submit.noSupplementaryFiles">No supplementary files have been added to this submission.</message>
 	<message key="author.submit.backToSupplementaryFiles">Back to Supplementary Files</message>
@@ -183,7 +217,6 @@
         <message key="author.submit.suppFile.who.summary">Summary</message>
         <message key="author.submit.suppFile.who.proposal">Proposal</message>
         <message key="author.submit.suppFile.who.informedConsent">Informed Consent</message>
-        <message key="author.submit.suppFile.who.localEthicalApproval">Local Ethical Approval</message>
         <message key="author.submit.suppFile.who.funding">Funding</message>
         <message key="author.submit.suppFile.who.cv">CV of Principal Investigator</message>
         <message key="author.submit.suppFile.who.questionnaire">Questionnaires</message>
@@ -207,14 +240,14 @@
 	<message key="author.submit.suppFile.form.descriptionRequired">Please enter a description.</message>
 	<message key="author.suppFile.suppFilePublicIdentificationExists">Public supplemental file identification already exists.</message>
 	<message key="author.suppFile.publicSuppFileIdentifier">Public supplemental file identifier</message>
-	<message key="author.submit.confirmationDescription">To submit your proposal to {$journalTitle} click Finish Submission. The RTO will receive an acknowledgement by email and will be able to view the submission's progress through the review process by logging in to the ERC web site. </message>
+	<message key="author.submit.confirmationDescription">To submit your proposal to {$journalTitle} click Finish Submission. The investigator will receive an acknowledgement by email and will be able to view the submission's progress through the review process by logging into this web site. </message>
 	<message key="author.submit.noFiles">No files have been attached to this submission.</message>
 	<message key="author.submit.filesSummary">File Summary</message>
 	<message key="author.submit.finishSubmission">Finish Submission</message>
 	<message key="author.submit.submissionComplete">Submission complete. Thank you for submitting your proposal.</message>
 	<message key="author.submit.expedite"><![CDATA[If this submission is in a format that is ready to be published without further review, editing, or layout work, it can be placed directly in the last stage of the Editing queue by <a href="{$expediteUrl}" class="action">Clicking here</a>. (Note: Only journal editors have this option for their submissions.)]]></message>
-	<message key="author.article.uploadAuthorVersion">Upload RTO Version</message>
+	<message key="author.article.uploadAuthorVersion">Upload investigator Version</message>
 	<message key="author.article.copyeditedFile">Copyedited File</message>
-	<message key="author.article.authorRevisedFile">RTO File</message>
+	<message key="author.article.authorRevisedFile">Investigator File</message>
 	<message key="author.submit.authorSubmitLoginMessage">A user account is required to submit to the ERC. This allows our Secretariat to track your submissions and contact you when the status of your submission changes, or if additional information is required from you.</message>
 </locale>

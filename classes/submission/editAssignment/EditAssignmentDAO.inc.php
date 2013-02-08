@@ -72,6 +72,50 @@ class EditAssignmentDAO extends DAO {
 	}
 
 	/**
+	 * Retrieve those edit assignments that relate to full editors.
+	 * @param $articleId int
+	 * @return EditAssignment
+	 */
+	function &getSectionEditorAssignmentsByArticleId($articleId) {
+		$result =& $this->retrieve(
+			'SELECT e.*, u.first_name, u.last_name, u.email, u.initials, r.role_id AS editor_role_id FROM articles a, edit_assignments e, users u, roles r WHERE r.user_id = e.editor_id AND r.role_id = ' . ROLE_ID_SECTION_EDITOR . ' AND e.article_id = ? AND r.journal_id = a.journal_id AND a.article_id = e.article_id AND e.editor_id = u.user_id ORDER BY e.date_notified ASC',
+			$articleId
+			);
+
+		$returner = new DAOResultFactory($result, $this, '_returnEditAssignmentFromRow');
+		return $returner;
+	}
+	
+	/**
+	 * Retrieve section editor assigned (used for notifications)
+	 * @param $articleId int
+	 * @return EditAssignment
+	 */
+	function &getEditorAssignmentsByArticleId3($articleId) {
+		$users = array();
+
+		$userDao =& DAORegistry::getDAO('UserDAO');
+		
+		$result =& $this->retrieve(
+			'SELECT u.* FROM articles a, edit_assignments e, users u, roles r WHERE r.user_id = e.editor_id AND r.role_id = ' . ROLE_ID_SECTION_EDITOR . ' AND e.article_id = ? AND r.journal_id = a.journal_id AND a.article_id = e.article_id AND e.editor_id = u.user_id ORDER BY e.date_notified ASC',
+			$articleId
+			);
+			
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+			$users[] = array(
+				'user' => $userDao->_returnUserFromRow($row)
+			);
+			$result->moveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $users;
+	}
+
+	/**
 	 * Retrieve those edit assignments that relate to section editors with
 	 * review access.
 	 * @param $articleId int

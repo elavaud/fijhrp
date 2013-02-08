@@ -403,7 +403,9 @@ class RoleDAO extends DAO {
 			case ROLE_ID_JOURNAL_MANAGER:
 				return 'user.role.manager' . ($plural ? 's' : '');
 			case ROLE_ID_EDITOR:
-				return 'user.role.editor' . ($plural ? 's' : '');
+				return 'user.role.coordinator' . ($plural ? 's' : '');
+			case ROLE_ID_SECTION_EDITOR:
+				return 'user.role.sectionEditor' . ($plural ? 's' : '');
 			case ROLE_ID_REVIEWER:
 				return 'user.role.reviewer' . ($plural ? 's' : '');
 			case ROLE_ID_AUTHOR:
@@ -411,8 +413,6 @@ class RoleDAO extends DAO {
 			default: return '';
 			
 			/* Commented out by EL on April 4 2012 - un-useful roles */
-			//case ROLE_ID_SECTION_EDITOR:
-			//	return 'user.role.sectionEditor' . ($plural ? 's' : '');
 			//case ROLE_ID_LAYOUT_EDITOR:
 			//	return 'user.role.layoutEditor' . ($plural ? 's' : '');
 			//case ROLE_ID_COPYEDITOR:
@@ -439,6 +439,8 @@ class RoleDAO extends DAO {
 				return 'manager';
 			case ROLE_ID_EDITOR:
 				return 'editor';
+			case ROLE_ID_SECTION_EDITOR:
+				return 'sectionEditor';
 			case ROLE_ID_REVIEWER:
 				return 'reviewer';
 			case ROLE_ID_AUTHOR:
@@ -451,8 +453,6 @@ class RoleDAO extends DAO {
 			//	return 'reader';
 			//case ROLE_ID_SUBSCRIPTION_MANAGER:
 			//	return 'subscriptionManager';
-			//case ROLE_ID_SECTION_EDITOR:
-			//	return 'sectionEditor';
 			//case ROLE_ID_LAYOUT_EDITOR:
 			//	return 'layoutEditor';
 			//case ROLE_ID_COPYEDITOR:
@@ -475,6 +475,8 @@ class RoleDAO extends DAO {
 				return ROLE_ID_JOURNAL_MANAGER;
 			case 'editor':
 				return ROLE_ID_EDITOR;
+			case 'sectionEditor':
+				return ROLE_ID_SECTION_EDITOR;
 			case 'reviewer':
 				return ROLE_ID_REVIEWER;
 			case 'author':
@@ -483,8 +485,6 @@ class RoleDAO extends DAO {
 				return null;
 				
 			/* Commented out by EL on April 4 2012 - un-useful roles */		
-			//case 'sectionEditor':
-			//	return ROLE_ID_SECTION_EDITOR;
 			//case 'layoutEditor':
 			//	return ROLE_ID_LAYOUT_EDITOR;
 			//case 'copyeditor':

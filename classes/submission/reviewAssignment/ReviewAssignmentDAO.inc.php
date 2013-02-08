@@ -308,6 +308,16 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 		return new ReviewAssignment();
 	}
 
+	/*
+	 * Return a review id by article id and user id
+	 */
+	function &getReviewIdByArticleIdAndUserId($articleId, $userId){
+		$result =& $this->retrieve('SELECT review_id FROM review_assignments WHERE submission_id = '. $articleId . ' AND reviewer_id = '. $userId);
+		$row = $result->GetRowAssoc(false);
+		return $row['review_id'];
+	}
+	
+	
 	/**
 	 * Internal function to return a review assignment object from a row.
 	 * @param $row array

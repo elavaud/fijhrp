@@ -11,25 +11,22 @@
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>{translate key=$pageTitle}</title>
+	{*<title>{translate key=$pageTitle}</title>
 	<meta http-equiv="Content-Type" content="text/html; charset={$defaultCharset|escape}" />
 	<meta name="description" content="" />
-	<meta name="keywords" content="" />
+	<meta name="keywords" content="" />*}
 
 	<link rel="stylesheet" href="{$baseUrl}/lib/pkp/styles/common.css" type="text/css" />
 	<link rel="stylesheet" href="{$baseUrl}/styles/common.css" type="text/css" />
-	<link rel="stylesheet" href="{$baseUrl}/styles/comments.css" type="text/css" />
+	{*<link rel="stylesheet" href="{$baseUrl}/styles/comments.css" type="text/css" />*}
 
 	{foreach from=$stylesheets item=cssUrl}
 		<link rel="stylesheet" href="{$cssUrl}" type="text/css" />
 	{/foreach}
 
-	{*MSB added custom stylesheet for pop-up windows, Oct19, 2011 *}
-	<link rel="stylesheet" href="{$baseUrl}/plugins/themes/whorrp/popup.css" type="text/css" />
-	{*End of custom code*}
 
 	<!-- Base Jquery -->
-	{if $allowCDN}<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	{*{if $allowCDN}<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 	<script type="text/javascript">{literal}
 		// Provide a local fallback if the CDN cannot be reached
 		if (typeof google == 'undefined') {
@@ -46,7 +43,7 @@
 	{/if}
 
 	<script type="text/javascript" src="{$baseUrl}/lib/pkp/js/general.js"></script>
-	{$additionalHeadData}
+	{$additionalHeadData}*}
 </head>
 <body>
 {literal}
@@ -56,9 +53,11 @@
 // -->
 </script>
 {/literal}
-
 <div id="container">
 <div id="body">
+<div id="header">
+<div id="headerTitle">
+<h1></h1></div></div>
 <div id="main">
 <h2>{translate key=$pageTitle}</h2>
 <div id="content">

@@ -181,17 +181,12 @@ class EditorSubmissionDAO extends DAO {
 	 * @return array result
 	 */
 	
-	function &_getUnfilteredEditorSubmissions($journalId, $sectionId = 0, $editorId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
-											  $technicalUnitField = null, $countryField = null, $additionalWhereSql, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &_getUnfilteredEditorSubmissions($journalId, $sectionId = null, $editorId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
+											  $researchFieldField = null, $countryField = null, $additionalWhereSql, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-			ASSOC_TYPE_ARTICLE,
-			'SIGNOFF_COPYEDITING_FINAL',
-			ASSOC_TYPE_ARTICLE,
-			'SIGNOFF_PROOFREADING_PROOFREADER',
-			ASSOC_TYPE_ARTICLE,
-			'SIGNOFF_LAYOUT',
+			'affiliation',
 			'title', // Section title
 			$primaryLocale,
 			'title',
@@ -200,19 +195,52 @@ class EditorSubmissionDAO extends DAO {
 			$primaryLocale,
 			'abbrev',
 			$locale,
-			'cleanTitle', // Article title
-			'cleanTitle',
+			'cleanScientificTitle', // Article title
+			'cleanScientificTitle',
 			$locale,
-			'technicalUnit',
-			'technicalUnit',
+			'researchField',
+			'researchField',
 			$locale,
 			'proposalCountry',
 			'proposalCountry',
+			$locale,
+			'approvalDate',
+			$locale,
+			'whoId',
+			'whoId',
+			$locale,
+			'studentInitiatedResearch',
+			'studentInitiatedResearch',
+			$locale,
+			'academicDegree',
+			'academicDegree',
+			$locale,
+			'primarySponsor',
+			'primarySponsor',
+			$locale,
+			'secondarySponsors',
+			'secondarySponsors',
+			$locale,
+			'proposalType',
+			'proposalType',
+			$locale,
+			'dataCollection',
+			'dataCollection',
+			$locale,
+			'multiCountryResearch',
+			'multiCountryResearch',
+			$locale,
+			'nationwide',
+			'nationwide',
+			$locale,
+			'startDate',
+			$locale,
+			'endDate',
 			$locale,
 			$journalId
 		);
 		$searchSql = '';
-		$technicalUnitSql = '';
+		$researchFieldSql = '';
 		$countrySql = '';
 
 		if (!empty($search)) switch ($searchField) {
@@ -228,25 +256,23 @@ class EditorSubmissionDAO extends DAO {
 				}
 				$params[] = $search;
 				break;
+			case SUBMISSION_FIELD_ID:
+				if ($searchMatch === 'is') {
+					$searchSql = ' AND LOWER(COALESCE(aid.setting_value, atid.setting_value)) = LOWER(?)';
+				} elseif ($searchMatch === 'contains') {
+					$searchSql = ' AND LOWER(COALESCE(aid.setting_value, atid.setting_value)) LIKE LOWER(?)';
+					$search = '%' . $search . '%';
+				} else { // $searchMatch === 'startsWith'
+					$searchSql = ' AND LOWER(COALESCE(aid.setting_value, atid.setting_value)) LIKE LOWER(?)';
+					$search = $search . '%';
+				}
+				$params[] = $search;
+				break;
 			case SUBMISSION_FIELD_AUTHOR:
 				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'aa.', $params);
 				break;
-			case SUBMISSION_FIELD_EDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ed.', $params);
-				break;
-			case SUBMISSION_FIELD_REVIEWER:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 're.', $params);
-				break;
-			case SUBMISSION_FIELD_COPYEDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ce.', $params);
-				break;
-			case SUBMISSION_FIELD_LAYOUTEDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'le.', $params);
-				break;
-			case SUBMISSION_FIELD_PROOFREADER:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'pe.', $params);
-				break;
 		}
+
 		if (!empty($dateFrom) || !empty($dateTo)) switch($dateField) {
 			case SUBMISSION_FIELD_DATE_SUBMITTED:
 				if (!empty($dateFrom)) {
@@ -256,85 +282,97 @@ class EditorSubmissionDAO extends DAO {
 					$searchSql .= ' AND a.date_submitted <= ' . $this->datetimeToDB($dateTo);
 				}
 				break;
-			case SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE:
+			case SUBMISSION_FIELD_DATE_APPROVED:
 				if (!empty($dateFrom)) {
-					$searchSql .= ' AND scf.date_completed >= ' . $this->datetimeToDB($dateFrom);
+					$searchSql .= ' AND apd.setting_value >= ' . $this->datetimeToDB($dateFrom);
 				}
 				if (!empty($dateTo)) {
-					$searchSql .= ' AND scf.date_completed <= ' . $this->datetimeToDB($dateTo);
-				}
-				break;
-			case SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE:
-				if (!empty($dateFrom)) {
-					$searchSql .= ' AND sle.date_completed >= ' . $this->datetimeToDB($dateFrom);
-				}
-				if (!empty($dateTo)) {
-					$searchSql .= ' AND sle.date_completed <= ' . $this->datetimeToDB($dateTo);
-				}
-				break;
-			case SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE:
-				if (!empty($dateFrom)) {
-					$searchSql .= ' AND spr.date_completed >= ' . $this->datetimeToDB($dateFrom);
-				}
-				if (!empty($dateTo)) {
-					$searchSql .= ' AND spr.date_completed <= ' . $this->datetimeToDB($dateTo);
+					$searchSql .= ' AND apd.setting_value <= ' . $this->datetimeToDB($dateTo);
 				}
 				break;
 		}
-		/** 
-		 * Added technical unit and country filter fields
-		 * Last updated by igm 9/24/2011
-		 */
 		
-		if (!empty($technicalUnitField)) {
-			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+		if (!empty($researchFieldField)) {
+			$researchFieldSql = ' AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) LIKE LOWER(?)';
+			$researchFieldField = '%'.$researchFieldField.'%';
+			$params[] = $researchFieldField;
 		}
 		if (!empty($countryField)) {
-			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+			$countrySql = ' AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) LIKE LOWER(?)';
+			$countryField = '%'.$countryField.'%';
+			$params[] = $countryField;
 		}
 		
 		$sql = 'SELECT DISTINCT
 				a.*,
-				scf.date_completed as copyedit_completed,
-				spr.date_completed as proofread_completed,
-				sle.date_completed as layout_completed,
 				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
-				aap.last_name AS author_name,
+				aap.first_name AS afname, aap.last_name AS alname, 
+				aaffiliation.setting_value as investigatoraffiliation, aap.email as email,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
 				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
 				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
+				LEFT JOIN author_settings aaffiliation on (aaffiliation.author_id = aap.author_id and aaffiliation.setting_name = ?)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN edit_assignments e ON (e.article_id = a.article_id)
-				LEFT JOIN users ed ON (e.editor_id = ed.user_id)
-				LEFT JOIN signoffs scf ON (a.article_id = scf.assoc_id AND scf.assoc_type = ? AND scf.symbolic = ?)
-				LEFT JOIN users ce ON (scf.user_id = ce.user_id)
-				LEFT JOIN signoffs spr ON (a.article_id = spr.assoc_id AND spr.assoc_type = ? AND spr.symbolic = ?)
-				LEFT JOIN users pe ON (pe.user_id = spr.user_id)
-				LEFT JOIN signoffs sle ON (a.article_id = sle.assoc_id AND sle.assoc_type = ? AND sle.symbolic = ?)
-				LEFT JOIN users le ON (le.user_id = sle.user_id)
-				LEFT JOIN review_assignments r ON (r.submission_id = a.article_id)
-				LEFT JOIN users re ON (re.user_id = r.reviewer_id AND cancelled = 0)
+				
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
+				
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				
 				LEFT JOIN article_settings atpl ON (a.article_id = atpl.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
 				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				
 				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
 				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
+				
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
 				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
+				
+				LEFT JOIN article_settings apd ON (a.article_id = apd.article_id AND apd.setting_name = ? AND apd.locale = ?)	
+				
+				LEFT JOIN article_settings atid ON (a.article_id = atid.article_id AND atid.setting_name = ? AND atid.locale = a.locale)
+				LEFT JOIN article_settings aid ON (a.article_id = aid.article_id AND aid.setting_name = ? AND aid.locale = ?)
+				
+				LEFT JOIN article_settings str ON (a.article_id = str.article_id AND str.setting_name = ? AND str.locale = a.locale)
+				LEFT JOIN article_settings sr ON (a.article_id = sr.article_id AND sr.setting_name = ? AND sr.locale = ?)
+
+				LEFT JOIN article_settings atd ON (a.article_id = atd.article_id AND atd.setting_name = ? AND atd.locale = a.locale)
+				LEFT JOIN article_settings ad ON (a.article_id = ad.article_id AND ad.setting_name = ? AND ad.locale = ?)
+
+				LEFT JOIN article_settings pts ON (a.article_id = pts.article_id AND pts.setting_name = ? AND pts.locale = a.locale)
+				LEFT JOIN article_settings ps ON (a.article_id = ps.article_id AND ps.setting_name = ? AND ps.locale = ?)				
+								
+				LEFT JOIN article_settings sts ON (a.article_id = sts.article_id AND sts.setting_name = ? AND sts.locale = a.locale)
+				LEFT JOIN article_settings ss ON (a.article_id = ss.article_id AND ss.setting_name = ? AND ss.locale = ?)				
+				
+				LEFT JOIN article_settings ptt ON (a.article_id = ptt.article_id AND ptt.setting_name = ? AND ptt.locale = a.locale)
+				LEFT JOIN article_settings pt ON (a.article_id = pt.article_id AND pt.setting_name = ? AND pt.locale = ?)	
+
+				LEFT JOIN article_settings dtc ON (a.article_id = dtc.article_id AND dtc.setting_name = ? AND dtc.locale = a.locale)
+				LEFT JOIN article_settings dc ON (a.article_id = dc.article_id AND dc.setting_name = ? AND dc.locale = ?)								
+				LEFT JOIN article_settings mtcr ON (a.article_id = mtcr.article_id AND mtcr.setting_name = ? AND mtcr.locale = a.locale)
+				LEFT JOIN article_settings mcr ON (a.article_id = mcr.article_id AND mcr.setting_name = ? AND mcr.locale = ?)
+				
+				LEFT JOIN article_settings ntwr ON (a.article_id = ntwr.article_id AND ntwr.setting_name = ? AND ntwr.locale = a.locale)
+				LEFT JOIN article_settings nwr ON (a.article_id = nwr.article_id AND nwr.setting_name = ? AND nwr.locale = ?)	
+
+				LEFT JOIN article_settings sd ON (a.article_id = sd.article_id AND sd.setting_name = ? AND sd.locale = ?)
+
+				LEFT JOIN article_settings ed ON (a.article_id = ed.article_id AND ed.setting_name = ? AND ed.locale = ?)
+								
 				LEFT JOIN edit_assignments ea ON (a.article_id = ea.article_id)
 				LEFT JOIN edit_assignments ea2 ON (a.article_id = ea2.article_id AND ea.edit_id < ea2.edit_id)
 				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	edec2.edit_decision_id IS NULL
 				AND ea2.edit_id IS NULL
-				AND a.journal_id = ? ' .
-				//AND a.submission_progress = 0' . edited by aglet 6/4/2011
-				(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'');
+				AND a.journal_id = ?
+				AND a.submission_progress = 0' .
+				(!empty($additionalWhereSql)?" $additionalWhereSql":'');
 
 		if ($sectionId) {
 			$searchSql .= ' AND a.section_id = ?';
@@ -347,7 +385,7 @@ class EditorSubmissionDAO extends DAO {
 		}
 
 		$result =& $this->retrieveRange(
-			$sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+			$sql . ' ' . $searchSql . $researchFieldSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 			count($params)===1?array_shift($params):$params,
 			$rangeInfo
 		);
@@ -377,6 +415,8 @@ class EditorSubmissionDAO extends DAO {
 
 	/**
 	 * Get all submissions unassigned for a journal.
+	 * Edited by EL on May 11, 2012: added "OR (edec.resubmit_count IS NOT NULL AND edec.decision = 5 AND a.submission_progress = 0)"
+	 * for including resubmitted proposals into unassigned
 	 * @param $journalId int
 	 * @param $sectionId int
 	 * @param $editorId int
@@ -389,12 +429,12 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsUnassigned($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsUnassigned($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NULL AND a.submission_progress = 0 ', //and not draft aglet 9/26/2011
+			$dateField, $dateFrom, $dateTo, $researchFieldField, $countryField,
+			' AND a.status = ' . STATUS_QUEUED . ' AND (ea.edit_id IS NULL AND a.submission_progress = 0) OR (edec.decision = 5 AND a.submission_progress = 0)', //and not draft aglet 9/26/2011
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
@@ -415,13 +455,13 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	//function &getEditorSubmissionsInReviewIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-	function &getEditorSubmissionsInReviewIterator($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	//function &getEditorSubmissionsInReviewIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInReviewIterator($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$rawSubmissions =& $this->_getUnfilteredEditorSubmissions(
 					$editorId, $journalId, $Id,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
+			$dateField, $dateFrom, $dateTo, $researchFieldField, $countryField,
+			' AND a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
 			$rangeInfo, $sortBy, $sortDirection
 				);
 		$submissions = new DAOResultFactory($rawSubmissions, $this, '_returnEditorSubmissionFromRow');
@@ -442,12 +482,12 @@ class EditorSubmissionDAO extends DAO {
 	 * @param $rangeInfo object
 	 * @return array EditorSubmission
 	 */
-	function &getEditorSubmissionsInEditingIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInEditingIterator($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NOT NULL AND edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
+			$dateField, $dateFrom, $dateTo, $researchFieldField, $countryField,
+			' AND a.status = ' . STATUS_QUEUED . ' AND ea.edit_id IS NOT NULL AND edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
@@ -476,7 +516,7 @@ class EditorSubmissionDAO extends DAO {
 			$journalId, $sectionId, $editorId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, null, null,
-			'a.status <> '. STATUS_QUEUED,
+			' AND a.status <> '. STATUS_QUEUED,
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');
@@ -529,11 +569,12 @@ class EditorSubmissionDAO extends DAO {
 			FROM	articles a
 				LEFT JOIN edit_assignments e ON (a.article_id = e.article_id)
 				LEFT JOIN edit_assignments e2 ON (a.article_id = e2.article_id AND e.edit_id < e2.edit_id)
+				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 			WHERE	a.journal_id = ? ".
-				"AND a.submission_progress = 0 ".//aglet 6/27/2011 -- drafts. NOTE: what about proposals for resubmission?
+				"AND (a.submission_progress = 0 ".//aglet 6/27/2011 -- drafts. NOTE: what about proposals for resubmission?
 				"AND a.status = " . STATUS_QUEUED . "
 				AND e2.edit_id IS NULL
-				AND e.edit_id IS NULL",
+				AND e.edit_id IS NULL ) OR (edec.decision = 5 AND a.submission_progress = 0)",
 			array((int) $journalId)
 		);
 		$submissionsCount[0] = $result->Fields('unassigned_count');
@@ -734,7 +775,7 @@ class EditorSubmissionDAO extends DAO {
 			case 'status': return 'a.status';
 			case 'country': return 'appc.setting_value';
 			case 'decision': return 'edec.decision';
-			case 'technicalUnit': return 'atu.setting_value';
+			case 'researchField': return 'atu.setting_value';
 			default: return null;
 		}
 	}
@@ -761,7 +802,7 @@ class EditorSubmissionDAO extends DAO {
 			$editorId, $journalId, $Id,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, null, null,
-			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
+			' AND a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -776,13 +817,13 @@ class EditorSubmissionDAO extends DAO {
 		return $editorSubmissions;
 	}
 	
-	function &getEditorSubmissionsInReview($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsInReview($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$editorSubmissions = array();
 		$result =& $this->_getUnfilteredEditorSubmissions(
 			$editorId, $journalId, $Id,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
+			$dateField, $dateFrom, $dateTo, $researchFieldField, $countryField,
+			' AND a.status = ' . STATUS_QUEUED . ' AND e.can_review = 1 ',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -798,13 +839,13 @@ class EditorSubmissionDAO extends DAO {
 	}
 	
 
-	function &getEditorSubmissionsArchives($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsArchives($editorId, $journalId, $Id, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null,$rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$editorSubmissions = array();
 		$result = $this->_getUnfilteredEditorSubmissions(
 			$editorId, $journalId, $Id,
 			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, $technicalUnitField, $countryField,
-			'(a.status <> ' . STATUS_QUEUED . ')',
+			$dateField, $dateFrom, $dateTo, $researchFieldField, $countryField,
+			' AND (a.status <> ' . STATUS_QUEUED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -828,8 +869,7 @@ class EditorSubmissionDAO extends DAO {
 	}	
 	
 	
-	/**
-	* Added by MSB, Oct13, 2011
+   /**
 	* Get all submissions for a report.
 	* @param $journalId int
 	* @param $sectionId int
@@ -842,37 +882,141 @@ class EditorSubmissionDAO extends DAO {
 	* @param $dateTo String date to search to
 	* @param $countryFields Array of countries
 	* @param $decisionFields Array of decisions
-	* @param $technicalUnitFields Array of technicalUnits
+	* @param $researchFieldFields Array of researchFields
 	* @param $rangeInfo object
 	* @return array EditorSubmission
 	*/
-	function &getEditorSubmissionsReport($journalId, $sectionId, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null,$technicalUnitFields = null, $countryFields = null, $decisionFields = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsReport($journalId, $sectionId = null, $sresearch = null, $adegree = null, $primarySponsorField = null, $secondarySponsorField = null, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldFields = null, $proposalTypeFields = null, $dataCollection = null, $multiCountry = null, $nationwide = null,$countryFields = null, $startDateBefore = null, $startDateAfter = null, $endDateBefore = null, $endDateAfter = null, $submittedBefore = null, $submittedAfter = null, $approvedBefore = null, $approvedAfter = null, $decisionFields = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 
-		$sql = "true";
-		if(!empty($countryFields)){
-			$countrySql = "false";
-			foreach ($countryFields as $countryField){
-				if(!empty($countryField)){
-					$countrySql .= " OR LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
-				}
-			}   $sql = " (".$countrySql.")";
-		}  
+		$sql = "";
+		if (!empty($sresearch)) {
+			$sql .= " AND (LOWER(COALESCE(sr.setting_value, str.setting_value)) LIKE '".$sresearch."')";
+		}
+
+		if (!empty($adegree)) {
+			$sql .= " AND (LOWER(COALESCE(ad.setting_value, atd.setting_value)) LIKE '".$adegree."')";
+		}
+				
 		if(!empty($decisionFields)){
-			$decisionSql = "false";
+			$decisionSql = "";
+			$present = false;
 			foreach ($decisionFields as $decisionField){
 				if(!empty($decisionField)){
-					$decisionSql = $decisionSql." OR edec.decision = " . $this->getDecisionMapping($decisionField) . "";
+					$present = true;
+					if ($decisionSql == "" || $decisionSql == null) $decisionSql = "edec.decision = " . $this->getDecisionMapping($decisionField) . "";
+					else $decisionSql .= " OR edec.decision = " . $this->getDecisionMapping($decisionField) . "";
 				}
-			} $sql .= " AND (".$decisionSql.")";
+			} if ($present) $sql .= " AND (".$decisionSql.")";
 		}
-		if(!empty($technicalUnitFields)){
-			$technicalUnitSql = "false";
-			foreach ($technicalUnitFields as $technicalUnitField){
-				if(!empty($technicalUnitField)){
-					$technicalUnitSql = $technicalUnitSql." OR LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
+
+		if(!empty($primarySponsorField)){
+			$primarySponsorSql = "";
+			$present = false;
+			foreach ($primarySponsorField as $primarySponsor){
+				if(!empty($primarySponsor)){
+					$present = true;
+					if ($primarySponsorSql == "" || $primarySponsorSql == null) $primarySponsorSql = "LOWER(COALESCE(ps.setting_value, pts.setting_value)) LIKE '" . $primarySponsor . "%'";
+					else $primarySponsorSql .= " OR LOWER(COALESCE(ps.setting_value, pts.setting_value)) LIKE '" . $primarySponsor . "%'";
 				}
-			}$sql .= " AND (".$technicalUnitSql.")";
-		}  
+			} if ($present) $sql .= " AND (".$primarySponsorSql.")";
+		}
+		
+		if(!empty($secondarySponsorField)){
+			$secondarySponsorSql = "";
+			$present = false;
+			foreach ($secondarySponsorField as $secondarySponsor){
+				if(!empty($secondarySponsor)){
+					$present = true;
+					if ($secondarySponsorSql == "" || $secondarySponsorSql == null) $secondarySponsorSql = "LOWER(COALESCE(ss.setting_value, sts.setting_value)) LIKE '%" . $secondarySponsor . "%'";
+					else $secondarySponsorSql .= " OR LOWER(COALESCE(ss.setting_value, sts.setting_value)) LIKE '%" . $secondarySponsor . "%'";
+				}
+			} if ($present) $sql .= " AND (".$secondarySponsorSql.")";
+		}
+		
+		if(!empty($researchFieldFields)){
+			$researchFieldSql = "";
+			$present = false;
+			foreach ($researchFieldFields as $researchFieldField){
+				if(!empty($researchFieldField)){
+					$present = true;
+					if ($researchFieldSql == "" || $researchFieldSql == null) $researchFieldSql = "LOWER(COALESCE(atu.setting_value, atpu.setting_value)) LIKE '%" . $researchFieldField . "%'";
+					else $researchFieldSql .= " OR LOWER(COALESCE(atu.setting_value, atpu.setting_value)) LIKE '%" . $researchFieldField . "%'";
+				}
+			} if ($present) $sql .= " AND (".$researchFieldSql.")";
+		} 
+
+		if(!empty($proposalTypeFields)){
+			$proposalTypeSql = "";
+			$present = false;
+			foreach ($proposalTypeFields as $proposalType){
+				if(!empty($proposalType)){
+					$present = true;
+					if ($proposalTypeSql == "" || $proposalTypeSql == null) $proposalTypeSql = "LOWER(COALESCE(pt.setting_value, ptt.setting_value)) LIKE '%" . $proposalType . "%'";
+					else $proposalTypeSql .= " OR LOWER(COALESCE(pt.setting_value, ptt.setting_value)) LIKE '%" . $proposalType . "%'";
+				}
+			} if ($present) $sql .= " AND (".$proposalTypeSql.")";
+		} 
+
+		if (!empty($dataCollection)) $sql .= " AND (LOWER(COALESCE(dc.setting_value, dtc.setting_value)) LIKE '".$dataCollection."')";
+		
+
+		if (!empty($multiCountry)) {
+			$sql .= " AND (LOWER(COALESCE(mcr.setting_value, mtcr.setting_value)) LIKE '".$multiCountry."')";
+			if ($multiCountry == 'No' && !empty($nationwide)) {
+				$sql .= " AND (LOWER(COALESCE(nwr.setting_value, ntwr.setting_value)) LIKE '".$nationwide."')";
+				if ($nationwide == 'No' && !empty($countryFields)){
+					$countrySql = "";
+					$present = false;
+					foreach ($countryFields as $countryField){
+						if(!empty($countryField)){
+							$present = true;
+							if ($countrySql == "" || $countrySql == null) $countrySql = "LOWER(COALESCE(apc.setting_value, appc.setting_value)) LIKE '%" . $countryField . "%'";
+							else $countrySql .= " OR LOWER(COALESCE(apc.setting_value, appc.setting_value)) LIKE '%" . $countryField . "%'";
+						}
+					} if ($present) $sql .= " AND (".$countrySql.")";				
+				}
+			}
+		}
+		
+		if (!empty($startDateBefore)){
+			$newDate = date("Y-m-d", strtotime($startDateBefore));
+			$sql .= " AND (STR_TO_DATE(sd.setting_value, '%d-%b-%Y') <= ".$this->datetimeToDB($newDate).")";
+		}
+
+		if (!empty($startDateAfter)){
+			$newDate = date("Y-m-d", strtotime($startDateAfter));
+			$sql .= " AND (STR_TO_DATE(sd.setting_value, '%d-%b-%Y') >= ".$this->datetimeToDB($newDate).")";
+		}
+
+		if (!empty($endDateBefore)){
+			$newDate = date("Y-m-d", strtotime($endDateBefore));
+			$sql .= " AND (STR_TO_DATE(ed.setting_value, '%d-%b-%Y') <= ".$this->datetimeToDB($newDate).")";
+		}
+
+		if (!empty($endDateAfter)){
+			$newDate = date("Y-m-d", strtotime($endDateAfter));
+			$sql .= " AND (STR_TO_DATE(ed.setting_value, '%d-%b-%Y') >= ".$this->datetimeToDB($newDate).")";
+		}
+		
+		if (!empty($submittedBefore)){
+			$newDate = date("Y-m-d", strtotime($submittedBefore));
+			$sql .= " AND (a.date_submitted <= ".$this->datetimeToDB($newDate).")";
+		}
+
+		if (!empty($submittedAfter)){
+			$newDate = date("Y-m-d", strtotime($submittedAfter));
+			$sql .= " AND (a.date_submitted >= ".$this->datetimeToDB($newDate).")";
+		}
+
+		if (!empty($approvedBefore)){
+			$newDate = date("Y-m-d", strtotime($approvedBefore));
+			$sql .= " AND (apd.setting_value <= ".$this->datetimeToDB($newDate).")";
+		}
+
+		if (!empty($approvedAfter)){
+			$newDate = date("Y-m-d", strtotime($approvedAfter));
+			$sql .= " AND (apd.setting_value >= ".$this->datetimeToDB($newDate).")";
+		}
 				
 		$result =& $this->_getUnfilteredEditorSubmissions(
 		$journalId, $sectionId, $editorId,

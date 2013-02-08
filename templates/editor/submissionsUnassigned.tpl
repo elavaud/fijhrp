@@ -9,7 +9,7 @@
 <div id="submissions">
 <table width="100%" class="listing">
 	<tr>
-		<td colspan="4" class="headseparator">&nbsp;</td>
+		<td colspan="5" class="headseparator">&nbsp;</td>
 	</tr>
 	<tr class="heading" valign="bottom">
 		<td width="10%">WHO Proposal ID</td>
@@ -17,10 +17,11 @@
 <!-- {sort_search key="submissions.submit" sort="submitDate"}--> </td> 
 		<!-- <td width="5%">{sort_search key="submissions.sec" sort="section"}</td> Commented out by MSB, Sept25,2011-->
 		<td width="30%"><span class="disabled">{translate key="article.authors"}</span><br/></td> <!-- {sort_search key="article.authors" sort="authors"}</td> -->
-		<td width="50%"><span class="disabled">{translate key="article.title"}</span><br/></td> <!-- {sort_search key="article.title" sort="title"}</td> -->
+		<td width="45%"><span class="disabled">{translate key="article.title"}</span><br/></td> <!-- {sort_search key="article.title" sort="title"}</td> -->
+		<td width="5%"><span class="disabled">Resubmitted</span><br/></td>
 	</tr>
 	<tr>
-		<td colspan="4" class="headseparator">&nbsp;</td>
+		<td colspan="5" class="headseparator">&nbsp;</td>
 	</tr>
 	
 	{iterate from=submissions item=submission}
@@ -32,10 +33,11 @@
 	<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td>  *}--> <!-- Commented out by MSB -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB -->
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
-		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+		<td>{if $submission->getResubmitCount()}<a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a>{else}<a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a>{/if}</td>
+		<td>{if $submission->getResubmitCount()}{$submission->getResubmitCount()}{else}0{/if}</td>
 	</tr>
 	<tr>
-		<td colspan="4" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
 {/iterate}
 {if $submissions->wasEmpty()}

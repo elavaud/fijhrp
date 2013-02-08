@@ -133,7 +133,11 @@
 		<td class="label">{fieldLabel name="initials" key="user.initials"}</td>
 		<td class="value"><input type="text" name="initials" id="initials" value="{$initials|escape}" size="5" maxlength="5" class="textField" />&nbsp;&nbsp;{translate key="user.initialsExample"}</td>
 	</tr>
+	
 	{if not $userId}
+	
+	<!-- Commented out by EL on May 8, 2012: This part is now only done in "Enroll a user as" -->
+	<!--
 	<tr valign="top">
 		<td class="label">{fieldLabel name="enrollAs" key="manager.people.enrollUserAs"}</td>
 		<td class="value">
@@ -144,6 +148,8 @@
 			<span class="instruct">{translate key="manager.people.enrollUserAsDescription"}</span>
 		</td>
 	</tr>
+	-->
+	
 	<tr valign="top">
 		<td class="label">{fieldLabel name="username" required="true" key="user.username"}</td>
 		<td class="value">
@@ -152,7 +158,7 @@
 			<span class="instruct">{translate key="user.register.usernameRestriction"}</span>
 		</td>
 	</tr>
-	{else}
+	{else} 
 	<tr valign="top">
 		<td class="label">{fieldLabel suppressId="true" name="username" key="user.username"}</td>
 		<td class="value"><strong>{$username|escape}</strong></td>
@@ -209,6 +215,16 @@
 			<span class="instruct">{translate key="user.affiliation.description"}</span>
 		</td>
 	</tr>
+	
+	
+	<tr valign="top">
+		<td class="label">{fieldLabel name="fieldOfActivity" key="user.fieldOfActivity"}</td>
+		<td class="value">
+			<textarea name="fieldOfActivity[{$formLocale|escape}]" id="fieldOfActivity" rows="5" cols="40" class="textArea">{$fieldOfActivity[$formLocale]|escape}</textarea><br/>
+			<span class="instruct">{translate key="user.fieldOfActivity.description"}</span>
+		</td>
+	</tr>
+	
 	<tr valign="top">
 		<td class="label">{fieldLabel name="signature" key="user.signature"}</td>
 		<td class="value"><textarea name="signature[{$formLocale|escape}]" id="signature" rows="5" cols="40" class="textArea">{$signature[$formLocale]|escape}</textarea></td>
@@ -266,24 +282,7 @@
 		{/foreach}</td>
 	</tr>
 	{/if}
-	{*******************
-		WPRO-specific user settings
-		Added by aglet 6/20/2011
-	*******************}
-	<tr valign="top">
-		<td class="label">{fieldLabel name="healthAffiliationLabel" key="user.profile.form.healthAffiliation"}</td>
-		<td class="value">
-			<input type="radio" name="healthAffiliation[{$formLocale|escape}]" id="healthAffiliation" value="Yes" {if $healthAffiliation[$formLocale] == "Yes"}checked="checked"{/if}/> Yes
-			<input type="radio" name="healthAffiliation[{$formLocale|escape}]" id="healthAffiliation" value="No" {if $healthAffiliation[$formLocale] == "No"}checked="checked"{/if}/> No
-		</td>
-	</tr>
-	<tr valign="top">
-		<td class="label">{fieldLabel name="wproAffiliationLabel" key="user.profile.form.wproAffiliation"}</td>
-		<td class="value">
-			<input type="radio" name="wproAffiliation[{$formLocale|escape}]" id="wproAffiliation" value="Yes" {if $wproAffiliation[$formLocale] == "Yes"}checked="checked"{/if}/> Yes
-			<input type="radio" name="wproAffiliation[{$formLocale|escape}]" id="wproAffiliation" value="No" {if $wproAffiliation[$formLocale] == "No"}checked="checked"{/if}/> No
-		</td>
-	</tr>
+
 </table>
 
 <p><input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> {if not $userId}<input type="submit" name="createAnother" value="{translate key="manager.people.saveAndCreateAnotherUser"}" class="button" /> {/if}<input type="button" value="{translate key="common.cancel"}" class="button" onclick="{if $source == ''}history.go(-1);{else}document.location='{$source|escape:"jsparam"}';{/if}" /></p>

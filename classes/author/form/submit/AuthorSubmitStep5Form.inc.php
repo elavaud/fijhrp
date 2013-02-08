@@ -44,11 +44,20 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		$user =& Request::getUser();
 		$templateMgr =& TemplateManager::getManager();
 
-                // Get article file for this article
+        // Get article file for this article
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
-		$articleFiles =& $articleFileDao->getArticleFilesByArticle($this->articleId);
-
-		$templateMgr->assign_by_ref('files', $articleFiles);
+		$articleFiles =& $articleFileDao->getArticleFilesByArticle($this->articleId);			
+		
+		$previousFiles =& $articleFileDao->getPreviousFilesByArticleId($this->articleId);
+		foreach ($articleFiles as $articleFile) {
+			foreach ($previousFiles as $previousFile) {
+				if ($articleFile->getFileId() == $previousFile->getFileId()) {
+					$articleFile->setType('previous');
+				}
+			}
+		}
+		
+		$templateMgr->assign_by_ref('files', $articleFiles);	
 		$templateMgr->assign_by_ref('journal', Request::getJournal());
 
                 //Added by AIM, 1.20.2012
@@ -58,6 +67,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();
 		if ( $paymentManager->submissionEnabled() || $paymentManager->fastTrackEnabled() || $paymentManager->publicationEnabled()) {
+			$templateMgr->assign('sectionId', $this->article->getSectionId());
 			$templateMgr->assign('authorFees', true);
 			$completedPaymentDAO =& DAORegistry::getDAO('OJSCompletedPaymentDAO');
 			$articleId = $this->articleId;
@@ -115,6 +125,8 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 				return parent::validate();
 			} elseif ( Request::getUserVar('paymentSent') ) {
 				return parent::validate();
+			} elseif ( $this->article->getLocalizedStudentInitiatedResearch() == "Yes" ) {
+				return parent::validate();
 			} else {
 				$queuedPayment =& $paymentManager->createQueuedPayment($journalId, PAYMENT_TYPE_SUBMISSION, $user->getId(), $articleId, $journal->getSetting('submissionFee'));
 				$queuedPaymentId = $paymentManager->queuePayment($queuedPayment);
@@ -145,6 +157,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 	function execute() {
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 
 		$journal = Request::getJournal();
 		$user = Request::getUser();
@@ -161,12 +174,25 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
                 
                 if($article->getDateSubmitted() == null) {
                     $year = substr(Core::getCurrentDate(), 0, 4);
-                    
+     
                     $countyear = $articleDao->getSubmissionsForYearCount($year) + 1;
 
                     $countryArray = explode(",", $article->getProposalCountry($this->getFormLocale()));
-                    if(count($countryArray) > 1) {
-                        $country = 'ICP';
+                    
+                    $sectionId = $article->getSectionId();
+                    if ($sectionId == '1'){
+                    	$section = 'NIOPH';
+                    } elseif ($sectionId == '2'){
+                    	$section = "UHS";
+                    }
+                    
+                    $countyearsection = $articleDao->getSubmissionsForYearForSectionCount($year, $sectionId) + 1;
+                    
+                    if ($article->getLocalizedMultiCountryResearch() == "Yes"){
+                    	$country = 'MC';
+                    }
+                    elseif(count($countryArray) > 1) {
+                        $country = 'MP';
                         $countyearcountry = $articleDao->getICPSubmissionsForYearCount($year) + 1;
 
                     } else {
@@ -175,7 +201,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
                     }
                     $unit = $article->getTechnicalUnit($this->getFormLocale());
 
-                    $article->setWhoId($year. '.' . $countyear . '.' . $country . '.' . $countyearcountry . '.' .$unit , $this->getFormLocale());
+                    $article->setWhoId($year. '.' . $countyear . '.' . $section . '.' . $countyearsection . '.' .$country , $this->getFormLocale());
                 }
                 if ($this->getData('commentsToEditor') != '') {
 			$article->setCommentsToEditor($this->getData('commentsToEditor'));
@@ -216,8 +242,11 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		$signoffDao->updateObject($proofProofreaderSignoff);
 		$signoffDao->updateObject($proofLayoutEditorSignoff);
 
-		$sectionEditors = $this->assignEditors($article);
-
+		//if resubmission, don't create again the assignment
+		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+		if ($editAssignmentDao->getEditorAssignmentsByArticleId3($article->getId())) $sectionEditors =& $editAssignmentDao->getEditorAssignmentsByArticleId3($article->getId());
+		else $sectionEditors = $this->assignEditors($article);
+		
 		$user =& Request::getUser();
 
 		// Update search index
@@ -228,36 +257,46 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		// Send author notification email
 		import('classes.mail.ArticleMailTemplate');
 		$mail = new ArticleMailTemplate($article, 'SUBMISSION_ACK', null, null, null, false);
-		$mail->setFrom($journal->getSetting('contactEmail'), $journal->getSetting('contactName'));
+		foreach ($sectionEditors as $sectionEditorEntry) {
+			$sectionEditor =& $sectionEditorEntry['user'];
+			$mail->setFrom($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			$mail->addBcc($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			//unset($sectionEditor);
+		}
 		if ($mail->isEnabled()) {
 			$mail->addRecipient($user->getEmail(), $user->getFullName());
-			// If necessary, BCC the acknowledgement to someone.
-			if($journal->getSetting('copySubmissionAckPrimaryContact')) {
-				$mail->addBcc(
-					$journal->getSetting('contactEmail'),
-					$journal->getSetting('contactName')
-				);
-			}
 			if($journal->getSetting('copySubmissionAckSpecified')) {
 				$copyAddress = $journal->getSetting('copySubmissionAckAddress');
 				if (!empty($copyAddress)) $mail->addBcc($copyAddress);
 			}
-
-			// Also BCC automatically assigned section editors
-			foreach ($sectionEditors as $sectionEditorEntry) {
-				$sectionEditor =& $sectionEditorEntry['user'];
-				$mail->addBcc($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				unset($sectionEditor);
-			}
-
+			
+			$section = $sectionDao->getSection($article->getSectionId());
 			$mail->assignParams(array(
 				'authorName' => $user->getFullName(),
 				'authorUsername' => $user->getUsername(),
-				'editorialContactSignature' => $journal->getSetting('contactName') . "\n" . $journal->getLocalizedTitle(),
+				'secretaryName' => $sectionEditor->getFullName(),
+				'address' => $sectionDao->getSettingValue($article->getSectionId(), 'address'),
+				'bankAccount' => $sectionDao->getSettingValue($article->getSectionId(), 'bankAccount'),
+				'proposalId' => $article->getWhoId(Locale::getLocale()),
 				'submissionUrl' => Request::url(null, 'author', 'submission', $article->getId())
 			));
 			$mail->send();
 		}
+		
+		// Send a regular notification to section editors
+		$message = 'notification.type.articleSubmitted';
+		if ($article->getResubmitCount()!=0) $message = 'notification.type.articleReSubmitted';
+		
+		import('lib.pkp.classes.notification.NotificationManager');
+		$notificationManager = new NotificationManager();
+		$url = Request::url($journal->getPath(), 'sectionEditor', 'submissionReview', array($article->getId()));
+        foreach ($sectionEditors as $sectionEditorEntry) {
+        	$sectionEditor =& $sectionEditorEntry['user'];
+            $notificationManager->createNotification(
+            	$sectionEditor->getId(), $message,
+            	$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
+        	);
+        }
 
 		import('classes.article.log.ArticleLog');
 		import('classes.article.log.ArticleEventLogEntry');

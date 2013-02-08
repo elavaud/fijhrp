@@ -131,6 +131,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$sectionEditorSubmission->setSubmissionFile($this->articleFileDao->getArticleFile($row['submission_file_id']));
 		$sectionEditorSubmission->setRevisedFile($this->articleFileDao->getArticleFile($row['revised_file_id']));
 		$sectionEditorSubmission->setReviewFile($this->articleFileDao->getArticleFile($row['review_file_id']));
+		$sectionEditorSubmission->setPreviousFiles($this->articleFileDao->getPreviousFilesByArticleId($row['article_id']));
 		$sectionEditorSubmission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
 		$sectionEditorSubmission->setEditorFile($this->articleFileDao->getArticleFile($row['editor_file_id']));
 
@@ -242,7 +243,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		foreach ($sectionEditorSubmission->getReviewAssignments() as $roundReviewAssignments) {
 			foreach ($roundReviewAssignments as $reviewAssignment) {
 				if ($reviewAssignment->getId() > 0) {
-					$this->reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
+					//$this->reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
 				} else {
 					$this->reviewAssignmentDao->insertReviewAssignment($reviewAssignment);
 				}
@@ -362,8 +363,8 @@ class SectionEditorSubmissionDAO extends DAO {
 			$primaryLocale,
 			'abbrev',
 			$locale,
-			'cleanTitle', // Article title
-			'cleanTitle',
+			'cleanScientificTitle', // Article title
+			'cleanScientificTitle',
 			$locale,
 			'technicalUnit',
 			'technicalUnit',
@@ -508,6 +509,7 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
 				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
+				
 				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
 				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
 			WHERE	a.journal_id = ?

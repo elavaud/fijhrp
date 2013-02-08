@@ -55,7 +55,7 @@ class CommentForm extends Form {
 
 		$this->user =& Request::getUser();
 
-		if ($commentType != COMMENT_TYPE_PEER_REVIEW) $this->addCheck(new FormValidator($this, 'comments', 'required', 'editor.article.commentsRequired'));
+		//if ($commentType != COMMENT_TYPE_PEER_REVIEW) $this->addCheck(new FormValidator($this, 'comments', 'required', 'editor.article.commentsRequired'));
 		$this->addCheck(new FormValidatorPost($this));
 	}
 
@@ -75,8 +75,10 @@ class CommentForm extends Form {
 
 		$articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 		$articleComments =& $articleCommentDao->getArticleComments($article->getId(), $this->commentType, $this->assocId);
+		$userDao =& DAORegistry::getDAO('UserDAO');
 
 		$templateMgr =& TemplateManager::getManager();
+		$templateMgr->assign_by_ref('userDao', $userDao);
 		$templateMgr->assign('articleId', $article->getId());
 		$templateMgr->assign('commentTitle', strip_tags($article->getLocalizedTitle()));
 		$user =& $this->user;
@@ -106,19 +108,21 @@ class CommentForm extends Form {
 		$commentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 		$article = $this->article;
 
-		// Insert new comment		
-		$comment = new ArticleComment();
-		$comment->setCommentType($this->commentType);
-		$comment->setRoleId($this->roleId);
-		$comment->setArticleId($article->getId());
-		$comment->setAssocId($this->assocId);
-		$comment->setAuthorId($this->user->getId());
-		$comment->setCommentTitle($this->getData('commentTitle'));
-		$comment->setComments($this->getData('comments'));
-		$comment->setDatePosted(Core::getCurrentDate());
-		$comment->setViewable($this->getData('viewable'));
+		// Insert new comment
+		if ($this->getData('comments') != '' || $this->getData('comments') != null){		
+			$comment = new ArticleComment();
+			$comment->setCommentType($this->commentType);
+			$comment->setRoleId($this->roleId);
+			$comment->setArticleId($article->getId());
+			$comment->setAssocId($this->assocId);
+			$comment->setAuthorId($this->user->getId());
+			$comment->setCommentTitle($this->getData('commentTitle'));
+			$comment->setComments($this->getData('comments'));
+			$comment->setDatePosted(Core::getCurrentDate());
+			$comment->setViewable($this->getData('viewable'));
 
-		$this->commentId = $commentDao->insertArticleComment($comment);
+			$this->commentId = $commentDao->insertArticleComment($comment);
+		}
 	}
 
 	/**

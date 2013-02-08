@@ -56,12 +56,10 @@ class ArticleDAO extends DAO {
                  *                May 4, 2011 -- added fields
 		 ************************************************/
 		return array(
-			'title', 'cleanTitle', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
+			'authorPhoneNumber', 'ethicsCommittee', 'scientificTitle', 'cleanScientificTitle', 'publicTitle', 'cleanPublicTitle', 'studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'withHumanSubjects', 'proposalType', 'proposalCountry',
-                        'technicalUnit', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'whoId', 'reasonsForExemption','withdrawReason', 'withdrawComments',
-
-						'approvalDate'
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'secondarySponsors', 'multiCountryResearch', 'multiCountry', 'researchField', 'otherResearchField', 'nationwide', 'withHumanSubjects', 'proposalType', 'otherProposalType', 'proposalCountry', 
+                        'technicalUnit', 'dataCollection', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'whoId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments', 'approvalDate', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant'
                         );
 	}
 
@@ -93,9 +91,9 @@ class ArticleDAO extends DAO {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-			'title',
+			'scientificTitle',
 		$primaryLocale,
-			'title',
+			'scientificTitle',
 		$locale,
 			'abbrev',
 		$primaryLocale,
@@ -148,43 +146,73 @@ class ArticleDAO extends DAO {
 	 * @param $row array input row
 	 */
 	function _articleFromRow(&$article, &$row) {
-		$article->setId($row['article_id']);
-		$article->setLocale($row['locale']);
-		$article->setUserId($row['user_id']);
-		$article->setJournalId($row['journal_id']);
-		$article->setSectionId($row['section_id']);
-		$article->setSectionTitle($row['section_title']);
-		$article->setSectionAbbrev($row['section_abbrev']);
-		$article->setStoredDOI($row['doi']);
-		$article->setLanguage($row['language']);
-		$article->setCommentsToEditor($row['comments_to_ed']);
-		$article->setCitations($row['citations']);
-		$article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
-		$article->setDateStatusModified($this->datetimeFromDB($row['date_status_modified']));
-		$article->setLastModified($this->datetimeFromDB($row['last_modified']));
-		$article->setStatus($row['status']);
+		
+		if (isset($row['article_id'])) $article->setId($row['article_id']);
+		if (isset($row['locale'])) $article->setLocale($row['locale']);
+		if (isset($row['user_id'])) $article->setUserId($row['user_id']);
+		if (isset($row['journal_id'])) $article->setJournalId($row['journal_id']);
+		if (isset($row['section_id'])) $article->setSectionId($row['section_id']);
+		if (isset($row['section_title'])) $article->setSectionTitle($row['section_title']);
+		if (isset($row['section_abbrev'])) $article->setSectionAbbrev($row['section_abbrev']);
+		if (isset($row['doi'])) $article->setStoredDOI($row['doi']);
+		if (isset($row['language'])) $article->setLanguage($row['language']);
+		if (isset($row['comments_to_ed'])) $article->setCommentsToEditor($row['comments_to_ed']);
+		if (isset($row['citations'])) $article->setCitations($row['citations']);
+		if (isset($row['date_submitted'])) $article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
+		if (isset($row['date_status_modified'])) $article->setDateStatusModified($this->datetimeFromDB($row['date_status_modified']));
+		if (isset($row['last_modified'])) $article->setLastModified($this->datetimeFromDB($row['last_modified']));
+		if (isset($row['status'])) $article->setStatus($row['status']);
 
 		//Added by Anne Ivy Mirasol, May 18, 2011
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$article->setProposalStatus($articleDao->getProposalStatus($article->getId()));
 
-		$article->setSubmissionProgress($row['submission_progress']);
-		$article->setCurrentRound($row['current_round']);
-		$article->setSubmissionFileId($row['submission_file_id']);
-		$article->setRevisedFileId($row['revised_file_id']);
-		$article->setReviewFileId($row['review_file_id']);
-		$article->setEditorFileId($row['editor_file_id']);
-		$article->setPages($row['pages']);
-		$article->setFastTracked($row['fast_tracked']);
-		$article->setHideAuthor($row['hide_author']);
-		$article->setCommentsStatus($row['comments_status']);
+		if (isset($row['submission_progress'])) $article->setSubmissionProgress($row['submission_progress']);
+		if (isset($row['current_round'])) $article->setCurrentRound($row['current_round']);
+		if (isset($row['submission_file_id'])) $article->setSubmissionFileId($row['submission_file_id']);
+		if (isset($row['revised_file_id'])) $article->setRevisedFileId($row['revised_file_id']);
+		if (isset($row['review_file_id'])) $article->setReviewFileId($row['review_file_id']);
+		if (isset($row['editor_file_id'])) $article->setEditorFileId($row['editor_file_id']);
+		if (isset($row['pages'])) $article->setPages($row['pages']);
+		if (isset($row['fast_tracked'])) $article->setFastTracked($row['fast_tracked']);
+		if (isset($row['hide_author'])) $article->setHideAuthor($row['hide_author']);
+		if (isset($row['comments_status'])) $article->setCommentsStatus($row['comments_status']);
+		if (isset($row['afname']) or isset($row['alname'])) $article->setPrimaryAuthor($row['afname']." ".$row['alname']);
+		if (isset($row['investigatoraffiliation'])) $article->setInvestigatorAffiliation($row['investigatoraffiliation']);
+		if (isset($row['email'])) $article->setAuthorEmail($row['email']);
 
 		$article->setAuthors($this->authorDao->getAuthorsByArticle($row['article_id']));
 
 		$this->getDataObjectSettings('article_settings', 'article_id', $row['article_id'], $article);
 
 		HookRegistry::call('ArticleDAO::_returnArticleFromRow', array(&$article, &$row));
-
+/*
+		$article->setWhoId($row['whoid']);
+		$article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
+		$article->setScientificTitle($row['scientifictitle']);
+		$article->setProposalCountry($row['country']);
+		$article->setPrimaryEditor($row['efname']." ".$row['elname']);
+		$article->setPrimaryAuthor($row['afname']." ".$row['alname']);
+		$article->setStartDate($this->datetimeFromDB($row['start_date']));
+		$article->setEndDate($this->datetimeFromDB($row['end_date']));
+		$article->setProposalStatus($row['decision']);
+		$article->setDateStatusModified($this->datetimeFromDB($row['date_decided']));
+		$article->setAuthorEmail($row['email']);
+		$article->setMultiCountryResearch($row['multicountryresearch']);
+		$article->setNationwide($row['nationwide']);
+		$article->setPrimarySponsor($row['primarysponsor']);
+		$article->setOtherPrimarySponsor($row['otherprimarysponsor']);
+		$article->setResearchField($row['researchfield']);
+		$article->setInvestigatorAffiliation($row['investigatoraffiliation']);
+		$article->setProposalType($row['proposaltype']);
+		$article->setDataCollection($row['datacollection']);
+		$article->setStudentInstitution($row['studentinstitution']);
+		$article->setAcademicDegree($row['academicdegree']);
+		$article->setPrimarySponsor($row['primarysponsor']);
+		$article->setOtherPrimarySponsor($row['otherprimarysponsor']);
+		$article->setFundsRequired($row['funds']);
+		$article->setSelectedCurrency($row['currency']);
+*/
 	}
 
 	/**
@@ -417,9 +445,9 @@ class ArticleDAO extends DAO {
 		$articles = array();
 
 		$params = array(
-			'title',
+			'scientificTitle',
 		$primaryLocale,
-			'title',
+			'scientificTitle',
 		$locale,
 			'abbrev',
 		$primaryLocale,
@@ -469,9 +497,9 @@ class ArticleDAO extends DAO {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-			'title',
+			'scientificTitle',
 		$primaryLocale,
-			'title',
+			'scientificTitle',
 		$locale,
 			'abbrev',
 		$primaryLocale,
@@ -689,6 +717,137 @@ class ArticleDAO extends DAO {
             return $code;
         }
 
+
+
+
+	/*******************************************************************************************
+	 *  Added by:  el
+	 ******************************************************************************************/
+
+	/**
+	 * Get all possible research fields.
+	 * @param none
+	 * @return array researchFields
+	 */
+	function getResearchFields() {
+		$locale = Locale::getLocale();
+		$filename = "lib/pkp/locale/".$locale."/researchFields.xml";
+
+		$xmlDao = new XMLDAO();
+		$data = $xmlDao->parseStruct($filename, array('researchFields', 'researchField'));
+
+		$researchFields = array();
+		if (isset($data['researchFields'])) {
+			$i=0;
+			foreach ($data['researchField'] as $researchFieldData) {
+				$researchField['code'] = $researchFieldData['attributes']['code'];
+				$researchField['name'] = $researchFieldData['attributes']['name'];
+				array_push($researchFields, $researchField);
+			}
+			$i++;
+		}
+
+
+		return $researchFields;
+
+	}
+	
+	/**********************************************************************
+	 * Get research field by code
+	 * Added by el
+	 ***********************************************************************/
+	function getResearchField($code) {
+                $researchFieldCodeArray = explode("+", $code);
+                $researchFieldTextArray = array();
+                foreach($researchFieldCodeArray as $rFieldCode) {
+                    $fieldText = $this->getResearchFieldSingle($rFieldCode);
+                    array_push($researchFieldTextArray, $fieldText);
+                }
+                
+                $researchFieldText = "";
+                foreach($researchFieldTextArray as $i => $rField) {
+                    $researchFieldText = $researchFieldText . $rField;
+                    if($i < count($researchFieldTextArray)-1) $researchFieldText = $researchFieldText . ", ";
+                }
+
+                return $researchFieldText;
+	}
+
+        function getResearchFieldSingle($code) {
+            $researchFields = $this->getResearchFields();
+            foreach($researchFields as $rf) {
+                if ($rf['code'] == $code) {
+                    return $rf['name'];
+                }
+            }
+            return $code;
+        }
+        
+
+	/*******************************************************************************************
+	 *  Added by:  el
+	 ******************************************************************************************/
+
+	/**
+	 * Get all agencies.
+	 * @param none
+	 * @return array agencies
+	 */
+	function getAgencies() {
+		$locale = Locale::getLocale();
+		$filename = "lib/pkp/locale/".$locale."/agencies.xml";
+
+		$xmlDao = new XMLDAO();
+		$data = $xmlDao->parseStruct($filename, array('agencies', 'agency'));
+
+		$agencies = array();
+		if (isset($data['agencies'])) {
+			$i=0;
+			foreach ($data['agency'] as $agencyData) {
+				$agency['code'] = $agencyData['attributes']['code'];
+				$agency['name'] = $agencyData['attributes']['name'];
+				array_push($agencies, $agency);
+			}
+			$i++;
+		}
+
+
+		return $agencies;
+
+	}
+	
+	/**********************************************************************
+	 * Get agency by code
+	 * Added by el
+	 ***********************************************************************/
+	function getAgency($code) {
+                $agencyCodeArray = explode("+", $code);
+                $agencyTextArray = array();
+                foreach($agencyCodeArray as $agencyCode) {
+                    $aText = $this->getAgencySingle($agencyCode);
+                    array_push($agencyTextArray, $aText);
+                }
+                
+                $agencyText = "";
+                foreach($agencyTextArray as $i => $agency) {
+                    $agencyText = $agencyText . $agency;
+                    if($i < count($agencyTextArray)-1) $agencyText = $agencyText . ", ";
+                }
+
+                return $agencyText;
+	}
+
+        function getAgencySingle($code) {
+            $agencies = $this->getAgencies();
+            foreach($agencies as $a) {
+                if ($a['code'] == $code) {
+                    return $a['name'];
+                }
+            }
+            return $code;
+        }
+        
+             
 	/**********************************************************************
 	 *
 	 * Get proposal status based on last decision on article
@@ -762,7 +921,6 @@ class ArticleDAO extends DAO {
 		return 	$decision;
 	}
 
-
 	/*******************************************************************************************/
 	/*
 	 *  Added by:  Anne Ivy Mirasol
@@ -800,8 +958,24 @@ class ArticleDAO extends DAO {
 		return $count;
 	}
 
+	/**
+	 * Get the number of submissions for the section for the year.
+	 * @param $year
+	 * @return integer
+	 *
+	 */
+	function getSubmissionsForYearForSectionCount($year, $section) {
+		$result =& $this->retrieve('SELECT * FROM articles
+                                            WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
+                                            section_id = ?',
+		array($year, $section));
 
-        /**
+		$count = $result->NumRows();
+
+		return $count;
+	}
+
+    /**
 	 * Get the number of submissions for the country for the year.
 	 * @param $year
 	 * @return integer
@@ -897,6 +1071,7 @@ class ArticleDAO extends DAO {
 	function insertReasonsForExemption($article, $reasons) {
 		$this->update('INSERT INTO article_settings (article_id, locale, setting_name, setting_value, setting_type) values (?, ?, ?, ?, ?)', array($article->getId(), $article->getLocale(), 'reasonsForExemption', (int) $reasons, 'int')
 		);
+		
 		$this->flushCache();
 		return $article->getId();
 	}
@@ -944,35 +1119,170 @@ class ArticleDAO extends DAO {
 		return $article->getId();
 	}
 	
-	function searchProposalsPublic($query, $dateFrom, $dateTo) {
-		$searchSql = "select distinct a.article_id, whoid.setting_value as whoid, a.date_submitted as date_submitted, title.setting_value as title, 
-					  country.setting_value as country, author.first_name as afname, author.last_name as alname, author.email as email,
-					  editor.first_name as efname, editor.last_name as elname, startDate.setting_value as start_date, 
-					  endDate.setting_value as end_date, keywords.setting_value as keywords, ed.decision, ed.date_decided
+	function searchProposalsPublic($query, $dateFrom, $dateTo, $country, $status = null) {
+		$searchSql = "select distinct 
+				a.article_id, a.status,
+				a.date_submitted as date_submitted, 
+				scientifictitle.setting_value as scientifictitle,
+				publictitle.setting_value as publictitle, 
+				country.setting_value as country, 
+				startdate.setting_value as start_date, 
+				enddate.setting_value as end_date, 
+				primarysponsor.setting_value as primarysponsor, 
+				otherprimarysponsor.setting_value as otherprimarysponsor,
+				multicountryresearch.setting_value as multicountryresearch,
+				researchfield.setting_value as researchfield,
+				keywords.setting_value as keywords
 				  FROM articles a
-				inner join article_settings whoid on (a.article_id = whoid.article_id and whoid.setting_name = 'whoId')
-				inner join article_settings title on (a.article_id = title.article_id and title.setting_name = 'title')
-				inner join article_settings country on (a.article_id = country.article_id and country.setting_name = 'proposalCountry')
-				inner join article_settings keywords on (a.article_id = keywords.article_id and keywords.setting_name = 'keywords')
-				inner join article_settings startDate on (a.article_id = startDate.article_id and startDate.setting_name = 'startDate')
-				inner join article_settings endDate on (a.article_id = endDate.article_id and endDate.setting_name = 'endDate')
-				inner join users as author on (author.user_id = a.user_id)
+				left join article_settings scientifictitle on (scientifictitle.article_id = a.article_id and scientifictitle.setting_name = 'scientificTitle')
+				left join article_settings publictitle on (publictitle.article_id = a.article_id and publictitle.setting_name = 'publicTitle')
+				left join article_settings country on (country.article_id = a.article_id and country.setting_name = 'proposalCountry')
+				left join article_settings startdate on (startdate.article_id = a.article_id and startdate.setting_name = 'startDate')
+				left join article_settings enddate on (enddate.article_id = a.article_id and enddate.setting_name = 'endDate')
+				left join article_settings primarysponsor on (primarysponsor.article_id = a.article_id and primarysponsor.setting_name = 'primarySponsor')
+				left join article_settings otherprimarysponsor on (otherprimarysponsor.article_id = a.article_id and otherprimarysponsor.setting_name = 'otherPrimarySponsor')
+				left join article_settings multicountryresearch on (multicountryresearch.article_id = a.article_id and multicountryresearch.setting_name = 'multiCountryResearch')
+				left join article_settings researchfield on (researchfield.article_id = a.article_id and researchfield.setting_name = 'researchField')
+				left join article_settings keywords on (keywords.article_id = a.article_id and keywords.setting_name = 'keywords')
 				inner join edit_decisions as ed on (ed.article_id = a.article_id)
-				inner join users as editor on (editor.user_id = ed.editor_id)
-				where (ed.decision = '1' or ed.decision = '2' or ed.decision = '3')";
+				where (ed.decision = '1' || ed.decision = '6' || ed.decision = '9')";
 		
 		if (!empty($query)) {
-			$searchSql .= " AND (keywords.setting_value LIKE '"."%".$query."%"."' or title.setting_value LIKE '"."%".$query."%"."')";
+			$searchSql .= " AND (keywords.setting_value LIKE '"."%".$query."%"."' or scientifictitle.setting_value LIKE '"."%".$query."%"."' or publictitle.setting_value LIKE '"."%".$query."%"."')";
 		}
-	
+		
+		
 		if (!empty($dateFrom) || !empty($dateTo)){
 			if (!empty($dateFrom)) {
-				$searchSql .= ' AND a.date_submitted >= ' . $this->datetimeToDB($dateFrom);
+				$searchSql .= " AND (STR_TO_DATE(startdate.setting_value, '%d-%b-%Y') >= " . $this->datetimeToDB($dateFrom).")";
 			}
 			if (!empty($dateTo)) {
-				$searchSql .= ' AND a.date_submitted <= ' . $this->datetimeToDB($dateTo);
+				$searchSql .= " AND (STR_TO_DATE(startdate.setting_value, '%d-%b-%Y') <= " . $this->datetimeToDB($dateTo).")";
 			}
 		}
+		
+		if ($country != 'ALL') $searchSql .= " AND country.setting_value LIKE '"."%".$country."%"."'";
+		
+		if ($status == 1) $searchSql .= " AND a.status = 11";
+		else if ($status == 2) $searchSql .= " AND a.status <> 11";
+
+		$result =& $this->retrieve($searchSql);
+		while (!$result->EOF) {
+			$articles[] =& $this->_returnSearchArticleFromRow($result->GetRowAssoc(false));
+			$result->MoveNext();
+		}
+		$result->Close();
+		unset($result);
+		return $articles;
+	}
+	
+	/**
+	 * Internal function to return an Article object from a row.
+	 * @param $row array
+	 * @return Article
+	 */
+	function &_returnSearchArticleFromRow(&$row) {
+		$article = new Article();
+		$this->_searchArticleFromRow($article, $row);
+		return $article;
+	}
+
+	function searchCustomizedProposalsPublic($query, $region, $statusFilter, $fromDate, $toDate, $investigatorName, $investigatorAffiliation, $investigatorEmail, $researchField, $proposalType, $duration, $area, $dataCollection, $status, $studentResearch, $primarySponsor, $fundsRequired, $dateSubmitted) {
+		
+		$searchSqlBeg = "select distinct a.article_id, 
+						keywords.setting_value as keywords, 
+						scientifictitle.setting_value as scientifictitle, 
+						publictitle.setting_value as publictitle, 
+						startdate.setting_value as start_date";
+		$searchSqlMid = " FROM articles a 
+						inner join edit_decisions ed on (ed.article_id = a.article_id) 
+						left join article_settings keywords on (keywords.article_id = a.article_id and keywords.setting_name = 'keywords')  
+						left join article_settings scientifictitle on (scientifictitle.article_id = a.article_id and scientifictitle.setting_name = 'scientificTitle')
+						left join article_settings publictitle on (publictitle.article_id = a.article_id and publictitle.setting_name = 'publicTitle')
+						left join article_settings region on (region.article_id = a.article_id and region.setting_name = 'proposalCountry')
+						left join article_settings startdate on (startdate.article_id = a.article_id and startdate.setting_name = 'startDate')";
+		$searchSqlEnd = " WHERE (ed.decision = '1' || ed.decision = '6' || ed.decision = '9')";
+
+		if ($investigatorName == true || $investigatorAffiliation == true || $investigatorEmail == true){
+			$searchSqlMid .= " left join authors investigator on (investigator.submission_id = a.article_id and investigator.primary_contact = '1')";
+			if ($investigatorName == true) $searchSqlBeg .= ", investigator.first_name as afname, investigator.last_name as alname";
+			if ($investigatorAffiliation == true) {
+				$searchSqlBeg .= ", investigatoraffiliation.setting_value as investigatoraffiliation";
+				$searchSqlMid .= " left join author_settings investigatoraffiliation on (investigatoraffiliation.author_id = investigator.author_id and investigatoraffiliation.setting_name = 'affiliation')";
+			}
+			if ($investigatorEmail == true) $searchSqlBeg .= ", investigator.email as email";
+		}
+		
+		if ($researchField == true){
+			$searchSqlBeg .= ", researchfield.setting_value as researchfield";
+			$searchSqlMid .= " left join article_settings researchfield on (researchfield.article_id = a.article_id and researchfield.setting_name = 'researchField')";
+		}
+		
+		if ($proposalType == true){
+			$searchSqlBeg .= ", proposaltype.setting_value as proposaltype";
+			$searchSqlMid .= " left join article_settings proposaltype on (proposaltype.article_id = a.article_id and proposaltype.setting_name = 'proposalType')";		
+		}
+		
+		if ($duration == true){
+			$searchSqlBeg .= ", enddate.setting_value as end_date";
+			$searchSqlMid .= " left join article_settings enddate on (enddate.article_id = a.article_id and enddate.setting_name = 'endDate')";
+		}
+		
+		if ($area == true){
+			$searchSqlBeg .= ", region.setting_value as country, multicountry.setting_value as multicountryresearch, nationwide.setting_value as nationwide";
+			$searchSqlMid .= " left join article_settings multicountry on (multicountry.article_id = a.article_id and multicountry.setting_name = 'multiCountryResearch') left join article_settings nationwide on (nationwide.article_id = a.article_id and nationwide.setting_name = 'nationwide')";		
+		}
+				
+		if ($dataCollection == true){
+			$searchSqlBeg .= ", datacollection.setting_value as datacollection";
+			$searchSqlMid .= " left join article_settings datacollection on (datacollection.article_id = a.article_id and datacollection.setting_name = 'dataCollection')";
+		}
+
+		if ($status == true){
+			$searchSqlBeg .= ", a.status";
+		}
+				
+		if ($studentResearch == true){
+			$searchSqlBeg .= ", studentinstitution.setting_value as studentinstitution, academicdegree.setting_value as academicdegree";
+			$searchSqlMid .= " left join article_settings studentinstitution on (studentinstitution.article_id = a.article_id and studentinstitution.setting_name = 'studentInstitution') left join article_settings academicdegree on (academicdegree.article_id = a.article_id and academicdegree.setting_name = 'academicDegree')";
+		}
+				
+		if ($primarySponsor == true){
+			$searchSqlBeg .= ", primarysponsor.setting_value as primarysponsor, otherprimarysponsor.setting_value as otherprimarysponsor";
+			$searchSqlMid .= " left join article_settings primarysponsor on (primarysponsor.article_id = a.article_id and primarysponsor.setting_name = 'primarySponsor') left join article_settings otherprimarysponsor on (otherprimarysponsor.article_id = a.article_id and otherprimarysponsor.setting_name = 'otherPrimarySponsor')";
+		}
+		
+		if ($fundsRequired == true){
+			$searchSqlBeg .= ", funds.setting_value as funds, currency.setting_value as currency";
+			$searchSqlMid .= " left join article_settings funds on (funds.article_id = a.article_id and funds.setting_name = 'fundsRequired') left join article_settings currency on (currency.article_id = a.article_id and currency.setting_name = 'selectedCurrency')";		
+		}
+								
+		if ($dateSubmitted == true){
+			$searchSqlBeg .= ", a.date_submitted as date_submitted";
+		}	
+		
+		
+		if (!empty($query)) {
+			$searchSqlEnd .= " AND (keywords.setting_value LIKE '"."%".$query."%"."' or scientifictitle.setting_value LIKE '"."%".$query."%"."' or publictitle.setting_value LIKE '"."%".$query."%"."')";
+		}
+		
+		
+		if ($fromDate != "--" || $toDate != "--"){
+			if ($fromDate != "--" && $fromDate != null) {
+				$searchSqlEnd .= " AND (STR_TO_DATE(startdate.setting_value, '%d-%b-%Y') >= " . $this->datetimeToDB($fromDate).")";
+			}
+			if ($toDate != "--" && $toDate != null) {
+				$searchSqlEnd .= " AND (STR_TO_DATE(startdate.setting_value, '%d-%b-%Y') <= " . $this->datetimeToDB($toDate).")";
+			}
+		}
+		
+		if ($region != 'ALL') $searchSqlEnd .= " AND region.setting_value LIKE '"."%".$region."%"."'";
+			
+		if ($statusFilter == 1) $searchSqlEnd .= " AND a.status = 11";
+		else if ($statusFilter == 2) $searchSqlEnd .= " AND a.status <> 11";		
+		
+		$searchSql = $searchSqlBeg.$searchSqlMid.$searchSqlEnd;
+		
 		$result =& $this->retrieve($searchSql);
 		
 		while (!$result->EOF) {
@@ -985,17 +1295,6 @@ class ArticleDAO extends DAO {
 
 		return $articles;
 	}
-	
-/**
-	 * Internal function to return an Article object from a row.
-	 * @param $row array
-	 * @return Article
-	 */
-	function &_returnSearchArticleFromRow(&$row) {
-		$article = new Article();
-		$this->_searchArticleFromRow($article, $row);
-		return $article;
-	}
 
 	/**
 	 * Internal function to fill in the passed article object from the row.
@@ -1003,18 +1302,31 @@ class ArticleDAO extends DAO {
 	 * @param $row array input row
 	 */
 	function _searchArticleFromRow(&$article, &$row) {
-		$article->setId($row['article_id']);
-		$article->setWhoId($row['whoid']);
-		$article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
-		$article->setTitle($row['title']);
-		$article->setProposalCountry($row['country']);
-		$article->setPrimaryEditor($row['efname']." ".$row['elname']);
-		$article->setPrimaryAuthor($row['afname']." ".$row['alname']);
-		$article->setStartDate($this->datetimeFromDB($row['start_date']));
-		$article->setEndDate($this->datetimeFromDB($row['end_date']));
-		$article->setProposalStatus($row['decision']);
-		$article->setDateStatusModified($this->datetimeFromDB($row['date_decided']));
-		$article->setAuthorEmail($row['email']);
+		if (isset($row['status'])) $article->setStatus($row['status']);
+		if (isset($row['article_id'])) $article->setId($row['article_id']);
+		if (isset($row['whoid'])) $article->setWhoId($row['whoid'], $article->getLocale());
+		if (isset($row['date_submitted'])) $article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
+		if (isset($row['scientifictitle'])) $article->setScientificTitle($row['scientifictitle'], $article->getLocale());
+		if (isset($row['country'])) $article->setProposalCountry($row['country'], $article->getLocale());
+		if (isset($row['efname']) or isset($row['elname'])) $article->setPrimaryEditor($row['efname']." ".$row['elname']);
+		if (isset($row['afname']) or isset($row['alname'])) $article->setPrimaryAuthor($row['afname']." ".$row['alname']);
+		if (isset($row['start_date'])) $article->setStartDate($this->datetimeFromDB($row['start_date']), $article->getLocale());
+		if (isset($row['end_date'])) $article->setEndDate($this->datetimeFromDB($row['end_date']), $article->getLocale());
+		if (isset($row['decision'])) $article->setProposalStatus($row['decision']);
+		if (isset($row['date_decided'])) $article->setDateStatusModified($this->datetimeFromDB($row['date_decided']));
+		if (isset($row['email'])) $article->setAuthorEmail($row['email']);
+		if (isset($row['multicountryresearch'])) $article->setMultiCountryResearch($row['multicountryresearch'], $article->getLocale());
+		if (isset($row['nationwide'])) $article->setNationwide($row['nationwide'], $article->getLocale());
+		if (isset($row['primarysponsor'])) $article->setPrimarySponsor($row['primarysponsor'], $article->getLocale());
+		if (isset($row['otherprimarysponsor'])) $article->setOtherPrimarySponsor($row['otherprimarysponsor'], $article->getLocale());
+		if (isset($row['researchfield'])) $article->setResearchField($row['researchfield'], $article->getLocale());
+		if (isset($row['investigatoraffiliation'])) $article->setInvestigatorAffiliation($row['investigatoraffiliation']);
+		if (isset($row['proposaltype'])) $article->setProposalType($row['proposaltype'], $article->getLocale());
+		if (isset($row['datacollection'])) $article->setDataCollection($row['datacollection'], $article->getLocale());
+		if (isset($row['studentinstitution'])) $article->setStudentInstitution($row['studentinstitution'], $article->getLocale());
+		if (isset($row['academicdegree'])) $article->setAcademicDegree($row['academicdegree'], $article->getLocale());
+		if (isset($row['funds'])) $article->setFundsRequired($row['funds'], $article->getLocale());
+		if (isset($row['currency'])) $article->setSelectedCurrency($row['currency'], $article->getLocale());
 		
 		HookRegistry::call('ArticleDAO::_returnSearchArticleFromRow', array(&$article, &$row));
 

@@ -118,7 +118,7 @@
 		</select>
 	</td>
 </tr>
-
+<!--
 {if $currentJournal}
 	<tr valign="top">
 		<td class="label">{translate key="user.roles"}</td>
@@ -134,7 +134,7 @@
 			{/if}
 		</td>
 	</tr>
-{/if}
+{/if}-->
 <tr valign="top">
 	<td class="label">{fieldLabel name="interests" key="user.interests"}</td>
 	<td class="value">

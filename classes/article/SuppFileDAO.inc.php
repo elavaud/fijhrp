@@ -345,6 +345,81 @@ class SuppFileDAO extends DAO {
 
 		return $returner;
 	}
+	
+	/*
+	 * Get a setting from a supp file by id and name
+	 */
+	function &getSetting($suppFileId, $settingName) {
+		$result =& $this->retrieve(
+			'SELECT	setting_value, setting_type
+			FROM	article_supp_file_settings
+			WHERE	supp_id = ? AND
+				setting_name = ?',
+			array(
+				(int) $suppFileId,
+				$settingName
+			)
+		);
+
+		if ($result->RecordCount() != 0) {
+			$row =& $result->getRowAssoc(false);
+			$returner = $this->convertFromDB($row['setting_value'], $row['setting_type']);
+		} else {
+			$returner = null;
+		}
+
+		return $returner;
+	}
+	
+	/*
+	 * Insert or update a setting
+	 */
+	function updateSetting($suppFileId, $settingName, $settingValue, $type = null) {
+		
+		$result = $this->retrieve(
+			'SELECT	COUNT(*)
+			FROM	article_supp_file_settings
+			WHERE	supp_id = ? AND
+				setting_name = ?',
+			array((int) $suppFileId, $settingName)
+		);
+
+		$settingValue = $this->convertToDB($settingValue, $type);
+		
+		if ($result->fields[0] == 0) {
+			$returner = $this->update(
+				'INSERT INTO article_supp_file_settings
+					(supp_id, setting_name, setting_value, setting_type)
+				VALUES
+					(?, ?, ?, ?)',
+				array(
+					(int) $suppFileId,
+					$settingName,
+					$settingValue,
+					$type
+				)
+			);
+		} else {
+			$returner = $this->update(
+				'UPDATE article_supp_file_settings
+				SET	setting_value = ?,
+					setting_type = ?
+				WHERE	supp_id = ? AND
+					setting_name = ?',
+				array(
+					$settingValue,
+					$type,
+					(int) $suppFileId,
+					$settingName
+				)
+			);
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
 }
 
 ?>

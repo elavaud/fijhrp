@@ -19,7 +19,7 @@
 		<td width="80%" colspan="2" class="data">{$submission->getFirstAuthor()|escape}</td>
 	</tr>
         <tr>
-		<td width="20%" class="label">WHO ID</td>
+		<td width="20%" class="label">ID</td>
 		<td width="80%" colspan="2" class="data">{$submission->getLocalizedWhoId()|escape}</td>
 	</tr>
 	<tr>
@@ -40,18 +40,21 @@
 		<td class="label">{translate key="article.suppFilesAbbrev"}</td>
 		<td width="80%" class="value">
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}
-                            <!-- Do not allow edit of supp files, Edit by AIM, June 6, 2011
-                            {*
-                            <a href="{if $submission->getStatus() != STATUS_PUBLISHED && $submission->getStatus() != STATUS_ARCHIVED}{url op="editSuppFile" path=$submission->getArticleId()|to_array:$suppFile->getId()}{else}{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}{/if}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;{$suppFile->getDateModified()|date_format:$dateFormatShort}<br />
-                            *}
-                            -->
-                            <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})
-                            {if $canEditFiles}
-                            &nbsp;
-                            <a href="{url op="deleteSuppFile" path=$suppFile->getSuppFileId() articleId=$submission->getArticleId()}" onclick="return confirm('{translate|escape:"jsparam" key="author.submit.confirmDeleteSuppFile"}')" class="action">{translate key="common.delete"}</a>
-                            {/if}
-                            <br />
-                        {foreachelse}
+				{if $suppFile->getType() == 'Final Decision'}
+					{if $suppFileDao->getSetting($suppFile->getSuppFileId(), 'investigator') == 'hide'}
+						You are not authorized to access the final decision.
+					{else}
+                        <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})
+					{/if}
+				{else}
+                    <a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>&nbsp;&nbsp;({$suppFile->getType()|escape})
+                    {if $canEditFiles}
+                    	&nbsp;
+                        <a href="{url op="deleteSuppFile" path=$suppFile->getSuppFileId() articleId=$submission->getArticleId()}" onclick="return confirm('{translate|escape:"jsparam" key="author.submit.confirmDeleteSuppFile"}')" class="action">{translate key="common.delete"}</a>
+                	{/if}
+                    <br />
+                {/if}
+            {foreachelse}
 				{translate key="common.none"}
 			{/foreach}
 		</td>

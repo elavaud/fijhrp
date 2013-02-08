@@ -43,10 +43,12 @@
                         {elseif $status==PROPOSAL_STATUS_EXPEDITED}{translate key="submissions.proposal.expedited"}
                         {elseif $status==PROPOSAL_STATUS_ASSIGNED}{translate key="submissions.proposal.assigned"}
                         {elseif $status==PROPOSAL_STATUS_RETURNED}{translate key="submissions.proposal.returned"}
+                        <br/><a href="{url op="resubmit" path=$submission->getId()}" class="action">Resubmit</a>
                         {elseif $status==PROPOSAL_STATUS_EXEMPTED}{translate key="submissions.proposal.exempted"}
                         {elseif $status==PROPOSAL_STATUS_REVIEWED}
                             {assign var="decision" value=$submission->getMostRecentDecision()}
                             {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}{translate key="submissions.proposal.resubmit"}
+                       		<br/><a href="{url op="resubmit" path=$submission->getId()}" class="action">Resubmit</a>
                             {elseif $decision==SUBMISSION_EDITOR_DECISION_ACCEPT}{translate key="submissions.proposal.approved"}
                             {elseif $decision==SUBMISSION_EDITOR_DECISION_DECLINE}{translate key="submissions.proposal.decline"}
                             
@@ -54,6 +56,18 @@
                         {/if}
 		</td>
 	</tr>
+	{if $status == PROPOSAL_STATUS_WITHDRAWN}
+		<tr>
+			<td class="label">&nbsp;</td>
+			<td class="value">Reason: {$submission->getWithdrawReason(en_US)}</td>
+		</tr>
+		{if $submission->getWithdrawComments(en_US)}
+			<tr>
+				<td class="label">&nbsp;</td>
+				<td class="value">Comments: {$submission->getWithdrawComments(en_US)}</td>
+			</tr>
+		{/if}
+	{/if}
 	<tr>
 		<td class="label">Date</td>
 		<td colspan="2" class="value">{$submission->getDateStatusModified()|date_format:$dateFormatShort}</td>

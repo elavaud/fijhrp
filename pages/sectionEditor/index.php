@@ -36,7 +36,7 @@ switch ($op) {
 	case 'recordDecision':
 	//if proposal is exempted, record reasons for exemption 
 	case 'recordReasonsForExemption':
-	//if proposal was tabled for expedited review, allow STO to upload approval/disapproval file
+	//if proposal was tabled for expedited review, allow Secretary to upload approval/disapproval file
 	case 'uploadDecisionFile':
 	case 'selectReviewer':
 	case 'selectReviewers':
@@ -154,9 +154,7 @@ switch ($op) {
 	// Submission Comments
 	//
 	case 'viewPeerReviewComments':
-	case 'postPeerReviewComment':define('HANDLER_CLASS', 'SectionEditorHandler');
-		import('pages.sectionEditor.SectionEditorHandler');
-		break;
+	case 'postPeerReviewComment':
 	case 'viewEditorDecisionComments':
 	case 'blindCcReviewsToReviewers':
 	case 'postEditorDecisionComment':
@@ -214,6 +212,12 @@ switch ($op) {
 		define('HANDLER_CLASS', 'ReportsHandler');
 		import('pages.sectionEditor.ReportsHandler');
 		break;
+	case 'sendEmailAllUsers':
+        case 'sendEmailERCMembers':
+        case 'sendEmailRTOs':
+        		define('HANDLER_CLASS', 'SendEmailHandler');
+			import('pages.sectionEditor.SendEmailHandler');
+			break;
 }
 
 ?>

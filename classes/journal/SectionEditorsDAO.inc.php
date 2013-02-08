@@ -24,6 +24,7 @@ class SectionEditorsDAO extends DAO {
 	 * @param $canReview boolean
 	 * @param $canEdit boolean
 	 */
+
 	function insertEditor($journalId, $sectionId, $userId, $canReview, $canEdit) {
 		return $this->update(
 			'INSERT INTO section_editors

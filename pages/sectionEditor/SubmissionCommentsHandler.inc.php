@@ -237,7 +237,6 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 	 * Email an editor decision comment.
 	 */
 	function emailEditorDecisionComment() {
-
 		$articleId = (int) Request::getUserVar('articleId');
 		$submissionEditHandler = new SubmissionEditHandler();
 		$submissionEditHandler->validate($articleId);

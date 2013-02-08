@@ -25,3 +25,5 @@
 	{call_hook name="Templates::Reviewer::Index::Meetings"}
 </ul>
 </div>
+
+{include file="common/footer.tpl"}

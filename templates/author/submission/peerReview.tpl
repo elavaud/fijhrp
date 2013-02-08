@@ -18,10 +18,10 @@
 {assign var=editorFiles value=$submission->getEditorFileRevisions($round)}
 {assign var="viewableFiles" value=$authorViewableFilesByRound[$round]}
 
-<h4>{translate key="submission.round" round=$round}</h4>
+<!--<h4>{translate key="submission.round" round=$round}</h4>-->
 
 <table class="data" width="100%">
-	<tr valign="top">
+	<!--<tr valign="top">
 		<td class="label" width="20%">
 			{translate key="submission.reviewVersion"}
 		</td>
@@ -57,7 +57,7 @@
 				&mdash;
 			{/if}
 		</td>
-	</tr>
+	</tr>-->
 	<tr valign="top">
 		<td class="label" width="20%">
 			{translate key="common.uploadedFile"}
@@ -68,8 +68,8 @@
 					{assign var="roundIndex" value=$reviewIndexesByRound[$round][$reviewId]}
 					{assign var=thisReviewer value=$start+$roundIndex|chr}
 					{foreach from=$viewableFilesForReviewer item=viewableFile}
-						{translate key="user.role.reviewer"} {$thisReviewer|escape}
-						<a href="{url op="downloadFile" path=$submission->getId()|to_array:$viewableFile->getFileId():$viewableFile->getRevision()}" class="file">{$viewableFile->getFileName()|escape}</a>&nbsp;&nbsp;{$viewableFile->getDateModified()|date_format:$dateFormatShort}<br />
+						<!--{translate key="user.role.reviewer"} {$thisReviewer|escape}-->
+						<a href="{url op="downloadFile" path=$submission->getId()|to_array:$viewableFile->getFileId():$viewableFile->getRevision()}" class="file">{$viewableFile->getFileName()|escape}</a>&nbsp;&nbsp;{$viewableFile->getDateModified()|date_format:$dateFormatLong}<br />
 					{/foreach}
 				{/foreach}
 			{foreachelse}

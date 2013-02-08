@@ -97,7 +97,6 @@ class SuppFileForm extends Form {
                 $typeOptions = array(
                     "author.submit.suppFile.who.summary" => "author.submit.suppFile.who.summary",
                     "author.submit.suppFile.who.informedConsent" => "author.submit.suppFile.who.informedConsent",
-                    "author.submit.suppFile.who.localEthicalApproval" => "author.submit.suppFile.who.localEthicalApproval",
                     "author.submit.suppFile.who.funding" => "author.submit.suppFile.who.funding",
                     "author.submit.suppFile.who.cv" => "author.submit.suppFile.who.cv",
                     "author.submit.suppFile.who.questionnaire" => "author.submit.suppFile.who.questionnaire",
@@ -155,7 +154,11 @@ class SuppFileForm extends Form {
 			$this->addError('publicIssueId', Locale::translate('author.suppFile.suppFilePublicIdentificationExists'));
 			$this->addErrorField('publicSuppFileId');
 		}
-
+		import ('classes.file.ArticleFileManager');
+		$articleFileManager = new ArticleFileManager($this->article->getArticleId());
+		if (!$articleFileManager->uploadedFileExists('uploadSuppFile')){
+			 $this->addError('uploadSuppFile', Locale::translate('author.submit.form.noFileSelected'));	
+		}
 		return parent::validate();
 	}
 
@@ -262,6 +265,39 @@ class SuppFileForm extends Form {
 				$fileId = 0;
 			}
 		}
+		
+		// Notifications
+		import('lib.pkp.classes.notification.NotificationManager');
+		$notificationManager = new NotificationManager();
+		$journal =& Request::getJournal();
+		$url = Request::url($journal->getPath(), 'sectionEditor', 'submissionReview', array($this->article->getArticleId()));
+		
+		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+		$notificationSectionEditors = array();
+		$sectionEditors = $editAssignmentDao->getEditorAssignmentsByArticleId3($this->article->getArticleId());
+		
+		foreach ($sectionEditors as $sectionEditorEntry) {
+			$sectionEditor =& $sectionEditorEntry['user'];
+            $notificationSectionEditors[] = array('id' => $sectionEditor->getId());
+            unset($sectionEditor);
+        }
+
+		if ($suppFile->getData('type') == 'Raw Data File') $message = 'notification.type.rawDataSubmitted'; 
+        if ($suppFile->getData('type') == 'Other Supplementary Research Output') $message = 'notification.type.otherSuppResearchOutput';
+        if ($suppFile->getData('type') == 'Progress Report') $message = 'notification.type.progressReport';
+        if ($suppFile->getData('type') == 'Completion Report') $message = 'notification.type.completionReport';
+        if ($suppFile->getData('type') == 'Extension Request') $message = 'notification.type.extensionRequest';
+        if ($this->getData('type') == "Supp File") $message = 'notification.type.suppFile';
+                    
+        if (isset($message)){
+        	foreach ($notificationSectionEditors as $userRole) {
+            	$notificationManager->createNotification(
+                	$userRole['id'], $message,
+                	$this->article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_SUPP_FILE_MODIFIED
+            	);
+       		}
+        }
+		
 		return $this->suppFileId;
 	}
 

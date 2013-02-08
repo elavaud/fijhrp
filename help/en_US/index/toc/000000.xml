@@ -15,7 +15,7 @@
 <toc id="index/toc/000000" locale="en_US" title="OJS Help" parent_topic="index/topic/000000">
 	<topic id="intro/topic/000000" title="Introduction to OJS" />
 	<topic id="site/topic/000000" title="Site Administration" />
-	<topic id="journal/topic/000000" title="WPRO-ERC Management" />
+	<topic id="journal/topic/000000" title="ERC Management" />
 	<topic id="submission/topic/000000" title="Submission Process" />
 	<topic id="editorial/topic/000000" title="Editorial Process" />
 	<topic id="publishing/topic/000000" title="Publishing Process" />

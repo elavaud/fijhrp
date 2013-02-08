@@ -23,6 +23,7 @@ switch ($op) {
 	// Submission Tracking
 	//
 	case 'submission':
+	case 'submissionForFullReview':
 	case 'confirmReview':
 	case 'saveCompetingInterests':
 	case 'recordRecommendation':
@@ -41,6 +42,7 @@ switch ($op) {
 	//
 	
 	case 'downloadFile':
+	case 'downloadFileFullReview':
 	//
 	// Submission Review Form
 	//

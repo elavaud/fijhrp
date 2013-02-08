@@ -16,17 +16,11 @@
  * @brief Application-specific submission actions.
  */
 
-
 /* These constants correspond to editing decision "decision codes". */
 define('SUBMISSION_EDITOR_DECISION_ACCEPT', 1);		//APPROVED
 define('SUBMISSION_EDITOR_DECISION_RESUBMIT', 2);	//REVISE AND RESUBMIT
 define('SUBMISSION_EDITOR_DECISION_DECLINE', 3);	//NOT APPROVED
 
-/**************************************
- * Additional editor decision codes
- * Added by aglet
- * Last Update: 5/28/2011
-***************************************/
 define('SUBMISSION_EDITOR_DECISION_COMPLETE', 4);	//INITIAL REVIEW: COMPLETE
 define('SUBMISSION_EDITOR_DECISION_INCOMPLETE', 5);	//INCOMPLETE
 define('SUBMISSION_EDITOR_DECISION_EXEMPTED', 6);	//EXEMPTED
@@ -42,11 +36,13 @@ define('SUBMISSION_FIELD_REVIEWER', 4);
 define('SUBMISSION_FIELD_COPYEDITOR', 5);
 define('SUBMISSION_FIELD_LAYOUTEDITOR', 6);
 define('SUBMISSION_FIELD_PROOFREADER', 7);
+define('SUBMISSION_FIELD_ID', 8);
 
 define('SUBMISSION_FIELD_DATE_SUBMITTED', 4);
 define('SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE', 5);
 define('SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE', 6);
 define('SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE', 7);
+define('SUBMISSION_FIELD_DATE_APPROVED', 8);
 
 import('lib.pkp.classes.submission.common.PKPAction');
 

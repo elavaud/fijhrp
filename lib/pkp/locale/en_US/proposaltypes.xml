@@ -19,7 +19,7 @@
     <proposaltype name="Proposal without Human Subjects" code="PNHS" />
     <proposaltype name="Qualitative Study" code="QS" />
     <proposaltype name="Intervention Evaluation Research" code="IER" />
-    <proposaltype name="Operation Research" code="OR" />
-    <proposaltype name="Others" code="OTHER" />
+    <proposaltype name="Operational Research" code="OR" />
+    <proposaltype name="Other(s)" code="OTHER" />
     <!-- Do not change code of OTHER -->
 </proposaltypes>

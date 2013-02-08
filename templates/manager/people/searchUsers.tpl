@@ -57,202 +57,306 @@ function checkSelected(){ldelim}
 
 $(document).ready(
     function() {ldelim}
-    	showOrHideErcMemberStatusField();
-        $('#roleId').change(showOrHideErcMemberStatusField);
+    	showOrHideEthicsCommitteeField();
+        $('#roleId').change(showOrHideEthicsCommitteeField);
+        showOrHideErcMemberStatusField();
+        $('#ethicsCommittee').change(showOrHideErcMemberStatusField);
         showOrHideButtons();
         $('#ercMemberStatus').change(showOrHideButtons);
 	{rdelim}
 );
 
-function showOrHideErcMemberStatusField() {ldelim}
+function showOrHideEthicsCommitteeField() {ldelim}
     var isErcMemberSelected = false;
+    
+    <!-- This variable and its use is only to be sure that a role is selected-->
+    var isSomethingSelected = false;
+    
     if ($('#roleId').val() != null) {ldelim}
         $.each(
             $('#roleId').val(), function(key, value){ldelim}
                 if(value == 0x00001000) {ldelim}
                     isErcMemberSelected = true;
                 {rdelim}
+                if(value == 0x00000010 || value == 0x00010000 || value == 0x00000100){ldelim}
+                	isSomethingSelected = true;
+                {rdelim}
             {rdelim}
         );
     {rdelim}
     
-    $('#chairErrorMessage').hide();
-    $('#viceChairErrorMessage').hide();
-    $('#secretaryErrorMessage').hide();
-    $('#secretaryAAErrorMessage').hide();
-    $('#membersErrorMessage').hide();
-    $('#extMembersErrorMessage').hide();
-    
-    $('#chairTooManySelected').hide();
-    $('#viceChairTooManySelected').hide();
-    $('#secretaryTooManySelected').hide();
-    $('#secretaryAATooManySelected').hide();
-    $('#membersTooManySelected').hide();
-    $('#extMembersTooManySelected').hide();
-    $('#placesAvailableForMember').hide();
-    $('#placesAvailableForExtMember').hide();
+    $('#uhsChairErrorMessage').hide();
+    $('#uhsViceChairErrorMessage').hide();
+    $('#uhsSecretaryErrorMessage').hide();
+    $('#uhsSecretaryTooManySelected').hide();
+    $('#placesAvailableForUhsSecretary').hide();
+    $('#uhsMembersErrorMessage').hide();
+    $('#uhsMembersTooManySelected').hide();
+    $('#placesAvailableForUhsMember').hide();
+
+    $('#niophChairErrorMessage').hide();
+    $('#niophViceChairErrorMessage').hide();    
+    $('#niophSecretaryErrorMessage').hide();
+    $('#niophSecretaryTooManySelected').hide();
+    $('#placesAvailableForNiophSecretary').hide();
+    $('#niophMembersErrorMessage').hide();
+    $('#niophMembersTooManySelected').hide();
+    $('#placesAvailableForNiophMember').hide();
     
     if(isErcMemberSelected) {ldelim}
-        $('#ercMemberStatusField').show();
+        $('#ethicsCommitteeField').show();
+        $('#noEthicsCommitteeSelected').show();
+        $('#nothingSelected').hide();
         $('#submit').hide();
-        $('#actionButton').hide();
-    {rdelim} else {ldelim}
+    {rdelim} else if(isSomethingSelected) {ldelim}
         $('#submit').show();
-        $('#actionButton').show();
+        $('#noEthicsCommitteeSelected').hide();
+        $('#nothingSelected').hide();
+        $('#noMemberStatusSelected').hide();
+        $('#ethicsCommitteeField').hide();
         $('#ercMemberStatusField').hide();
+        $('#ethicsCommittee').val("NA");
+        $('#ercMemberStatus').val("NA");
+    {rdelim} else {ldelim}
+    	$('#nothingSelected').show();
+    	$('#noEthicsCommitteeSelected').hide();
+    	$('#noMemberStatusSelected').hide();
+    	$('#ercMemberStatusField').hide();
+    	$('#ethicsCommitteeField').hide();
+        $('#ethicsCommittee').val("NA");
+        $('#ercMemberStatus').val("NA");
+    {rdelim}
+{rdelim}
+
+function showOrHideErcMemberStatusField() {ldelim}
+    
+    var isEthicsCommitteeSelected = false;
+    
+    if ($('#ethicsCommittee').val() != null) {ldelim}
+        $.each(
+            $('#ethicsCommittee').val(), function(key, value){ldelim}
+                if(value == "NIOPH" || value == "UHS"){ldelim}
+                	isEthicsCommitteeSelected = true;
+                {rdelim}
+            {rdelim}
+        );
+    {rdelim}
+    
+    $('#uhsChairErrorMessage').hide();
+    $('#uhsViceChairErrorMessage').hide();
+    $('#uhsSecretaryErrorMessage').hide();
+    $('#uhsSecretaryTooManySelected').hide();
+    $('#placesAvailableForUhsSecretary').hide();
+    $('#uhsMembersErrorMessage').hide();
+    $('#uhsMembersTooManySelected').hide();
+    $('#placesAvailableForUhsMember').hide();
+
+    $('#niophChairErrorMessage').hide();
+    $('#niophViceChairErrorMessage').hide();    
+    $('#niophSecretaryErrorMessage').hide();
+    $('#niophSecretaryTooManySelected').hide();
+    $('#placesAvailableForNiophSecretary').hide();
+    $('#niophMembersErrorMessage').hide();
+    $('#niophMembersTooManySelected').hide();
+    $('#placesAvailableForNiophMember').hide();
+    
+    if (isEthicsCommitteeSelected) {ldelim}
+        $('#noEthicsCommitteeSelected').hide();
+        $('#ercMemberStatusField').show();
+        $('#noMemberStatusSelected').show();
+        $('#ercMemberStatus').val("NA");
+        $('#submit').hide();
+    {rdelim} else {ldelim}
+    	$('#ercMemberStatusField').hide();
         $('#ercMemberStatus').val("NA");
     {rdelim}
 {rdelim}
 
 function showOrHideButtons() {ldelim}
-    var isChairSelected = false;
-    var isViceChairSelected = false;
-    var isSecretarySelected = false;
-    var isSecretaryAASelected = false;
-    var isMemberSelected = false;
-    var isExternalMemberSelected = false;
-    var checkCheckbox = checkSelected();
 
-    if ($('#ercMemberStatus').val() != null) {ldelim}
+	var isUhsSelected = false;
+	var isNiophSelected = false;
+	var isChairSelected = false;
+	var isViceChairSelected = false;
+    var isSecretarySelected = false;  
+    var isMemberSelected = false;
+    
+    var checkCheckbox = checkSelected();
+	
+    if ($('#ethicsCommittee').val() != null) {ldelim}
         $.each(
-            $('#ercMemberStatus').val(), function(key, value){ldelim}
-                if(value == "WPRO-ERC, Chair") {ldelim}
-                    isChairSelected = true;                   
+            $('#ethicsCommittee').val(), function(key, value){ldelim}
+                if(value == "UHS"){ldelim}
+                	isUhsSelected = true;
                 {rdelim}
-                else if(value == "WPRO-ERC, Vice-Chair") {ldelim}
-                    isViceChairSelected = true;                   
-                {rdelim}
-                else if(value == "WPRO-ERC, Secretary") {ldelim}
-                    isSecretarySelected = true;                    
-                {rdelim}
-                else if(value == "WPRO-ERC, Secretary Administrative Assistant") {ldelim}
-                    isSecretaryAASelected = true;                    
-                {rdelim}
-                else if(value == "WPRO-ERC, Member") {ldelim}
-                    isMemberSelected = true;                   
-                {rdelim}
-                else if(value == "WPRO-ERC, External Member") {ldelim}
-                    isExternalMemberSelected = true;;                    
+                else if(value == "NIOPH"){ldelim}
+                	isNiophSelected =true;
                 {rdelim}
             {rdelim}
         );
     {rdelim}
     
-    $('#chairErrorMessage').hide();
-    $('#viceChairErrorMessage').hide();
-    $('#secretaryErrorMessage').hide();
-    $('#secretaryAAErrorMessage').hide();
-    $('#membersErrorMessage').hide();
-    $('#extMembersErrorMessage').hide();
+    if ($('#ercMemberStatus').val() != null) {ldelim}
+        $.each(
+            $('#ercMemberStatus').val(), function(key, value){ldelim}
+                if(value == "ERC, Chair") {ldelim}
+                    isChairSelected = true;                    
+                {rdelim}
+                else if(value == "ERC, Vice-Chair") {ldelim}
+                    isViceChairSelected = true;                   
+                {rdelim}
+                else if(value == "ERC, Secretary") {ldelim}
+                    isSecretarySelected = true;                   
+                {rdelim}
+                else if(value == "ERC, Member") {ldelim}
+                    isMemberSelected = true;                   
+                {rdelim}
+            {rdelim}
+        );
+    {rdelim}
     
-	$('#chairTooManySelected').hide();
-	$('#viceChairTooManySelected').hide();
-	$('#secretaryTooManySelected').hide();
-	$('#secretaryAATooManySelected').hide();
-	$('#membersTooManySelected').hide();
-	$('#extMembersTooManySelected').hide();
-	$('#placesAvailableForMember').hide();
-    $('#placesAvailableForExtMember').hide();
-	
-    if(isChairSelected) {ldelim}
-    	if({$isChair}=='1'){ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#chairErrorMessage').show();
-        {rdelim}
-        else if (checkCheckbox>1) {ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#chairTooManySelected').show();
-        {rdelim} 
-        else {ldelim}
-         	$('#submit').show();
-         	$('#actionButton').show();
-        {rdelim}        
-    {rdelim} 
-    else if(isViceChairSelected) {ldelim}
-    	if({$isViceChair}=='1'){ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#viceChairErrorMessage').show();
-        {rdelim}
-        else if (checkCheckbox>1) {ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#viceChairTooManySelected').show();
-        {rdelim}
-        else {ldelim}
-        	$('#submit').show();
-        	$('#actionButton').show();
-        {rdelim}        
-    {rdelim} 
-    else if(isSecretarySelected) {ldelim}
-    	if({$isSecretary}=='1'){ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#secretaryErrorMessage').show();
-        {rdelim}
-        else if (checkCheckbox>1) {ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#secretaryTooManySelected').show();
-        {rdelim}        
-        else {ldelim}
-        	$('#submit').show();
-        	$('#actionButton').show();
-        {rdelim}        
-    {rdelim} 
-    else if(isSecretaryAASelected) {ldelim}
-    	if({$isSecretaryAA}=='1'){ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#secretaryAAErrorMessage').show();
-        {rdelim}
-        else if (checkCheckbox>1) {ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#secretaryAATooManySelected').show();
-        {rdelim}        
-        else {ldelim}
-	        $('#submit').show();
-	        $('#actionButton').show();
-        {rdelim}        
-    {rdelim} 
-    else if(isMemberSelected) {ldelim}
-    	if({$areMembers}=='1'){ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#membersErrorMessage').show();
-        {rdelim}
-        else if (checkCheckbox>{$freeMemberPlaces}) {ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#membersTooManySelected').show();
-        {rdelim}        
-        else {ldelim}
-        	$('#placesAvailableForMember').show();
-        	$('#submit').show();
-        	$('#actionButton').show();
-        {rdelim} 
-    {rdelim} 
-    else if(isExternalMemberSelected) {ldelim}
-    	if({$areExtMembers}=='1'){ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#extMembersErrorMessage').show();
-        {rdelim}
-        else if (checkCheckbox>{$freeExtMemberPlaces}) {ldelim}
-        	$('#submit').hide();
-        	$('#actionButton').hide();
-        	$('#extMembersTooManySelected').show();
-        {rdelim}        
-        else {ldelim}
-        	$('#placesAvailableForExtMember').show();
-        	$('#submit').show();
-        	$('#actionButton').show();
-        {rdelim}        
+    $('#uhsChairErrorMessage').hide();
+    $('#uhsViceChairErrorMessage').hide();
+    $('#uhsSecretaryErrorMessage').hide();
+    $('#uhsSecretaryTooManySelected').hide();
+    $('#placesAvailableForUhsSecretary').hide();
+    $('#uhsMembersErrorMessage').hide();
+    $('#uhsMembersTooManySelected').hide();
+    $('#placesAvailableForUhsMember').hide();
+
+    $('#niophChairErrorMessage').hide();
+    $('#niophViceChairErrorMessage').hide();    
+    $('#niophSecretaryErrorMessage').hide();
+    $('#niophSecretaryTooManySelected').hide();
+    $('#placesAvailableForNiophSecretary').hide();
+    $('#niophMembersErrorMessage').hide();
+    $('#niophMembersTooManySelected').hide();
+    $('#placesAvailableForNiophMember').hide();
+    
+     $('#tooManySelected').hide();
+    
+    if (isUhsSelected) {ldelim}
+        if(isChairSelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$isUhsChair}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#uhsChairErrorMessage').show();
+        	{rdelim}
+       		else if (checkCheckbox>'1') {ldelim}
+        		$('#submit').hide();
+        		$('#tooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#submit').show();
+        	{rdelim}        
+    	{rdelim}
+        else if(isViceChairSelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$isUhsViceChair}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#uhsViceChairErrorMessage').show();
+        	{rdelim}
+       		else if (checkCheckbox>'1') {ldelim}
+        		$('#submit').hide();
+        		$('#tooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#submit').show();
+        	{rdelim}        
+    	{rdelim}
+        else if(isSecretarySelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$areUhsSecretary}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#uhsSecretaryErrorMessage').show();
+        	{rdelim}
+       		else if (checkCheckbox>{$freeUhsSecretaryPlaces}) {ldelim}
+        		$('#submit').hide();
+        		$('#uhsSecretaryTooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#placesAvailableForUhsSecretary').show();
+        		$('#submit').show();
+        	{rdelim}        
+    	{rdelim}
+    	else if(isMemberSelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$areUhsMembers}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#uhsMembersErrorMessage').show();
+        	{rdelim}
+        	else if (checkCheckbox>{$freeUhsMemberPlaces}) {ldelim}
+        		$('#submit').hide();
+        		$('#uhsMembersTooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#placesAvailableForUhsMember').show();
+        		$('#submit').show();
+        	{rdelim} 
+    	{rdelim}
+    {rdelim}
+    else if (isNiophSelected) {ldelim}
+        if(isChairSelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$isNiophChair}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#niophChairErrorMessage').show();
+        	{rdelim}
+       		else if (checkCheckbox>'1') {ldelim}
+        		$('#submit').hide();
+        		$('#tooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#submit').show();
+        	{rdelim}        
+    	{rdelim}
+        else if(isViceChairSelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$isNiophViceChair}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#niophViceChairErrorMessage').show();
+        	{rdelim}
+       		else if (checkCheckbox>'1') {ldelim}
+        		$('#submit').hide();
+        		$('#tooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#submit').show();
+        	{rdelim}        
+    	{rdelim}
+        else if(isSecretarySelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$areNiophSecretary}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#niophSecretaryErrorMessage').show();
+        	{rdelim}
+       		else if (checkCheckbox>{$freeNiophSecretaryPlaces}) {ldelim}
+        		$('#submit').hide();
+        		$('#niophSecretaryTooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#placesAvailableForNiophSecretary').show();
+        		$('#submit').show();
+        	{rdelim}        
+    	{rdelim}
+    	else if(isMemberSelected) {ldelim}
+    		$('#noMemberStatusSelected').hide();
+    		if({$areNiophMembers}=='1'){ldelim}
+        		$('#submit').hide();
+        		$('#niophMembersErrorMessage').show();
+        	{rdelim}
+        	else if (checkCheckbox>{$freeNiophMemberPlaces}) {ldelim}
+        		$('#submit').hide();
+        		$('#niophMembersTooManySelected').show();
+        	{rdelim}        
+        	else {ldelim}
+        		$('#placesAvailableForNiophMember').show();
+        		$('#submit').show();
+        	{rdelim} 
+    	{rdelim}
     {rdelim}
 {rdelim}
+
 <!-- End of management of the ERC Status -->
 </script>
 
@@ -280,11 +384,11 @@ function showOrHideButtons() {ldelim}
 	<tr valign="top" id="roleIdField">
     	<td width="20%" class="label"><strong>Enroll user as :</strong></td>
     	<td width="80%" class="value">
-			<select name="roleId" multiple="multiple" size="1" id="roleId" class="selectMenu">
+			<select name="roleId" multiple="multiple" size="3" id="roleId" class="selectMenu">
 				<option value="{$smarty.const.ROLE_ID_JOURNAL_MANAGER}">{translate key="user.role.manager"}</option>
-				<option value="{$smarty.const.ROLE_ID_REVIEWER}">{translate key="user.role.reviewer"}</option>
+				<option value="{$smarty.const.ROLE_ID_REVIEWER}">Ethics Committee</option>
 				<option value="{$smarty.const.ROLE_ID_AUTHOR}">{translate key="user.role.author"}</option>
-					<!-- Commented out - spf - 1 Dec 2011 <option value="{$smarty.const.ROLE_ID_EDITOR}">{translate key="user.role.editor"}</option> -->
+				<option value="{$smarty.const.ROLE_ID_EDITOR}">{translate key="user.role.coordinator"}</option>
 					<!-- Commented out - el - 19 April 2012 -->
 	        		{*	<option value="{$smarty.const.ROLE_ID_SECTION_EDITOR}">{translate key="user.role.sectionEditor"}</option> 
 					{if $roleSettings.useLayoutEditors}
@@ -301,51 +405,32 @@ function showOrHideButtons() {ldelim}
 			</select>
 		</td>
 	</tr>
+	
+	<tr valign="top" id="ethicsCommitteeField"  style="display: none;">
+		<td width="20%" class="label"><strong>Ethics Committee :</strong></td>
+		<td width="80%" class="value">
+			<select name="ethicsCommittee" multiple="multiple" size="2" id="ethicsCommittee" class="selectMenu">
+				<option value="NIOPH">NIOPH</option>
+				<option value="UHS">UHS</option>
+			</select>
+		</td>
+	</tr>
+	
 	<!-- Added by EL on April 25, 2012: Management of the ERC Status -->
     <tr valign="top" id="ercMemberStatusField" style="display: none;">
-        <td width="20%" class="label"><strong>ERC Member Status :</strong></td>
+        <td width="20%" class="label"><strong>Status :</strong></td>
         <td width="80%" class="value">
-			<select name="ercMemberStatus" multiple="multiple" size="1" id="ercMemberStatus" class="selectMenu">
-				<option value="WPRO-ERC, Chair">Chair</option>
-				<option value="WPRO-ERC, Vice-Chair">Vice-Chair</option>
-				<option value="WPRO-ERC, Secretary">Secretary</option>
-				<option value="WPRO-ERC, Secretary Administrative Assistant">Secretary Administrative Assistant</option>
-				<option value="WPRO-ERC, Member">Member</option>
-				<option value="WPRO-ERC, External Member">External Member</option>
+			<select name="ercMemberStatus" multiple="multiple" size="4" id="ercMemberStatus" class="selectMenu">
+				<option value="ERC, Chair">Chair</option>
+				<option value="ERC, Vice-Chair">Vice-Chair</option>
+				<option value="ERC, Secretary">Secretary</option>
+				<!--<option value="ERC, Secretary Administrative Assistant">Secretary Administrative Assistant</option>-->
+				<option value="ERC, Member">Member</option>
+				<!--<option value="ERC, External Member">External Member</option>-->
 			</select>
 		</td>
 	</tr>
 	<!-- End of management of the ERC Status -->
-
-<!--	
-    <tr valign="top" id="proposalTypeField">
-    	<td width="20%" class="label">{fieldLabel name="proposalType" required="false" key="proposal.proposalType"}</td>
-        <td width="80%" class="value">
-            <select name="proposalType[{$formLocale|escape}][]"  multiple="multiple" size="7" id="proposalType" class="selectMenu">
-
-                <option value="PNHS"></option>
-                    {foreach from=$proposalTypes key=id item=ptype}
-                        {if $ptype.code != "PNHS"}
-                            {assign var="isSelected" value=false}
-                            {foreach from=$proposalType[$formLocale] key=i item=selectedTypes}
-                                {if $proposalType[$formLocale][$i] == $ptype.code}
-                                    {assign var="isSelected" value=true}
-                                {/if}
-                            {/foreach}
-                            <option value="{$ptype.code}" {if $isSelected==true}selected="selected"{/if} >{$ptype.name}</option>
-                        {/if}
-                    {/foreach}
-            </select>
-        </td>
-    </tr>
-    <tr valign="top" id="otherProposalTypeField" style="display: none;">
-        <td width="20%" class="label">&nbsp;</td>
-        <td width="80%" class="value">
-            <span style="font-style: italic;">Specify "other" proposal type</span>&nbsp;&nbsp;
-            <input type="text" name="otherProposalType" id="otherProposalType" size="20" {if $otherProposalType}value="{$otherProposalType}"{/if} />
-        </td>
-    </tr>	
--->	
 	
 	</table>
 	<script type="text/javascript">
@@ -368,136 +453,158 @@ function showOrHideButtons() {ldelim}
 {/if}
 
 <!-- Added by EL on April 25, 2012: Management of the ERC Status -->
-<p id="chairErrorMessage"><font color=#FF0000>
-<strong>ATTENTION :</strong><br />
-An ERC Chair is already set in the Data-Base:<br />
+<p id="nothingSelected" style="display: none;"><font color=#FF0000>
+Please select a type of enrollement<br/>
 </font>
-{foreach from=$chair item=chair}
-{$chair->getFullName()|escape}<br />
+</p>
+<p id="noEthicsCommitteeSelected" style="display: none;"><font color=#FF0000>
+Please select an Ethics Committee<br/>
+</font>
+</p>
+<p id="noMemberStatusSelected" style="display: none;"><font color=#FF0000>
+Please select an Ethics Committee Status<br/>
+</font>
+</p>
+<p id="uhsChairErrorMessage" style="display: none;"><font color=#FF0000>
+<strong>ATTENTION :</strong><br />
+A Chair is already set into the UHS Ethics Committee:<br />
+</font>
+{foreach from=$uhsChair item=uhsChair}
+{$uhsChair->getFullName()|escape}<br />
 {/foreach}
 <font color=#FF0000>
 Please unenroll him/her before enrolling someone else.
 </font></p>
-
-<p id="viceChairErrorMessage"><font color=#FF0000>
+<p id="uhsViceChairErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-An ERC Vice-Chair is already set in the Data-Base:<br />
+A Vice-Chair is already set into the UHS Ethics Committee:<br />
 </font>
-{foreach from=$viceChair item=viceChair}
-{$viceChair->getFullName()|escape}<br />
+{foreach from=$uhsViceChair item=uhsViceChair}
+{$uhsViceChair->getFullName()|escape}<br />
 {/foreach}
 <font color=#FF0000>
 Please unenroll him/her before enrolling someone else.
 </font></p>
-
-<p id="secretaryErrorMessage"><font color=#FF0000>
+<p id="niophChairErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-An ERC Secretary is already set in the Data-Base:<br />
+A Chair is already set into the NIOPH Ethics Committee:<br />
 </font>
-{foreach from=$secretary item=secretary}
-{$secretary->getFullName()|escape}<br />
+{foreach from=$niophChair item=niophChair}
+{$niophChair->getFullName()|escape}<br />
 {/foreach}
 <font color=#FF0000>
 Please unenroll him/her before enrolling someone else.
 </font></p>
-
-<p id="secretaryAAErrorMessage"><font color=#FF0000>
+<p id="niophViceChairErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-An ERC Secretary Administrative Assistant is already set in the Data-Base:<br />
+A Vice-Chair is already set into the NIOPH Ethics Committee:<br />
 </font>
-{foreach from=$secretaryAA item=secretaryAA}
-{$secretaryAA->getFullName()|escape}<br />
+{foreach from=$niophViceChair item=niophViceChair}
+{$niophViceChair->getFullName()|escape}<br />
 {/foreach}
 <font color=#FF0000>
 Please unenroll him/her before enrolling someone else.
 </font></p>
-
-<p id="membersErrorMessage"><font color=#FF0000>
+<p id="uhsSecretaryErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-Too many ERC members are already set in the Data-Base:<br />
+Too many Secretaries are set in the UHS Ethics Committee:<br />
 </font>
-{foreach from=$members item=members}
-{$members->getFullName()|escape}<br />
+{foreach from=$uhsSecretary item=uhsSecretary}
+{$uhsSecretary->getFullName()|escape}<br />
 {/foreach}
 <font color=#FF0000>
 Please unenroll at least one before enrolling someone else.
 </font></p>
-
-<p id="extMembersErrorMessage"><font color=#FF0000>
+<p id="niophSecretaryErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-Too many ERC external members are already set in the Data-Base:<br />
+Too many Secretaries are set in the NIOPH Ethics Committee:<br />
 </font>
-{foreach from=$extMembers item=extMembers}
-{$extMembers->getFullName()|escape}<br />
+{foreach from=$niophSecretary item=niophSecretary}
+{$niophSecretary->getFullName()|escape}<br />
 {/foreach}
 <font color=#FF0000>
 Please unenroll at least one before enrolling someone else.
 </font></p>
-
-<p id="chairTooManySelected"><font color=#FF0000>
+<p id="uhsMembersErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-Only one member can be the Chairperson of the Committee.<br />
-Please select only one user.
+Too many ERC members are set in the UHS Ethics Committee:<br />
+</font>
+{foreach from=$uhsMembers item=uhsMembers}
+{$uhsMembers->getFullName()|escape}<br />
+{/foreach}
+<font color=#FF0000>
+Please unenroll at least one before enrolling someone else.
 </font></p>
-
-<p id="viceChairTooManySelected"><font color=#FF0000>
+<p id="niophMembersErrorMessage" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-Only one member can be the Vice-Chairperson of the Committee.<br />
-Please select only one user.
+Too many ERC members are set in the NIOPH Ethics Committee:<br />
+</font>
+{foreach from=$niophMembers item=niophMembers}
+{$niophMembers->getFullName()|escape}<br />
+{/foreach}
+<font color=#FF0000>
+Please unenroll at least one before enrolling someone else.
 </font></p>
-
-<p id="secretaryTooManySelected"><font color=#FF0000>
-<strong>ATTENTION :</strong><br />
-Only one member can be the Secretary of the Committee.<br />
-Please select only one user.
-</font></p>
-
-<p id="secretaryAATooManySelected"><font color=#FF0000>
-<strong>ATTENTION :</strong><br />
-Only one person can be the Secretary Administrative Assistant of the Committee.<br />
-Please select only one user.
-</font></p>
-
-<p id="membersTooManySelected"><font color=#FF0000>
+<p id="tooManySelected" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
 Too many users selected.<br />
-Only {$freeMemberPlaces} place(s) available.
+Only 1 place available.
 </font></p>
-
-<p id="placesAvailableForMember"><font color=#1e7fb8>
-ERC Member: {$freeMemberPlaces} place(s) available.<br />
-</font></p>
-
-<p id="extMembersTooManySelected"><font color=#FF0000>
+<p id="uhsSecretaryTooManySelected" style="display: none;"><font color=#FF0000>
 <strong>ATTENTION :</strong><br />
-Too many users selected.<br />
-Only {$freeExtMemberPlaces} place(s) available.
+Too many secretaries selected for the UHS Ethics Committee.<br />
+Only {$freeUhsSecretaryPlaces} place(s) available.
 </font></p>
-
-<p id="placesAvailableForExtMember"><font color=#1e7fb8>
-ERC External Member: {$freeExtMemberPlaces} place(s) available.
+<p id="niophSecretaryTooManySelected" style="display: none;"><font color=#FF0000>
+<strong>ATTENTION :</strong><br />
+Too many secretaries selected for the NIOPH Ethics Committee.<br />
+Only {$freeNiophSecretaryPlaces} place(s) available.
+</font></p>
+<p id="uhsMembersTooManySelected" style="display: none;"><font color=#FF0000>
+<strong>ATTENTION :</strong><br />
+Too many members selected for the UHS Ethics Committee.<br />
+Only {$freeUhsMemberPlaces} place(s) available.
+</font></p>
+<p id="niophMembersTooManySelected" style="display: none;"><font color=#FF0000>
+<strong>ATTENTION :</strong><br />
+Too many members selected for the NIOPH Ethics Committee.<br />
+Only {$freeNiophMemberPlaces} place(s) available.
+</font></p>
+<p id="placesAvailableForUhsMember" style="display: none;"><font color=#1e7fb8>
+UHS-ERC Member: {$freeUhsMemberPlaces} place(s) available.<br />
+</font></p>
+<p id="placesAvailableForNiophMember" style="display: none;"><font color=#1e7fb8>
+NIOPH-ERC Member: {$freeNiophMemberPlaces} place(s) available.<br />
+</font></p>
+<p id="placesAvailableForUhsSecretary" style="display: none;"><font color=#1e7fb8>
+UHS-ERC Secretary: {$freeUhsSecretaryPlaces} place(s) available.<br />
+</font></p>
+<p id="placesAvailableForNiophSecretary" style="display: none;"><font color=#1e7fb8>
+NIOPH-ERC Secretary: {$freeNiophSecretaryPlaces} place(s) available.<br />
 </font></p>
 <!-- End of management of the ERC Status -->
 
 
 <div id="users">
 <table width="100%" class="listing">
-<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
+<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 <tr class="heading" valign="bottom">
 	<td width="5%">&nbsp;</td>
-	<td width="25%">{sort_heading key="user.username" sort="username"}</td>
-	<td width="30%">{sort_heading key="user.name" sort="name"}</td>
+	<td width="10%">{sort_heading key="user.username" sort="username"}</td>
+	<td width="10%">{sort_heading key="user.name" sort="name"}</td>
+	<td width="35%">Function(s)</td>
 	<td width="10%">{sort_heading key="user.email" sort="email"}</td>
 	<td width="10%" align="right">{translate key="common.disableEnable"}</td>
 </tr>
-<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
+<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 {iterate from=users item=user}
 {assign var="userid" value=$user->getId()}
 {assign var="stats" value=$statistics[$userid]}
 <tr valign="top">
 	<td><input type="checkbox" name="users[]" value="{$user->getId()}" onclick="showOrHideButtons()" /></td>
 	<td><a class="action" href="{url op="userProfile" path=$userid}">{$user->getUsername()|escape}</a></td>
-	<td>{$user->getFullName(true)|escape}</td>
+	<td>{$user->getFullName()|escape}</td>
+	<td>{$user->getFunctions()|escape}</td>
 	<td class="nowrap">
 		{assign var=emailString value=$user->getFullName()|concat:" <":$user->getEmail():">"}
 		{url|assign:"url" page="user" op="email" to=$emailString|to_array}
@@ -512,6 +619,7 @@ ERC External Member: {$freeExtMemberPlaces} place(s) available.
 		<a href="#" onclick="enrollUser({$user->getId()})" class="action">{translate key="manager.people.enroll"}</a>
 		{/if}
 		-->
+		<a href="{url op="editUser" path=$user->getId()}" class="action">{translate key="common.edit"}</a>
 		{if $thisUser->getId() != $user->getId()}
 			{if $user->getDisabled()}
 				|&nbsp;<a href="{url op="enableUser" path=$user->getId()}" class="action">{translate key="manager.people.enable"}</a>
@@ -521,13 +629,13 @@ ERC External Member: {$freeExtMemberPlaces} place(s) available.
 		{/if}
 	</td>
 </tr>
-<tr><td colspan="5" class="{if $users->eof()}end{/if}separator">&nbsp;</td></tr>
+<tr><td colspan="6" class="{if $users->eof()}end{/if}separator">&nbsp;</td></tr>
 {/iterate}
 {if $users->wasEmpty()}
 	<tr>
-	<td colspan="5" class="nodata">{translate key="common.none"}</td>
+	<td colspan="6" class="nodata">{translate key="common.none"}</td>
 	</tr>
-	<tr><td colspan="5" class="endseparator">&nbsp;</td></tr>
+	<tr><td colspan="6" class="endseparator">&nbsp;</td></tr>
 {else}
 	<tr>
 		<td colspan="3" align="left">{page_info iterator=$users}</td>
@@ -537,7 +645,7 @@ ERC External Member: {$freeExtMemberPlaces} place(s) available.
 </table>
 </div>
 
-<input type="submit" id="submit" value="{translate key="manager.people.enrollSelected"}" class="button defaultButton" /> 
+<input type="submit" id="submit" value="{translate key="manager.people.enrollSelected"}" class="button defaultButton" style="display: none;" /> 
 <!-- Comment out by EL on April 25, 2012: Too hazardous -->
 <!-- <input type="button" id="selectAll" value="{translate key="common.selectAll"}" class="button" onclick="toggleChecked()" /> -->
 <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="manager" escape=false}'" />

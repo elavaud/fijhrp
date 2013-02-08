@@ -18,11 +18,15 @@
 	<li{if ($pageToDisplay == "submissionsInReview")} class="current"{/if}><a href="{url path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
 	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
-
+<ul class="plain">
+<li align="right"><a href="{url op="sendEmailERCMembers"}">Send an email to all members</a></li>
+</ul>
 <form action="#">
+<br />
+<!--
 <ul class="filter">
 	<li>{translate key="editor.submissions.inSection"}: <select name="filterSection" onchange="location.href='{url|escape:"javascript" path=$pageToDisplay searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth dateSearchField=$dateSearchField filterSection="SECTION_ID" escape=false}'.replace('SECTION_ID', this.options[this.selectedIndex].value)" size="1" class="selectMenu">{html_options options=$sectionOptions selected=$filterSection}</select></li>
-</ul>
+</ul>-->
 </form>
 
 {if !$dateFrom}
@@ -72,6 +76,7 @@ function sortSearch(heading, direction) {
 	
 	<!-- Allows filtering by technical unit and country -->
 	<!-- Added by: igm 9/24/2011                        -->
+	<!--
 	<h5>Filter by</h5>
 	<select name="technicalUnitField" id="technicalUnit" class="selectMenu">
 		<option value="">All Technical Units</option>
@@ -80,7 +85,7 @@ function sortSearch(heading, direction) {
 	<select name="countryField" id="country" class="selectMenu">
 		<option value="">All Countries</option>
 		{html_options options=$countries selected=$countryField}
-    </select>
+    </select>-->
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>

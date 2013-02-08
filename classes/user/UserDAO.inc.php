@@ -128,6 +128,12 @@ class UserDAO extends PKPUserDAO {
 		$this->flushCache();
 		return $userId;
 	}
+	
+	function deleteExternalReviewer($userId, $locale) {	
+		$this->update('DELETE FROM user_settings WHERE user_id = '.$userId.' AND setting_name = "externalReviewer"');
+		$this->flushCache();
+		return $userId;
+	}
 }
 
 ?>

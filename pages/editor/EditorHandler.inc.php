@@ -67,12 +67,11 @@ class EditorHandler extends SectionEditorHandler {
          *********************************************************************/
 		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
 		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $countries =& $countryDAO->getAsiaPacificCountries();
+        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        $countries =& $countryDAO->getRegionsOfPhilippines();
        
 		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
-        $templateMgr->assign_by_ref('countries', $countries);
-		
+        $templateMgr->assign_by_ref('countries', $countries);		
 		
 		// Bring in the print_issue_id function (FIXME?)
 		import('classes.issue.IssueAction');
@@ -222,11 +221,9 @@ class EditorHandler extends SectionEditorHandler {
 		
 		
 		/**
-		 * Get user's search conditions for technical unit and RTO
-		 * Added by: Ayvee Mallare
-		 * Last Updated: Sept 28, 2011
+		 * Get user's search conditions for research field and regions
 		 */
-		$technicalUnitField = Request::getUserVar('technicalUnitField');
+		$researchFieldField = Request::getUserVar('researchFieldField');
 		$countryField = Request::getUserVar('countryField');
 
 		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
@@ -285,19 +282,19 @@ class EditorHandler extends SectionEditorHandler {
 		//workaround for multiple use of iterator in one page 3/21/2012
 		$submissions =& $editorSubmissionDao->$functionName(
 			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
-			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+			$toDate,$researchFieldField,$countryField,$rangeInfo,$sort,$sortDirection);
 		$submissions1 =& $editorSubmissionDao->$functionName(
 			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
-			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+			$toDate,$researchFieldField,$countryField,$rangeInfo,$sort,$sortDirection);
 		$submissions2 =& $editorSubmissionDao->$functionName(
 			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
-			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+			$toDate,$researchFieldField,$countryField,$rangeInfo,$sort,$sortDirection);
 		$submissions3 =& $editorSubmissionDao->$functionName(
 			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
-			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+			$toDate,$researchFieldField,$countryField,$rangeInfo,$sort,$sortDirection);
 		$submissions4 =& $editorSubmissionDao->$functionName(
 			$journalId,$filterSection,$editorId,$searchField,$searchMatch,$search,$dateSearchField,$fromDate,
-			$toDate,$technicalUnitField,$countryField,$rangeInfo,$sort,$sortDirection);
+			$toDate,$researchFieldField,$countryField,$rangeInfo,$sort,$sortDirection);
 		
 
 		$templateMgr =& TemplateManager::getManager();
@@ -325,18 +322,16 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('dateFieldOptions', $this->getDateFieldOptions());
 		
 		/*********************************************************************
-		 * Get list of WHO technical units from the XML file and get all countries
-		 * Added by:  Ayvee Mallare
-		 * Last Updated: Oct 8, 2011
+		 * Get list of all research fields from the XML file and get all regions
          *********************************************************************/
-		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('AsiaPacificCountryDAO');
-        $countries =& $countryDAO->getAsiaPacificCountries();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$researchFields =& $articleDao->getResearchFields();
+		
+        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        $countries =& $countryDAO->getRegionsOfPhilippines();
        
-		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
+		$templateMgr->assign_by_ref('researchFields', $researchFields);
         $templateMgr->assign_by_ref('countries', $countries);
-        
 
 		import('classes.issue.IssueAction');
 		$issueAction = new IssueAction();
@@ -345,8 +340,8 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('helpTopicId', $helpTopicId);
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
-		// Added by igm 9/28/11
-		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+
+		$templateMgr->assign('researchFieldField', $researchFieldField);
 		$templateMgr->assign('countryField', $countryField);
 		
 		$templateMgr->display('editor/submissions.tpl');
@@ -375,11 +370,12 @@ class EditorHandler extends SectionEditorHandler {
 		return array(
 			SUBMISSION_FIELD_TITLE => 'article.title',
 			SUBMISSION_FIELD_AUTHOR => 'user.role.author',
-			SUBMISSION_FIELD_EDITOR => 'user.role.editor',
-			SUBMISSION_FIELD_REVIEWER => 'user.role.reviewer',
-			SUBMISSION_FIELD_COPYEDITOR => 'user.role.copyeditor',
-			SUBMISSION_FIELD_LAYOUTEDITOR => 'user.role.layoutEditor',
-			SUBMISSION_FIELD_PROOFREADER => 'user.role.proofreader'
+			SUBMISSION_FIELD_ID => 'article.submissionId'
+			//SUBMISSION_FIELD_EDITOR => 'user.role.editor',
+			//SUBMISSION_FIELD_REVIEWER => 'user.role.reviewer',
+			//SUBMISSION_FIELD_COPYEDITOR => 'user.role.copyeditor',
+			//SUBMISSION_FIELD_LAYOUTEDITOR => 'user.role.layoutEditor',
+			//SUBMISSION_FIELD_PROOFREADER => 'user.role.proofreader'
 		);
 	}
 
@@ -390,9 +386,10 @@ class EditorHandler extends SectionEditorHandler {
 	function getDateFieldOptions() {
 		return array(
 			SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
-			SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE => 'submissions.copyeditComplete',
-			SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
-			SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
+			//SUBMISSION_FIELD_DATE_COPYEDIT_COMPLETE => 'submissions.copyeditComplete',
+			//SUBMISSION_FIELD_DATE_LAYOUT_COMPLETE => 'submissions.layoutComplete',
+			//SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
+			SUBMISSION_FIELD_DATE_APPROVED => 'submissions.dateApproved'
 		);
 	}
 	
@@ -588,8 +585,8 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr =& TemplateManager::getManager();
 
 		if ($level==EDITOR_SECTION_HOME) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'));
-		else if ($level==EDITOR_SECTION_SUBMISSIONS) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'editor'), 'user.role.editor'), array(Request::url(null, 'editor', 'submissions'), 'article.submissions'));
-		else if ($level==EDITOR_SECTION_ISSUES) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $isLayoutEditor?'layoutEditor':'editor'), $isLayoutEditor?'user.role.layoutEditor':'user.role.editor'), array(Request::url(null, $isLayoutEditor?'layoutEditor':'editor', 'futureIssues'), 'issue.issues'));
+		else if ($level==EDITOR_SECTION_SUBMISSIONS) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'editor'), 'user.role.coordinator'), array(Request::url(null, 'editor', 'submissions'), 'article.submissions'));
+		else if ($level==EDITOR_SECTION_ISSUES) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $isLayoutEditor?'layoutEditor':'editor'), $isLayoutEditor?'user.role.layoutEditor':'user.role.coordinator'), array(Request::url(null, $isLayoutEditor?'layoutEditor':'editor', 'futureIssues'), 'issue.issues'));
 
 		import('classes.submission.sectionEditor.SectionEditorAction');
 		$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, 'editor');

@@ -13,13 +13,13 @@
 {include file="common/header.tpl"}
 {/strip}
 
-
+<!--
 {if $isSiteAdmin}
 	{assign var="hasRole" value=1}
 	&#187; <a href="{url journal="index" page=$isSiteAdmin->getRolePath()}">{translate key=$isSiteAdmin->getRoleName()}</a>
 	{call_hook name="Templates::User::Index::Site"}
 {/if}
-
+-->
 
 <div id="myJournals">
 {if !$currentJournal}<h3>{translate key="user.myJournals"}</h3>{/if}
@@ -38,7 +38,9 @@
 				<td></td>
 				<td></td>
 				<td></td>
+				<!--
 				<td align="right">{if $setupIncomplete.$journalId}[<a href="{url journal=$journalPath page="manager" op="setup" path="1"}">{translate key="manager.setup"}</a>]{/if}</td>
+				-->
 			</tr>
 		{/if}
 		{if $isValid.SubscriptionManager.$journalId}
@@ -53,44 +55,31 @@
 		{if $isValid.Editor.$journalId}
 			<tr>
 				{assign var="editorSubmissionsCount" value=$submissionsCount.Editor.$journalId}
-				<td>&#187; <a href="{url journal=$journalPath page="editor"}">{translate key="user.role.editor"}</a></td>
-				<td>{if $editorSubmissionsCount[0]}
-						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsUnassigned"}">{$editorSubmissionsCount[0]} {translate key="common.queue.short.submissionsUnassigned"}</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsUnassigned"}</span>{/if}
+				<td>&#187; <a href="{url journal=$journalPath page="editor"}">{$user->getSecretaryEthicsCommittee()} {translate key="user.role.coordinator"}</a></td>
+				<td></td>
+				<td align="center"><a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInReview"}">Proposals</a>
 				</td>
-				<td>{if $editorSubmissionsCount[1]}
-						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInReview"}">{$editorSubmissionsCount[1]} {translate key="common.queue.short.submissionsInReview"}</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
-				</td>				
-{** - Commented out - spf - 1 Dec 2011
-<td>
-					{if $editorSubmissionsCount[2]} 
- 						<a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInEditing"}">
-{$editorSubmissionsCount[2]} {translate key="common.queue.short.submissionsInEditing"}</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInEditing"}</span>{/if}
-				</td>
-*}
-{** - Create Issue - Commented out - spf 1 Dec 2011				 
-				<td align="right">[<a href="{url journal=$journalPath page="editor" op="createIssue"}">{translate key="editor.issues.createIssue"}</a>] [<a href="{url journal=$journalPath page="editor" op="notifyUsers"}">{translate key="editor.notifyUsers"}</a>]</td>
-*}			</tr>
+				<td align="left"><a href="{url journal=$journalPath page="editor" op="submissionsReport"}">Report Generator</a></td>
+			</tr>
 		{/if} 
-{** Commented out - spf - 1 Dec 2011
 		{if $isValid.SectionEditor.$journalId}
 			{assign var="sectionEditorSubmissionsCount" value=$submissionsCount.SectionEditor.$journalId}
 			<tr>
-				<td>&#187; <a href="{url journal=$journalPath page="sectionEditor"}">{translate key="user.role.sectionEditor"}</a></td>
+				<td>&#187; <a href="{url journal=$journalPath page="sectionEditor"}">{$user->getSecretaryEthicsCommittee()} {translate key="user.role.sectionEditor"}</a></td>
 				<td></td>
-				<td>{if $sectionEditorSubmissionsCount[0]}
-						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsInReview"}">{$sectionEditorSubmissionsCount[0]} {translate key="common.queue.short.submissionsInReview"}</a>
+				<td align="center">{if $sectionEditorSubmissionsCount[0]}
+						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"} ({$sectionEditorSubmissionsCount[0]})</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
 				</td>
+				<td align="left"><a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsArchives"}">{translate key="common.queue.short.completed"}</a></td>
+				<!--
 				<td>{if $sectionEditorSubmissionsCount[1]}
 						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsInEditing"}">{$sectionEditorSubmissionsCount[1]} {translate key="common.queue.short.submissionsInEditing"}</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInEditing"}</span>{/if}
-				</td>
+				</td>-->
 				<td align="right"></td>
 			</tr>
-		{/if} *}
+		{/if}
 		{if $isValid.LayoutEditor.$journalId}
 			{assign var="layoutEditorSubmissionsCount" value=$submissionsCount.LayoutEditor.$journalId}
 			<tr>
@@ -138,34 +127,65 @@
 			<tr>
 				<td>&#187; <a href="{url journal=$journalPath page="author"}">{translate key="user.role.author"}</a></td>
 				<td></td>
-				<td></td>
-				<td>{if $authorSubmissionsCount[0]}
-						<a href="{url journal=$journalPath page="author"}">{$authorSubmissionsCount[0]} {translate key="common.queue.short.active"}</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.active"}</span>{/if}
+				<td align="center">
+					{if $authorSubmissionsCount[0]}
+						<a href="{url journal=$journalPath page="author"}">{translate key="common.queue.short.active"} ({$authorSubmissionsCount[0]})</a> {* EL on August 18, 2012 *}
+					{else}
+						<span class="disabled">{translate key="common.queue.short.active"} (0)</span>
+					{/if}
+				</td>
+				<td align="left">{* EL on August 18, 2012 *}
+					{if $authorSubmissionsCount[1]}
+						<a href="{url journal=$journalPath page="author" path="completed"}">{translate key="common.queue.short.completed"} ({$authorSubmissionsCount[1]})</a> 
+					{else}
+						<span class="disabled">{translate key="common.queue.short.completed"} (0)</span>
+					{/if}
 				</td>
 				<td align="right">[<a href="{url journal=$journalPath page="author" op="submit"}">{translate key="author.submit"}</a>]</td>
 			</tr>
 		{/if}
 		{if $isValid.Reviewer.$journalId}
+			{if (($user->isNiophMember() == true) && ($user->isUhsMember() == true))} {assign var="ERC" value="NIOPH & UHS"}
+			{elseif $user->isNiophMember() == true} {assign var="ERC" value="NIOPH"}
+			{elseif $user->isUhsMember() == true} {assign var="ERC" value="UHS"}
+			{else} {assign var="ERC" value="External"} {/if}
+			
 			{assign var="reviewerSubmissionsCount" value=$submissionsCount.Reviewer.$journalId}
 			<tr>
-				<td>&#187; <a href="{url journal=$journalPath page="reviewer"}">{translate key="user.role.reviewer"}</a></td>
-				<td></td>
-				<td></td>
-				<td>{if $reviewerSubmissionsCount[0]}
-						<a href="{url journal=$journalPath page="reviewer"}">{$reviewerSubmissionsCount[0]} {translate key="common.queue.short.active"}</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.active"}</span>{/if}
+				<td colspan="2">&#187; <a href="{url journal=$journalPath page="reviewer"}">{$ERC} {translate key="user.role.reviewer"}</a></td>
+				<td align="right">
+					{if $reviewerSubmissionsCount[0]}
+						<a href="{url journal=$journalPath page="reviewer"}">{translate key="common.queue.short.active"} ({$reviewerSubmissionsCount[0]})</a>
+					{else}
+						<span class="disabled">{translate key="common.queue.short.active"} (0)</span>
+					{/if}
 				</td>
-				<td align="right"></td>
+				<td align="center">
+					{if $reviewerSubmissionsCount[1]}
+					<a href="{url journal=$journalPath page="reviewer" path="completed"}">{translate key="common.queue.short.completed"} ({$reviewerSubmissionsCount[1]})</a>
+					{else}
+						<span class="disabled">{translate key="common.queue.short.completed"} (0)</span>
+					{/if}					
+				</td>
+				<td align="left">
+					{if $reviewerSubmissionsCount[2]}
+						<a href="{url journal=$journalPath page="reviewer" path="fullReview"}">{translate key="common.queue.short.fullReview"} ({$reviewerSubmissionsCount[2]})</a>
+					{else}
+						<span class="disabled">{translate key="common.queue.short.fullReview"} (0)</span>
+					{/if}				
+				</td>
 			</tr>
+		{/if}
+		{if $isValid.Author.$journalId || $isValid.Reviewer.$journalId}
+			<tr><td class="separator" width="100%" colspan="5">&nbsp;</td></tr>
 		{/if}
 		{* Add a row to the bottom of each table to ensure all have same width*}
 		<tr>
-			<td width="25%"></td>
-			<td width="12%"></td>
-			<td width="12%"></td>
-			<td width="12%"></td>
-			<td width="39%"></td>
+			<td width="20%"></td>
+			<td width="20%"></td>
+			<td width="20%"></td>
+			<td width="20%"></td>
+			<td width="20%"></td>
 		</tr>
 			
 	</table>
@@ -192,7 +212,7 @@
 			<li>
 				&#187;
 				{if $allowRegReviewer}
-					{url|assign:"userHomeUrl" page="user" op="whorrp"}
+					{url|assign:"userHomeUrl" page="user" op="philhrp"}
 					<a href="{url op="become" path="reviewer" source=$userHomeUrl}">{translate key="user.noRoles.regReviewer"}</a>
 				{else}{* $allowRegReviewer *}
 					{translate key="user.noRoles.regReviewerClosed"}

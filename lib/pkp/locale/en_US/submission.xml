@@ -337,6 +337,7 @@
 	<message key="submission.page.editing">{$id} Editing</message>
 	<message key="submission.page.history">{$id} History</message>
 	<message key="submission.page.review">{$id} Review</message>
+    <message key="submission.page.fullReview">{$id} Full Review</message>
 	<message key="submission.page.summary">{$id} Summary</message>
 	<message key="submission.page.citations">{$id} Citations</message>
 	<message key="submission.peerReview">Peer&amp;nbsp;Review</message>
@@ -407,7 +408,7 @@
 	<message key="submission.supportingAgencies">Supporting Agencies</message>
 	<message key="submission.currentAgencies">Current Agencies</message>
 	<message key="submission.indexingInformation">Indexing Information</message>
-	<message key="submission.titleAndAbstract">Title and Abstract</message>
+	<message key="submission.titleAndAbstract">Title and summary of proposal</message>
 	<message key="submission.underway">Underway</message>
 	<message key="submission.uploadFileTo">Upload file to</message>
 	<message key="submission.viewMetadata">View Metadata</message>
@@ -419,5 +420,5 @@
 	<message key="submission.fileDetails">File Details</message>
 	<message key="submission.nameRequired">A name is required for this item.</message>
 	<message key="submission.date.mmdd">MM-DD</message>
-	<message key="submission.date.yyyymmdd">YYYY-MM-DD</message>
+	<message key="submission.date.yyyymmdd">Date of submission</message>
 </locale>

@@ -19,74 +19,194 @@
 
 <h3>Proposal Details</h3>
 <table class="listing" width="100%">
-    <tr>
+    <tr valign="top">
         <td colspan="5" class="headseparator">&nbsp;</td>
     </tr>
-    <tr>
-        <td style="width: 30%">WHO ID:</td>
-        <td style="width: 70%">{$article->getLocalizedWhoId()}</td>
+{foreach name=authors from=$article->getAuthors() item=author}
+	<tr valign="top">
+        <td class="label">{if $author->getPrimaryContact()}Investigator{else}Co-Investigator{/if}</td>
+        <td class="value">
+			{$author->getFullName()|escape}<br />
+			{$author->getEmail()|escape}<br />
+			{if ($author->getLocalizedAffiliation()) != ""}{$author->getLocalizedAffiliation()|escape}<br/>{/if}
+			{if $author->getPrimaryContact()}{$article->getLocalizedAuthorPhoneNumber()}
+			{else}
+			{if ($author->getUrl()) != ""}{$author->getUrl()|escape}<br />{/if}
+			{/if}
+        </td>
     </tr>
+{/foreach}
     <tr valign="top">
-        <td class="label">{translate key="proposal.title"}</td>
+        <td class="label" width="20%">{translate key="proposal.scientificTitle"}</td>
         <td class="value">{$article->getLocalizedTitle()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.abstract"}</td>
+        <td class="label" width="20%">{translate key="proposal.publicTitle"}</td>
+        <td class="value">{$article->getLocalizedPublicTitle()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.studentInitiatedResearch"}</td>
+        <td class="value">{$article->getLocalizedStudentInitiatedResearch()}</td>
+    </tr>
+    {if ($article->getLocalizedStudentInitiatedResearch()) == "Yes"}
+    <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">{translate key="proposal.studentInstitution"} {$article->getLocalizedStudentInstitution()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">{translate key="proposal.academicDegree"} {$article->getLocalizedAcademicDegree()}</td>
+    </tr>  
+    {/if}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.abstract"}</td>
         <td class="value">{$article->getLocalizedAbstract()}</td>
     </tr>
+    
     <tr valign="top">
-        <td class="label">{translate key="proposal.objectives"}</td>
-        <td class="value">{$article->getLocalizedObjectives()}</td>
-    </tr>
-    <tr valign="top">
-        <td class="label">{translate key="proposal.keywords"}</td>
+        <td class="label" width="20%">{translate key="proposal.keywords"}</td>
         <td class="value">{$article->getLocalizedKeywords()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.startDate"}</td>
+        <td class="label" width="20%">{translate key="proposal.startDate"}</td>
         <td class="value">{$article->getLocalizedStartDate()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.endDate"}</td>
+        <td class="label" width="20%">{translate key="proposal.endDate"}</td>
         <td class="value">{$article->getLocalizedEndDate()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.fundsRequired"}</td>
-        <td class="value">{$article->getLocalizedFundsRequired()}</td>
+        <td class="label" width="20%">{translate key="proposal.fundsRequired"}</td>
+        <td class="value">{$article->getLocalizedFundsRequired()} {$article->getLocalizedSelectedCurrency()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.proposalCountry"}</td>
+        <td class="label" width="20%">{translate key="proposal.primarySponsor"}</td>
+        <td class="value">
+        	{if $article->getLocalizedPrimarySponsor()}
+        		{$article->getLocalizedPrimarySponsorText()}
+        	{/if}
+        </td>
+    </tr>
+    {if $article->getLocalizedSecondarySponsors()}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.secondarySponsors"}</td>
+        <td class="value">
+        	{if $article->getLocalizedSecondarySponsors()}
+        		{$article->getLocalizedSecondarySponsorText()}
+        	{/if}        
+        </td>
+    </tr>
+    {/if}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.nationwide"}</td>
+        <td class="value">{$article->getLocalizedNationwide()}</td>
+    </tr>
+    {if ($article->getLocalizedNationwide() == "No") || ($article->getLocalizedNationwide() == "Yes, with randomly selected regions")}
+    <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
         <td class="value">{$article->getLocalizedProposalCountryText()}</td>
     </tr>
+    {/if}
+
     <tr valign="top">
-        <td class="label">{translate key="proposal.technicalUnit"}</td>
-        <td class="value">{$article->getLocalizedTechnicalUnitText()}</td>
+        <td class="label" width="20%">{translate key="proposal.multiCountryResearch"}</td>
+        <td class="value">{$article->getLocalizedMultiCountryResearch()}</td>
     </tr>
+	{if ($article->getLocalizedMultiCountryResearch()) == "Yes"}
+	<tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">{$article->getLocalizedMultiCountryText()}</td>
+    </tr>
+	{/if}
     <tr valign="top">
-        <td class="label">{translate key="proposal.withHumanSubjects"}</td>
+        <td class="label" width="20%">{translate key="proposal.withHumanSubjects"}</td>
         <td class="value">{$article->getLocalizedWithHumanSubjects()}</td>
     </tr>
+    {if ($article->getLocalizedWithHumanSubjects()) == "Yes"}
     <tr valign="top">
-        <td class="label">{translate key="proposal.proposalType"}</td>
-        <td class="value">{$article->getLocalizedProposalTypeText()}</td>
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">
+        	{if ($article->getLocalizedProposalType())}
+        		{$article->getLocalizedProposalTypeText()}
+        	{/if}      
+        </td>
+    </tr>
+    {/if}
+    
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.researchField"}</td>
+        <td class="value">
+        	{if $article->getLocalizedResearchField()}
+        		{$article->getLocalizedResearchFieldText()}
+        	{/if}
+        </td>
+    </tr>
+     <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.dataCollection"}</td>
+        <td class="value">{$article->getLocalizedDataCollection()}</td>
+    </tr>   
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.reviewedByOtherErc"}</td>
+        <td class="value">{$article->getLocalizedReviewedByOtherErc()}{if $article->getLocalizedOtherErcDecision() != 'NA'}({$article->getLocalizedOtherErcDecision()}){/if}</td>
+    </tr>
+
+	<tr><td colspan="2"><br/><h4>Source(s) of monetary or material support</h4></td></tr>
+    
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.industryGrant"}</td>
+        <td class="value">{$article->getLocalizedIndustryGrant()}</td>
+    </tr>
+    {if ($article->getLocalizedIndustryGrant()) == "Yes"}
+     <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">{$article->getLocalizedNameOfIndustry()}</td>
+    </tr>   
+    {/if}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.internationalGrant"}</td>
+        <td class="value">{$article->getLocalizedInternationalGrant()}</td>
+    </tr>
+    {if ($article->getLocalizedInternationalGrant()) == "Yes"}
+     <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">
+        	{if $article->getLocalizedInternationalGrantName()}
+        		{$article->getLocalizedInternationalGrantNameText()} 
+        	{/if}
+        </td>
+    </tr>     
+    {/if}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.mohGrant"}</td>
+        <td class="value">{$article->getLocalizedMohGrant()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.submittedAsPi"}</td>
-        <td class="value">{$article->getLocalizedSubmittedAsPi()}</td>
+        <td class="label" width="20%">{translate key="proposal.governmentGrant"}</td>
+        <td class="value">{$article->getLocalizedGovernmentGrant()}</td>
+    </tr>
+    {if ($article->getLocalizedGovernmentGrant()) == "Yes"}
+     <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">{$article->getLocalizedGovernmentGrantName()}</td>
+    </tr>     
+    {/if}
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.universityGrant"}</td>
+        <td class="value">{$article->getLocalizedUniversityGrant()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.conflictOfInterest"}</td>
-        <td class="value">{$article->getLocalizedConflictOfInterest()}</td>
+        <td class="label" width="20%">{translate key="proposal.selfFunding"}</td>
+        <td class="value">{$article->getLocalizedSelfFunding()}</td>
     </tr>
     <tr valign="top">
-        <td class="label">{translate key="proposal.reviewedByOtherErc"}</td>
-        <td class="value">{$article->getLocalizedReviewedByOtherErc()}</td>
+        <td class="label" width="20%">{translate key="proposal.otherGrant"}</td>
+        <td class="value">{$article->getLocalizedOtherGrant()}</td>
     </tr>
-    {if $article->getLocalizedOtherErcDecision() != 'NA'}
-    <tr valign="top">
-        <td class="label">{translate key="proposal.otherErcDecision"}</td>
-        <td class="value">{$article->getLocalizedOtherErcDecision()}</td>
-    </tr>
+    {if ($article->getLocalizedOtherGrant()) == "Yes"}
+     <tr valign="top">
+        <td class="label" width="20%">&nbsp;</td>
+        <td class="value">{$article->getLocalizedSpecifyOtherGrant()}</td>
+    </tr>    
     {/if}
 </table>
 <div class="separator"></div>
@@ -128,7 +248,7 @@
 <div class="separator"></div>
 
 <br />
-
+<!--
 {if $canExpedite}
 	{url|assign:"expediteUrl" op="expediteSubmission" articleId=$articleId}
 	{translate key="author.submit.expedite" expediteUrl=$expediteUrl}
@@ -136,7 +256,7 @@
 {if $paymentButtonsTemplate }
 	{include file=$paymentButtonsTemplate orientation="vertical"}
 {/if}
-
+-->
 
 <p>&#187; <a href="{url op="index"}">{translate key="author.track"}</a></p>
 

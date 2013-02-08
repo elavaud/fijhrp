@@ -79,6 +79,29 @@ class ArticleFileDAO extends DAO {
 	}
 
 	/**
+	 * Retrieve all previous main files for an article.
+	 * @param $articleId int
+	 * @return array SuppFiles
+	 */
+	function &getPreviousFilesByArticleId($articleId) {
+		$previousFiles = array();
+
+		$result =& $this->retrieve(
+			'SELECT * FROM article_files WHERE article_id = ? AND source_file_id IS NOT NULL ORDER BY date_modified DESC',
+			$articleId
+		);
+
+		while (!$result->EOF) {
+			$previousFiles[] =& $this->_returnArticleFileFromRow($result->GetRowAssoc(false));
+			$result->moveNext();
+		}
+
+		$result->Close();
+		unset($result);
+		return $previousFiles;
+	}
+	
+	/**
 	 * Retrieve all revisions of an article file.
 	 * @param $articleId int
 	 * @return ArticleFile

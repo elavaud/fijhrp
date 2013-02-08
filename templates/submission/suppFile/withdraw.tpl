@@ -10,6 +10,22 @@
 {include file="common/header.tpl"}
 {/strip}
 
+{literal}
+<script>
+    function showOrHideOtherReasonField(value) {
+        if (value == "Others") {
+			document.getElementById('otherReasonField').style.display = '';
+			$('#otherReason').val("");
+        } else {
+			document.getElementById('otherReasonField').style.display = 'none';
+			$('#otherReason').val("NA");
+        }
+    }
+
+</script>
+{/literal}
+
+
 <form name="withdrawFile" method="post" action="{url page=$rolePath op="saveWithdrawal"}" enctype="multipart/form-data">
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 <input type="hidden" name="type" value="{$type|escape}" /> <!-- Added by AIM, June 15 2011 -->
@@ -41,22 +57,28 @@
 		<td class="label">Upload Report</td>
 		<td class="value"><input type="file" name="uploadSuppFile" id="uploadSuppFile" class="uploadField" /></td>
 	</tr>
-        <tr valign="top">
+    <tr valign="top">
 		<td class="label">Reason for Withdrawal</td>
 		<td class="value">
-                    <select name="withdrawReason[{$formLocale|escape}]" id="withdrawReason" class="selectMenu">
-                        <option value="">-Select One-</option>
-                        <option value="Lack of Funding">Lack of Funding</option>
-                        <option value="Adverse Event">Adverse Event</option>
-                        <option value="Others">Others</option>
-                    </select>
-                </td>
+        	<select name="withdrawReason[{$formLocale|escape}]" id="withdrawReason" class="selectMenu" onchange="showOrHideOtherReasonField(this.value);">
+            	<option value="">-Select One-</option>
+                <option value="Lack of Funding">Lack of Funding</option>
+                <option value="Adverse Event">Adverse Event</option>
+                <option value="Others">Others</option>
+            </select>
+        </td>
 	</tr>
-        <tr valign="top">
+	<tr valign="top" id="otherReasonField" style="display: none;">
+		<td class="label">&nbsp;</td>
+		<td class="value">Please specify:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="text" class="textField" name="otherReason[{$formLocale|escape}]" id="otherReason" value="NA" size="20" maxlength="40" />
+		</td>
+	</tr>
+    <tr valign="top">
 		<td class="label">Comments</td>
 		<td class="value">
-                    <textarea name="withdrawComments[{$formLocale|escape}]" id="withdrawComments" class="textArea" rows="5" cols="30"></textarea>
-                </td>
+        	<textarea name="withdrawComments[{$formLocale|escape}]" id="withdrawComments" class="textArea" rows="5" cols="30"></textarea>
+        </td>
 	</tr>
 </table>
 </div>

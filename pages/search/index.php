@@ -30,6 +30,8 @@ switch ($op) {
 	case 'results':
 	case 'advancedResults':
 	case 'generateCSV':
+	case 'generateCustomizedCSV':
+	case 'downloadFile':
 	case 'viewProposal':
 		define('HANDLER_CLASS', 'NewSearchHandler');
 		import('pages.search.NewSearchHandler');

@@ -18,7 +18,7 @@
 	<message key="editor.article.clearReviewForm">Clear Review Form</message>
 	<!-- Edited spf 3 March 2012
 	  Replace editor with ERC Secretary -->
-	<message key="editor.home">ERC Secretary Home</message> 
+	<message key="editor.home">Coordinator Home</message> 
 	<message key="editor.article.confirmChangeReviewForm">Warning: Changing the review form will affect any answers reviewers have made using this form. Are you sure you wish to continue?</message>
 	<message key="editor.submissionsAndPublishing">Submissions</message>
 	<message key="editor.submissionQueue">Submission Queue</message>
@@ -32,13 +32,13 @@
 	<message key="editor.submissionArchive.saveChanges">Save changes to archived submissions? Submissions marked for deletion will be permanently deleted from the system.</message>
 	<message key="editor.submissionArchive.confirmDelete">Are you sure you want to permanently delete this submission?</message>
 	<message key="editor.submissionReview.confirmDecision">Are you sure you wish to record this decision?</message>
-	<message key="editor.submissionReview.emailWillArchive">This submission will be archived after the Notify RTO email is either sent or its Skip Email button is pressed.</message>
-	<message key="editor.submissionReview.cannotSendToCopyediting">Before sending a submission, use Notify RTO link to inform RTO of decision and select the version to be sent.</message>
+	<message key="editor.submissionReview.emailWillArchive">This submission will be archived after the notify investigator email is either sent or its Skip Email button is pressed.</message>
+	<message key="editor.submissionReview.cannotSendToCopyediting">Before sending a submission, use Notify Investigator link to inform Investigator of decision and select the version to be sent.</message>
 	<message key="editor.submissionReview.sendToCopyediting">Send to Copyediting</message>
 	<message key="editor.notifyUsers">Notify Users</message>
 	<message key="editor.notifyUsers.allUsers">All users associated with this site. ({$count} users)</message>
 	<message key="editor.notifyUsers.allReaders">All guest ({$count} users)</message>
-	<message key="editor.notifyUsers.allAuthors">All RTOs ({$count} users)</message>
+	<message key="editor.notifyUsers.allAuthors">All Investigators ({$count} users)</message>
 	<message key="editor.notifyUsers.allIndividualSubscribers">All individual subscribers ({$count} users)</message>
 	<message key="editor.notifyUsers.allInstitutionalSubscribers">All institutional subscribers ({$count} users)</message>
 	<message key="editor.notifyUsers.inProgress">Notifying users...</message>
@@ -148,7 +148,7 @@
 	<message key="editor.article.selectCopyeditor">Assign Copyeditor</message>
 	<message key="editor.article.replaceCopyeditor">Replace Copyeditor</message>
 	<message key="editor.article.editorsCopyedit">Editor's Copyedit</message>
-	<message key="editor.article.showAuthor">Let author view file</message>
+	<message key="editor.article.showAuthor">Share to Investigator</message>
 	<message key="editor.article.showCopyeditor">Show version to copyeditor</message>
 	<message key="editor.article.rateReviewer">Reviewer rating</message>
 	<message key="editor.article.reviewerRating.veryGood">5 High</message>
@@ -205,7 +205,7 @@
 	<message key="editor.article.exemption.publicOfficials">Public officials are interviewed in their official capacity on issues that are in the public domain.</message>
 	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
-	<message key="editor.article.exemption.registered">Proposals registered in WPRO Research Registry when the study has been reviewed and approved by World Health Organizations's Ethics Review Committee (WHOERC).</message>
+	<message key="editor.article.exemption.registered">Proposals registered in the Demo National Health Research Portal when the study has been reviewed and approved by the Ethics Committee of the University of Health Sciences (ECUHS) or the National Ethics Committee for Health Research.</message>
 	<message key="editor.minutes.minutes">Minutes</message>
 	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
 	<message key="editor.minutes.attendance">Attendance</message>
@@ -414,7 +414,6 @@
 	<message key="editor.reports.generateReport">Generate Report</message>
 	<message key="editor.reports.submissions">Submissions</message>
 	<message key="editor.reports.meetingAttendance">Meeting Attendance</message>
-	<message key="editor.reports.submissions">Submissions</message>
 	<message key="editor.reports.ercMemberRequired">Select at least one (1) ERC member</message>
 	<message key="editor.reports.selectAtLeastOneErcMember">Select at least one (1) ERC member for the report</message>
 	<message key="editor.reports.dateRange">Pick a date range for the report (optional)</message>
@@ -423,22 +422,50 @@
 	<message key="editor.reports.meetingDate">Meeting schedule</message>
 	<message key="editor.reports.isPresent">Is present?</message>
 	<message key="editor.reports.reason">Reason (if absent)</message>
-	
-	<!-- *********************************************
-	* Additional keys for submissions report
-	* Added by MSB, Oct11,2011
-	*
-	********************************************* -->
-	<message key="editor.reports.whoId">WHO ID</message>
-	<message key="editor.reports.author">Author</message>
-	<message key="editor.reports.submitDate">Date Submitted</message>
-	<message key="editor.reports.title">Title</message>
-	<message key="editor.reports.country">Country</message>
-	<message key="editor.reports.decision">Decision</message>
-	<message key="editor.reports.technicalUnit">Technical Unit</message>
-	<message key="editor.reports.allTechnicalUnits">All Technical Units</message>
-	<message key="editor.reports.allCountries">All Countries</message>	
+    
+	<message key="editor.reports.whoId">Proposal ID</message>
+    <message key="editor.reports.erc">Ethics Committee</message>
+    <message key="editor.reports.decision">Last secretary decision</message>
+    <message key="editor.reports.submitDate">Date Submitted</message>
+    <message key="editor.reports.approveDate">Date Approved</message>
+	<message key="editor.reports.author">Primary Investigator</message>
+    <message key="editor.reports.authorAffiliation">PI Affiliation</message>
+    <message key="editor.reports.authorEmail">PI E-Mail</message>
+	<message key="editor.reports.scientificTitle">Scientific Title</message>
+    <message key="editor.reports.publicTitle">Public Title</message>
+    <message key="editor.reports.studentInstitution">Student Institution</message>
+    <message key="editor.reports.studentAcademicDegree">Student Academic Degree</message>
+    <message key="editor.reports.primarySponsor">Primary Sponsor</message>
+    <message key="editor.reports.secondarySponsor">Secondary Sponsor(s)</message>
+    <message key="editor.reports.researchField">Research Field(s)</message>
+    <message key="editor.reports.proposalType">Proposal Type(s)</message>
+    <message key="editor.reports.duration">Dates of Research</message>
+	<message key="editor.reports.country">Geographical Area(s)</message>
+    <message key="editor.reports.dataCollection">Data Collection</message>
+	<message key="editor.reports.budget">Estimated Budget</message>
+    <message key="editor.reports.currency">Currency</message>
+	<message key="editor.reports.otherErcReview">Other ERC Review</message>
+	<message key="editor.reports.abstract">Abstract</message>
+    <message key="editor.reports.industryGrant">Industry Grant(s)</message>
+    <message key="editor.reports.agencyGrant">Agency Grant(s)</message>    
+    <message key="editor.reports.mohGrant">MoH Grant</message>
+    <message key="editor.reports.governmentGrant">Government Grant</message>
+    <message key="editor.reports.universityGrant">University Grant</message>
+    <message key="editor.reports.selfFunding">Self Funding</message>
+    <message key="editor.reports.otherGrant">Other Grant</message>
+    
 	<message key="editor.reports.countryRequired">Select at least (1) country for the report.</message>	
 	<message key="editor.reports.technicalUnitRequired">Select at least (1) technical unit for the report.</message>	
-	<message key="editor.reports.decisionRequired">Select at least (1) decision for the report.</message>	
+	<message key="editor.reports.decisionRequired">Select at least (1) decision for the report.</message>
+    
+            
+    <!-- *********************************************
+	* Additional keys for sending emails
+	* Added by AIM, Jul25,2012
+	*
+	********************************************* -->
+        <message key="editor.email.send">Send an Email</message>
+	<message key="editor.email.allUsers">Send to All</message>
+	<message key="editor.email.ERCMembers">Send to ERC Members only</message>
+	<message key="editor.email.RTOs">Send to Investigators only</message>
 </locale>
