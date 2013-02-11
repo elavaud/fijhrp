@@ -112,7 +112,7 @@ a:hover {
 }
 
 #headerTitle {
-background-color: #E5E6EE;
+background-color: #045FB4;
 width: 1000px !important;
 border-bottom: 1px solid #CCC;
 position: relative;
@@ -128,7 +128,7 @@ form{
 	font-size: 20px;
 	font-family: inherit;
 	font-weight: bold;
-	color: #ef353a;
+	color: #fff;
 	margin: 0 auto;
 	margin-left: 1%;
 	padding: 10px;

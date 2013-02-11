@@ -362,6 +362,48 @@ class Section extends DataObject {
 	function setPolicy($policy, $locale) {
 		return $this->setData('policy', $policy, $locale);
 	}
+
+	// Region of the ERC in section_settings
+	// Added by EL on February 11th 2013
+
+    	/**
+		 * Get "localized" region's full text.
+		 * Added by EL on February 11th 2013
+		 * @return string
+		 */
+		function getLocalizedRegionText() {
+			$regionDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+			return $regionDAO->getRegionOfPhilippines($this->getLocalizedRegion());
+		}
+	
+		/**
+		 * Get localized region.
+		 * @return string
+		 */
+		function getLocalizedRegion() {
+			return $this->getLocalizedData('region');
+		}
+		
+		/**
+		 * Get region.
+		 * @param $locale string
+		 * @return string
+		 */
+		function getRegion($locale) {
+			return $this->getData('region', $locale);
+		}
+	
+		/**
+		 * Set region.
+		 * @param $policy string
+		 * @param $locale string
+		 */
+		function setRegion($region, $locale) {
+			return $this->setData('region', $region, $locale);
+		}
+
+	// Region of the ERC in section_settings
+	
 }
 
 ?>

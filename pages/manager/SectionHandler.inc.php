@@ -33,13 +33,22 @@ class SectionHandler extends ManagerHandler {
 		$journal =& Request::getJournal();
 		$rangeInfo =& Handler::getRangeInfo('sections');
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
-		$sections =& $sectionDao->getJournalSections($journal->getId(), $rangeInfo);
+		
+		/* Addition of sort and sortDirection*/
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'title';
+		$sortDirection = Request::getUserVar('sortDirection');
+		$sortDirection = (isset($sortDirection) && ($sortDirection == SORT_DIRECTION_ASC || $sortDirection == SORT_DIRECTION_DESC)) ? $sortDirection : SORT_DIRECTION_ASC;
+		
+		$sections =& $sectionDao->getJournalSections($journal->getId(), $rangeInfo, $sort, $sortDirection);
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->addJavaScript('lib/pkp/js/jquery.tablednd_0_5.js');
 		$templateMgr->addJavaScript('lib/pkp/js/tablednd.js');
 		$templateMgr->assign('pageHierarchy', array(array(Request::url(null, 'manager'), 'manager.journalManagement')));
 		$templateMgr->assign_by_ref('sections', $sections);
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->assign('helpTopicId','journal.managementPages.sections');
 		$templateMgr->display('manager/sections/sections.tpl');
 	}

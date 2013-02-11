@@ -50,6 +50,11 @@ class SectionForm extends Form {
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorLocale($this, 'title', 'required', 'manager.sections.form.titleRequired'));
 		$this->addCheck(new FormValidatorLocale($this, 'abbrev', 'required', 'manager.sections.form.abbrevRequired'));
+		
+		// Check for the region
+		// Added by EL on February 11th 2013 
+			$this->addCheck(new FormValidatorLocale($this, 'region', 'required', 'manager.sections.form.regionRequired'));
+		
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCustom($this, 'reviewFormId', 'optional', 'manager.sections.form.reviewFormId', array(DAORegistry::getDAO('ReviewFormDAO'), 'reviewFormExists'), array(ASSOC_TYPE_JOURNAL, $journal->getId())));
 		$this->includeSectionEditor = $this->omitSectionEditor = null;
@@ -113,6 +118,12 @@ class SectionForm extends Form {
 		}
 		$templateMgr->assign_by_ref('reviewFormOptions', $reviewFormOptions);
 
+		// Get list of regions of Philippines
+		// Added by EL February 11th 2013
+       		$regionDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+        	$regions =& $regionDAO->getRegionsOfPhilippines();
+        	$templateMgr->assign_by_ref('regions', $regions);
+        
 		parent::display();
 	}
 
@@ -132,6 +143,11 @@ class SectionForm extends Form {
 				$this->_data = array(
 					'title' => $section->getTitle(null), // Localized
 					'abbrev' => $section->getAbbrev(null), // Localized
+					
+					// Addded region
+					// EL on February 11th 2013
+						'region' => $section->getRegion(null), // Localized
+						
 					'reviewFormId' => $section->getReviewFormId(),
 					'metaIndexed' => !$section->getMetaIndexed(), // #2066: Inverted
 					'metaReviewed' => !$section->getMetaReviewed(), // #2066: Inverted
@@ -157,9 +173,11 @@ class SectionForm extends Form {
 
 	/**
 	 * Assign form data to user-submitted data.
+	 * Added region
+	 * EL on February 11th 2013
 	 */
 	function readInputData() {
-		$this->readUserVars(array('title', 'abbrev', 'policy', 'reviewFormId', 'identifyType', 'metaIndexed', 'metaReviewed', 'abstractsNotRequired', 'editorRestriction', 'hideTitle', 'hideAuthor', 'hideAbout', 'disableComments', 'wordCount'));
+		$this->readUserVars(array('title', 'abbrev', 'region', 'policy', 'reviewFormId', 'identifyType', 'metaIndexed', 'metaReviewed', 'abstractsNotRequired', 'editorRestriction', 'hideTitle', 'hideAuthor', 'hideAbout', 'disableComments', 'wordCount'));
 		$assignedEditorIds = Request::getUserVar('assignedEditorIds');
 		if (empty($assignedEditorIds)) $assignedEditorIds = array();
 		elseif (!is_array($assignedEditorIds)) $assignedEditorIds = array($assignedEditorIds);
@@ -210,6 +228,11 @@ class SectionForm extends Form {
 
 		$section->setTitle($this->getData('title'), null); // Localized
 		$section->setAbbrev($this->getData('abbrev'), null); // Localized
+		
+		// Added region
+		// EL on Febraurt 11th 2013
+			$section->setRegion($this->getData('region'), null);
+			
 		$reviewFormId = $this->getData('reviewFormId');
 		if ($reviewFormId === '') $reviewFormId = null;
 		$section->setReviewFormId($reviewFormId);

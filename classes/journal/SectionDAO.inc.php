@@ -182,9 +182,13 @@ class SectionDAO extends DAO {
 	/**
 	 * Get the list of fields for which data can be localized.
 	 * @return array
+	 * Last modified: EL on February 11th 2013
+	 * Need only title, abbrev and region
 	 */
 	function getLocaleFieldNames() {
-		return array('title', 'abbrev', 'policy', 'identifyType', 'address', 'bankAccount');
+		return array('title', 'abbrev', 'region'
+		/*, 'policy', 'identifyType', 'address', 'bankAccount'*/
+		);
 	}
 
 	/**
@@ -371,12 +375,44 @@ class SectionDAO extends DAO {
 	 * Retrieve all sections for a journal.
 	 * @return DAOResultFactory containing Sections ordered by sequence
 	 */
-	function &getJournalSections($journalId, $rangeInfo = null) {
-		$result =& $this->retrieveRange(
+	 /* Addition of sortBy and sortDirection*/
+	function &getJournalSections($journalId, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_DESC) {
+		
+		/*$result =& $this->retrieveRange(
 			'SELECT * FROM sections WHERE journal_id = ? ORDER BY seq',
 			$journalId, $rangeInfo
 		);
+		*/
+		$locale = Locale::getLocale();
+		
+		$params = array(
+				'title',
+				$locale,
+				'abbrev',
+				$locale,
+				'region',
+				$locale,
+				$journalId
+		);
+		
+		$sql = 'SELECT DISTINCT s.*,
+					stl.setting_value AS section_title,
+					sal.setting_value AS section_abbrev,
+					srl.setting_value AS section_region
+				FROM sections s
+					LEFT JOIN section_settings stl ON (stl.section_id = s.section_id AND stl.setting_name = ? AND stl.locale = ?)
+					LEFT JOIN section_settings sal ON (sal.section_id = s.section_id AND sal.setting_name = ? AND sal.locale = ?)
+					LEFT JOIN section_settings srl ON (srl.section_id = s.section_id AND srl.setting_name = ? AND srl.locale = ?)
+				WHERE s.journal_id = ?';
+		
 
+				
+		$result =& $this->retrieveRange(
+			$sql.($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+				count($params)===1?array_shift($params):$params,
+				$rangeInfo
+		);		
+				
 		$returner = new DAOResultFactory($result, $this, '_returnSectionFromRow');
 		return $returner;
 	}
@@ -613,6 +649,20 @@ class SectionDAO extends DAO {
 		$row = $result->GetRowAssoc(false);
 		return $row['setting_value'];
 	}
-}
 
+	/**
+	 * Map a column heading value to a database value for sorting
+	 * @param string
+	 * @return string
+	 * Added by EL on February 11th 2013
+	 */
+	function getSortMapping($heading) {
+		switch ($heading) {
+			case 'title': return 'section_title';
+			case 'abbrev': return 'section_abbrev';
+			case 'region': return 'section_region';
+			default: return null;
+		}
+	}
+}
 ?>

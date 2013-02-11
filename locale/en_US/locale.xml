@@ -110,11 +110,12 @@
 	-->
 
 	<!-- Common Section Terms -->
-	<message key="section.section">Ethics Committee</message>
-	<message key="section.sections">Demo National Ethics Review Committees</message>
+	<message key="section.section">Ethics Review Committee</message>
+	<message key="section.sections">Ethics Review Committees</message>
 
 	<message key="section.title">Ethics Committee title</message>
 	<message key="section.abbreviation">Abbreviation</message>
+    <message key="section.region">Region</message>
 	<message key="section.abbreviation.example">(For example, Proposals=PRO)</message>
 
 	<!-- Common Article Terms -->

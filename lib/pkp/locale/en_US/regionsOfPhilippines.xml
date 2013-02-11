@@ -9,16 +9,16 @@
 -->
 
 <countries>
-    <country code="R1" name="Region I, Ilocos"/>
-    <country code="R2" name="Region II, Cagayan Valley"/>
-    <country code="R3" name="Region III, Central Luzon"/>
-    <country code="R4A" name="Region IV-A, Calabarzon"/>
-    <country code="R4B" name="Region IV-B, Mimaropa"/>
-    <country code="R5" name="Region V, Bicol"/>
-    <country code="R6" name="Region VI, Western Visayas"/>
-    <country code="R7" name="Region VII, Central Visayas"/>
-    <country code="R8" name="Region VIII, Eastern Visayas"/>
-    <country code="R9" name="Region IX, Zamboanga Peninsula"/>
+    <country code="R01" name="Region I, Ilocos"/>
+    <country code="R02" name="Region II, Cagayan Valley"/>
+    <country code="R03" name="Region III, Central Luzon"/>
+    <country code="R04A" name="Region IV-A, Calabarzon"/>
+    <country code="R04B" name="Region IV-B, Mimaropa"/>
+    <country code="R05" name="Region V, Bicol"/>
+    <country code="R06" name="Region VI, Western Visayas"/>
+    <country code="R07" name="Region VII, Central Visayas"/>
+    <country code="R08" name="Region VIII, Eastern Visayas"/>
+    <country code="R09" name="Region IX, Zamboanga Peninsula"/>
     <country code="R10" name="Region X, Northern Mindanao"/>
     <country code="R11" name="Region XI, Davao Region"/>
     <country code="R12" name="Region XII, Soccsksargen"/>

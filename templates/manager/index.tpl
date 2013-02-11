@@ -20,9 +20,10 @@
 		<li>&#187; <a href="{url op="announcements"}">{translate key="manager.announcements"}</a></li>
 	{/if}
 	<li>&#187; <a href="{url op="files"}">{translate key="manager.filesBrowser"}</a></li>
-	<!--
-        <li>&#187; <a href="{url op="sections"}">{translate key="section.sections"}</a></li>
-        <li>&#187; <a href="{url op="reviewForms"}">{translate key="manager.reviewForms"}</a></li>
+	
+    <li>&#187; <a href="{url op="sections"}">{translate key="section.sections"}</a></li>
+    <!--
+    <li>&#187; <a href="{url op="reviewForms"}">{translate key="manager.reviewForms"}</a></li>
 	-->
 {** Commented out - spf 1 Dec 2011
         <li>&#187; <a href="{url op="languages"}">{translate key="common.languages"}</a></li>
