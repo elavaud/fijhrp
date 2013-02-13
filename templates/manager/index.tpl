@@ -78,7 +78,8 @@
 	{/if}*}
 	<li>&#187; <a href="{url op="people" path="reviewers"}">{*translate key="user.role.reviewers"*}ERC Members & External Reviewers</a></li>
 	<li>&#187; <a href="{url op="people" path="authors"}">{translate key="user.role.authors"}</a></li>
-	<li>&#187; <a href="{url op="showNoRole"}">{translate key="manager.people.showNoRole"}</a></li>
+	<!-- Not useful: EL on February 13th 2013 -->
+	<!--<li>&#187; <a href="{url op="showNoRole"}">{translate key="manager.people.showNoRole"}</a></li>-->
 	<!-- <li>&#187; <a href="{url op="people" path="readers"}">{translate key="user.role.readers"}</a></li> Edited by MSB, Nov17,2011-->
 	<!-- <li>&#187; <a href="{url op="people" path="subscriptionManagers"}">{translate key="user.role.subscriptionManagers"}</a></li> Edited by MSB, Nov17,2011-->
 	{call_hook name="Templates::Manager::Index::Roles"}
