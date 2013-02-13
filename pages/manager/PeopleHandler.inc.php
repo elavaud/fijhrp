@@ -249,6 +249,12 @@ class PeopleHandler extends ManagerHandler {
 		$this->validate();
 
 		$userDao =& DAORegistry::getDAO('UserDAO');
+			
+			// For sending the list of ERCs to the template
+			// EL on February 13th 2013
+			$sectionDao =& DAORegistry::getDAO('SectionDAO');
+			$journalDao =& DAORegistry::getDAO('JournalDAO');
+			$journal =& $journalDao->getJournalByPath(Request::getRequestedJournalPath());
 
 		$templateMgr =& TemplateManager::getManager();
 
@@ -257,148 +263,10 @@ class PeopleHandler extends ManagerHandler {
 		$rangeInfo = PKPHandler::getRangeInfo('users');
 
 		$users =& $userDao->getUsersWithNoRole(true, $rangeInfo);
-
 		
-		//FIXME: twice the same portion of code in "enrollSearch" and here
-		/////////////////////////////////////////////////
-
-		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-		
-		/*
-		$chair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, Chair");
-		$chair =& $chair->toArray();
-		$isChair = '0';
-		if(count($chair)>'0') $isChair = '1';
-		
-		$viceChair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, Vice-Chair");
-		$viceChair =& $viceChair->toArray();
-		$isViceChair = '0';
-		if(count($viceChair)>'0') $isViceChair = '1';
-		*/	
-		
-		/*
-		$secretaryAA =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, Secretary Administrative Assistant");
-		$secretaryAA =& $secretaryAA->toArray();
-		$isSecretaryAA = '0';
-		if(count($secretaryAA)>'0') $isSecretaryAA = '1';
-		*/
-		
-		$uhsChair =& $userSettingsDao->getUsersBySetting("uhsMemberStatus", "UHS Chair");
-		$uhsChair =& $uhsChair->toArray();
-		$isUhsChair = '0';
-		$countUhsChair = count($uhsChair);
-		if($countUhsChair>'0') $isUhsChair = '1';
-
-		$niophChair =& $userSettingsDao->getUsersBySetting("niophMemberStatus", "NIOPH Chair");
-		$niophChair =& $niophChair->toArray();
-		$isNiophChair = '0';
-		$countNiophChair = count($niophChair);
-		if($countNiophChair>'0') $isNiophChair = '1';
-		
-		$uhsViceChair =& $userSettingsDao->getUsersBySetting("uhsMemberStatus", "UHS Vice-Chair");
-		$uhsViceChair =& $uhsViceChair->toArray();
-		$isUhsViceChair = '0';
-		$countUhsViceChair = count($uhsViceChair);
-		if($countUhsViceChair>'0') $isUhsViceChair = '1';
-
-		$niophViceChair =& $userSettingsDao->getUsersBySetting("niophMemberStatus", "NIOPH Vice-Chair");
-		$niophViceChair =& $niophViceChair->toArray();
-		$isNiophViceChair = '0';
-		$countNiophViceChair = count($niophViceChair);
-		if($countNiophViceChair>'0') $isNiophViceChair = '1';
-		
-		$uhsSecretary =& $userSettingsDao->getUsersBySetting("secretaryStatus", "UHS Secretary");
-		$uhsSecretary =& $uhsSecretary->toArray();
-		$areUhsSecretary = '0';
-		$countUhsSecretary = count($uhsSecretary);
-		$freeUhsSecretaryPlaces = 3 - $countUhsSecretary;
-		if($countUhsSecretary>'2') $areUhsSecretary = '1';
-
-		$niophSecretary =& $userSettingsDao->getUsersBySetting("secretaryStatus", "NIOPH Secretary");
-		$niophSecretary =& $niophSecretary->toArray();
-		$areNiophSecretary = '0';
-		$countNiophSecretary = count($niophSecretary);
-		$freeNiophSecretaryPlaces = 3 - $countNiophSecretary;
-		if($countNiophSecretary>'2') $areNiophSecretary = '1';
-							
-		$uhsMembers =& $userSettingsDao->getUsersBySetting("uhsMemberStatus", "UHS Member");
-		$uhsMembers =& $uhsMembers->toArray();
-		$areUhsMembers = '0';
-		$countUhsMembers = count($uhsMembers);
-		$freeUhsMemberPlaces = 15 - $countUhsMembers;
-		if($countUhsMembers>'14') $areUhsMembers = '1';
-		
-		$niophMembers =& $userSettingsDao->getUsersBySetting("niophMemberStatus", "NIOPH Member");
-		$niophMembers =& $niophMembers->toArray();
-		$areNiophMembers = '0';
-		$countNiophMembers = count($niophMembers);
-		$freeNiophMemberPlaces = 15 - $countNiophMembers;
-		if($countNiophMembers>'14') $areNiophMembers = '1';
-		
-		
-		$templateMgr->assign('isUhsChair', $isUhsChair);
-		$templateMgr->assign('isNiophChair', $isNiophChair);
-		$templateMgr->assign('isUhsViceChair', $isUhsViceChair);
-		$templateMgr->assign('isNiophViceChair', $isNiophViceChair);
-		$templateMgr->assign_by_ref('uhsChair', $uhsChair);
-		$templateMgr->assign_by_ref('niophChair', $niophChair);
-		$templateMgr->assign_by_ref('uhsViceChair', $uhsViceChair);
-		$templateMgr->assign_by_ref('niophViceChair', $niophViceChair);
-		
-		$templateMgr->assign('isNiophChair', $isNiophChair);
-		$templateMgr->assign('isNiophChair', $isNiophChair);
-		$templateMgr->assign('isNiophChair', $isNiophChair);
-		$templateMgr->assign('isNiophChair', $isNiophChair);
-		$templateMgr->assign('isNiophChair', $isNiophChair);
-		$templateMgr->assign('freeUhsMemberPlaces', $freeUhsMemberPlaces);
-		$templateMgr->assign('freeNiophMemberPlaces', $freeNiophMemberPlaces);
-		$templateMgr->assign('freeUhsSecretaryPlaces', $freeUhsSecretaryPlaces);
-		$templateMgr->assign('freeNiophSecretaryPlaces', $freeNiophSecretaryPlaces);
-		$templateMgr->assign_by_ref('uhsSecretary', $uhsSecretary);
-		$templateMgr->assign_by_ref('niophSecretary', $niophSecretary);		
-		$templateMgr->assign_by_ref('uhsMembers', $uhsMembers);
-		$templateMgr->assign_by_ref('niophMembers', $niophMembers);
-		$templateMgr->assign('areUhsSecretary', $areUhsSecretary);
-		$templateMgr->assign('areNiophSecretary', $areNiophSecretary);
-		$templateMgr->assign('areUhsMembers', $areUhsMembers);
-		$templateMgr->assign('areNiophMembers', $areNiophMembers);
-		
-		//$extMembers =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, External Member");
-		//$extMembers =& $extMembers->toArray();
-		//$areExtMembers = '0';
-		
-		//$countExtMembers = count($extMembers);
-		
-		//if($countExtMembers<'2'){
-
-		//}elseif($countExtMembers=='2'){
-		//	$freeMemberPlaces = 10 - $countMembers;
-		//	if(count($members)>'9') $areMembers = '1';
-		//}
-		
-		/*
-		if (count($members)>'10'){
-			$freeExtMemberPlaces = 1 - $countExtMembers;
-			if(count($extMembers)>'0') $areExtMembers = '1';
-		}elseif(count($members)<'11'){
-			$freeExtMemberPlaces = 2 - $countExtMembers;
-			if(count($extMembers)>'1') $areExtMembers = '1';
-		}
-		*/
-		
-		//$templateMgr->assign('freeExtMemberPlaces', $freeExtMemberPlaces);
-		
-		//$templateMgr->assign_by_ref('chair', $chair);
-		//$templateMgr->assign_by_ref('viceChair', $viceChair);
-		//$templateMgr->assign_by_ref('secretaryAA', $secretaryAA);
-		//$templateMgr->assign_by_ref('extMembers', $extMembers);
-		
-		//$templateMgr->assign('isChair', $isChair);
-		//$templateMgr->assign('isViceChair', $isViceChair);
-		//$templateMgr->assign('isSecretaryAA', $isSecretaryAA);
-		//$templateMgr->assign('areExtMembers', $areExtMembers);
-
-		//////////////////////////////////////////////////
+		// Send the list of IRBs to the template
+			$templateMgr->assign('sections', $sectionDao->getJournalSections($journal->getId()));
+			
 		$templateMgr->assign('omitSearch', true);
 		$templateMgr->assign_by_ref('users', $users);
 		$templateMgr->assign_by_ref('thisUser', Request::getUser());
