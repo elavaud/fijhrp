@@ -120,7 +120,70 @@ class UserDAO extends PKPUserDAO {
 
 		return $reviewers;		
 	}
+
+	/**
+	 * Retrieve an array of enrollable users (no reviewers, secretary, administrator, coordinator)
+	 * @param $allowDisabled boolean
+	 * @param $dbResultRange object The desired range of results to return
+	 * @return array matching Users
+	 * Added by EL February 12th 2013
+	 */
+	function &getEnrollableUsers($journalId, $field = USER_FIELD_NONE, $match = null, $value = null, $allowDisabled = true, $dbResultRange = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		
+		$sqlBeg = 'SELECT DISTINCT u.* FROM (';
+		$sqlEnd = ') u';
+		
+		$sql1Beg = 'SELECT u.* 
+						FROM users AS u 
+						INNER JOIN roles AS r1 
+							ON u.user_id = r1.user_id
+						INNER JOIN roles AS r2 
+							ON u.user_id = r2.user_id 
+							AND r2.journal_id = '.$journalId.' 
+						WHERE r2.role_id = '.ROLE_ID_AUTHOR;
+		$sql1End = ' GROUP BY u.user_id 
+					HAVING COUNT(r1.user_id) = 1';
+		
+		$sql2Beg = ' UNION SELECT u.*
+							FROM users u
+ 							WHERE NOT EXISTS (
+ 								SELECT NULL FROM roles r
+ 									WHERE u.user_id=r.user_id
+ 									AND r.journal_id = '. $journalId;
+ 		$sql2End =  ')';
+
+ 					
+		switch ($field) {
+			case USER_FIELD_USERNAME:
+				$var = $match == 'is' ? $value : "%$value%";
+				$sqlEnd .= ' WHERE LOWER(u.username) ' . ($match == 'is' ? '=' : 'LIKE') . ' LOWER(?)';
+				break;
+			case USER_FIELD_EMAIL:
+				$var = $match == 'is' ? $value : "%$value%";
+				$sqlEnd .= ' WHERE LOWER(u.email) ' . ($match == 'is' ? '=' : 'LIKE') . ' LOWER(?)';
+				break;
+			case USER_FIELD_FIRSTNAME:
+				$var = $match == 'is' ? $value : "%$value%";
+				$sqlEnd .= ' WHERE LOWER(u.first_name) ' . ($match == 'is' ? '=' : 'LIKE') . ' LOWER(?)';
+				break;
+			case USER_FIELD_LASTNAME:
+				$var = $match == 'is' ? $value : "%$value%";
+				$sqlEnd .= ' WHERE LOWER(u.last_name) ' . ($match == 'is' ? '=' : 'LIKE') . ' LOWER(?)';
+				break;
+		}
+		
+		$roleDao =& DAORegistry::getDAO('RoleDAO');
+		$orderSql = ($sortBy?(' ORDER BY ' . $roleDao->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : '');
+		
+		if ($field != USER_FIELD_NONE) 
+			$result =& $this->retrieveRange($sqlBeg . $sql1Beg . $sql1End . $sql2Beg . $sql2End . $sqlEnd . ($allowDisabled?'':' AND u.disabled = 0') . $orderSql, $var, $dbResultRange);
+		else $result =& $this->retrieveRange($sqlBeg . $sql1Beg . $sql1End . $sql2Beg . $sql2End . $sqlEnd . ($allowDisabled?'':' WHERE u.disabled = 0') . $orderSql, false, $dbResultRange);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnUserFromRowWithData');
+		return $returner;
+	}
 	
+		
 	function insertExternalReviewer($userId, $locale) {
 		$sql = 'INSERT INTO user_settings (user_id, locale, setting_name, setting_value, setting_type) '.
 			 ' values (?, ?, ?, ?, ?)';		

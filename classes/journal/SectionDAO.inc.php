@@ -374,9 +374,9 @@ class SectionDAO extends DAO {
 	/**
 	 * Retrieve all sections for a journal.
 	 * @return DAOResultFactory containing Sections ordered by sequence
+	 * Last modified: EL on February 11th 2013
 	 */
-	 /* Addition of sortBy and sortDirection*/
-	function &getJournalSections($journalId, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_DESC) {
+	function &getJournalSections($journalId, $rangeInfo = null, $sortBy = "title", $sortDirection = SORT_DIRECTION_ASC) {
 		
 		/*$result =& $this->retrieveRange(
 			'SELECT * FROM sections WHERE journal_id = ? ORDER BY seq',
