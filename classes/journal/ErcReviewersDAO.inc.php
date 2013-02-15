@@ -190,6 +190,26 @@ class ErcReviewersDAO extends DAO {
 
 		return $returner;
 	}
+
+	/**
+	 * Get the erc of the reviewer
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @param $userId int
+	 * @return boolean
+	 */
+	function getReviewerStatus($userId, $sectionId) {
+		$result =& $this->retrieve(
+			'SELECT status 
+				FROM erc_reviewers 
+				WHERE user_id = ? AND section_id = ?', array($userId, $sectionId)
+		);
+
+		if ($result->fields[0] == 1) return 'Chair';
+		elseif ($result->fields[0] == 2) return 'Vice-Chair';
+		elseif ($result->fields[0] == 3) return 'Member';
+		else return null;
+	}
 }
 
 ?>

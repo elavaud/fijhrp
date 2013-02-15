@@ -597,21 +597,18 @@ class PKPUser extends DataObject {
 			if ($roleId == '512'){
 				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
 				$erc =& $sectionEditorsDao->getErcBySecretaryId($this->getId());
-				if ($functions != null){
-					$functions .= ' & '.$erc->getLocalizedAbbrev().' Secretary';
-				} else {
-					$functions = $erc->getLocalizedAbbrev().' Secretary';
-				}
+				if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' Secretary';
+				else $functions = $erc->getLocalizedAbbrev().' Secretary';
 			}
 			if ($roleId == '4096'){
 				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
 				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
-				if ($functions != null){
-					if (isset($erc)) $functions .= ' & '.$erc->getLocalizedAbbrev().' Reviewer';
-					else $functions .= ' & External Reviewer';
+				if (isset($erc)) {
+					if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
+					else $functions = $erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
 				} else {
-					if (isset($erc)) $functions = $erc->getLocalizedAbbrev().' Reviewer';
-					else $functions = 'External Reviewer';
+					if ($functions != null) $functions .= ' & External Reviewer';
+					else  $functions = 'External Reviewer';
 				}
 			}
 			
