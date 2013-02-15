@@ -584,50 +584,40 @@ class PKPUser extends DataObject {
 			return ($salutation != ''?"$salutation ":'') . "$firstName " . ($middleName != ''?"$middleName ":'') . $lastName;
 		}
 	}
+
 	
 	function getFunctions(){
+		
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
-		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
 		$roles =& $roleDao->getRolesByUserId($this->getId(), '4');
 		$functions;
-		foreach ($roles as $role){
+		
+		foreach ($roles as $role){ 
 			$roleId =& $role->getRoleId();
 			if ($roleId == '512'){
-				if($userSettingsDao->getSetting($this->getId(), 'secretaryStatus', '4') && ($userSettingsDao->getSetting($this->getId(), 'secretaryStatus', '4') != "Retired")){
-					if ($functions != null){
-						$functions = $functions . ' & ' . $userSettingsDao->getSetting($this->getId(), 'secretaryStatus', '4');
-					}
-					else {
-						$functions = $userSettingsDao->getSetting($this->getId(), 'secretaryStatus', '4');
-					}
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$erc =& $sectionEditorsDao->getErcBySecretaryId($this->getId());
+				if ($functions != null){
+					$functions .= ' & '.$erc->getLocalizedAbbrev().' Secretary';
+				} else {
+					$functions = $erc->getLocalizedAbbrev().' Secretary';
 				}
 			}
 			if ($roleId == '4096'){
-				if ($userSettingsDao->getSetting($this->getId(), 'uhsMemberStatus', '4') && ($userSettingsDao->getSetting($this->getId(), 'uhsMemberStatus', '4') != "Retired")){
-					if ($functions != null){
-						$functions = $functions . ' & ' . $userSettingsDao->getSetting($this->getId(), 'uhsMemberStatus', '4'); 
-					}else {
-						$functions = $userSettingsDao->getSetting($this->getId(), 'uhsMemberStatus', '4'); 
-					}
+				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
+				if ($functions != null){
+					if (isset($erc)) $functions .= ' & '.$erc->getLocalizedAbbrev().' Reviewer';
+					else $functions .= ' & External Reviewer';
+				} else {
+					if (isset($erc)) $functions = $erc->getLocalizedAbbrev().' Reviewer';
+					else $functions = 'External Reviewer';
 				}
-				if ($userSettingsDao->getSetting($this->getId(), 'niophMemberStatus', '4') && ($userSettingsDao->getSetting($this->getId(), 'niophMemberStatus', '4') != "Retired")){
-					if ($functions != null){
-						$functions = $functions . ' & ' . $userSettingsDao->getSetting($this->getId(), 'niophMemberStatus', '4'); 
-					}else {
-						$functions = $userSettingsDao->getSetting($this->getId(), 'niophMemberStatus', '4'); 
-					}
-				}
-				if ($this->isLocalizedExternalReviewer() == "Yes"){
-					if ($functions != null){
-						$functions = $functions . ' & External Reviewer'; 
-					}else {
-						$functions = 'External Reviewer'; 
-					}
-				}	
 			}
+			
 			if ($roleId == '65536'){
 				if ($functions != null){
-					$functions = $functions . ' & ' . 'Investigator';
+					$functions .= ' & Investigator';
 				}
 				else {
 					$functions = 'Investigator';
@@ -635,48 +625,24 @@ class PKPUser extends DataObject {
 			}
 			if ($roleId == '256'){
 				if ($functions != null){
-					$functions = $functions . ' & ' . 'Coordinator';
+					$functions .= ' & Coordinator';
 				}
 				else {
 					$functions = 'Coordinator';
 				}
 			}
+			if ($roleId == '16'){
+				if ($functions != null){
+					$functions .= ' & Administrator';
+				}
+				else {
+					$functions = 'Administrator';
+				}
+			}
 		}
 		return $functions;
 	}
-	
-	function getSecretaryEthicsCommittee(){
-		$ethicsCommittee;
-		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-		if (($userSettingsDao->getSetting($this->getId(), 'secretaryStatus', '4')) == "UHS Secretary"){
-			$ethicsCommittee = 'UHS';
-		}
-		if (($userSettingsDao->getSetting($this->getId(), 'secretaryStatus', '4')) == "NIOPH Secretary"){
-			$ethicsCommittee = 'NIOPH';
-		}
-		return $ethicsCommittee;
-	}
-	
-	function isNiophMember(){
-		$niophMember = false;
-		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-		$userStatus = $userSettingsDao->getSetting($this->getId(), 'niophMemberStatus', '4');
-		if ($userStatus == "NIOPH Chair" || $userStatus == "NIOPH Vice-Chair" || $userStatus == "NIOPH Member"){
-			$niophMember = true;
-		}
-		return $niophMember;
-	}
-	
-	function isUhsMember(){
-		$uhsMember = false;
-		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-		$userStatus = $userSettingsDao->getSetting($this->getId(), 'uhsMemberStatus', '4');
-		if ($userStatus == "UHS Chair" || $userStatus == "UHS Vice-Chair" || $userStatus == "UHS Member"){
-			$uhsMember = true;
-		}
-		return $uhsMember;
-	}
-	
+
 	
 	function getContactSignature() {
 		$signature = $this->getFullName();
@@ -685,139 +651,9 @@ class PKPUser extends DataObject {
 		if ($f = $this->getFax()) $signature .= "\n" . Locale::translate('user.fax') . ' ' . $f;
 		$signature .= "\n" . $this->getEmail();
 		return $signature;
-	}
-	/*
-	 * Getters and setters for additional user settings: health and wpro affiliation
-	 * Added by aglet
-	 * Last Update: 6/20/2011
-	 */
-	
-	/**
-	 * Get localized health affiliation
-	 */
-	function getLocalizedHealthAffiliation() {
-		return $this->getLocalizedData('healthAffiliation');
-	}
-
-	/**
-	 * Get user health affiliation.
-	 * @param $locale string
-	 * @return string
-	 */
-	function getHealthAffiliation($locale) {
-		return $this->getData('healthAffiliation', $locale);
-	}
-
-	/**
-	 * Set user health affiliation.
-	 * @param $healthAffiliation string
-	 * @param $locale string
-	 */
-	function setHealthAffiliation($healthAffiliation, $locale) {
-		return $this->setData('healthAffiliation', $healthAffiliation, $locale);
-	}
-
-
-			//Added by EL on May 8, 2012
-
-			/**
-	 		* Get localized health affiliation
-	 		*/
-			function getLocalizedFieldOfActivity() {
-				return $this->getLocalizedData('fieldOfActivity');
-			}
-
-			/**
-	 		* Get user field of Activity.
-	 		* @param $locale string
-	 		* @return string
-	 		*/
-			function getFieldOfActivity($locale) {
-				return $this->getData('fieldOfActivity', $locale);
-			}
-
-			/**
-	 		* Set user field of activity.
-	 		* @param $fieldOfActivity string
-	 		* @param $locale string
-	 		*/
-			function setFieldOfActivity($fieldOfActivity, $locale) {
-				return $this->setData('fieldOfActivity', $fieldOfActivity, $locale);
-			}
-			
-	
-	/**
-	 * Get localized wpro affiliation
-	 */
-	function getLocalizedWproAffiliation() {
-		return $this->getLocalizedData('wproAffiliation');
-	}
-
-	/**
-	 * Get user wpro affiliation.
-	 * @param $locale string
-	 * @return string
-	 */
-	function getWproAffiliation($locale) {
-		return $this->getData('wproAffiliation', $locale);
-	}
-
-	/**
-	 * Set user wpro affiliation.
-	 * @param $wproAffiliation string
-	 * @param $locale string
-	 */
-	function setWproAffiliation($wproAffiliation, $locale) {
-		return $this->setData('wproAffiliation', $wproAffiliation, $locale);
-	}
-
-	/**
-	 * Set user as external reviewer
-	 * @param $isExternalReviewer string
-	 * @param @locale string
-	 */
-	function setExternalReviewer($externalReviewer, $locale) {		
-		return $this->setData('externalReviewer', $externalReviewer, $locale);
-	}
-	
-	/**
-	 * Get externalReviewer indicator
-	 */
-	function isLocalizedExternalReviewer() {
-		return $this->getLocalizedData('externalReviewer');
 	}	
 	
-	/**
-	 * Get externalReviewer indicator
-	 */
-	function isExternalReviewer($locale) {
-		return $this->getData('externalReviewer', $locale);
-	}
-	
-	
-	/**
-	 * Get ERC Member Status.
-	 * @param $locale string
-	 * @return string
-	 */
-	function getErcMemberStatus($locale){
-		return $this->getData('ercMemberStatus', $locale);
-	}
-	/**
-	 * Set ERC Member Status.
-	 * @param $ercMemberStatus string
-	 * @param $locale string
-	 */
-	function setErcMemberStatus ($ercMemberStatus, $locale){
-			return $this->setData('ercMemberStatus', $ercMemberStatus, $locale);
-	}
-	/**
-	 * Get localized ERC Member Status.
-	 */
-	function getLocalizedErcMemberStatus() {
-		return $this->getLocalizedData('ercMemberStatus');
-	}
-	
+
 }
 
 ?>

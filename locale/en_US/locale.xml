@@ -314,6 +314,7 @@
         <message key="user.ercrole.viceChair">Vice-Chair</message>
         <message key="user.ercrole.secretariat">Secretariat</message>
         <message key="user.ercrole.ercMembers">Members</message>
+        <message key="user.ercrole.extReviewer">External Reviewer</message>
         <message key="user.ercrole.extReviewers">External Reviewers</message>
         <message key="user.ercrole.extMembers">External Members (non-affiliated members)</message>
         

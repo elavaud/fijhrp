@@ -181,8 +181,6 @@ class ProfileForm extends Form {
 			'lastName' => $user->getLastName(),
 			'gender' => $user->getGender(),
 			'affiliation' => $user->getAffiliation(null), // Localized
-				//Added by EL on May 8, 2012
-				'fieldOfActivity' => $user->getFieldOfActivity(null), // Localized
 			'signature' => $user->getSignature(null), // Localized
 			'email' => $user->getEmail(),
 			'userUrl' => $user->getUrl(),
@@ -212,8 +210,6 @@ class ProfileForm extends Form {
 			'gender',
 			'initials',
 			'affiliation',
-				//Added by EL on May 8, 2012
-				'fieldOfActivity',
 			'signature',
 			'email',
 			'userUrl',
@@ -247,8 +243,6 @@ class ProfileForm extends Form {
 		$user->setGender($this->getData('gender'));
 		$user->setInitials($this->getData('initials'));
 		$user->setAffiliation($this->getData('affiliation'), null); // Localized
-			//Added by EL on May 8, 2012
-			$user->setFieldOfActivity($this->getData('fieldOfActivity'), null); // Localized
 		$user->setSignature($this->getData('signature'), null); // Localized
 		$user->setEmail($this->getData('email'));
 		$user->setUrl($this->getData('userUrl'));

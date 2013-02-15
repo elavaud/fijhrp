@@ -37,18 +37,28 @@ class PeopleHandler extends ManagerHandler {
 
 		if (Request::getUserVar('roleSymbolic')!=null) $roleSymbolic = Request::getUserVar('roleSymbolic');
 		else $roleSymbolic = isset($args[0])?$args[0]:'all';
-
+				
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'name';
 		$sortDirection = Request::getUserVar('sortDirection');
 
 		if ($roleSymbolic != 'all' && String::regexp_match_get('/^(\w+)s$/', $roleSymbolic, $matches)) {
-			$roleId = $roleDao->getRoleIdFromPath($matches[1]);
+						
+				// For separating external reviewers from reviewers
+				// Added by EL on February 14th  2013
+				if ($matches[1] == "extReviewer") $roleId = "extReviewer";
+				elseif ($matches[1] == "reviewer") $roleId = "reviewer";
+				else $roleId = $roleDao->getRoleIdFromPath($matches[1]);
+			
 			if ($roleId == null) {
 				Request::redirect(null, null, null, 'all');
 			}
-			$roleName = $roleDao->getRoleName($roleId, true);
-
+				// For separating external reviewers from reviewers
+				// Added by EL on February 14th 2013			
+				if ($roleId == "extReviewer") $roleName = 'user.ercrole.extReviewers';
+				elseif ($roleId == "reviewer") $roleName = 'user.role.reviewers';		
+				else $roleName = $roleDao->getRoleName($roleId, true);
+						
 		} else {
 			$roleId = 0;
 			$roleName = 'manager.people.allUsers';
@@ -74,7 +84,10 @@ class PeopleHandler extends ManagerHandler {
 		$rangeInfo = Handler::getRangeInfo('users');
 
 		if ($roleId) {
-			$users =& $roleDao->getUsersByRoleId($roleId, $journal->getId(), $searchType, $search, $searchMatch, $rangeInfo, $sort);
+			$users =& $roleDao->getUsersByRoleId($roleId, $journal->getId(), $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
+				// For separating external reviewers from reviewers
+				// Added by EL on February 14th 2013			
+				if ($roleId == "extReviewer" || $roleId == "reviewer") $roleId = ROLE_ID_REVIEWER;
 			$templateMgr->assign('roleId', $roleId);
 			switch($roleId) {
 				case ROLE_ID_JOURNAL_MANAGER:
@@ -92,8 +105,8 @@ class PeopleHandler extends ManagerHandler {
 				case ROLE_ID_REVIEWER:
 					$helpTopicId = 'journal.roles.reviewer';
 					//For External Reviewers
-					$reviewers =& $roleDao->getUsersByRoleId('4096', $journal->getId(), $searchType, $search, $searchMatch, $rangeInfo, $sort);
-					$templateMgr->assign_by_ref('reviewers', $reviewers);
+					//$reviewers =& $roleDao->getUsersByRoleId('4096', $journal->getId(), $searchType, $search, $searchMatch, $rangeInfo, $sort);
+					//$templateMgr->assign_by_ref('reviewers', $reviewers);
 					break;
 				/* Commented out by EL on April 4 2012 */
 				//case ROLE_ID_COPYEDITOR:
@@ -125,7 +138,6 @@ class PeopleHandler extends ManagerHandler {
 		$templateMgr->assign('roleName', $roleName);
 		$templateMgr->assign_by_ref('users', $users);
 		$templateMgr->assign_by_ref('thisUser', Request::getUser());
-		$templateMgr->assign('isReviewer', $roleId == ROLE_ID_REVIEWER);
 
 		$templateMgr->assign('searchField', $searchType);
 		$templateMgr->assign('searchMatch', $searchMatch);
@@ -153,6 +165,7 @@ class PeopleHandler extends ManagerHandler {
 		$templateMgr->assign('alphaList', explode(' ', Locale::translate('common.alphaList')));
 		$templateMgr->assign('roleSymbolic', $roleSymbolic);
 		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
 
 		$session =& Request::getSession();
 		$session->setSessionVar('enrolmentReferrer', Request::getRequestedArgs());
@@ -244,6 +257,7 @@ class PeopleHandler extends ManagerHandler {
 
 	/**
 	 * Show users with no role.
+	 * Last update: EL on February 13th 2013
 	 */
 	function showNoRole() {
 		$this->validate();
@@ -276,6 +290,7 @@ class PeopleHandler extends ManagerHandler {
 
 	/**
 	 * Enroll a user in a role.
+	 * Last update: EL on February 14th 2013
 	 */
 	function enroll($args) {
 		$this->validate();
@@ -294,274 +309,77 @@ class PeopleHandler extends ManagerHandler {
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$rolePath = $roleDao->getRolePath($roleId);
 		
-		//Added by EL on April 24, 2012
-		//Management of the ERC Member Status
-		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-		$sectionEditorsDAO =& DAORegistry::getDAO('SectionEditorsDAO');
+			// Added by EL on April 24, 2012
+			// Management of the ERC Member Status
+			$sectionEditorsDAO =& DAORegistry::getDAO('SectionEditorsDAO');
+		
+			// Added by EL on February 13th 2013
+			// Management of the erc for the reviewers
+			$ercReviewersDAO =& DAORegistry::getDAO('ErcReviewersDAO');		
+		
 		$ercMemberStatus =& Request::getUserVar('ercMemberStatus');
-		$ethicsCommittee =& Request::getUserVar('ethicsCommittee');
+		$ethicsCommitteeId =& Request::getUserVar('ethicsCommittee');
+		
+		// the role path "reviewer" includes all the erc members but also the secretaries
+		// if the enrollment concern secretaries, the role path and the role id is further modified
 		if ($users != null && is_array($users) && $rolePath == 'reviewer') {
-			if($ethicsCommittee == "UHS"){
-				if($ercMemberStatus == "ERC, Secretary" ){
-					$uhsSecretary =& $userSettingsDao->getUsersBySetting("secretaryStatus", "UHS Secretary");
-					$uhsSecretary =& $uhsSecretary->toArray();
-					$rolePath = 'sectionEditor';
-					$roleId = '512';
-					if(count($uhsSecretary)<'3'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'uhsMemberStatus', '4')) == "UHS Member"){
-								$userSettingsDao->updateSetting($users[$i], 'uhsMemberStatus', 'Retired', 'string', 0, 0);
-								if (($userSettingsDao->getSetting($users[$i], 'niophMemberStatus', '4')) != "NIOPH-ERC, Member"){
-									$roleDao->deleteRoleByUserId($users[$i], '4', '4096');
-								}
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId(0x00000200);
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'UHS Secretary');
-								$roleDao->insertRole($role);
-								$sectionEditorsDAO->insertEditor($journal->getId(), '2', $users[$i], '1', '0');
-							}
-						}						
-					}
-				}
-				elseif($ercMemberStatus == "ERC, Chair"){
-					$uhsChair =& $userSettingsDao->getUsersBySetting("uhsMemberStatus", "UHS Chair");
-					$uhsChair =& $uhsChair->toArray();
-					if(count($uhsChair)<'1'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'secretaryStatus', '4')) == "UHS Secretary"){
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'Retired', 'string', 0, 0);
-								$roleDao->deleteRoleByUserId($users[$i], '4', '512');
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId($roleId);
-								$roleDao->insertRole($role);
-							}
-							$userSettingsDao->updateSetting($users[$i], 'uhsMemberStatus', 'UHS Chair');
-						}						
-					}
-				}
-				elseif($ercMemberStatus == "ERC, Vice-Chair"){
-					$uhsViceChair =& $userSettingsDao->getUsersBySetting("uhsMemberStatus", "UHS Vice-Chair");
-					$uhsViceChair =& $uhsViceChair->toArray();
-					if(count($uhsViceChair)<'1'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'secretaryStatus', '4')) == "UHS Secretary"){
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'Retired', 'string', 0, 0);
-								$roleDao->deleteRoleByUserId($users[$i], '4', '512');
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId($roleId);
-								$roleDao->insertRole($role);
-							}
-							$userSettingsDao->updateSetting($users[$i], 'uhsMemberStatus', 'UHS Vice-Chair');
-						}						
-					}
-				}
-				elseif($ercMemberStatus == "ERC, Member"){
-					$uhsMember =& $userSettingsDao->getUsersBySetting("uhsMemberStatus", "UHS Member");
-					$uhsMember =& $uhsMember->toArray();
-					if(count($uhsMember)<'15'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'secretaryStatus', '4')) == "UHS Secretary"){
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'Retired', 'string', 0, 0);
-								$roleDao->deleteRoleByUserId($users[$i], '4', '512');
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId($roleId);
-								$roleDao->insertRole($role);
-							}
-							$userSettingsDao->updateSetting($users[$i], 'uhsMemberStatus', 'UHS Member');
-						}						
-					}
-				}
-			}
-			elseif($ethicsCommittee == "NIOPH"){
-				if($ercMemberStatus == "ERC, Secretary" ){
-					$niophSecretary =& $userSettingsDao->getUsersBySetting("secretaryStatus", "NIOPH Secretary");
-					$niophSecretary =& $niophSecretary->toArray();
-					$rolePath = 'sectionEditor';
-					$roleId = '512';
-					if(count($niophSecretary)<'3'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'niophMemberStatus', '4')) == "NIOPH Member"){
-								$userSettingsDao->updateSetting($users[$i], 'niophMemberStatus', 'Retired', 'string', 0, 0);
-								if(($userSettingsDao->getSetting($users[$i], 'uhsMemberStatus', '4')) != "UHS Member"){
-									$roleDao->deleteRoleByUserId($users[$i], '4', '4096');
-								}
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId(0x00000200);
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'NIOPH Secretary');
-								$roleDao->insertRole($role);
-								$sectionEditorsDAO->insertEditor($journal->getId(), '1', $users[$i], '1', '0');
-							}
-						}						
-					}
-				}
-				elseif($ercMemberStatus == "ERC, Chair"){
-					$niophChair =& $userSettingsDao->getUsersBySetting("niophMemberStatus", "NIOPH Chair");
-					$niophChair =& $niophChair->toArray();
-					if(count($niophChair)<'1'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'secretaryStatus', '4')) == "NIOPH Secretary"){
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'Retired', 'string', 0, 0);
-								$roleDao->deleteRoleByUserId($users[$i], '4', '512');
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId($roleId);
-								$roleDao->insertRole($role);
-							}
-							$userSettingsDao->updateSetting($users[$i], 'niophMemberStatus', 'NIOPH Chair');
-						}						
-					}
-				}
-				elseif($ercMemberStatus == "ERC, Vice-Chair"){
-					$niophViceChair =& $userSettingsDao->getUsersBySetting("niophMemberStatus", "NIOPH Vice-Chair");
-					$niophViceChair =& $niophViceChair->toArray();
-					if(count($niophViceChair)<'1'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'secretaryStatus', '4')) == "NIOPH Secretary"){
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'Retired', 'string', 0, 0);
-								$roleDao->deleteRoleByUserId($users[$i], '4', '512');
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId($roleId);
-								$roleDao->insertRole($role);
-							}
-							$userSettingsDao->updateSetting($users[$i], 'niophMemberStatus', 'NIOPH Vice-Chair');
-						}						
-					}
-				}
-				elseif($ercMemberStatus == "ERC, Member"){
-					$niophMember =& $userSettingsDao->getUsersBySetting("niophMemberStatus", "NIOPH Member");
-					$niophMember =& $niophMember->toArray();
-					if(count($niophMember)<'15'){
-						for ($i=0; $i<count($users); $i++) {
-							if (($userSettingsDao->getSetting($users[$i], 'secretaryStatus', '4')) == "NIOPH Secretary"){
-								$userSettingsDao->updateSetting($users[$i], 'secretaryStatus', 'Retired', 'string', 0, 0);
-								$roleDao->deleteRoleByUserId($users[$i], '4', '512');
-							}
-							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-								$role = new Role();
-								$role->setJournalId($journal->getId());
-								$role->setUserId($users[$i]);
-								$role->setRoleId($roleId);
-								$roleDao->insertRole($role);
-							}
-							$userSettingsDao->updateSetting($users[$i], 'niophMemberStatus', 'NIOPH Member');
-						}						
-					}
-				}			
-			}
-			/*
-			if($ercMemberStatus == "ERC, Chair"){
-				$chair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, Chair");
-				$chair =& $chair->toArray();
-				if(count($chair)=='0'){
+			if ($ercMemberStatus == "Chair" OR $ercMemberStatus == "Vice-Chair" OR $ercMemberStatus == "Member"){
+				$reviewers = $ercReviewersDAO->getReviewersBySectionId($journal->getId(), $ethicsCommitteeId);
+				
+				// Here the number of members per committee is set to 20, 
+				// and of chair or vice-chair to 1
+				if ((((count($reviewers) + count($users)) < 21) && $ercMemberStatus == "Member") || (count($reviewers) + count($users)) < 2) {
 					for ($i=0; $i<count($users); $i++) {
-						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$ercReviewersDAO->ercReviewerExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
+							
+							// Create the role and insert it
 							$role = new Role();
 							$role->setJournalId($journal->getId());
 							$role->setUserId($users[$i]);
 							$role->setRoleId($roleId);
-							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'ERC, Chair');
 							$roleDao->insertRole($role);
+							
+							// Assign the reviewer to the specified committee
+							if ($ercMemberStatus == "Chair") $status = 1;
+							elseif ($ercMemberStatus == "Vice-Chair") $status = 2;
+							elseif ($ercMemberStatus == "Member") $status = 3;
+							
+							$ercReviewersDAO->insertReviewer($journal->getId(), $ethicsCommitteeId, $users[$i], $status);
 						}
-					}						
+					}					
 				}
-			}
-			elseif($ercMemberStatus == "ERC, Vice-Chair"){
-				$viceChair =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, Vice-Chair");
-				$viceChair =& $viceChair->toArray();
-				if(count($viceChair)=='0'){
+			} elseif ($ercMemberStatus == "Secretary") {
+				
+				//Get all the secretaries already enrolled in this particular committee
+				$secretaries = $sectionEditorsDAO->getEditorsBySectionId($journal->getId(), $ethicsCommitteeId);
+				
+				// The role id and the role path is modified
+				$roleId = ROLE_ID_SECTION_EDITOR;
+				$rolePath = $roleDao->getRolePath($roleId);
+				
+				//Here, the number of secretaries per committee is limited to 5
+				if ((count($secretaries) + count($users)) < 6) {
 					for ($i=0; $i<count($users); $i++) {
-						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$sectionEditorsDAO->editorExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
+							
+							// Create the role and insert it
 							$role = new Role();
 							$role->setJournalId($journal->getId());
 							$role->setUserId($users[$i]);
 							$role->setRoleId($roleId);
-							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'ERC, Vice-Chair');
 							$roleDao->insertRole($role);
+							
+							// Assign the secretary to the specified committee
+							$sectionEditorsDAO->insertEditor($journal->getId(), $ethicsCommitteeId, $users[$i], 1, 1);
 						}
-					}						
+					}				
 				}
 			}
-			
-			else*/
-			/*
-			elseif($ercMemberStatus == "ERC, Secretary Administrative Assistant"){
-				$secretaryAA =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, Secretary Administrative Assistant");
-				$secretaryAA =& $secretaryAA->toArray();
-				if(count($secretaryAA)=='0'){
-					for ($i=0; $i<count($users); $i++) {
-						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'ERC, Secretary Administrative Assistant');
-						}
-					}						
-				}
-			}
-			*/
-
-			/*
-			if($ercMemberStatus == "ERC, External Member"){
-				$extMember =& $userSettingsDao->getUsersBySetting("ercMemberStatus", "ERC, External Member");
-				$extMember =& $extMember->toArray();
-				if(count($extMember)<'2'){
-					for ($i=0; $i<count($users); $i++) {
-						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-							$role = new Role();
-							$role->setJournalId($journal->getId());
-							$role->setUserId($users[$i]);
-							$role->setRoleId($roleId);
-							$userSettingsDao->updateSetting($users[$i], 'ercMemberStatus', 'ERC, External Member');
-							$roleDao->insertRole($role);
-						}
-					}						
-				}
-			}*/
-			
 		}
-		//End of adding
-		// new adding for External Reviewers
 		else if ($users != null && is_array($users) && $roleId == 'ExtReviewer'){
 			$roleId = '4096';
-			$rolePath = 'reviewer';
+			$rolePath = 'extReviewer';
 			$userDAO =& DAORegistry::getDAO('UserDAO');
-			for ($i=0; $i<count($users); $i++) {
-				if ((!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) && (!$roleDao->roleExists($journal->getId(), $users[$i], '1')) && (!$roleDao->roleExists($journal->getId(), $users[$i], '16')) && (!$roleDao->roleExists($journal->getId(), $users[$i], '256')) && (!$roleDao->roleExists($journal->getId(), $users[$i], '512'))) {
-					$userDAO->insertExternalReviewer($users[$i], Locale::getLocale());
-					$role = new Role();
-					$role->setJournalId($journal->getId());
-					$role->setUserId($users[$i]);
-					$role->setRoleId($roleId);
-					$roleDao->insertRole($role);
-				}
-			}
-		}
-		//end
-		elseif ($users != null && is_array($users) && $rolePath != '' && $rolePath != 'admin') {
 			for ($i=0; $i<count($users); $i++) {
 				if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
 					$role = new Role();
@@ -572,7 +390,17 @@ class PeopleHandler extends ManagerHandler {
 				}
 			}
 		}
-
+		elseif ($users != null && is_array($users) && $rolePath != '') {
+			for ($i=0; $i<count($users); $i++) {
+				if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+					$role = new Role();
+					$role->setJournalId($journal->getId());
+					$role->setUserId($users[$i]);
+					$role->setRoleId($roleId);
+					$roleDao->insertRole($role);
+				}
+			}
+		}
 		Request::redirect(null, null, 'people', (empty($rolePath) ? null : $rolePath . 's'));
 	}
 
@@ -590,20 +418,18 @@ class PeopleHandler extends ManagerHandler {
 		if ($roleId != ROLE_ID_SITE_ADMIN && (Validation::isSiteAdmin() || $journalId = $journal->getId())) {
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
 			if ($roleId=='4096'){
-				$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-				
-				$userSettingsDao->updateSetting($userId, 'niophMemberStatus', 'Retired', 'string', 0, 0);
-				$userSettingsDao->updateSetting($userId, 'uhsMemberStatus', 'Retired', 'string', 0, 0);
-				//For external Reviewer
-				$userDao =& DAORegistry::getDAO('UserDAO');
-				$userDao->deleteExternalReviewer($userId, Locale::getLocale());
-				//end
+
 				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
+				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+				
+				// For the redirection of external reviewers
+				if ($ercReviewersDao->reviewerExists($journalId, $userId)) $ercReviewersDao->deleteReviewersByUserId($userId, $journalId);
+				else $roleId = 4097;
+					
+				
 			}
 			if ($roleId=='512'){
-				$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
-				
-				$userSettingsDao->updateSetting($userId, 'secretaryStatus', 'Retired', 'string', 0, 0);
+
 				$sectionEditorsDAO =& DAORegistry::getDAO('SectionEditorsDAO');
 				$sectionEditorsDAO->deleteEditorsByUserId($userId);
 				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);

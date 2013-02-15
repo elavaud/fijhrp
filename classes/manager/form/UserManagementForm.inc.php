@@ -168,9 +168,6 @@ class UserManagementForm extends Form {
 					'initials' => $user->getInitials(),
 					'gender' => $user->getGender(),
 					'affiliation' => $user->getAffiliation(null), // Localized
-						//Added by EL on May 8, 2012
-						'fieldOfActivity' => $user->getFieldOfActivity(null), // Localized 
-
 					'email' => $user->getEmail(),
 					'userUrl' => $user->getUrl(),
 					'phone' => $user->getPhone(),
@@ -180,13 +177,7 @@ class UserManagementForm extends Form {
 					'biography' => $user->getBiography(null), // Localized
 					'existingInterests' => $existingInterests,
 					'interestsKeywords' => $currentInterests,
-					'gossip' => $user->getGossip(null), // Localized
-					/*
-					 * Init data for additional user settings
-					 * Added by aglet 6/20/2011
-					 */
-					'healthAffiliation' => $user->getHealthAffiliation(null),
-					'wproAffiliation' => $user->getWproAffiliation(null),				
+					'gossip' => $user->getGossip(null), // Localized			
 					'userLocales' => $user->getLocales()
 				);
 
@@ -223,9 +214,6 @@ class UserManagementForm extends Form {
 			'initials',
 			'signature',
 			'affiliation',
-				//Added by EL on May 8, 2012
-				'fieldOfActivity',
-
 			'email',
 			'userUrl',
 			'phone',
@@ -238,14 +226,7 @@ class UserManagementForm extends Form {
 			'userLocales',
 			'generatePassword',
 			'sendNotify',
-			'mustChangePassword',
-			/*
-			 * Read input data of additional user settings
-			 * Added by aglet
-			 * Last Update: 6/20/2011
-			 */
-			'healthAffiliation',
-			'wproAffiliation'
+			'mustChangePassword'
 		));
 		if ($this->userId == null) {
 			$this->readUserVars(array('username'));
@@ -287,11 +268,7 @@ class UserManagementForm extends Form {
 		$user->setLastName($this->getData('lastName'));
 		$user->setInitials($this->getData('initials'));
 		$user->setGender($this->getData('gender'));
-		$user->setAffiliation($this->getData('affiliation'), null); // Localized
-		
-			//Added by EL on May 8, 2012
-			$user->setFieldOfActivity($this->getData('fieldOfActivity'), null); // Localized
-		
+		$user->setAffiliation($this->getData('affiliation'), null); // Localized		
 		$user->setSignature($this->getData('signature'), null); // Localized
 		$user->setEmail($this->getData('email'));
 		$user->setUrl($this->getData('userUrl'));
@@ -303,8 +280,6 @@ class UserManagementForm extends Form {
 		$user->setGossip($this->getData('gossip'), null); // Localized
 		$user->setMustChangePassword($this->getData('mustChangePassword') ? 1 : 0);
 		$user->setAuthId((int) $this->getData('authId'));
-		$user->setHealthAffiliation($this->getData('healthAffiliation'), null);
-		$user->setWproAffiliation($this->getData('wproAffiliation'), null);
 
 		$site =& Request::getSite();
 		$availableLocales = $site->getSupportedLocales();

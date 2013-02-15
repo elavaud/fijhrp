@@ -18,10 +18,6 @@
 	<message key="user.affiliation.description">(Your institution, e.g. "Simon Fraser University")</message>
 	<message key="user.affiliations">Affiliations</message>
 
-        <!-- Added by EL on May 8, 2012-->
-        <message key="user.fieldOfActivity">Field of Activity</message>
-        <message key="user.fieldOfActivity.description">(e.g. "Noncommunicable Diseases")</message>
-
 	<message key="user.authorization.accessDenied">Access denied.</message>
 	<message key="user.authorization.processAuthenticationTokenRequired">The process authentication token is missing or invalid.</message>
 	<message key="user.authorization.contextRequired">You cannot call this operation without a context (press, journal, conference, etc).</message>
@@ -90,21 +86,6 @@
 	<message key="user.profile.form.publishedNotifications">New issue published email notifications</message>
 	<message key="user.profile.form.urlInvalid">The specified URL is not valid. Please double-check the URL and try again. (Hint: Try adding http:// to the beginning of the URL.)</message>
 	<message key="user.profile.form.usernameRequired">A username is required.</message>
-	
-	<!-- ******************************** 
-		Added by aglet
-		Last Update: 6/20/2011
-		Error messages for additional user settings
-	 ******************************** -->
-	 <message key="user.profile.form.healthAffiliationRequired">Please select Yes or No (Yes if health-affiliated)</message>
-	 <message key="user.profile.form.wproAffiliationRequired">Please select Yes or No (Yes if WPRO-affiliated).</message>
-	 <message key="user.profile.form.healthAffiliation">Is user health-affiliated?</message>
-	 <message key="user.profile.form.wproAffiliation">Is user WPRO-affiliated?</message>
-	 <message key="user.profile.healthWproAffiliation">Health / WPRO Affiliation</message>
-	 <message key="user.profile.healthAffiliated">Health-affiliated</message>
-	 <message key="user.profile.nonHealth">Non-health</message>
-	 <message key="user.profile.wproAffiliated">WPRO-affiliated</message>
-	 <message key="user.profile.nonWpro">non-WPRO</message>
 	
 	<message key="user.profile.leavePasswordBlank">Leave the password fields blank to keep the current password.</message>
 	<message key="user.profile.newPassword">New password</message>

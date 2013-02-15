@@ -133,8 +133,6 @@
 					<td width="20%">
 					 		<label for="attendance[{$userId}]">{$user->getSalutation} {$user->getFirstName()} {$user->getLastName()}</label></td>
 					<td width="20%">
-					 		{if $user->getLocalizedWproAffiliation() == "Yes"} {translate key="editor.reviewer.wproAffiliated"} {else} {translate key="editor.reviewer.nonWpro"} {/if} /
-					 		{if $user->getLocalizedHealthAffiliation() == "Yes"} {translate key="editor.reviewer.healthAffiliated"} {else} {translate key="editor.reviewer.nonHealth"} {/if}					 		
 					</td>
 					<td width="50%" id="div_reason_of_absence_{$userId}" class="div_reason_of_absence">
 					 			<input type="radio" name="reviewer_attendance[{$userId}][reason]" onClick="reasonClicked({$userId})" id="absent-{$userId}-duty-travel" value="Duty Travel" {if  $attendance[$userId][$reason] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$user->getId()}">Duty Travel</label>

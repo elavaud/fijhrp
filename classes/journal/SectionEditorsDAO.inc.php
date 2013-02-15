@@ -14,8 +14,8 @@
 
 // $Id$
 
-
 class SectionEditorsDAO extends DAO {
+	
 	/**
 	 * Insert a new section editor.
 	 * @param $journalId int
@@ -24,7 +24,6 @@ class SectionEditorsDAO extends DAO {
 	 * @param $canReview boolean
 	 * @param $canEdit boolean
 	 */
-
 	function insertEditor($journalId, $sectionId, $userId, $canReview, $canEdit) {
 		return $this->update(
 			'INSERT INTO section_editors
@@ -177,6 +176,34 @@ class SectionEditorsDAO extends DAO {
 			'SELECT COUNT(*) FROM section_editors WHERE journal_id = ? AND section_id = ? AND user_id = ?', array($journalId, $sectionId, $userId)
 		);
 		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Get the erc of the secretary
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @param $userId int
+	 * @return boolean
+	 * Added by EL on February 15th 2013
+	 */
+	function getErcBySecretaryId($userId) {
+		$result =& $this->retrieve(
+			'SELECT DISTINCT s.* FROM sections s 
+				LEFT JOIN section_editors se ON s.section_id = se.section_id
+			WHERE se.user_id = ?', array($userId)
+		);
+
+		$sectionDAO =& DAORegistry::getDAO('SectionDAO');
+
+		$returner = null;
+		if ($result->RecordCount() == 1) {
+			$returner =& $sectionDAO->_returnSectionFromRow($result->GetRowAssoc(false));
+		}
 
 		$result->Close();
 		unset($result);

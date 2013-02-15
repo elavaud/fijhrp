@@ -110,6 +110,7 @@ $(document).ready(
 				<option value="{$smarty.const.ROLE_ID_REVIEWER}">Ethics Committee</option>
 				<option value="{$smarty.const.ROLE_ID_AUTHOR}">{translate key="user.role.author"}</option>
 				<option value="{$smarty.const.ROLE_ID_EDITOR}">{translate key="user.role.coordinator"}</option>
+				<option value="ExtReviewer">{translate key="user.ercrole.extReviewer"}</option>
 					<!-- Commented out - el - 19 April 2012 -->
 	        		{*	<option value="{$smarty.const.ROLE_ID_SECTION_EDITOR}">{translate key="user.role.sectionEditor"}</option> 
 					{if $roleSettings.useLayoutEditors}
@@ -146,11 +147,11 @@ $(document).ready(
         <td width="80%" class="value">
 			<select name="ercMemberStatus" id="ercMemberStatus" class="selectMenu">
 				<option value="NA"></option>
-				<option value="ERC, Chair">Chair</option>
-				<option value="ERC, Vice-Chair">Vice-Chair</option>
-				<option value="ERC, Secretary">Secretary</option>
+				<option value="Chair">Chair</option>
+				<option value="Vice-Chair">Vice-Chair</option>
+				<option value="Secretary">Secretary</option>
 				<!--<option value="ERC, Secretary Administrative Assistant">Secretary Administrative Assistant</option>-->
-				<option value="ERC, Member">Member</option>
+				<option value="Member">Member</option>
 				<!--<option value="ERC, External Member">External Member</option>-->
 			</select>
 		</td>

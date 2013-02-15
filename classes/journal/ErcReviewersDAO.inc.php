@@ -11,9 +11,6 @@
  */
 
 // $Id$
-define('ERC_STATUS_CHAIR', 1);
-define('ERC_STATUS_VICE_CHAIR',	2);
-define('ERC_STATUS_MEMBER', 3);
 
 class ErcReviewersDAO extends DAO {
 	
@@ -130,17 +127,63 @@ class ErcReviewersDAO extends DAO {
 	}
 
 	/**
-	 * Check if a user is assigned to a specified section.
+	 * Check if a user is assigned to a specified erc.
 	 * @param $journalId int
 	 * @param $sectionId int
 	 * @param $userId int
 	 * @return boolean
 	 */
-	function reviewerExists($journalId, $sectionId, $userId) {
+	function ercReviewerExists($journalId, $sectionId, $userId) {
 		$result =& $this->retrieve(
 			'SELECT COUNT(*) FROM erc_reviewers WHERE journal_id = ? AND section_id = ? AND user_id = ?', array($journalId, $sectionId, $userId)
 		);
 		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Check if a user is assigned to any erc.
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @param $userId int
+	 * @return boolean
+	 */
+	function reviewerExists($journalId, $userId) {
+		$result =& $this->retrieve(
+			'SELECT COUNT(*) FROM erc_reviewers WHERE journal_id = ? AND user_id = ?', array($journalId, $userId)
+		);
+		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Get the erc of the reviewer
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @param $userId int
+	 * @return boolean
+	 */
+	function getErcByReviewerId($userId) {
+		$result =& $this->retrieve(
+			'SELECT DISTINCT s.* FROM sections s 
+				LEFT JOIN erc_reviewers er ON s.section_id = er.section_id
+			WHERE er.user_id = ?', array($userId)
+		);
+
+		$sectionDAO =& DAORegistry::getDAO('SectionDAO');
+
+		$returner = null;
+		if ($result->RecordCount() == 1) {
+			$returner =& $sectionDAO->_returnSectionFromRow($result->GetRowAssoc(false));
+		}
 
 		$result->Close();
 		unset($result);

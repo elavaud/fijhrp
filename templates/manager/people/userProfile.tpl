@@ -39,31 +39,7 @@
 	<tr valign="top">
 		<td class="label">{translate key="user.lastName"}</td>
 		<td class="value">{$user->getLastName()|escape|default:"&mdash;"}</td>
-	</tr>
-	{******************************
-	 *
-	 *	WPRO-specific user settings
-	 *	Added by aglet 6/20/2011
-	 *
-	 *******************************}
-	<tr valign="top">
-		<td class="label">{translate key="user.profile.healthWproAffiliation"}</td>
-		<td class="value">
-			{assign var="healthAffiliation" value=$user->getLocalizedHealthAffiliation()}
-			{assign var="wproAffiliation" value=$user->getLocalizedWproAffiliation()}
-			{if $healthAffiliation == "Yes"}
-				{translate key="user.profile.healthAffiliated"}
-			{else $healthAffiliation == "No"}
-				{translate key="user.profile.nonHealth"}				
-			{/if}
-			,&nbsp;
-			{if $wproAffiliation == "Yes"}
-				{translate key="user.profile.wproAffiliated"}
-			{else $wproAffiliation == "No"}
-				{translate key="user.profile.nonWpro"}
-			{/if}
-		</td>
-	</tr>		
+	</tr>	
 	<tr valign="top">
 		<td class="label">{translate key="user.affiliation"}</td>
 		<td class="value">{$user->getLocalizedAffiliation()|escape|nl2br|default:"&mdash;"}</td>

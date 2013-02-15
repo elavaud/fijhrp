@@ -21,7 +21,6 @@ $(document).ready(function() { setupTableDND("#dragTable", "moveSection"); });
 
 <br/>
 
-
 <div id="sections">
 <table width="100%" class="listing" id="dragTable">
 	<tr>

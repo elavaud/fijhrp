@@ -92,6 +92,11 @@ class Application extends PKPApplication {
 			'EditAssignmentDAO' => 'classes.submission.editAssignment.EditAssignmentDAO',
 			'EditorSubmissionDAO' => 'classes.submission.editor.EditorSubmissionDAO',
 			'EmailTemplateDAO' => 'classes.mail.EmailTemplateDAO',
+
+				// Added by EL on February 13th 2013
+				// New DAO for associating a reviewer to an erc
+				'ErcReviewersDAO' => 'classes.journal.ErcReviewersDAO',
+
 			'FilterDAO' => 'lib.pkp.classes.filter.FilterDAO',
 			'GroupDAO' => 'lib.pkp.classes.group.GroupDAO',
 			'GroupMembershipDAO' => 'lib.pkp.classes.group.GroupMembershipDAO',

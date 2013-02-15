@@ -43,7 +43,7 @@ function confirmAndPrompt(userId) {
 {/literal}
 </script>
 
-<h3>{if $roleSymbolic=='reviewers'}ERC Members & External Reviewers{else}{translate key=$roleName}{/if}</h3>
+<h3>{translate key=$roleName}</h3>
 <form method="post" action="{url path=$roleSymbolic}">
 	<select name="roleSymbolic" class="selectMenu">
 		<option {if $roleSymbolic=='all'}selected="selected" {/if}value="all">{translate key="manager.people.allUsers"}</option>
@@ -107,9 +107,7 @@ function confirmAndPrompt(userId) {
 <input type="hidden" name="redirectUrl" value="{url path=$roleSymbolic}"/>
 
 <div id="users">
-{if $roleSymbolic=='reviewers'}
-<h6>ERCs Members</h6>
-{/if}
+
 <table width="100%" class="listing">
 	<tr>
 		<td colspan="6" class="headseparator">&nbsp;</td>
@@ -126,7 +124,6 @@ function confirmAndPrompt(userId) {
 		<td colspan="6" class="headseparator">&nbsp;</td>
 	</tr>
 {iterate from=users item=user}
-	{if $user->isLocalizedExternalReviewer()!= "Yes"}
 	{assign var=userExists value=1}
 	<tr valign="top">
 		<td><input type="checkbox" name="bcc[]" value="{$user->getEmail()|escape}"/></td>
@@ -158,9 +155,7 @@ function confirmAndPrompt(userId) {
 	<tr>
 		<td colspan="6" class="{if $users->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
-	{/if}
 {/iterate}
-{if $roleSymbolic!='reviewers'}
 {if $users->wasEmpty()}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="manager.people.noneEnrolled"}</td>
@@ -174,74 +169,7 @@ function confirmAndPrompt(userId) {
 		<td align="right">{page_links anchor="users" name="users" iterator=$users searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth roleSymbolic=$roleSymbolic searchInitial=$searchInitial sort=$sort sortDirection=$sortDirection}</td>
 	</tr>
 {/if}
-{/if}
 </table>
-
-{if $roleSymbolic=='reviewers'}
-<h6>External Reviewers</h6>
-<table width="100%" class="listing">
-	<tr>
-		<td colspan="6" class="headseparator">&nbsp;</td>
-	</tr>
-	<tr class="heading" valign="bottom">
-		<td width="5%">&nbsp;</td>
-		<td width="10%">{sort_heading key="user.username" sort="username"}</td>
-		<td width="10%">{sort_heading key="user.name" sort="name"}</td>
-		<td width="20%">{sort_heading key="user.email" sort="email"}</td>
-		<td width="20%" align="right">{translate key="common.action"}</td>
-	</tr>
-	<tr>
-		<td colspan="6" class="headseparator">&nbsp;</td>
-	</tr>
-{iterate from=reviewers item=extreviewer}
-	{if $extreviewer->isLocalizedExternalReviewer()== "Yes"}
-	<tr valign="top">
-		<td><input type="checkbox" name="bcc[]" value="{$extreviewer->getEmail()|escape}"/></td>
-		<td><a class="action" href="{url op="userProfile" path=$extreviewer->getId()}">{$extreviewer->getUsername()|escape|wordwrap:15:" ":true}</a></td>
-		<td>{$extreviewer->getFullName()|escape}</td>
-		<td class="nowrap">
-			{assign var=emailString value=$extreviewer->getFullName()|concat:" <":$extreviewer->getEmail():">"}
-			{url|assign:"redirectUrl" path=$roleSymbolic escape=false}
-			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$redirectUrl}
-			{$extreviewer->getEmail()|truncate:15:"..."|escape}&nbsp;{icon name="mail" url=$url}
-		</td>
-		<td align="right">
-			{if $roleId}
-			<a href="{url op="unEnroll" path=$roleId userId=$extreviewer->getId() journalId=$currentJournal->getId()}" onclick="return confirm('{translate|escape:"jsparam" key="manager.people.confirmUnenroll"}')" class="action">{translate key="manager.people.unenroll"}</a>&nbsp;|
-			{/if}
-			<a href="{url op="editUser" path=$extreviewer->getId()}" class="action">{translate key="common.edit"}</a>
-			{if $thisUser->getId() != $extreviewer->getId()}
-				|&nbsp;<a href="{url page="login" op="signInAsUser" path=$extreviewer->getId()}" class="action">{translate key="manager.people.signInAs"}</a>
-				{if !$roleId}|&nbsp;<a href="{url op="removeUser" path=$extreviewer->getId()}" onclick="return confirm('{translate|escape:"jsparam" key="manager.people.confirmRemove"}')" class="action">{translate key="manager.people.remove"}</a>{/if}
-				{if $extreviewer->getDisabled()}
-					|&nbsp;<a href="{url op="enableUser" path=$extreviewer->getId()}" class="action">{translate key="manager.people.enable"}</a>
-				{else}
-					|&nbsp;<a href="javascript:confirmAndPrompt({$extreviewer->getId()})" class="action">{translate key="manager.people.disable"}</a>
-				{/if}
-			{/if}
-		</td>
-	</tr>
-	<tr>
-		<td colspan="6" class="{if $users->eof()}end{/if}separator">&nbsp;</td>
-	</tr>
-	{/if}
-{/iterate}
-{if $users->wasEmpty()}
-	<tr>
-		<td colspan="6" class="nodata">{translate key="manager.people.noneEnrolled"}</td>
-	</tr>
-	<tr>
-		<td colspan="6" class="endseparator">&nbsp;</td>
-	</tr>
-{else}
-	<tr>
-		<td colspan="4" align="left"><br/><br/>{page_info iterator=$users}</td>
-		<td align="right">{page_links anchor="users" name="users" iterator=$users searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth roleSymbolic=$roleSymbolic searchInitial=$searchInitial sort=$sort sortDirection=$sortDirection}</td>
-	</tr>
-{/if}
-</table>
-{/if}
-
 
 {if $userExists}
 	<p><input type="submit" value="{translate key="email.compose"}" class="button defaultButton"/>&nbsp;<input type="button" value="{translate key="common.selectAll"}" class="button" onclick="toggleChecked()" />  <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url page="manager" escape=false}'" /></p>

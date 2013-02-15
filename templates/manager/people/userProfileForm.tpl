@@ -216,15 +216,6 @@
 		</td>
 	</tr>
 	
-	
-	<tr valign="top">
-		<td class="label">{fieldLabel name="fieldOfActivity" key="user.fieldOfActivity"}</td>
-		<td class="value">
-			<textarea name="fieldOfActivity[{$formLocale|escape}]" id="fieldOfActivity" rows="5" cols="40" class="textArea">{$fieldOfActivity[$formLocale]|escape}</textarea><br/>
-			<span class="instruct">{translate key="user.fieldOfActivity.description"}</span>
-		</td>
-	</tr>
-	
 	<tr valign="top">
 		<td class="label">{fieldLabel name="signature" key="user.signature"}</td>
 		<td class="value"><textarea name="signature[{$formLocale|escape}]" id="signature" rows="5" cols="40" class="textArea">{$signature[$formLocale]|escape}</textarea></td>

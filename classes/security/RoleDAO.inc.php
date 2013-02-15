@@ -146,15 +146,28 @@ class RoleDAO extends DAO {
 	function &getUsersByRoleId($roleId = null, $journalId = null, $searchType = null, $search = null, $searchMatch = null, $dbResultRange = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$users = array();
 
+		$searchSql = '';
+
 		$paramArray = array(ASSOC_TYPE_USER, 'interest');
-		if (isset($roleId)) $paramArray[] = (int) $roleId;
+		if (isset($roleId)) {
+			if ($roleId == "extReviewer" || $roleId == "reviewer") {
+				if ($roleId == "extReviewer") {
+					$searchSql = ' AND NOT EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id)';
+				} else {
+					$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id)';	
+				}
+				$roleId = ROLE_ID_REVIEWER;
+			} 
+			
+			$paramArray[] = (int) $roleId;
+		}
+
 		if (isset($journalId)) $paramArray[] = (int) $journalId;
 
 		// For security / resource usage reasons, a role or journal ID
 		// must be specified. Don't allow calls supplying neither.
 		if ($journalId === null && $roleId === null) return null;
 
-		$searchSql = '';
 
 		$searchTypeMap = array(
 			USER_FIELD_FIRSTNAME => 'u.first_name',
@@ -168,36 +181,36 @@ class RoleDAO extends DAO {
 			$fieldName = $searchTypeMap[$searchType];
 			switch ($searchMatch) {
 				case 'is':
-					$searchSql = "AND LOWER($fieldName) = LOWER(?)";
+					$searchSql .= " AND LOWER($fieldName) = LOWER(?)";
 					$paramArray[] = $search;
 					break;
 				case 'contains':
-					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
+					$searchSql .= " AND LOWER($fieldName) LIKE LOWER(?)";
 					$paramArray[] = '%' . $search . '%';
 					break;
 				case 'startsWith':
-					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
+					$searchSql .= " AND LOWER($fieldName) LIKE LOWER(?)";
 					$paramArray[] = $search . '%';
 					break;
 			}
 		} elseif (!empty($search)) switch ($searchType) {
 			case USER_FIELD_USERID:
-				$searchSql = 'AND u.user_id=?';
+				$searchSql .= ' AND u.user_id=?';
 				$paramArray[] = $search;
 				break;
 			case USER_FIELD_INITIAL:
-				$searchSql = 'AND LOWER(u.last_name) LIKE LOWER(?)';
+				$searchSql .= ' AND LOWER(u.last_name) LIKE LOWER(?)';
 				$paramArray[] = $search . '%';
 				break;
 		}
 
 		$searchSql .= ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : '');
-
+				
 		$result =& $this->retrieveRange(
 			'SELECT DISTINCT u.* FROM users AS u LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
 				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
 				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id),
-				roles AS r WHERE u.user_id = r.user_id ' . (isset($roleId)?'AND r.role_id = ?':'') . (isset($journalId) ? ' AND r.journal_id = ?' : '') . ' ' . $searchSql,
+				roles AS r WHERE u.user_id = r.user_id ' . (isset($roleId)?'AND r.role_id = ?':'') . (isset($journalId) ? ' AND r.journal_id = ?' : '') . $searchSql,
 			$paramArray,
 			$dbResultRange
 		);
@@ -443,6 +456,11 @@ class RoleDAO extends DAO {
 				return 'sectionEditor';
 			case ROLE_ID_REVIEWER:
 				return 'reviewer';
+				
+			// For external reviewer
+			// Added by EL on February 14th 2012
+				case 4097:
+					return 'extReviewer';
 			case ROLE_ID_AUTHOR:
 				return 'author';
 			default:
