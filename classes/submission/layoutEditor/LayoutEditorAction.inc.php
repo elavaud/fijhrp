@@ -154,8 +154,10 @@ class LayoutEditorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($submission, 'LAYOUT_COMPLETE');
 
-		$editAssignments =& $submission->getEditAssignments();
-		if (empty($editAssignments)) return;
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $submission->getEditAssignments();
+			//if (empty($editAssignments)) return;
 
 		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
 			HookRegistry::call('LayoutEditorAction::completeLayoutEditing', array(&$submission, &$editAssignments, &$email));
@@ -185,7 +187,9 @@ class LayoutEditorAction extends Action {
 				} else {
 					$editorialContact = array_shift($assignedSectionEditors);
 					if (!$editorialContact) $editorialContact = array_shift($assignedEditors);
-					$editorialContactName = $editorialContact->getEditorFullName();
+							// Modified by EL on February 17th 2013
+							// No edit assigment anymore
+							$editorialContactName = $editorialContact->getFullName();
 				}
 				$paramArray = array(
 					'editorialContactName' => $editorialContactName,

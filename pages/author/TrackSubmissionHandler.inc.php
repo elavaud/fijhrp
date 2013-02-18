@@ -832,10 +832,12 @@ class TrackSubmissionHandler extends AuthorHandler {
             $article->setStatus(PROPOSAL_STATUS_WITHDRAWN);
             $articleDao->updateArticle($article);
 
-			// Send a regular notification to section editors
-			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-			$notificationSectionEditors = array();
-			$sectionEditors = $editAssignmentDao->getEditorAssignmentsByArticleId3($article->getArticleId());
+				// Send a regular notification to section editors
+				// Removed by EL on February 17th 2013
+				// No edit assignments anymore
+				//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+				//$notificationSectionEditors = array();
+				//$sectionEditors = $edit Assignment Dao->getEditorAssignmentsByArticleId3($article->getArticleId());
 			
 			$user =& Request::getUser();
 			$journal =& Request::getJournal();
@@ -845,14 +847,22 @@ class TrackSubmissionHandler extends AuthorHandler {
 			$param = $article->getLocalizedWhoId().':<br/>'.$user->getUsername();
 			$url = Request::url($journal->getPath(), 'sectionEditor', 'submission', array($article->getId()));
         	
-        	foreach ($sectionEditors as $sectionEditorEntry) {
-        		$sectionEditor =& $sectionEditorEntry['user'];
-            	$notificationManager->createNotification(
-            		$sectionEditor->getId(), 'notification.type.proposalWithdrawn',
-            		$param, $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
-        		);
-        	}
-        	
+        		//foreach ($sectionEditors as $sectionEditorEntry) {
+        			//$sectionEditor =& $sectionEditorEntry['user'];
+            		//$notificationManager->createNotification(
+            			//$sectionEditor->getId(), 'notification.type.proposalWithdrawn',
+            			//$param, $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
+        			//);
+        		//}
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+				foreach ($sectionEditors as $sectionEditor){
+            		$notificationManager->createNotification(
+            			$sectionEditor->getId(), 'notification.type.proposalWithdrawn',
+            			$param, $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
+        			);		
+				}
+			        	
             Request::redirect(null, null, 'index');
         }
 

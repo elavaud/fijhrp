@@ -664,5 +664,40 @@ class SectionDAO extends DAO {
 			default: return null;
 		}
 	}
+
+	/**
+	 * Check if a erc exists with the specified title.
+	 * @param $value string
+	 * @return boolean
+	 * Added by EL on February 15th 2013
+	 */
+	function ercExistsByTitle($value) {
+		$result =& $this->retrieve(
+			'SELECT COUNT(*) FROM section_settings WHERE setting_name = "title" AND setting_value = ?', array ($value)
+		);
+		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+
+	/**
+	 * Check if a erc exists with the specified abbrev.
+	 * @param $value string
+	 * Added by EL on February 15th 2013
+	 */
+	function ercExistsByAbbrev($value) {
+		$result =& $this->retrieve(
+			'SELECT COUNT(*) FROM section_settings WHERE setting_name = "abbrev" AND setting_value = ?', array ($value)
+		);
+		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
 }
 ?>

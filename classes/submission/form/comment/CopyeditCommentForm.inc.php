@@ -78,13 +78,19 @@ class CopyeditCommentForm extends CommentForm {
 		// excluding whomever posted the comment.
 
 		// Get editors
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$editAssignments =& $editAssignmentDao->getEditAssignmentsByArticleId($article->getId());
-		$editAssignments =& $editAssignments->toArray();
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//$editAssignments =& $edit Assignment Dao->get Edit AssignmentsByArticleId($article->getId());
+			//$editAssignments =& $editAssignments->toArray();
 		$editorAddresses = array();
-		foreach ($editAssignments as $editAssignment) {
-			if ($editAssignment->getCanEdit()) $editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-		}
+			//foreach ($editAssignments as $editAssignment) {
+				//if ($editAssignment->getCanEdit()) $editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
+			//}
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+			foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();			
+			
 
 		// If no editors are currently assigned, send this message to
 		// all of the journal's editors.

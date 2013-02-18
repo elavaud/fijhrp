@@ -115,6 +115,8 @@ class SectionHandler extends ManagerHandler {
 	/**
 	 * Delete a section.
 	 * @param $args array first parameter is the ID of the section to delete
+	 * Last modified: EL on February 17th 2013
+	 * Delete also all the roles of the members and secretaries associated to this section.
 	 */
 	function deleteSection($args) {
 		$this->validate();

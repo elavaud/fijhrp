@@ -498,23 +498,32 @@ class Article extends Submission {
 		}
 
 		if($editors) {
-			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-			$editAssignments =& $editAssignmentDao->getEditorAssignmentsByArticleId($articleId);
-			while ($editAssignment =& $editAssignments->next()) {
-				$userId = $editAssignment->getEditorId();
-				if ($userId) $userIds[] = array('id' => $userId, 'role' => 'editor');
-				unset($editAssignment);
-			}
+			// Edited by EL on February 17th 2013
+			// Editors are not assigned to articles anymore
+			// $edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			// $editAssignments =& $edit Assignment Dao->getEditorAssignmentsByArticleId($articleId);
+			// while ($editAssignment =& $editAssignments->next()) {
+				// $userId = $editAssignment->getEditorId();
+				// if ($userId) $userIds[] = array('id' => $userId, 'role' => 'editor');
+				// unset($editAssignment);
+			//}
 		}
 		
 		if($sectionEditors) {
-			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-			$editAssignments =& $editAssignmentDao->getSectionEditorAssignmentsByArticleId($articleId);
-			while ($editAssignment =& $editAssignments->next()) {
-				$userId = $editAssignment->getEditorId();
-				if ($userId) $userIds[] = array('id' => $userId, 'role' => 'sectionEditor');
-				unset($editAssignment);
-			}
+			// Edited by EL on February 17th 2013
+			// No more editAssignment
+			// $edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			// $editAssignments =& $edit Assignment Dao->getSectionEditorAssignmentsByArticleId($articleId);
+			//while ($editAssignment =& $editAssignments->next()) {
+			//	$userId = $editAssignment->getEditorId();
+			//	if ($userId) $userIds[] = array('id' => $userId, 'role' => 'sectionEditor');
+			//	unset($editAssignment);
+			//}
+			
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($this->getJournalId(), $this->getSectionId());
+				foreach ($sectionEditors as $sectionEditor) $userIds[] = array('id' => $sectionEditor->getId(), 'role' => 'sectionEditor');
+
 		}
 		
 		if($copyeditor) {

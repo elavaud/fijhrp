@@ -13,6 +13,7 @@
  * @ingroup pages_sectionEditor
  * @brief Handle requests for section editor functions.
  *
+ * Last modified: EL on February 17th 2013
  */
 
 // $Id$
@@ -21,11 +22,7 @@ switch ($op) {
 	//
 	// Submission Tracking
 	//
-	case 'enrollSearch':
-	case 'createReviewer':
-	case 'createExternalReviewer':
 	case 'suggestUsername':
-	case 'enroll':
 	case 'submission':
 	case 'submissionRegrets':
 	case 'submissionReview':
@@ -120,6 +117,12 @@ switch ($op) {
 	//
 	case 'downloadFile':
 	case 'viewFile':
+	case 'section':
+	case 'enrollSearch':
+	case 'createReviewer':
+	case 'createExternalReviewer':
+	case 'enroll':
+	case 'unEnroll':
 	// Submission Review Form
 	case 'clearReviewForm':
 	case 'selectReviewForm':

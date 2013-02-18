@@ -242,11 +242,15 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		$signoffDao->updateObject($proofProofreaderSignoff);
 		$signoffDao->updateObject($proofLayoutEditorSignoff);
 
-		//if resubmission, don't create again the assignment
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		if ($editAssignmentDao->getEditorAssignmentsByArticleId3($article->getId())) $sectionEditors =& $editAssignmentDao->getEditorAssignmentsByArticleId3($article->getId());
-		else $sectionEditors = $this->assignEditors($article);
-		
+			// Not anymore: EL on February 17th 2013
+			// A section editor is directly assigned with the section id
+		// if resubmission, don't create again the assignment
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//if ($edit Assignment Dao->getEditorAssignmentsByArticleId3($article->getId())) $sectionEditors =& $edit Assignment Dao->getEditorAssignmentsByArticleId3($article->getId());
+			//else $sectionEditors = $this->assignEditors($article);
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+			
 		$user =& Request::getUser();
 
 		// Update search index
@@ -257,8 +261,10 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		// Send author notification email
 		import('classes.mail.ArticleMailTemplate');
 		$mail = new ArticleMailTemplate($article, 'SUBMISSION_ACK', null, null, null, false);
-		foreach ($sectionEditors as $sectionEditorEntry) {
-			$sectionEditor =& $sectionEditorEntry['user'];
+		foreach ($sectionEditors as $sectionEditor) {
+				// Not anymore: EL on February 17th 2013
+				// A section editor is directly assigned with the section id
+				// $sectionEditor =& $sectionEditorEntry['user'];
 			$mail->setFrom($sectionEditor->getEmail(), $sectionEditor->getFullName());
 			$mail->addBcc($sectionEditor->getEmail(), $sectionEditor->getFullName());
 			//unset($sectionEditor);
@@ -290,8 +296,10 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		import('lib.pkp.classes.notification.NotificationManager');
 		$notificationManager = new NotificationManager();
 		$url = Request::url($journal->getPath(), 'sectionEditor', 'submissionReview', array($article->getId()));
-        foreach ($sectionEditors as $sectionEditorEntry) {
-        	$sectionEditor =& $sectionEditorEntry['user'];
+        foreach ($sectionEditors as $sectionEditor) {
+        		// Not anymore: EL on February 17th 2013
+				// A section editor is directly assigned with the section id
+        		// $sectionEditor =& $sectionEditorEntry['user'];
             $notificationManager->createNotification(
             	$sectionEditor->getId(), $message,
             	$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED

@@ -55,6 +55,9 @@ class SectionForm extends Form {
 		// Added by EL on February 11th 2013 
 			$this->addCheck(new FormValidatorLocale($this, 'region', 'required', 'manager.sections.form.regionRequired'));
 		
+		$this->addCheck(new FormValidatorCustom($this, 'title', 'required', 'manager.sections.form.titleAlreadyUsed', array(DAORegistry::getDAO('SectionDAO'), 'ercExistsByTitle'), array(), true));
+		$this->addCheck(new FormValidatorCustom($this, 'abbrev', 'required', 'manager.sections.form.abbrevAlreadyInUsed', array(DAORegistry::getDAO('SectionDAO'), 'ercExistsByAbbrev'), array(), true));
+		
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidatorCustom($this, 'reviewFormId', 'optional', 'manager.sections.form.reviewFormId', array(DAORegistry::getDAO('ReviewFormDAO'), 'reviewFormExists'), array(ASSOC_TYPE_JOURNAL, $journal->getId())));
 		$this->includeSectionEditor = $this->omitSectionEditor = null;

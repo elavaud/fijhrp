@@ -22,7 +22,9 @@ class CopyeditorSubmissionDAO extends DAO {
 	var $articleDao;
 	var $authorDao;
 	var $userDao;
-	var $editAssignmentDao;
+		// Removed by EL on February 17th 2013
+		// No edit assignments anymore
+		//var $edit Assignment Dao;
 	var $articleFileDao;
 	var $suppFileDao;
 	var $galleyDao;
@@ -36,7 +38,9 @@ class CopyeditorSubmissionDAO extends DAO {
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
-		$this->editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
@@ -101,8 +105,10 @@ class CopyeditorSubmissionDAO extends DAO {
 		$this->articleDao->_articleFromRow($copyeditorSubmission, $row);
 
 		// Editor Assignment
-		$editAssignments =& $this->editAssignmentDao->getEditAssignmentsByArticleId($row['article_id']);
-		$copyeditorSubmission->setEditAssignments($editAssignments->toArray());
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
+			//$copyeditorSubmission->setEditAssignments($editAssignments->toArray());
 
 		// Comments
 		$copyeditorSubmission->setMostRecentCopyeditComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_COPYEDIT, $row['article_id']));

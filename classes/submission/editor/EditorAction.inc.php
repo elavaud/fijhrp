@@ -29,7 +29,10 @@ class EditorAction extends SectionEditorAction {
 	 */
 	function assignEditor($articleId, $sectionEditorId, $isEditor = false, $send = false) {
 		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			// This one was already unseful
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
 
 		$user =& Request::getUser();
@@ -59,9 +62,11 @@ class EditorAction extends SectionEditorAction {
 			$editAssignment->setDateNotified(Core::getCurrentDate());
 			$editAssignment->setDateUnderway(null);
 
-			$editAssignments =& $editorSubmission->getEditAssignments();
-			array_push($editAssignments, $editAssignment);
-			$editorSubmission->setEditAssignments($editAssignments);
+				// Removed by EL on February 17th 2013
+				// No edit assignments anymore
+				//$editAssignments =& $editorSubmission->getEditAssignments();
+				//array_push($editAssignments, $editAssignment);
+				//$editorSubmission->setEditAssignments($editAssignments);
 
 			$editorSubmissionDao->updateEditorSubmission($editorSubmission);
 
@@ -110,11 +115,13 @@ class EditorAction extends SectionEditorAction {
 		ArticleLog::logEvent($article->getId(), ARTICLE_LOG_EDITOR_EXPEDITE, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.submissionExpedited', array('editorName' => $user->getFullName(), 'articleId' => $article->getId()));
 
 		// 1. Ensure that an editor is assigned.
-		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-		if (empty($editAssignments)) {
-			// No editors are currently assigned; assign self.
-			EditorAction::assignEditor($article->getId(), $user->getId(), true);
-		}
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
+			//if (empty($editAssignments)) {
+				// No editors are currently assigned; assign self.
+				//EditorAction::assignEditor($article->getId(), $user->getId(), true);
+			//}
 
 		// 2. Accept the submission and send to copyediting.
 		$sectionEditorSubmission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($article->getId());

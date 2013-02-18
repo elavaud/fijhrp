@@ -396,7 +396,11 @@ class EditorHandler extends SectionEditorHandler {
 
 	/**
 	 * Set the canEdit / canReview flags for this submission's edit assignments.
+	 * Removed by EL on February 17th 2013
+	 * Not Useful anymore
+	 * If put back, be careful of the editassignments
 	 */
+	/*
 	function setEditorFlags($args) {
 		$this->validate();
 
@@ -407,8 +411,8 @@ class EditorHandler extends SectionEditorHandler {
 		$article =& $articleDao->getArticle($articleId);
 
 		if ($article && $article->getJournalId() === $journal->getId()) {
-			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-			$editAssignments =& $editAssignmentDao->getEditAssignmentsByArticleId($articleId);
+			$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			$editAssignments =& $edit Assignment Dao->getEditAssignmentsByArticleId($articleId);
 
 			while($editAssignment =& $editAssignments->next()) {
 				if ($editAssignment->getIsEditor()) continue;
@@ -419,41 +423,51 @@ class EditorHandler extends SectionEditorHandler {
 				$editAssignment->setCanReview($canReview);
 				$editAssignment->setCanEdit($canEdit);
 
-				$editAssignmentDao->updateEditAssignment($editAssignment);
+				$edit Assignment Dao->updateEditAssignment($editAssignment);
 			}
 		}
 
 		Request::redirect(null, null, 'submission', $articleId);
 	}
-
+	*/
+	
 	/**
 	 * Delete the specified edit assignment.
+	 * Removed by EL on February 17th 2013
+	 * Edit assignments not useful anymore
+	 * If put back, be careful of the edit assignments
 	 */
+	 /*
 	function deleteEditAssignment($args) {
 		$this->validate();
 
 		$journal =& Request::getJournal();
 		$editId = (int) (isset($args[0])?$args[0]:0);
 
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$editAssignment =& $editAssignmentDao->getEditAssignment($editId);
+		$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+		$editAssignment =& $edit Assignment Dao->getEditAssignment($editId);
 
 		if ($editAssignment) {
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
 			$article =& $articleDao->getArticle($editAssignment->getArticleId());
 
 			if ($article && $article->getJournalId() === $journal->getId()) {
-				$editAssignmentDao->deleteEditAssignmentById($editAssignment->getEditId());
+				$edit Assignment Dao->deleteEditAssignmentById($editAssignment->getEditId());
 				Request::redirect(null, null, 'submission', $article->getId());
 			}
 		}
 
 		Request::redirect(null, null, 'submissions');
 	}
-
+	*/
+	
 	/**
 	 * Assigns the selected editor to the submission.
+	 * Removed by EL on February 17th 2013
+	 * Should not be useful anymore
+	 * If put back, be careful of the edit assignments
 	 */
+	 /*
 	function assignEditor($args) {
 		$this->validate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_MANAGER)); // manager.people.noneEnrolled
@@ -519,8 +533,8 @@ class EditorHandler extends SectionEditorHandler {
 			$sectionDao =& DAORegistry::getDAO('SectionDAO');
 			$sectionEditorSections =& $sectionDao->getEditorSections($journal->getId());
 
-			$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-			$editorStatistics = $editAssignmentDao->getEditorStatistics($journal->getId());
+			$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			$editorStatistics = $edit Assignment Dao->getEditorStatistics($journal->getId());
 
 			$templateMgr->assign_by_ref('editorSections', $sectionEditorSections);
 			$templateMgr->assign('editorStatistics', $editorStatistics);
@@ -541,7 +555,8 @@ class EditorHandler extends SectionEditorHandler {
 			$templateMgr->display('editor/selectSectionEditor.tpl');
 		}
 	}
-
+	*/
+	
 	/**
 	 * Delete a submission.
 	 */

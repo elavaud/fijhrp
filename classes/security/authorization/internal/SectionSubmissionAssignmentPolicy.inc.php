@@ -48,20 +48,26 @@ class SectionSubmissionAssignmentPolicy extends AuthorizationPolicy {
 		// that they have been explicitly assigned to.
 
 		// 1) Retrieve the edit assignments
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$editAssignments =& $editAssignmentDao->getEditAssignmentsByArticleId($sectionEditorSubmission->getId());
-		if (!is_a($editAssignments, 'DAOResultFactory')) return AUTHORIZATION_DENY;
-		$editAssignmentsArray =& $editAssignments->toArray();
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//$editAssignments =& $edit Assignment Dao->getEditAssignmentsByArticleId($sectionEditorSubmission->getId());
+			//if (!is_a($editAssignments, 'DAOResultFactory')) return AUTHORIZATION_DENY;
+			//$editAssignmentsArray =& $editAssignments->toArray();
 
 		// 2) Check whether the user is the article's editor,
 		//    otherwise deny access.
-		$foundAssignment = false;
-		foreach ($editAssignmentsArray as $editAssignment) {
-			if ($editAssignment->getEditorId() == $user->getId()) {
-				if ($editAssignment->getCanEdit()) $foundAssignment = true;
-				break;
-			}
-		}
+			//$foundAssignment = false;
+			//foreach ($editAssignmentsArray as $editAssignment) {
+				//if ($editAssignment->getEditorId() == $user->getId()) {
+					//if ($editAssignment->getCanEdit()) $foundAssignment = true;
+					//break;
+				//}
+			//}
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($sectionEditorSubmission->getJournalId(), $sectionEditorSubmission->getSectionId());
+			$foundAssignment = false;
+			foreach ($sectionEditors as $sectionEditor) if ($sectionEditor->getId() == $user->getId()) $foundAssignment = true;
 
 		if ($foundAssignment) {
 			return AUTHORIZATION_PERMIT;

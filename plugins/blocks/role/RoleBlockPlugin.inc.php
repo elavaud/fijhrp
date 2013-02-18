@@ -90,7 +90,7 @@ class RoleBlockPlugin extends BlockPlugin {
 				return 'editor.tpl';
 			case 'sectionEditor':
 				$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-				$submissionsCount =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($userId, $journalId);
+				$submissionsCount =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($user->getCommittee(), $journalId);
 				$templateMgr->assign('submissionsCount', $submissionsCount);
 				return 'sectionEditor.tpl';
 			case 'proofreader':

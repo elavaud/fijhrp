@@ -586,61 +586,6 @@ class PKPUser extends DataObject {
 	}
 
 	
-	function getFunctions(){
-		
-		$roleDao =& DAORegistry::getDAO('RoleDAO');
-		$roles =& $roleDao->getRolesByUserId($this->getId(), '4');
-		$functions;
-		
-		foreach ($roles as $role){ 
-			$roleId =& $role->getRoleId();
-			if ($roleId == '512'){
-				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-				$erc =& $sectionEditorsDao->getErcBySecretaryId($this->getId());
-				if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' Secretary';
-				else $functions = $erc->getLocalizedAbbrev().' Secretary';
-			}
-			if ($roleId == '4096'){
-				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
-				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
-				if (isset($erc)) {
-					if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
-					else $functions = $erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
-				} else {
-					if ($functions != null) $functions .= ' & External Reviewer';
-					else  $functions = 'External Reviewer';
-				}
-			}
-			
-			if ($roleId == '65536'){
-				if ($functions != null){
-					$functions .= ' & Investigator';
-				}
-				else {
-					$functions = 'Investigator';
-				}
-			}
-			if ($roleId == '256'){
-				if ($functions != null){
-					$functions .= ' & Coordinator';
-				}
-				else {
-					$functions = 'Coordinator';
-				}
-			}
-			if ($roleId == '16'){
-				if ($functions != null){
-					$functions .= ' & Administrator';
-				}
-				else {
-					$functions = 'Administrator';
-				}
-			}
-		}
-		return $functions;
-	}
-
-	
 	function getContactSignature() {
 		$signature = $this->getFullName();
 		if ($a = $this->getLocalizedAffiliation()) $signature .= "\n" . $a;

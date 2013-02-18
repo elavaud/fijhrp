@@ -59,7 +59,8 @@ function confirmAndPrompt(userId) {
 		{if $roleSettings.useProofreaders}
 			<option {if $roleSymbolic=='proofreaders'}selected="selected" {/if}value="proofreaders">{translate key="user.role.proofreaders"}</option>
 		{/if}
-		<option {if $roleSymbolic=='reviewers'}selected="selected" {/if}value="reviewers">ERC Members & External Reviewers</option>
+		<option {if $roleSymbolic=='reviewers'}selected="selected" {/if}value="reviewers">{translate key="user.role.reviewers"}</option>
+		<option {if $roleSymbolic=='extReviewers'}selected="selected" {/if}value="extReviewers">{translate key="user.ercrole.extReviewers"}</option>
 		<option {if $roleSymbolic=='authors'}selected="selected" {/if}value="authors">{translate key="user.role.authors"}</option>
 
 <!--		<option {if $roleSymbolic=='readers'}selected="selected" {/if}value="readers">{translate key="user.role.readers"}</option> -->

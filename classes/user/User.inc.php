@@ -57,6 +57,91 @@ class User extends PKPUser {
 		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
 		return $userSettingsDao->updateSetting($this->getId(), $name, $value, $type, $journalId);
 	}
+
+	/**
+	 * Get the function of the user
+	 * @param $ercMemberIndex boolean, if true, retrieve only for erc members.
+	 * @return string
+	 * Added by EL on February 15th 2013
+	 */
+	function getFunctions($ercMemberIndex = false){
+		$journal =& Request::getJournal();
+		$roleDao =& DAORegistry::getDAO('RoleDAO');
+		$roles =& $roleDao->getRolesByUserId($this->getId(), $journal->getId());
+		$functions;
+		
+		foreach ($roles as $role){ 
+			$roleId =& $role->getRoleId();
+			if ($roleId == '512'){
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$erc =& $sectionEditorsDao->getErcBySecretaryId($this->getId());
+				if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' Secretary';
+				else $functions = $erc->getLocalizedAbbrev().' Secretary';
+			}
+			elseif ($roleId == '4096'){
+				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
+				if (isset($erc)) {
+					if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
+					else $functions = $erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
+				} else {
+					if ($functions != null) $functions .= ' & External Reviewer';
+					else  $functions = 'External Reviewer';
+				}
+			}
+			elseif ($roleId == '65536' && $ercMemberIndex == false){
+				if ($functions != null){
+					$functions .= ' & Investigator';
+				}
+				else {
+					$functions = 'Investigator';
+				}
+			}
+			elseif ($roleId == '256' && $ercMemberIndex == false){
+				if ($functions != null){
+					$functions .= ' & Coordinator';
+				}
+				else {
+					$functions = 'Coordinator';
+				}
+			}
+			elseif ($roleId == '16' && $ercMemberIndex == false){
+				if ($functions != null){
+					$functions .= ' & Administrator';
+				}
+				else {
+					$functions = 'Administrator';
+				}
+			}
+		}
+		return $functions;
+	}
+
+	/**
+	 * Get the erc (section in OJS) id of the user (if exists)
+	 * @return int (or null if no committee)
+	 * Added by EL on February 17th 2013
+	 */	
+	function getCommittee(){
+		$journal =& Request::getJournal();
+		$roleDao =& DAORegistry::getDAO('RoleDAO');
+		$roles =& $roleDao->getRolesByUserId($this->getId(), $journal->getId());
+		foreach ($roles as $role){
+			$roleId = $role->getRoleId();
+			if ($roleId == '512'){
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$erc =& $sectionEditorsDao->getErcBySecretaryId($this->getId());
+				if (isset($erc)) return $erc->getSectionId();
+				else return null;
+			} elseif ($roleId == '4096') {
+				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
+				if (isset($erc)) return $erc->getSectionId();
+				else return null;
+			}
+		}
+		return null;		
+	}
 }
 
 ?>

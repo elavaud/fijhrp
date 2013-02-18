@@ -27,6 +27,9 @@
 		<td class="label">{translate key="section.section"}</td>
 		<td>{$submission->getSectionTitle()|escape}</td>
 	</tr>
+<!--
+Removed by EL on February 17th 2013
+No edit assignments anymore	
 	<tr>
 		<td class="label">{translate key="user.role.editor"}</td>
 		<td>
@@ -48,6 +51,7 @@
 			{/foreach}
 		</td>
 	</tr>
+-->
 </table>
 </div>
 

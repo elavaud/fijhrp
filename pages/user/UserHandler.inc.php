@@ -27,6 +27,7 @@ class UserHandler extends Handler {
 
 	/**
 	 * Display user index page.
+	 * Last modified by EL on February 17th 2013
 	 */
 	function index() {
 		$this->validate();
@@ -64,7 +65,7 @@ class UserHandler extends Handler {
 				$roles =& $roleDao->getRolesByUserId($userId, $journalId);
 				if (!empty($roles)) {
 					$userJournals[] =& $journal;
-					$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid);
+					$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommittee());
 				}
 
 				unset($journal);
@@ -81,7 +82,7 @@ class UserHandler extends Handler {
 			$setupIncomplete[$journalId] = $this->checkIncompleteSetup($journal);
 			
 			$userJournals = array($journal);
-			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid);
+			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommittee());
 			$subscriptionTypeDAO =& DAORegistry::getDAO('SubscriptionTypeDAO');
 			$subscriptionsEnabled = $journal->getSetting('publishingMode') ==  PUBLISHING_MODE_SUBSCRIPTION
 				&& ($subscriptionTypeDAO->subscriptionTypesExistByInstitutional($journalId, false)
@@ -101,6 +102,9 @@ class UserHandler extends Handler {
 
 			$templateMgr->assign_by_ref('userJournals', $userJournals);
 		}
+
+		$ercId = $user->getCommittee();
+		$templateMgr->assign('ercId', $ercId);
 		
 		$templateMgr->assign_by_ref('user', $user);
 		$templateMgr->assign('isValid', $isValid);
@@ -180,9 +184,11 @@ class UserHandler extends Handler {
 	 * @param $isValid array reference
 	 *
 	 * New Version by EL on April 11 2012 -> Commented out some un-useful roles
+	 * New version by EL on February 17th 2013 -> All editors of a section are automatically
+	 * assigned to the section of the article
 	 *
 	 */
-	function getRoleDataForJournal($userId, $journalId, &$submissionsCount, &$isValid) {
+	function getRoleDataForJournal($userId, $journalId, &$submissionsCount, &$isValid, $sectionId) {
 /*
 		if (Validation::isSubscriptionManager($journalId)) {
 			$isValid["SubscriptionManager"][$journalId] = true;
@@ -202,7 +208,7 @@ class UserHandler extends Handler {
 */
 		if (Validation::isSectionEditor($journalId)) {
 			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-			$submissionsCount["SectionEditor"][$journalId] = $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($userId, $journalId);
+			$submissionsCount["SectionEditor"][$journalId] = $sectionEditorSubmissionDao->getSectionEditorSubmissionsCount($sectionId, $journalId);
 			$isValid["SectionEditor"][$journalId] = true;
 		}
 /*

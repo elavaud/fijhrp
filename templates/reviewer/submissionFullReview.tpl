@@ -31,31 +31,6 @@
 	<td class="value">{$submission->getSectionTitle()|escape}</td>
 </tr>
 
-{assign var=editAssignments value=$submission->getEditAssignments()}
-{foreach from=$editAssignments item=editAssignment}
-	{if !$notFirstEditAssignment}
-		{assign var=notFirstEditAssignment value=1}
-		<tr valign="top">
-			<td class="label">Secretary</td>
-			<td class="value">
-	{/if}
-			{assign var=emailString value=$editAssignment->getEditorFullName()|concat:" <":$editAssignment->getEditorEmail():">"}
-			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle()|strip_tags articleId=$articleId}
-			{$editAssignment->getEditorFullName()|escape} {icon name="mail" url=$url}
-			{if !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
-				{if $editAssignment->getCanEdit()}
-					({translate key="submission.editing"} / ກວດແກ້)
-				{else}
-					({translate key="submission.review"} / ທົບທວນ)
-				{/if}
-			{/if}
-			<br/>
-{/foreach}
-{if $notFirstEditAssignment}
-		</td>
-	</tr>
-{/if}
-
 </table>
 </div>
 <div class="separator"></div>

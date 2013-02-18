@@ -12,7 +12,7 @@
 
 <form method="post" action="{url op="selectReviewers" path=$submission->getId()}">
 <div id="peerReview">
-<table><tr><td><h3>Active ERC Members</h3></td></tr></table>
+<table><tr width="100%"><td width="30%"><h3>Active ERC Members</h3><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="selectReviewer" path=$submission->getId()|to_array:0:true}" class="action">&#187;&nbsp;{translate key="editor.article.selectExternalReviewer"}</a></td></tr></table>
 <table class="data" width="100%">
 	<tr id="reviewersHeader" valign="middle">
 		<td width="10%"></td>
@@ -25,9 +25,6 @@
 {assign var="start" value="A"|ord}
 {assign var="reviewIndex" value=0}
 {foreach from=$reviewers item=reviewer}
-{if ($submission->getSectionId()=='1' && $reviewer->isNiophMember()) || ($submission->getSectionId()=='2' && $reviewer->isUhsMember())}
-	{assign var="isExternalReviewer" value=$reviewer->isLocalizedExternalReviewer()}
-	{if $isExternalReviewer==null || $isExternalReviewer!="Yes"}
 	{assign var="reviewIndex" value=$reviewIndex+1}
 	<div class="separator"></div>
 	<table class="data" width="100%">		
@@ -43,10 +40,9 @@
 				</td>
 			</tr>	
 	</table>
-	{/if}
-{/if}
 {/foreach}
 <div class="separator"></div>
+<!--
 <table class="title">
 	<tr>
 		<td>
@@ -68,9 +64,7 @@
 </table>
 {assign var="start" value="A"|ord}
 {assign var="reviewIndex" value=0}
-{foreach from=$reviewers item=reviewer}
-	{assign var="isExternalReviewer" value=$reviewer->isLocalizedExternalReviewer()}
-	{if $isExternalReviewer=="Yes"}
+{foreach from=$extReviewers item=reviewer}
 	{assign var="reviewIndex" value=$reviewIndex+1}
 	<div class="separator"></div>
 	<table class="data" width="100%">		
@@ -86,7 +80,6 @@
 				</td>
 			</tr>	
 	</table>
-	{/if}
 {/foreach}
 {if $reviewIndex == 0}
 	<div class="separator"></div>
@@ -97,6 +90,7 @@
 	</table>
 {/if}
 <div class="separator"></div>
+-->
 <br/><input type="submit" class="button" value="Select And Notify ERC Members for Primary Review" />						
 </form>
 </div>

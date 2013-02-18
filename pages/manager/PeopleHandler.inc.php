@@ -43,7 +43,7 @@ class PeopleHandler extends ManagerHandler {
 		$sortDirection = Request::getUserVar('sortDirection');
 
 		if ($roleSymbolic != 'all' && String::regexp_match_get('/^(\w+)s$/', $roleSymbolic, $matches)) {
-						
+				
 				// For separating external reviewers from reviewers
 				// Added by EL on February 14th  2013
 				if ($matches[1] == "extReviewer") $roleId = "extReviewer";
@@ -325,10 +325,12 @@ class PeopleHandler extends ManagerHandler {
 		if ($users != null && is_array($users) && $rolePath == 'reviewer') {
 			if ($ercMemberStatus == "Chair" OR $ercMemberStatus == "Vice-Chair" OR $ercMemberStatus == "Member"){
 				$reviewers = $ercReviewersDAO->getReviewersBySectionId($journal->getId(), $ethicsCommitteeId);
+				$chairs = $ercReviewersDAO->getReviewersBySectionIdByStatus($journal->getId(), $ethicsCommitteeId, 1);
+				$viceChairs = $ercReviewersDAO->getReviewersBySectionIdByStatus($journal->getId(), $ethicsCommitteeId, 2);
 				
 				// Here the number of members per committee is set to 20, 
 				// and of chair or vice-chair to 1
-				if ((((count($reviewers) + count($users)) < 21) && $ercMemberStatus == "Member") || (count($reviewers) + count($users)) < 2) {
+				if ((((count($reviewers) + count($users)) < 21) && $ercMemberStatus == "Member") || (((count($chairs) + count($users)) < 2) && $ercMemberStatus == "Chair") || (((count($viceChairs) + count($users)) < 2) && $ercMemberStatus == "Vice-Chair")) {
 					for ($i=0; $i<count($users); $i++) {
 						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$ercReviewersDAO->ercReviewerExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
 							
@@ -422,7 +424,7 @@ class PeopleHandler extends ManagerHandler {
 				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
 				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
 				
-				// For the redirection of external reviewers
+				// For deleting erc members and the redirection of external reviewers
 				if ($ercReviewersDao->reviewerExists($journalId, $userId)) $ercReviewersDao->deleteReviewersByUserId($userId, $journalId);
 				else $roleId = 4097;
 					

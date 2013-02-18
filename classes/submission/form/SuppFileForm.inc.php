@@ -271,16 +271,21 @@ class SuppFileForm extends Form {
 		$notificationManager = new NotificationManager();
 		$journal =& Request::getJournal();
 		$url = Request::url($journal->getPath(), 'sectionEditor', 'submissionReview', array($this->article->getArticleId()));
+
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore		
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//$notificationSectionEditors = array();
+			//$sectionEditors = $edit Assignment Dao->getEditorAssignmentsByArticleId3($this->article->getArticleId());
 		
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$notificationSectionEditors = array();
-		$sectionEditors = $editAssignmentDao->getEditorAssignmentsByArticleId3($this->article->getArticleId());
-		
-		foreach ($sectionEditors as $sectionEditorEntry) {
-			$sectionEditor =& $sectionEditorEntry['user'];
-            $notificationSectionEditors[] = array('id' => $sectionEditor->getId());
-            unset($sectionEditor);
-        }
+			//foreach ($sectionEditors as $sectionEditorEntry) {
+				//$sectionEditor =& $sectionEditorEntry['user'];
+            	//$notificationSectionEditors[] = array('id' => $sectionEditor->getId());
+            	//unset($sectionEditor);
+        	//}
+ 			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->article->getSectionId());
+			foreach ($sectionEditors as $sectionEditor) $notificationSectionEditors[] = array('id' => $sectionEditor->getId());
 
 		if ($suppFile->getData('type') == 'Raw Data File') $message = 'notification.type.rawDataSubmitted'; 
         if ($suppFile->getData('type') == 'Other Supplementary Research Output') $message = 'notification.type.otherSuppResearchOutput';

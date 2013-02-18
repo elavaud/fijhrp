@@ -184,7 +184,11 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reasonsMap =& $submission->getReasonsForExemptionMap();
 		
 		$editAssignments =& $submission->getEditAssignments();
-		$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
+
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
+			$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null;
 		$allowResubmit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
 		$allowCopyedit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == null ? true : false;
 
@@ -224,12 +228,17 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}			
 		
 		
-		//////////////////		
-		$journalReviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
+			// Changed by EL on February 15th 2013
+			// Management of multiple committees		
+			$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+			$ercReviewers =& $ercReviewersDao->getReviewersBySectionId($journal->getId(), $submission->getSectionId());
+			// $extReviewers =& $ercReviewersDao->getExternalReviewers($journal->getId());
+
 		$reviewAssignments = $submission->getReviewAssignments($round);
-		
+			
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign_by_ref('reviewers', $journalReviewers);
+		$templateMgr->assign_by_ref('reviewers', $ercReviewers);
+		//$templateMgr->assign_by_ref('extReviewers', $extReviewers);
 		$templateMgr->assign_by_ref('reviewAssignmentCount', count($reviewAssignments));
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('reviewIndexes', $reviewAssignmentDao->getReviewIndexesForRound($articleId, $round));
@@ -518,13 +527,17 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		Request::redirect(null, null, 'notifyReviewers', $articleId);
 	}
 	
-	//
-	// Peer Review
-	//
+	/**
+	 * Peer Review
+	 * Last modified: EL on February 16h 2013
+	 * Separation of External reviewers and ERC Members
+	**/
 
 	function selectReviewer($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$reviewerId = isset($args[1]) && $args[1]!=null ? (int) $args[1] : 0;
+		$extReviewers = isset($args[2]) && $args[2]!=null ? (boolean) $args[2] : false;
+		
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$journal =& Request::getJournal();
 		$submission =& $this->submission;
@@ -548,33 +561,24 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			// FIXME: Prompt for due date.
 		} else {
 			$this->setupTemplate(true, $articleId, 'review');
-			
-			$userDao =& DAORegistry::getDAO('UserDAO');
-			$reviewerIds = array();
-			$unassignedReviewers = array();
-			$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
-			foreach($reviewAssignments as $reviewAssignment) {
-				$reviewAssignmentReviewerIds = $reviewAssignment->getReviewerId();
-				array_push($reviewerIds, $reviewAssignmentReviewerIds);
-			}
-			$journalReviewers =& $userDao->getUsersWithReviewerRole($journal->getId());
-			foreach($journalReviewers as $journalReviewer) {
-				$reviewerId = $journalReviewer->getId();
-				if(!in_array($reviewerId, $reviewerIds)) {
-					array_push($unassignedReviewers, $journalReviewer);
-				}
-			}
 				
 			$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 
 			$searchType = null;
 			$searchMatch = null;
+			
 			$search = $searchQuery = Request::getUserVar('search');
 			$searchInitial = Request::getUserVar('searchInitial');
+			
+			if (!$extReviewers) {
+				$extReviewers = Request::getUserVar('extReviewers');
+				if ($extReviewers == "false") $extReviewers = false;
+				elseif ($extReviewers == "true") $extReviewers = true;
+			}
+			
 			if (!empty($search)) {
 				$searchType = Request::getUserVar('searchField');
 				$searchMatch = Request::getUserVar('searchMatch');
-
 			} elseif (!empty($searchInitial)) {
 				$searchInitial = String::strtoupper($searchInitial);
 				$searchType = USER_FIELD_INITIAL;
@@ -582,15 +586,18 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			}
 
 			$rangeInfo =& Handler::getRangeInfo('reviewers');
-			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $articleId, $submission->getCurrentRound(), $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
-			
+			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $articleId, $submission->getSectionId(), $submission->getCurrentRound(), $extReviewers, $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
+						
 			$journal = Request::getJournal();
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-
+			$sectionDao =& DAORegistry::getDAO('SectionDAO');
+			$erc =& $sectionDao->getSection($submission->getSectionId());
+			
 			$templateMgr =& TemplateManager::getManager();
 
-			$templateMgr->assign_by_ref('unassignedReviewers', $unassignedReviewers);
 			$templateMgr->assign_by_ref('submission', $submission);
+			$templateMgr->assign('ercAbbrev', $erc->getLocalizedAbbrev());
+			$templateMgr->assign('extReviewers', $extReviewers);
 			$templateMgr->assign('searchField', $searchType);
 			$templateMgr->assign('searchMatch', $searchMatch);
 			$templateMgr->assign('search', $searchQuery);
@@ -700,88 +707,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			Request::getUserVar('lastName')
 		);
 		echo $suggestion;
-	}
-
-	/**
-	 * Search for users to enroll as reviewers.
-	 */
-	function enrollSearch($args) {
-		$articleId = isset($args[0]) ? (int) $args[0] : 0;
-		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
-		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_MANAGER)); // manager.people.enrollment, manager.people.enroll
-		$submission =& $this->submission;
-
-		$roleDao =& DAORegistry::getDAO('RoleDAO');
-		$roleId = $roleDao->getRoleIdFromPath('reviewer');
-
-		$user =& Request::getUser();
-
-		$rangeInfo = Handler::getRangeInfo('users');
-		$templateMgr =& TemplateManager::getManager();
-		$this->setupTemplate(true);
-
-		$searchType = null;
-		$searchMatch = null;
-		$search = $searchQuery = Request::getUserVar('search');
-		$searchInitial = Request::getUserVar('searchInitial');
-		if (!empty($search)) {
-			$searchType = Request::getUserVar('searchField');
-			$searchMatch = Request::getUserVar('searchMatch');
-
-		} elseif (!empty($searchInitial)) {
-			$searchInitial = String::strtoupper($searchInitial);
-			$searchType = USER_FIELD_INITIAL;
-			$search = $searchInitial;
-		}
-
-		$userDao =& DAORegistry::getDAO('UserDAO');
-		$users =& $userDao->getUsersByField($searchType, $searchMatch, $search, false, $rangeInfo);
-
-		$templateMgr->assign('searchField', $searchType);
-		$templateMgr->assign('searchMatch', $searchMatch);
-		$templateMgr->assign('search', $searchQuery);
-		$templateMgr->assign('searchInitial', Request::getUserVar('searchInitial'));
-
-		$templateMgr->assign('articleId', $articleId);
-		$templateMgr->assign('fieldOptions', Array(
-			USER_FIELD_INTERESTS => 'user.interests',
-			USER_FIELD_FIRSTNAME => 'user.firstName',
-			USER_FIELD_LASTNAME => 'user.lastName',
-			USER_FIELD_USERNAME => 'user.username',
-			USER_FIELD_EMAIL => 'user.email'
-		));
-		$templateMgr->assign('roleId', $roleId);
-		$templateMgr->assign_by_ref('users', $users);
-		$templateMgr->assign('alphaList', explode(' ', Locale::translate('common.alphaList')));
-
-		$templateMgr->assign('helpTopicId', 'journal.roles.index');
-		$templateMgr->display('sectionEditor/searchUsers.tpl');
-	}
-
-	function enroll($args) {
-		$articleId = isset($args[0]) ? (int) $args[0] : 0;
-		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
-		$journal =& Request::getJournal();
-		$submission =& $this->submission;
-
-		$roleDao =& DAORegistry::getDAO('RoleDAO');
-		$roleId = $roleDao->getRoleIdFromPath('reviewer');
-
-		$users = Request::getUserVar('users');
-		if (!is_array($users) && Request::getUserVar('userId') != null) $users = array(Request::getUserVar('userId'));
-
-		// Enroll reviewer
-		for ($i=0; $i<count($users); $i++) {
-			if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-				$role = new Role();
-				$role->setJournalId($journal->getId());
-				$role->setUserId($users[$i]);
-				$role->setRoleId($roleId);
-
-				$roleDao->insertRole($role);
-			}
-		}
-		Request::redirect(null, null, 'selectReviewer', $articleId);
 	}
 
 	function notifyReviewers($args = array()) {
@@ -2783,22 +2708,29 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$templateMgr->assign('canEdit', true);
 			} else {
 				// If this user isn't the submission's editor, they don't have access.
-				$editAssignments =& $sectionEditorSubmission->getEditAssignments();
+					// Modified by EL on February 17th 2013
+					// No edit assignments anymore
+					//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
+					$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+					$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
 				$wasFound = false;
-				foreach ($editAssignments as $editAssignment) {
-					if ($editAssignment->getEditorId() == $user->getId()) {
-						$templateMgr->assign('canReview', $editAssignment->getCanReview());
-						$templateMgr->assign('canEdit', $editAssignment->getCanEdit());
+					//foreach ($editAssignments as $editAssignment) {
+					foreach ($sectionEditors as $sectionEditor){
+					if ($sectionEditor->getId() == $user->getId()) {
+							//$templateMgr->assign('canReview', $editAssignment->getCanReview());
+							//$templateMgr->assign('canEdit', $editAssignment->getCanEdit());
+							$templateMgr->assign('canReview', true);
+							$templateMgr->assign('canEdit', true);
 						switch ($access) {
 							case SECTION_EDITOR_ACCESS_EDIT:
-								if ($editAssignment->getCanEdit()) {
+									//if ($editAssignment->getCanEdit()) {
 									$wasFound = true;
-								}
+									//}
 								break;
 							case SECTION_EDITOR_ACCESS_REVIEW:
-								if ($editAssignment->getCanReview()) {
+									//if ($editAssignment->getCanReview()) {
 									$wasFound = true;
-								}
+									//}
 								break;
 
 							default:
@@ -2817,14 +2749,16 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}
 
 		// If necessary, note the current date and time as the "underway" date/time
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-		foreach ($editAssignments as $editAssignment) {
-			if ($editAssignment->getEditorId() == $user->getId() && $editAssignment->getDateUnderway() === null) {
-				$editAssignment->setDateUnderway(Core::getCurrentDate());
-				$editAssignmentDao->updateEditAssignment($editAssignment);
-			}
-		}
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
+			//foreach ($editAssignments as $editAssignment) {
+				//if ($editAssignment->getEditorId() == $user->getId() && $editAssignment->getDateUnderway() === null) {
+					//$editAssignment->setDateUnderway(Core::getCurrentDate());
+					//$edit Assignment Dao->updateEditAssignment($editAssignment);
+				//}
+			//}
 
 		$this->submission =& $sectionEditorSubmission;
 		return true;

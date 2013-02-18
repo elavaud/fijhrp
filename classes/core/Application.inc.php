@@ -89,7 +89,8 @@ class Application extends PKPApplication {
 			'CitationDAO' => 'lib.pkp.classes.citation.CitationDAO',
 			'CommentDAO' => 'lib.pkp.classes.comment.CommentDAO',
 			'CopyeditorSubmissionDAO' => 'classes.submission.copyeditor.CopyeditorSubmissionDAO',
-			'EditAssignmentDAO' => 'classes.submission.editAssignment.EditAssignmentDAO',
+				// Removed by EL on February 17th 2013, not useful anymore
+				//'Edit Assignment DAO' => 'classes.submission.editAssignment.Edit Assignment DAO',
 			'EditorSubmissionDAO' => 'classes.submission.editor.EditorSubmissionDAO',
 			'EmailTemplateDAO' => 'classes.mail.EmailTemplateDAO',
 

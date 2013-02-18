@@ -371,9 +371,11 @@ class ArticleDAO extends DAO {
 
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewAssignmentDao->deleteReviewAssignmentsByArticle($articleId);
-
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$editAssignmentDao->deleteEditAssignmentsByArticle($articleId);
+			
+			// Removed by EL on February 17th 2013
+			// No edit assignment anymore
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//$edit Assignment Dao->deleteEditAssignmentsByArticle($articleId);
 
 		// Delete copyedit, layout, and proofread signoffs
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');

@@ -22,7 +22,10 @@ class ProofreaderSubmissionDAO extends DAO {
 	/** Helper DAOs */
 	var $articleDao;
 	var $articleCommentDao;
-	var $editAssignmentDao;
+
+		// Removed by EL on February 17th 2013
+		// No edit assignments anymore
+		//var $edit Assignment Dao;
 	var $galleyDao;
 	var $suppFileDao;
 
@@ -34,7 +37,9 @@ class ProofreaderSubmissionDAO extends DAO {
 
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
-		$this->editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore		
+			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->galleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 	}
@@ -98,8 +103,10 @@ class ProofreaderSubmissionDAO extends DAO {
 		$submission->setMostRecentProofreadComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_PROOFREAD, $row['article_id']));
 
 		// Editor Assignment
-		$editAssignments =& $this->editAssignmentDao->getEditAssignmentsByArticleId($row['article_id']);
-		$submission->setEditAssignments($editAssignments->toArray());
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
+			//$submission->setEditAssignments($editAssignments->toArray());
 
 		// Layout reference information
 		$submission->setGalleys($this->galleyDao->getGalleysByArticle($row['article_id']));

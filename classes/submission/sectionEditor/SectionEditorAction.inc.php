@@ -86,8 +86,10 @@ class SectionEditorAction extends Action {
 	 * Last Update: 5/4/2011
 	 */
 	function recordDecision($sectionEditorSubmission, $decision, $lastDecisionId = null, $resubmitCount, $dateDecided = null, $assignedReviewer = null) {
-		$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-		if (empty($editAssignments)) return;
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
+			//if (empty($editAssignments)) return;
 
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$user =& Request::getUser();

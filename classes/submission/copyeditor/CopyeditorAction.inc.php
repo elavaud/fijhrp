@@ -162,7 +162,9 @@ class CopyeditorAction extends Action {
 					if (!$editorialContact) $editorialContact = array_shift($assignedEditors);
 
 					$paramArray = array(
-						'editorialContactName' => $editorialContact->getEditorFullName(),
+							// Modified by EL on February 17th 2013
+							// No edit assigment anymore
+						'editorialContactName' => $editorialContact->getFullName(),
 						'copyeditorName' => $user->getFullName()
 					);
 				}

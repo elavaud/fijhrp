@@ -38,7 +38,9 @@ class AuthorSubmissionDAO extends DAO {
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
 		$this->reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-		$this->editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			// $this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$this->copyeditorSubmissionDao =& DAORegistry::getDAO('CopyeditorSubmissionDAO');
@@ -101,8 +103,10 @@ class AuthorSubmissionDAO extends DAO {
 		$this->articleDao->_articleFromRow($authorSubmission, $row);
 
 		// Editor Assignment
-		$editAssignments =& $this->editAssignmentDao->getEditAssignmentsByArticleId($row['article_id']);
-		$authorSubmission->setEditAssignments($editAssignments->toArray());
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $this->edit Assignment Dao->get Edit AssignmentsByArticleId($row['article_id']);
+			//$authorSubmission->setEditAssignments($editAssignments->toArray());
 
 		// Editor Decisions
 		for ($i = 1; $i <= $row['current_round']; $i++) {

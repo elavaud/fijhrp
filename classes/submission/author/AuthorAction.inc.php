@@ -137,7 +137,9 @@ class AuthorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($authorSubmission, 'COPYEDIT_AUTHOR_COMPLETE');
 
-		$editAssignments = $authorSubmission->getEditAssignments();
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments = $authorSubmission->get Edit Assignments();
 
 		$copyeditor = $authorSubmission->getUserBySignoffType('SIGNOFF_COPYEDITING_INITIAL');
 
@@ -176,7 +178,9 @@ class AuthorAction extends Action {
 					} else {
 						$editor = array_shift($assignedSectionEditors);
 						if (!$editor) $editor = array_shift($assignedEditors);
-						$editorName = $editor->getEditorFullName();
+							// Modified by EL on February 17th 2013
+							// No edit assigment anymore
+							$editorName = $editor->getFullName();
 					}
 				} else {
 					$assignedSectionEditors = $email->toAssignedEditingSectionEditors($authorSubmission->getId());
@@ -187,7 +191,9 @@ class AuthorAction extends Action {
 					} else {
 						$editor = array_shift($assignedSectionEditors);
 						if (!$editor) $editor = array_shift($assignedEditors);
-						$editorName = $editor->getEditorFullName();
+							// Modified by EL on February 17th 2013
+							// No edit assigment anymore
+							$editorName = $editor->getFullName();
 					}
 				}
 
@@ -337,11 +343,15 @@ class AuthorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($authorSubmission);
 
-		$editAssignments = $authorSubmission->getEditAssignments();
-		$editors = array();
-		foreach ($editAssignments as $editAssignment) {
-			array_push($editors, $userDao->getUser($editAssignment->getEditorId()));
-		}
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$edit Assignments = $authorSubmission->get Edit Assignments();
+			//$editors = array();
+			//foreach ($edit Assignments as $edit Assignment) {
+				//array_push($editors, $userDao->getUser($edit Assignment->getEditorId()));
+			//}
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$editors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $authorSubmission->getSectionId());	
 
 		if ($send && !$email->hasErrors()) {
 			HookRegistry::call('AuthorAction::emailEditorDecisionComment', array(&$authorSubmission, &$email));

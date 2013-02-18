@@ -28,7 +28,9 @@ class EditorSubmissionDAO extends DAO {
 	var $articleDao;
 	var $authorDao;
 	var $userDao;
-	var $editAssignmentDao;
+		// Removed by EL on February 17th 2013
+		// No edit assignments anymore	
+		//var $edit Assignment Dao;
 
 	/**
 	 * Constructor.
@@ -38,7 +40,9 @@ class EditorSubmissionDAO extends DAO {
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
-		$this->editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit AssignmentDAO');
 	}
 
 	/**
@@ -97,8 +101,10 @@ class EditorSubmissionDAO extends DAO {
 		$this->articleDao->_articleFromRow($editorSubmission, $row);
 
 		// Editor Assignment
-		$editAssignments =& $this->editAssignmentDao->getEditAssignmentsByArticleId($row['article_id']);
-		$editorSubmission->setEditAssignments($editAssignments->toArray());
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
+			//$editorSubmission->setEditAssignments($editAssignments->toArray());
 
 		// Editor Decisions
 		for ($i = 1; $i <= $row['current_round']; $i++) {
@@ -152,19 +158,22 @@ class EditorSubmissionDAO extends DAO {
 	/**
 	 * Update an existing article.
 	 * @param $article Article
+	 * Removed by EL on February 17th 2013
+	 * Should not be useful anymore
 	 */
+	 /*
 	function updateEditorSubmission(&$editorSubmission) {
 		// update edit assignments
 		$editAssignments = $editorSubmission->getEditAssignments();
 		foreach ($editAssignments as $editAssignment) {
 			if ($editAssignment->getEditId() > 0) {
-				$this->editAssignmentDao->updateEditAssignment($editAssignment);
+				$this->edit Assignment Dao->updateEditAssignment($editAssignment);
 			} else {
-				$this->editAssignmentDao->insertEditAssignment($editAssignment);
+				$this->edit Assignment Dao->insertEditAssignment($editAssignment);
 			}
 		}
 	}
-
+	*/
 	/**
 	 * Get all unfiltered submissions for a journal.
 	 * @param $journalId int

@@ -103,7 +103,7 @@ $(document).ready(
     <table width="100%" class="data">
 	<div id=enrollUserAs>
 	<tr valign="top" id="roleIdField">
-    	<td width="20%" class="label"><strong>Enroll user as :</strong></td>
+    	<td width="20%" class="label"><strong>{translate key="common.enroll"}</strong></td>
     	<td width="80%" class="value">
 			<select name="roleId" id="roleId" class="selectMenu" onchange="showOrHideEthicsCommittee(this.value);">
 				<option value="{$smarty.const.ROLE_ID_JOURNAL_MANAGER}">{translate key="user.role.manager"}</option>

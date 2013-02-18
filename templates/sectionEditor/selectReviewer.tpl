@@ -9,7 +9,7 @@
  * $Id$
  *}
 {strip}
-{assign var="pageTitle" value="user.role.reviewers"}
+{assign var="pageTitle" value="editor.article.selectReviewer"}
 {include file="common/header.tpl"}
 {/strip}
 
@@ -26,63 +26,16 @@ function sortSearch(heading, direction) {
 </script>
 
 <div id="selectReviewer">
-<h3>{translate key="editor.article.selectReviewer"}</h3>
-<table class="listing">
-	<tr><td colspan="3">&nbsp;</td></tr>
-	<tr class="heading" colspan="3">			
-		<td colspan="3"><a href="{url op="createExternalReviewer" path=$articleId}" class="action">Create External Reviewer</a></td>		
-	</tr>
-	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
-	<tr>
-		<td width="20%" class="heading">Role</td>
-		<td width="40%" class="heading" align="left">{translate key="user.name" sort="reviewerName"}</td>	
-		<td width="40%" class="heading" align="left">{translate key="common.action"}</td>
-	</tr>	
-	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
-	{assign var="count" value=0}
-	{foreach from=$unassignedReviewers item=ercMember}
-		{if ($submission->getSectionId()=='1' && $ercMember->isNiophMember()) || ($submission->getSectionId()=='2' && $ercMember->isUhsMember()) || $ercMember->isLocalizedExternalReviewer() == "Yes"}
-		{assign var="count" value=$count+1}
-		{assign var="reviewerId" value=$ercMember->getId()}
-		<tr>
-			<td width="20%" class="heading">
-				{if $ercMember->isLocalizedExternalReviewer()==null || $ercMember->isLocalizedExternalReviewer()!="Yes"}
-					ERC Member
-				{else}
-					External Reviewer
-				{/if}
-			</td>
-			<td width="40%" class="heading">{$ercMember->getFullname()|escape}</td>	
-			<td width="40%" class="heading" align="left"><a href="{url op="selectReviewer" path=$articleId|to_array:$reviewerId}" class="action">Add and Notify as Primary Reviewer</a></td>
-		</tr>			
-		<tr><td colspan="3" class="separator">&nbsp;</td></tr>
-		{/if}
-	{/foreach}
-	{if $count==0}
-		<tr>
-			<td colspan="3" class="nodata">No unassigned reviewers</td>
-		</tr>
-		<tr>
-			<td colspan="3" class="endseparator">&nbsp;</td>
-		</tr>
-	{else}
-		<tr>
-			<td colspan="3" class="endseparator">&nbsp;</td>
-		</tr>
-		<tr>
-			<td colspan="3" align="left">{$count} unassigned reviewer(s)</td>
-		</tr>
-	{/if}
-</table>
+<h3>{if $extReviewers == false}{$ercAbbrev} Members{elseif $extReviewers == true}{translate key="user.ercrole.extReviewers"}{/if}</h3>
 
 
-
-
-{***************************************************************************
-Commented out Jan 20, 2011 
 <form name="submit" method="post" action="{url op="selectReviewer" path=$articleId}">
 	<input type="hidden" name="sort" value="id"/>
 	<input type="hidden" name="sortDirection" value="ASC"/>
+	<select name="extReviewers" size="1" class="selectMenu">
+		<option value=false {if $extReviewers == false} selected="selected"{/if}>{$ercAbbrev} Members</option>
+		<option value=true {if $extReviewers == true} selected="selected"{/if}>{translate key="user.ercrole.extReviewers"}</option>
+	</select>
 	<select name="searchField" size="1" class="selectMenu">
 		{html_options_translate options=$fieldOptions selected=$searchField}
 	</select>
@@ -96,7 +49,7 @@ Commented out Jan 20, 2011
 
 <p>{foreach from=$alphaList item=letter}<a href="{url op="selectReviewer" path=$articleId searchInitial=$letter}">{if $letter == $searchInitial}<strong>{$letter|escape}</strong>{else}{$letter|escape}{/if}</a> {/foreach}<a href="{url op="selectReviewer" path=$articleId}">{if $searchInitial==''}<strong>{translate key="common.all"}</strong>{else}{translate key="common.all"}{/if}</a></p>
 
-<p><a class="action" href="{url op="enrollSearch" path=$articleId}">{translate key="sectionEditor.review.enrollReviewer"}</a>&nbsp;|&nbsp;<a class="action" href="{url op="createReviewer" path=$articleId}">{translate key="sectionEditor.review.createReviewer"}</a>{foreach from=$reviewerDatabaseLinks item="link"}{if !empty($link.title) && !empty($link.url)}&nbsp;|&nbsp;<a href="{$link.url|escape}" target="_new" class="action">{$link.title|escape}</a>{/if}{/foreach}</p>
+<p><a class="action" href="{url op="enrollSearch" path=$submission->getSectionId()}">{translate key="sectionEditor.review.enrollReviewer"}</a>&nbsp;|&nbsp;<a class="action" href="{url op="createReviewer" path=$articleId}">{translate key="sectionEditor.review.createReviewer"}</a>{foreach from=$reviewerDatabaseLinks item="link"}{if !empty($link.title) && !empty($link.url)}&nbsp;|&nbsp;<a href="{$link.url|escape}" target="_new" class="action">{$link.title|escape}</a>{/if}{/foreach}</p>
 
 <div id="reviewers">
 <table class="listing" width="100%">
@@ -174,9 +127,6 @@ Commented out Jan 20, 2011
 <h4>{translate key="common.notes"}</h4>
 <p>{translate key="editor.article.selectReviewerNotes"}</p>
 </div>
-
-END OF COMMENT
-****************************************************************************************************}
 
 </div>
 

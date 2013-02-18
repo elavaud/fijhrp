@@ -16,6 +16,8 @@
 		<td class="label">{translate key="section.section"}</td>
 		<td>{$submission->getSectionTitle()|escape}</td>
 	</tr>
+	<!-- Removed by EL on February 17th 2013
+	No more edit assignments
 	<tr>
 		<td class="label">{translate key="user.role.editor"}</td>
 		<td>
@@ -37,6 +39,7 @@
 			{/foreach}
 		</td>
 	</tr>
+	-->
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="submission.reviewVersion"}</td>
 		{if $reviewFile}

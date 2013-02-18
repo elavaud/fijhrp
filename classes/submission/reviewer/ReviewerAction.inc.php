@@ -111,7 +111,9 @@ class ReviewerAction extends Action {
 					} else {
 						if (!empty($reviewingSectionEditors)) $editorialContact = array_shift($reviewingSectionEditors);
 						else $editorialContact = array_shift($assignedEditors);
-						$editorialContactName = $editorialContact->getEditorFullName();
+							// Modified by EL on February 17th 2013
+							// No edit assigment anymore
+							$editorialContactName = $editorialContact->getFullName();
 					}
 					$email->promoteCcsIfNoRecipients();
 
@@ -200,7 +202,9 @@ class ReviewerAction extends Action {
 					} else {
 						if (!empty($reviewingSectionEditors)) $editorialContact = array_shift($reviewingSectionEditors);
 						else $editorialContact = array_shift($assignedEditors);
-						$editorialContactName = $editorialContact->getEditorFullName();
+							// Modified by EL on February 17th 2013
+							// No edit assigment anymore
+						$editorialContactName = $editorialContact->getFullName();
 					}
 
 					$reviewerRecommendationOptions =& ReviewAssignment::getReviewerRecommendationOptions();

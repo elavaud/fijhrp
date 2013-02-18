@@ -23,7 +23,9 @@ class LayoutEditorSubmissionDAO extends DAO {
 	var $articleDao;
 	var $layoutDao;
 	var $galleyDao;
-	var $editAssignmentDao;
+		// Removed by EL on February 17th 2013
+		// No edit assignments anymore
+		//var $edit Assignment Dao;
 	var $suppFileDao;
 	var $articleCommentDao;
 
@@ -35,7 +37,9 @@ class LayoutEditorSubmissionDAO extends DAO {
 
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->galleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
-		$this->editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 	}
@@ -103,9 +107,10 @@ class LayoutEditorSubmissionDAO extends DAO {
 		$submission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
 
 		$submission->setGalleys($this->galleyDao->getGalleysByArticle($row['article_id']));
-
-		$editAssignments =& $this->editAssignmentDao->getEditAssignmentsByArticleId($row['article_id']);
-		$submission->setEditAssignments($editAssignments->toArray());
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
+			//$submission->setEditAssignments($editAssignments->toArray());
 
 		HookRegistry::call('LayoutEditorSubmissionDAO::_returnLayoutEditorSubmissionFromRow', array(&$submission, &$row)); 
 

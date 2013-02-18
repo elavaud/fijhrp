@@ -23,7 +23,10 @@ class ReviewerSubmissionDAO extends DAO {
 	var $authorDao;
 	var $userDao;
 	var $reviewAssignmentDao;
-	var $editAssignmentDao;
+
+		// Removed by EL on February 17th 2013
+		// No edit assignments anymore
+		//var $edit Assignment Dao;
 	var $articleFileDao;
 	var $suppFileDao;
 	var $articleCommentDao;
@@ -37,7 +40,10 @@ class ReviewerSubmissionDAO extends DAO {
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
 		$this->reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-		$this->editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
+
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
@@ -102,8 +108,10 @@ class ReviewerSubmissionDAO extends DAO {
 		$reviewerSubmission = new ReviewerSubmission();
 
 		// Editor Assignment
-		$editAssignments =& $this->editAssignmentDao->getEditAssignmentsByArticleId($row['article_id']);
-		$reviewerSubmission->setEditAssignments($editAssignments->toArray());
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
+			//$reviewerSubmission->setEditAssignments($editAssignments->toArray());
 
 		// Files
 		$reviewerSubmission->setSubmissionFile($this->articleFileDao->getArticleFile($row['submission_file_id']));
@@ -360,8 +368,13 @@ class ReviewerSubmissionDAO extends DAO {
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$user =& $userDao->getUser($reviewerId);
 		$section == ' ';
-		if ($user->isNiophMember() && !$user->isUhsMember()) $section = 'AND a.section_id = 1';
-		else if (!$user->isNiophMember() && $user->isUhsMember()) $section = 'AND a.section_id = 2';
+		
+			// Added by EL on February 15th 2013
+			// Management of multiple ERCs
+			$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+			$erc =& $ercReviewersDao->getErcByReviewerId($user->getId());
+			if (isset($erc)) $section = 'AND a.section_id = '.$erc->getSectionId();
+
 		$sql = 'SELECT a.*
 			FROM articles a
 				LEFT JOIN edit_decisions ed ON (a.article_id = ed.article_id)
@@ -418,140 +431,6 @@ class ReviewerSubmissionDAO extends DAO {
 
 		return $returner;
 	}	
-	
-	/**
-	 * Get all submissions for a reviewer of a journal.
-	 * Added filtering
-	 * Last Updated by igm 9/25/2011
-	 * @param $reviewerId int
-	 * @param $journalId int
-	 * @param $rangeInfo object
-	 * @return array ReviewerSubmissions
-	 */
-	 /*
-	function &getReviewerSubmissionsByReviewerId($reviewerId, $journalId, $active = true, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
-											  $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-		$primaryLocale = Locale::getPrimaryLocale();
-		$locale = Locale::getLocale();
-		$params = array(
-				'cleanTitle', // Article title
-				'cleanTitle',
-				$locale,
-				'technicalUnit',
-				'technicalUnit',
-				$locale,
-				'proposalCountry',
-				'proposalCountry',
-				$locale,
-				'title', // Section title
-				$primaryLocale,
-				'title',
-				$locale,
-				'abbrev', // Section abbreviation
-				$primaryLocale,
-				'abbrev',
-				$locale,
-				$journalId,
-				$reviewerId,
-				SUBMISSION_EDITOR_DECISION_ASSIGNED);
-		$searchSql = '';
-		$technicalUnitSql = '';
-		$countrySql = '';
-		if (!empty($search)) switch ($searchField) {
-			case SUBMISSION_FIELD_TITLE:
-				if ($searchMatch === 'is') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) = LOWER(?)';
-				} elseif ($searchMatch === 'contains') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
-					$search = '%' . $search . '%';
-				} else { // $searchMatch === 'startsWith'
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
-					$search = $search . '%';
-				}
-				$params[] = $search;
-				break;
-			case SUBMISSION_FIELD_AUTHOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'aa.', $params);
-				break;
-			case SUBMISSION_FIELD_EDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ed.', $params);
-				break;
-			case SUBMISSION_FIELD_REVIEWER:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 're.', $params);
-				break;
-			case SUBMISSION_FIELD_COPYEDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ce.', $params);
-				break;
-			case SUBMISSION_FIELD_LAYOUTEDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'le.', $params);
-				break;
-			case SUBMISSION_FIELD_PROOFREADER:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'pe.', $params);
-				break;
-		}
-		if (!empty($dateFrom) || !empty($dateTo)) switch($dateField) {
-			case SUBMISSION_FIELD_DATE_SUBMITTED:
-				if (!empty($dateFrom)) {
-					$searchSql .= ' AND a.date_submitted >= ' . $this->datetimeToDB($dateFrom);
-				}
-				if (!empty($dateTo)) {
-					$searchSql .= ' AND a.date_submitted <= ' . $this->datetimeToDB($dateTo);
-				}
-				break;
-		}
-		
-		if (!empty($technicalUnitField)) {
-			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
-		}
-											  	
-		if (!empty($countryField)) {
-			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
-		}
-		
-		$sql = 'SELECT	a.*,
-				r.*,
-				r2.review_revision,
-				u.first_name, u.last_name,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
-				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
-			FROM	articles a
-				LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
-				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
-				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
-				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
-				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
-				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
-				LEFT JOIN sections s ON (s.section_id = a.section_id)
-				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
-				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
-				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
-				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
-				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
-				LEFT JOIN edit_decisions ed ON (ed.article_id = a.article_id)
-			WHERE	a.journal_id = ? AND
-				r.reviewer_id = ? AND
-				r.date_notified IS NOT NULL AND
-				r.date_due IS NOT NULL AND
-				ed.decision = ? ';	
-		if ($active) {
-			$sql .=  ' AND r.date_completed IS NULL AND r.declined <> 1 AND (r.cancelled = 0 OR r.cancelled IS NULL)';
-		} else {
-			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1)';
-		}
-		
-		$result =& $this->retrieveRange(
-			$sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
-			count($params)===1?array_shift($params):$params,
-			$rangeInfo
-		);
-
-		$returner = new DAOResultFactory($result, $this, '_returnReviewerSubmissionFromRow');
-		return $returner;
-	}*/
 
 	/**
 	 * FIXME Move this into somewhere common (SubmissionDAO?) as this is used in several classes.
@@ -656,8 +535,11 @@ class ReviewerSubmissionDAO extends DAO {
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$user =& $userDao->getUser($reviewerId);
 		
-		if ($user->isNiophMember() && !$user->isUhsMember()) $sql .= ' AND s.section_id = 1';
-		else if (!$user->isNiophMember() && $user->isUhsMember()) $sql .= ' AND s.section_id = 2';
+			// Added by EL on February 15th 2013
+			// Management of multiple ERCs
+			$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+			$erc =& $ercReviewersDao->getErcByReviewerId($user->getId());
+			if (isset($erc)) $section = ' AND a.section_id = '.$erc->getSectionId();
 					
 		$result =& $this->retrieve($sql, array($journalId, SUBMISSION_EDITOR_DECISION_ASSIGNED));
 

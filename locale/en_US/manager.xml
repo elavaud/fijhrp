@@ -160,10 +160,12 @@
 	<message key="manager.sections.editorRestriction">Items can only be submitted by Editors and Section Editors.</message>
 	<message key="manager.sections.editors">Section editors</message>
 	<message key="manager.sections.form.abbrevRequired">An abbreviated title is required for the ERC</message>
+    <message key="manager.sections.form.abbrevAlreadyInUsed">This abbreviated title is already in used by another committee.s</message>
     <message key="manager.sections.form.regionRequired">The region of the ERC is required</message>
 	<message key="manager.sections.form.mustAllowPermission">Please ensure that at least one checkbox is checked for each Section Editor assignment.</message>
 	<message key="manager.sections.form.reviewFormId">Please ensure that you have chosen a valid review form.</message>
 	<message key="manager.sections.form.titleRequired">A title is required for the ERC.</message>
+    <message key="manager.sections.form.titleAlreadyUsed">This title is already used by another committee.</message>
 	<message key="manager.sections.hideAbout">Omit this section from About the Journal.</message>
 	<message key="manager.sections.hideTocAuthor">Omit author names for section items from issues' table of contents.</message>
 	<message key="manager.sections.hideTocTitle">Omit the title of this section from issues' table of contents.</message>

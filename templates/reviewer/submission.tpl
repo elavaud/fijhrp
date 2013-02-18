@@ -57,7 +57,9 @@ $(document).ready(function() {
 	<td class="label">{translate key="article.abstract"}</td>
 	<td class="value">{$submission->getLocalizedAbstract()|strip_unsafe_html|nl2br}</td>
 </tr>
-
+<!--
+Removed by EL on February 17th 2013
+No edit assignments anymore
 {assign var=editAssignments value=$submission->getEditAssignments()}
 {foreach from=$editAssignments item=editAssignment}
 	{if !$notFirstEditAssignment}
@@ -82,6 +84,7 @@ $(document).ready(function() {
 		</td>
 	</tr>
 {/if}
+-->
  <!--
 	<tr valign="top">
 	       <td class="label">{translate key="submission.metadata"}</td>

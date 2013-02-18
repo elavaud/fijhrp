@@ -206,11 +206,18 @@ class RoleDAO extends DAO {
 
 		$searchSql .= ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : '');
 				
-		$result =& $this->retrieveRange(
-			'SELECT DISTINCT u.* FROM users AS u LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
-				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
-				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id),
-				roles AS r WHERE u.user_id = r.user_id ' . (isset($roleId)?'AND r.role_id = ?':'') . (isset($journalId) ? ' AND r.journal_id = ?' : '') . $searchSql,
+		$result =& $this->retrieveRange('SELECT DISTINCT u.* 
+			FROM users AS u 
+				LEFT JOIN controlled_vocabs cv 
+					ON (cv.assoc_type = ? 
+					AND cv.assoc_id = u.user_id 
+					AND cv.symbolic = ?)
+				LEFT JOIN controlled_vocab_entries cve 
+					ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
+				LEFT JOIN controlled_vocab_entry_settings cves 
+					ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id),
+				roles AS r
+			 WHERE u.user_id = r.user_id ' . (isset($roleId)?'AND r.role_id = ?':'') . (isset($journalId) ? ' AND r.journal_id = ?' : '') . $searchSql,
 			$paramArray,
 			$dbResultRange
 		);

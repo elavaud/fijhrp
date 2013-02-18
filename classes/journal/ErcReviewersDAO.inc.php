@@ -72,10 +72,7 @@ class ErcReviewersDAO extends DAO {
 
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
-			$users[] = array(
-				'user' => $userDao->_returnUserFromRow($row),
-				'status' => $row['status']
-			);
+			$users[] = $userDao->_returnUserFromRowWithData($row);
 			$result->moveNext();
 		}
 
@@ -85,6 +82,66 @@ class ErcReviewersDAO extends DAO {
 		return $users;
 	}
 
+	/**
+	 * Retrieve a list of all external reviewers
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @return array matching Users
+	 */
+	function &getExternalReviewers($journalId) {
+		$users = array();
+
+		$userDao =& DAORegistry::getDAO('UserDAO');
+
+		$result =& $this->retrieve(
+			'SELECT u.* 
+				FROM users u 
+				LEFT JOIN roles r 
+					ON u.user_id=r.user_id
+				WHERE r.role_id = ? AND r.journal_id = ? AND NOT EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id)',
+			array(4096, $journalId)
+		);
+
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+			$users[] = $userDao->_returnUserFromRowWithData($row);
+			$result->moveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $users;
+	}
+
+	/**
+	 * Retrieve a list of all erc reviewers assigned to the specified erc with a specific status
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @return array matching Users
+	 */
+	function &getReviewersBySectionIdByStatus($journalId, $sectionId, $status) {
+		$users = array();
+
+		$userDao =& DAORegistry::getDAO('UserDAO');
+
+		$result =& $this->retrieve(
+			'SELECT u.*, er.status FROM users AS u, erc_reviewers AS er WHERE u.user_id = er.user_id AND er.journal_id = ? AND er.section_id = ? AND er.status = ? ORDER BY last_name, first_name',
+			array($journalId, $sectionId, $status)
+		);
+
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+			$users[] = $userDao->_returnUserFromRow($row);
+			$result->moveNext();
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $users;
+	}
+	
 	/**
 	 * Delete all erc reviewers for a specified erc in a journal.
 	 * @param $sectionId int

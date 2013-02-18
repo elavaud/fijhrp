@@ -62,6 +62,8 @@ class SectionEditorsDAO extends DAO {
 	 * @param $journalId int
 	 * @param $sectionId int
 	 * @return array matching Users
+	 * Last modified: EL on February 17th 2013
+	 * We don't need anymore the can_review and can_edit
 	 */
 	function &getEditorsBySectionId($journalId, $sectionId) {
 		$users = array();
@@ -69,17 +71,14 @@ class SectionEditorsDAO extends DAO {
 		$userDao =& DAORegistry::getDAO('UserDAO');
 
 		$result =& $this->retrieve(
-			'SELECT u.*, e.can_review AS can_review, e.can_edit AS can_edit FROM users AS u, section_editors AS e WHERE u.user_id = e.user_id AND e.journal_id = ? AND e.section_id = ? ORDER BY last_name, first_name',
+			'SELECT u.* FROM users AS u, section_editors AS e WHERE u.user_id = e.user_id AND e.journal_id = ? AND e.section_id = ? ORDER BY last_name, first_name',
 			array($journalId, $sectionId)
 		);
 
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
-			$users[] = array(
-				'user' => $userDao->_returnUserFromRow($row),
-				'canReview' => $row['can_review'],
-				'canEdit' => $row['can_edit']
-			);
+			$users[] = $userDao->_returnUserFromRow($row);
+		
 			$result->moveNext();
 		}
 

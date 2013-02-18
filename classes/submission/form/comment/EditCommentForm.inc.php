@@ -124,14 +124,19 @@ class EditCommentForm extends Form {
 		$recipients = array();
 
 		// Get editors for article
-		$editAssignmentDao =& DAORegistry::getDAO('EditAssignmentDAO');
-		$editAssignments =& $editAssignmentDao->getEditAssignmentsByArticleId($this->article->getArticleId());
-		$editAssignments =& $editAssignments->toArray();
+			// Removed by EL on February 17th 2013
+			// No edit assignments anymore
+			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
+			//$editAssignments =& $edit Assignment Dao->getEditAssignmentsByArticleId($this->article->getArticleId());
+			//$editAssignments =& $editAssignments->toArray();
 		$editorAddresses = array();
-		foreach ($editAssignments as $editAssignment) {
-			$editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-		}
-
+			//foreach ($editAssignments as $editAssignment) {
+				//$editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
+			//}
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->article->getSectionId());
+			foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();			
+			
 		// If no editors are currently assigned, send this message to
 		// all of the journal's editors.
 		if (empty($editorAddresses)) {
