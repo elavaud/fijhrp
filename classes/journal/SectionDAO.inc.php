@@ -671,10 +671,11 @@ class SectionDAO extends DAO {
 	 * @return boolean
 	 * Added by EL on February 15th 2013
 	 */
-	function ercExistsByTitle($value) {
-		$result =& $this->retrieve(
-			'SELECT COUNT(*) FROM section_settings WHERE setting_name = "title" AND setting_value = ?', array ($value)
-		);
+	function ercExistsByTitle($value, $sectionId = null) {
+		if ($sectionId != null)
+		$result =& $this->retrieve('SELECT COUNT(*) FROM section_settings WHERE setting_name = "title" AND setting_value = "'.$value['en_US'].'" AND section_id != '.$sectionId);
+		else $result =& $this->retrieve('SELECT COUNT(*) FROM section_settings WHERE setting_name = "title" AND setting_value = "'.$value['en_US'].'"');
+	
 		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
 
 		$result->Close();
@@ -688,10 +689,11 @@ class SectionDAO extends DAO {
 	 * @param $value string
 	 * Added by EL on February 15th 2013
 	 */
-	function ercExistsByAbbrev($value) {
-		$result =& $this->retrieve(
-			'SELECT COUNT(*) FROM section_settings WHERE setting_name = "abbrev" AND setting_value = ?', array ($value)
-		);
+	function ercExistsByAbbrev($value, $sectionId = null) {
+		if ($sectionId != null)
+		$result =& $this->retrieve('SELECT COUNT(*) FROM section_settings WHERE setting_name = "abbrev" AND setting_value = "'.$value['en_US'].'" AND section_id != '.$sectionId);
+		else $result =& $this->retrieve('SELECT COUNT(*) FROM section_settings WHERE setting_name = "abbrev" AND setting_value = "'.$value['en_US'].'"');
+		
 		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
 
 		$result->Close();

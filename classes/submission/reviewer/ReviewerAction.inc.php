@@ -102,18 +102,20 @@ class ReviewerAction extends Action {
 				return true;
 			} else {
 				if (!Request::getUserVar('continued')) {
-					$assignedEditors = $email->ccAssignedEditors($reviewerSubmission->getArticleId());
+					//$assignedEditors = $email->ccAssignedEditors($reviewerSubmission->getArticleId());
 					$reviewingSectionEditors = $email->toAssignedReviewingSectionEditors($reviewerSubmission->getArticleId());
-					if (empty($assignedEditors) && empty($reviewingSectionEditors)) {
+					if (empty($reviewingSectionEditors)) {
 						$journal =& Request::getJournal();
 						$email->addRecipient($journal->getSetting('contactEmail'), $journal->getSetting('contactName'));
 						$editorialContactName = $journal->getSetting('contactName');
 					} else {
 						if (!empty($reviewingSectionEditors)) $editorialContact = array_shift($reviewingSectionEditors);
-						else $editorialContact = array_shift($assignedEditors);
+						//else $editorialContact = array_shift($assignedEditors);
 							// Modified by EL on February 17th 2013
 							// No edit assigment anymore
-							$editorialContactName = $editorialContact->getFullName();
+						//	$editorialContactName = $editorialContact->getFullName();
+						$journal =& Request::getJournal();
+						$editorialContactName = $journal->getSetting('contactName');
 					}
 					$email->promoteCcsIfNoRecipients();
 

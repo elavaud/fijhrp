@@ -14,7 +14,6 @@
 
 // $Id$
 
-
 import('classes.handler.Handler');
 
 class UserHandler extends Handler {
@@ -48,6 +47,7 @@ class UserHandler extends Handler {
 		$setupIncomplete = array();
 		$submissionsCount = array();
 		$isValid = array();
+	
 		if ($journal == null) { // Curently at site level
 			unset($journal);
 			
@@ -75,12 +75,12 @@ class UserHandler extends Handler {
 			$templateMgr->assign('showAllJournals', 1);
 
 		} else { // Currently within a journal's context.
-			
+
 			$journalId = $journal->getId();
 			
 			// Determine if journal setup is incomplete, to provide a message for JM
 			$setupIncomplete[$journalId] = $this->checkIncompleteSetup($journal);
-			
+
 			$userJournals = array($journal);
 			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommittee());
 			$subscriptionTypeDAO =& DAORegistry::getDAO('SubscriptionTypeDAO');
@@ -220,7 +220,7 @@ class UserHandler extends Handler {
 */		
 		if (Validation::isJournalManager($journalId)) {
 			$journalDao =& DAORegistry::getDAO('JournalDAO');
-			$isValid["JournalManager"][$journalId] = true;			
+			$isValid["JournalManager"][$journalId] = true;	
 		}
 		if (Validation::isAuthor($journalId)) {
 			$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
@@ -236,7 +236,7 @@ class UserHandler extends Handler {
 			$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
 			$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsForERCReviewCount($userId, $journalId);
 			//$submissionsCount["Reviewer"][$journalId] = $reviewerSubmissionDao->getSubmissionsCount($userId, $journalId);
-			$isValid["Reviewer"][$journalId] = true;			
+			$isValid["Reviewer"][$journalId] = true;
 		}
 	}
 	

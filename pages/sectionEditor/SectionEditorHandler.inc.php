@@ -71,22 +71,29 @@ class SectionEditorHandler extends Handler {
 			FILTER_SECTION_ALL => Locale::Translate('editor.allSections')
 		) + $sections;
 		switch($page) {
-			case 'minutes':
-				$page = 'minutes';
-				$functionName = 'getSectionEditorSubmissionsInReview';
-				$helpTopicId = 'editorial.sectionEditorsRole.submissions.inReview';
-				break;
-			case 'submissionsInEditing':
-				$functionName = 'getSectionEditorSubmissionsInEditing';
-				$helpTopicId = 'editorial.sectionEditorsRole.submissions.inEditing';
-				break;
+				// Modified by EL on February 17th 2013
+				//case 'minutes':
+					//$page = 'minutes';
+					//$functionName = 'getSectionEditorSubmissionsInReview';
+					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.inReview';
+					//break;
+				//case 'submissionsInEditing':
+					//$functionName = 'getSectionEditorSubmissionsInEditing';
+					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.inEditing';
+					//break;
+				case 'submissionsApproved':
+					$functionName = 'getSectionEditorSubmissionsApprovedIterator';
+					break;
+				case 'submissionsNotApproved':
+					$functionName = 'getSectionEditorSubmissionsNotApprovedIterator';
+					break;
 			case 'submissionsArchives':
 				$functionName = 'getSectionEditorSubmissionsArchives';
 				$helpTopicId = 'editorial.sectionEditorsRole.submissions.archives';
 				break;
 			default:
 				$page = 'submissionsInReview';
-				$functionName = 'getSectionEditorSubmissionsInReview';
+				$functionName = 'getSectionEditorSubmissionsInReviewIterator';
 				$helpTopicId = 'editorial.sectionEditorsRole.submissions.inReview';
 		}
 
@@ -117,12 +124,12 @@ class SectionEditorHandler extends Handler {
 			$sort,
 			$sortDirection
 		);
-
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('helpTopicId', $helpTopicId);
 		$templateMgr->assign('sectionOptions', $filterSectionOptions);
 		$templateMgr->assign_by_ref('submissions', $submissions);
-		$templateMgr->assign('filterSection', $filterSection);
+			// EL on February 19th 2013
+			//$templateMgr->assign('filterSection', $filterSection);
 		$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
 
@@ -161,7 +168,8 @@ class SectionEditorHandler extends Handler {
 		$templateMgr->assign('sortDirection', $sortDirection);
 		
 		// Added by igm 9/24/11
-		$templateMgr->assign('technicalUnitField', $technicalUnitField);
+			// Removed by EL on February 19th 2013
+			//$templateMgr->assign('technicalUnitField', $technicalUnitField);
 		$templateMgr->assign('countryField', $countryField);
 
 		$templateMgr->display('sectionEditor/index.tpl');

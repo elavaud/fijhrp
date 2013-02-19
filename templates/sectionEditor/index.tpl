@@ -16,6 +16,8 @@
 
 <ul class="menu">
 	<li{if ($pageToDisplay == "submissionsInReview")} class="current"{/if}><a href="{url path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
+	<li{if ($pageToDisplay == "submissionsApproved")} class="current"{/if}><a href="{url path="submissionsApproved"}">{translate key="common.queue.short.submissionsApproved"}</a></li>
+	<li{if ($pageToDisplay == "submissionsNotApproved")} class="current"{/if}><a href="{url path="submissionsNotApproved"}">{translate key="common.queue.short.submissionsNotApproved"}</a></li>
 	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 <ul class="plain">

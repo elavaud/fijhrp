@@ -78,6 +78,9 @@ class SendEmailHandler extends Handler {
             Request::redirect(null, null, 'index');
         }
         
+        /*
+         * Last modified by EL on February 19th 2013
+         */
         function sendEmailERCMembers($send=false) {
             import('classes.mail.MailTemplate');
             $email = new MailTemplate();
@@ -90,31 +93,30 @@ class SendEmailHandler extends Handler {
             } else {
                 $sender =& Request::getUser();
                 $journal =& Request::getJournal();
-                $roleDao =& DAORegistry::getDAO('RoleDAO');
-				$erc = $sender->getSecretaryEthicsCommittee();
-                
+                $ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+                $sectionDao =& DAORegistry::getDAO('SectionDAO');
+				$ercId = $sender->getCommittee();
+				$erc =& $sectionDao->getSection($ercId);
+                $email->setSubject('['.$erc->getLocalizedAbbrev().']');
                 //Get ERC Members
-                $reviewers = $roleDao->getUsersByRoleId(ROLE_ID_REVIEWER);
+                $reviewers = $ercReviewersDao->getReviewersBySectionId($journal->getId(), $erc);
                 
                 //Get already added recipients
                 $recipients =& $email->getRecipients();
                 if(isset($recipients)) $totalRecipients = count($recipients);
                 else $totalRecipients = 0;
                 
-                while (!$reviewers->eof()) {
-                    $reviewer =& $reviewers->next();
-                    
+                foreach ($reviewers as $reviewer) {                    
                     // Check if new recipient is not already added
                     $isNotInTheList = true;
                     if(isset($recipients)) foreach ($recipients as $recipient) if ($recipient['email'] == $reviewer->getEmail()) $isNotInTheList = false;
                     
                     //Add new recipients according the committee
-                    if(($sender->getId() != $reviewer->getId()) && (($erc=="UHS" && $reviewer->isUhsMember()) || ($erc=="NIOPH" && $reviewer->isNiophMember())) && ($isNotInTheList == true)) {
+                    if(($sender->getId() != $reviewer->getId()) && ($isNotInTheList == true)) {
                         $email->addRecipient($reviewer->getEmail(), $reviewer->getFullName());
                         $totalRecipients++;
                     }
 
-                    unset($reviewer);
                 }
 
                 $email->displayEditForm(Request::url(null, null, 'sendEmailAllUsers', 'send'), null, 'email/email.tpl', array('totalRecipients' => $totalRecipients));

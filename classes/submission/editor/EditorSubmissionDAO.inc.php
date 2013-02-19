@@ -23,7 +23,6 @@ import('classes.submission.sectionEditor.SectionEditorSubmissionDAO');
 import('classes.submission.common.Action');
 import('classes.submission.author.AuthorSubmission');
 
-
 class EditorSubmissionDAO extends DAO {
 	var $articleDao;
 	var $authorDao;
@@ -190,8 +189,7 @@ class EditorSubmissionDAO extends DAO {
 	 * @return array result
 	 */
 	
-	function &_getUnfilteredEditorSubmissions($journalId, $sectionId = null, $editorId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, 
-											  $researchFieldField = null, $countryField = null, $additionalWhereSql, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &_getUnfilteredEditorSubmissions($journalId, $sectionId = null, $editorId = 0, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldField = null, $countryField = null, $additionalWhereSql, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
