@@ -42,6 +42,7 @@
 	<message key="user.initialsExample">Joan Alice Smith = JAS</message>
 	<message key="user.initials">Initials</message>
 	<message key="user.interests">Reviewing interests</message>
+    <message key="user.interests.description">(Separate interests by pressing the enter or comma key)</message>
 	<message key="user.gossip">Private Notes</message>
 	<message key="user.lastName">Last name</message>
 	<message key="user.profile.form.profileImageInvalid">Invalid profile image format or image too big. Accepted formats are .gif, .jpg, or .png, and the image must not exceed 150x150 pixels.</message>
@@ -86,6 +87,7 @@
 	<message key="user.profile.form.publishedNotifications">New issue published email notifications</message>
 	<message key="user.profile.form.urlInvalid">The specified URL is not valid. Please double-check the URL and try again. (Hint: Try adding http:// to the beginning of the URL.)</message>
 	<message key="user.profile.form.usernameRequired">A username is required.</message>
+    <message key="user.profile.form.ercStatusRequired">A committee status is required.</message>
 	
 	<message key="user.profile.leavePasswordBlank">Leave the password fields blank to keep the current password.</message>
 	<message key="user.profile.newPassword">New password</message>
@@ -94,6 +96,7 @@
 	<message key="user.profile.publicProfile">User Profile</message>
 	<message key="user.profile.repeatNewPassword">Repeat new password</message>
 	<message key="user.register.form.emailExists">The selected email address is already in use by another user.</message>
+    <message key="user.register.form.tooManyMembers">Too many people are enrolled in your committee with the selected status. Please take note that only up to 5 secretaries, 1 chair, 1 Vice-Chair, and 20 Members are allowed (the chair and the vice-chair are considered as members).</message>
 	<message key="user.register.form.passwordsDoNotMatch">The passwords do not match.</message>
 	<message key="user.register.form.emailsDoNotMatch">The email address fields do not match.</message>
 	<message key="user.register.form.usernameAlphaNumeric">The username can contain only alphanumeric characters, underscores, and hyphens, and must begin and end with an alphanumeric character.</message>

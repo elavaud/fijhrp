@@ -168,15 +168,15 @@ class ArticleMailTemplate extends MailTemplate {
 				//$returner[] =& $edit Assignment;
 				//unset($edit Assignment);
 			//}
-			$journal = isset($this->journal)?$this->journal:Request::getJournal();
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($articleId);
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor){
-				$this->addCc($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$returner[] =& $sectionEditor;			
-			}
+			//$journal = isset($this->journal)?$this->journal:Request::getJournal();
+			//$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			//$article =& $articleDao->getArticle($articleId);
+			//$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			//$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+			//foreach ($sectionEditors as $sectionEditor){
+			//	$this->addCc($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			//	$returner[] =& $sectionEditor;			
+			//}
 		return $returner;
 	}
 

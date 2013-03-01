@@ -35,7 +35,9 @@ function deleteAttachment(fileId) {
 {if $attachmentsEnabled}
 	<input type="hidden" name="deleteAttachment" value="" />
 	{foreach from=$persistAttachments item=temporaryFile}
-		{if is_object($temporaryFile)}<input type="hidden" name="persistAttachments[]" value="{$temporaryFile->getFileId()}" />{/if}
+		{if is_object($temporaryFile)}
+			<input type="hidden" name="persistAttachments[]" value="{$temporaryFile->getFileId()}" />
+		{/if}
 	{/foreach}
 {/if}
 

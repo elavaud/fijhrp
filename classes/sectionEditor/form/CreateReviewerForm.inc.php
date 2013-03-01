@@ -22,18 +22,18 @@
 import('lib.pkp.classes.form.Form');
 
 class CreateReviewerForm extends Form {
-	/** @var int The article this form is for */
-	var $articleId;
+	/** @var int the section this form is for */
+	var $sectionId;
 
 	/**
 	 * Constructor.
 	 */
-	function CreateReviewerForm($articleId) {
+	function CreateReviewerForm($sectionId) {
 		parent::Form('sectionEditor/createReviewerForm.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 
 		$site =& Request::getSite();
-		$this->articleId = $articleId;
+		$this->sectionId = $sectionId;
 
 		// Validation checks for this form
 		$this->addCheck(new FormValidator($this, 'username', 'required', 'user.profile.form.usernameRequired'));
@@ -44,6 +44,8 @@ class CreateReviewerForm extends Form {
 		$this->addCheck(new FormValidatorUrl($this, 'userUrl', 'optional', 'user.profile.form.urlInvalid'));
 		$this->addCheck(new FormValidatorEmail($this, 'email', 'required', 'user.profile.form.emailRequired'));
 		$this->addCheck(new FormValidatorCustom($this, 'email', 'required', 'user.register.form.emailExists', array(DAORegistry::getDAO('UserDAO'), 'userExistsByEmail'), array(null, true), true));
+		$this->addCheck(new FormValidator($this, 'ercStatus', 'required', 'user.profile.form.ercStatusRequired'));
+		$this->addCheck(new FormValidatorCustom($this, 'ercStatus', 'required', 'user.register.form.tooManyMembers', create_function('$ercStatus, $sectionId', ' $journal =& Request::getJournal(); if ($ercStatus == "Secretary"){ $sectionEditorsDao =& DAORegistry::getDAO(\'SectionEditorsDAO\'); $secretaries =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionId); if (count($secretaries)>4) return true; else return false;} else { $ercReviewersDao =& DAORegistry::getDAO(\'ErcReviewersDAO\'); if ($ercStatus == "Chair") { $chairs =& $ercReviewersDao->getReviewersBySectionIdByStatus($journal->getId(), $sectionId, 1); if (count($chairs) != 0) return true; else return false;} elseif ($ercStatus == "Vice-Chair"){ $vicechairs =& $ercReviewersDao->getReviewersBySectionIdByStatus($journal->getId(), $sectionId, 2); if (count($vicechairs) != 0) return true; else return false;} elseif ($ercStatus == "Member"){ $members =& $ercReviewersDao->getReviewersBySectionId($journal->getId(), $sectionId); if (count($members) > 19) return true; else return false;} return false;}'), array($this->sectionId), true));
 
 		// Provide a default for sendNotify: If we're using one-click
 		// reviewer access or email-based reviews, it's not necessary;
@@ -64,9 +66,11 @@ class CreateReviewerForm extends Form {
 	function display(&$args, &$request) {
 		$templateMgr =& TemplateManager::getManager();
 		$site =& Request::getSite();
-		$templateMgr->assign('articleId', $this->articleId);
-
-		$site =& Request::getSite();
+		$templateMgr->assign('sectionId', $this->sectionId);
+		
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		$templateMgr->assign_by_ref('erc', $sectionDao->getSection($this->sectionId));
+		
 		$templateMgr->assign('availableLocales', $site->getSupportedLocaleNames());
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$templateMgr->assign('genderOptions', $userDao->getGenderOptions());
@@ -95,20 +99,16 @@ class CreateReviewerForm extends Form {
 			'middleName',
 			'lastName',
 			'gender',
-			'initials',
 			'affiliation',
 			'email',
-			'userUrl',
 			'phone',
 			'fax',
 			'mailingAddress',
 			'country',
-			'biography',
 			'interestsKeywords',
-			'gossip',
-			'userLocales',
 			'sendNotify',
-			'username'
+			'username',
+			'ercStatus'
 		));
 
 		if ($this->getData('userLocales') == null || !is_array($this->getData('userLocales'))) {
@@ -124,6 +124,7 @@ class CreateReviewerForm extends Form {
 	/**
 	 * Register a new user.
 	 * @return userId int
+	 * Last modified: EL on February 22th 2013
 	 */
 	function execute() {
 		$userDao =& DAORegistry::getDAO('UserDAO');
@@ -152,7 +153,6 @@ class CreateReviewerForm extends Form {
 
 		$site =& Request::getSite();
 		$availableLocales = $site->getSupportedLocales();
-
 		$locales = array();
 		foreach ($this->getData('userLocales') as $locale) {
 			if (Locale::isLocaleValid($locale) && in_array($locale, $availableLocales)) {
@@ -164,7 +164,6 @@ class CreateReviewerForm extends Form {
 		$user->setUsername($this->getData('username'));
 		$password = Validation::generatePassword();
 		$sendNotify = $this->getData('sendNotify');
-
 		if (isset($auth)) {
 			$user->setPassword($password);
 			// FIXME Check result and handle failures
@@ -176,38 +175,72 @@ class CreateReviewerForm extends Form {
 		}
 
 		$user->setDateRegistered(Core::getCurrentDate());
+		
 		$userId = $userDao->insertUser($user);
 
 		// Add reviewing interests to interests table
 		$interestDao =& DAORegistry::getDAO('InterestDAO');
-		$interests = Request::getUserVar('interestsKeywords');
-		$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
-		$interestTextOnly = Request::getUserVar('interests');
-		if(!empty($interestsTextOnly)) {
-			// If JS is disabled, this will be the input to read
-			$interestsTextOnly = explode(",", $interestTextOnly);
-		} else $interestsTextOnly = null;
-		if ($interestsTextOnly && !isset($interests)) {
-			$interests = $interestsTextOnly;
-		} elseif (isset($interests) && !is_array($interests)) {
-			$interests = array($interests);
+		$interests = is_array(Request::getUserVar('interestsKeywords')) ? Request::getUserVar('interestsKeywords') : array();
+		if (is_array($interests)){
+			$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
+			$interestTextOnly = Request::getUserVar('interests');
+			if(!empty($interestsTextOnly)) {
+				// If JS is disabled, this will be the input to read
+				$interestsTextOnly = explode(",", $interestTextOnly);
+			} else $interestsTextOnly = null;
+			if ($interestsTextOnly && !isset($interests)) {
+				$interests = $interestsTextOnly;
+			} elseif (isset($interests) && !is_array($interests)) {
+				$interests = array($interests);
+			}
+			$interestDao->insertInterests($interests, $user->getId(), true);
 		}
 		$interestDao->insertInterests($interests, $user->getId(), true);
 
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$journal =& Request::getJournal();
-		$role = new Role();
-		$role->setJournalId($journal->getId());
-		$role->setUserId($userId);
-		$role->setRoleId(ROLE_ID_REVIEWER);
-		$roleDao->insertRole($role);
+
+		$ercStatus = $this->getData('ercStatus');
+		if ($ercStatus == "Secretary") {
+			$role = new Role();
+			$role->setJournalId($journal->getId());
+			$role->setUserId($userId);
+			$role->setRoleId(ROLE_ID_SECTION_EDITOR);
+			$roleDao->insertRole($role);
+
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditorsDao->insertEditor($journal->getId(), $this->sectionId, $userId, 1, 1);
+		} elseif ($ercStatus == "Chair" || $ercStatus == "Vice-Chair" || $ercStatus == "Member") {
+			$role = new Role();
+			$role->setJournalId($journal->getId());
+			$role->setUserId($userId);
+			$role->setRoleId(ROLE_ID_REVIEWER);
+			$roleDao->insertRole($role);
+			
+			$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+			if ($ercStatus == "Chair") $ercReviewersDao->insertReviewer($journal->getId(), $this->sectionId, $userId, 1);
+			elseif ($ercStatus == "Vice-Chair") $ercReviewersDao->insertReviewer($journal->getId(), $this->sectionId, $userId, 2);
+			if ($ercStatus == "Member") $ercReviewersDao->insertReviewer($journal->getId(), $this->sectionId, $userId, 3);
+		}
 
 		if ($sendNotify) {
+			$sectionDao =& DAORegistry::getDAO('SectionDAO');
+			$erc =& $sectionDao->getSection($this->sectionId);
+			$thisUser =& Request::getUser();
 			// Send welcome email to user
 			import('classes.mail.MailTemplate');
-			$mail = new MailTemplate('REVIEWER_REGISTER');
+			$mail = new MailTemplate('COMMITTEE_REGISTER');
 			$mail->setFrom($journal->getSetting('contactEmail'), $journal->getSetting('contactName'));
-			$mail->assignParams(array('username' => $this->getData('username'), 'password' => $password, 'userFullName' => $user->getFullName()));
+			$mail->assignParams(array(
+				'username' => $this->getData('username'), 
+				'password' => $password, 
+				'userFullName' => $user->getFullName(), 
+				'ercStatus' => $ercStatus, 
+				'ercTitle' => $erc->getLocalizedTitle(),
+				'editProfile' => Request::url(null, 'user', 'profile'),
+				'secretaryFullName' => $thisUser->getFullName(),
+				'secretaryFunctions' => $thisUser->getFunctions()	
+			));
 			$mail->addRecipient($user->getEmail(), $user->getFullName());
 			$mail->send();
 		}

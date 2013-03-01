@@ -1337,27 +1337,19 @@ class SectionEditorSubmissionDAO extends DAO {
 	
 	/*
 	 * Edited by EL
-	 * Last Update: February 17th 2013
+	 * Last Update: February 25th 2013
 	 */	
 	function &getSectionEditorSubmissionsForErcReview($sectionId, $journalId) {
-		$sectionEditorSubmissions = array();
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionId, $journalId,
-			$searchField, $searchMatch, $search,
-			$dateField, $dateFrom, $dateTo, $countryField,
+			null, null, null,
+			null, null, null, null,
 			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
-			$rangeInfo, $sortBy, $sortDirection
+			null, null, null
 		);
 
-		while (!$result->EOF) {
-			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
-			$result->MoveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $sectionEditorSubmissions;
+		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
+		return $returner;
 	}
 
 	/*

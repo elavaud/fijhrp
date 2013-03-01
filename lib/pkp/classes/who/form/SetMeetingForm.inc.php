@@ -11,6 +11,8 @@
  * @class SetMeetingForm
  * @ingroup sectionEditor_form
  *
+ * Last updated by EL on February 25, 2013
+ *
  * @brief Form for section editors to create meeting.
  */
 
@@ -30,6 +32,8 @@ class SetMeetingForm extends Form {
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorPost($this));
 		$this->addCheck(new FormValidator($this,'meetingDate', 'required', 'editor.meetings.form.meetingDateRequired'));
+		$this->addCheck(new FormValidator($this,'meetingLength', 'required', 'editor.meetings.form.meetingLengthRequired'));
+		$this->addCheck(new FormValidator($this,'investigator', 'required', 'editor.meetings.form.meetingInvestigatorRequired'));
 		$this->addCheck(new FormValidator($this,'selectedProposals', 'required', 'editor.meetings.form.selectAtleastOneProposal'));
 	}
 	
@@ -40,6 +44,9 @@ class SetMeetingForm extends Form {
 		$this->readUserVars(array(
 			'selectedProposals',
 			'meetingDate',
+			'meetingLength',
+			'location',
+			'investigator',
 			'meetingId'
 		));
 	
@@ -58,27 +65,11 @@ class SetMeetingForm extends Form {
 
 		$site =& Request::getSite();
 		
-		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		
-		$editor = $user->getId();
-
-		
-		$filterSection = Request::getUserVar('filterSection');
-		if ($filterSection != '' && array_key_exists($filterSection, $filterSectionOptions)) {
-			$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-		} else {
-			$filterSection = $user->getSetting('filterSection', $journalId);
-			if ($filterSection == null) {
-				$filterSection = FILTER_SECTION_ALL;
-				$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-			}	
-		}
-		
-		$submissions =& $editorSubmissionDao->getEditorSubmissionsForERCReview(
-			$journalId,
-			$filterSection,
-			$editorId
+		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview(
+			$user->getCommitteeId(),
+			$journalId
 		);
 	
 		/*Get the selected submissions to be reviewed*/
@@ -92,6 +83,9 @@ class SetMeetingForm extends Form {
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('meetingId', $meetingId);
 		$templateMgr->assign('meetingDate', $meeting->getDate());
+		$templateMgr->assign('meetingLength', $meeting->getLength());
+		$templateMgr->assign('location', $meeting->getLocation());
+		$templateMgr->assign('investigator', $meeting->getInvestigator());
 		$templateMgr->assign_by_ref('submissions', $submissions);
 		$templateMgr->assign_by_ref('selectedProposals', $selectedSubmissions);
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));

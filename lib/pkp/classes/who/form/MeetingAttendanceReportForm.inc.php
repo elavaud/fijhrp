@@ -15,6 +15,10 @@
  * @brief Form for section editors to generate meeting attendance report form.
  */
 
+/**
+ * Last update on February 2013
+ * EL
+**/
 
 import('lib.pkp.classes.form.Form');
 

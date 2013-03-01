@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Last update on February 2013
+ * EL
+**/
+
 class MeetingSubmission extends DataObject {
 
 	function MeetingSubmission() {

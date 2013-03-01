@@ -80,14 +80,15 @@
 		<tr class="heading" valign="bottom">
 			<td width="5%">{$meeting->getId()}</td>
 			<td width="40%">
+				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 				{foreach from=$map.$key item=submission name=submissions}
-					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
+					{$submission->getLocalizedTitle()|strip_unsafe_html}
 					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
 				{/foreach}
+				</a>
 				{if empty($map.$key)}
 					<i>{translate key="reviewer.meetings.noSubmissions"}</i>
 				{/if}
-				
 			</td>
 			<td width="25%" align="right">
 <!--				{if $meeting->getStatus() == 4}-->

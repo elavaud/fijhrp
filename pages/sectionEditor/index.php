@@ -202,11 +202,14 @@ switch ($op) {
 	case 'viewMeeting':
 	case 'cancelMeeting':
 	case 'setMeetingFinal':
-	case 'notifyReviewersNewMeeting':
+	case 'notifyUsersNewMeeting':
+	case 'notifyInvestigatorsNewMeeting':
+	case 'notifyExternalReviewersNewMeeting':	
 	case 'notifyReviewersChangeMeeting':
 	case 'notifyReviewersFinalMeeting':
 	case 'notifyReviewersCancelMeeting':
-	case 'remindReviewersMeeting':
+	case 'replyAttendanceForUser':
+	case 'remindUsersMeeting':
 		define('HANDLER_CLASS', 'MeetingsHandler');
 		import('pages.sectionEditor.MeetingsHandler');
 		break;

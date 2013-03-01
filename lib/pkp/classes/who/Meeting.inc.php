@@ -28,6 +28,11 @@ define ('MINUTES_REVIEW_CONSENT_DOCUMENT', 8);
 define ('MINUTES_REVIEW_OTHER_CONSIDERATIONS', 9);
 define ('MINUTES_REVIEW_LOCAL_IRB', 10);
 
+/**
+ * Last update on February 2013
+ * EL
+**/
+
 class Meeting extends DataObject {
 
 	function Meeting() {
@@ -50,16 +55,44 @@ class Meeting extends DataObject {
 		return $this->getData('meetingDate');
 	}
 
-	function setUploader($userId) {
-		$this->setUser($userId);
+		/*
+		 * New functions for the length, location and if the investigator(s) is(are) invited
+		 * EL on February 25th 2013
+		 */
+		function setLength($length) {
+			$this->setData('length', $length);
+		}
+
+		function getLength() {
+			return $this->getData('length');
+		}
+
+		function setLocation($location) {
+			$this->setData('location', $location);
+		}
+
+		function getLocation() {
+			return $this->getData('location');
+		}
+
+		function setInvestigator($investigator) {
+			return $this->getData('investigator', $investigator);
+		}
+
+		function getInvestigator() {
+			return $this->getData('investigator');
+		}
+
+	function setUploader($sectionId) {
+		$this->setSection($sectionId);
 	}
 
-	function setUser($userId) {
-		$this->setData('userId', $userId);
+	function setSection($sectionId){
+		$this->setData('sectionId', $sectionId);
 	}
 
 	function getUploader() {
-		return $this->getData('userId');
+		return $this->getData('sectionId');
 	}
 
 	function setMinutesStatus($minutesStatus) {
@@ -75,12 +108,12 @@ class Meeting extends DataObject {
 	 *  Added by ayveemallare 7/6/2011
 	 **********************************/
 
-	function setReviewerId($reviewerId) {
-		$this->setData('reviewerId', $reviewerId);
+	function setUserId($userId) {
+		$this->setData('userId', $userId);
 	}
 
-	function getReviewerId() {
-		return $this->getData('reviewerId');
+	function getUserId() {
+		return $this->getData('userId');
 	}
 
 	function setIsAttending($isAttending) {

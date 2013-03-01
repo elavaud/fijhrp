@@ -80,6 +80,7 @@ class MinutesHandler extends Handler {
 	 * Display list of uploaded minutes or allow STO to create a new one
 	 * @param $args
 	 * @param $request
+	 * Last updated by EL on February 25th 2013
 	 */
 	function minutes($args) {
 		$this->validate();
@@ -87,10 +88,9 @@ class MinutesHandler extends Handler {
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
-		$userId = $user->getId();
 
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
-		$meetings =& $meetingDao->getMeetingsOfUser($userId);
+		$meetings =& $meetingDao->getMeetingsOfSection($user->getCommitteeId());
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings);

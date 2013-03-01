@@ -502,10 +502,7 @@ class MetadataForm extends Form {
 		$article->setAcademicDegree($this->getData('academicDegree'), null);
 		$article->setAbstract($this->getData('abstract'), null); // Localized
 		$article->setLanguage($this->getData('language'));
-		if ($article->getSubmissionProgress() <= $this->step) {
-			$article->stampStatusModified();
-			$article->setSubmissionProgress($this->step + 1);
-		}                
+               
         $article->setKeywords($this->getData('keywords'), null); // Localized
         $article->setStartDate($this->getData('startDate'), null); // Localized
         $article->setEndDate($this->getData('endDate'), null); // Localized
@@ -671,7 +668,6 @@ class MetadataForm extends Form {
 		if ($previousRawCitationList != $rawCitationList) {
 			$citationDao->importCitations($request, ASSOC_TYPE_ARTICLE, $article->getId(), $rawCitationList);
 		}
-		return $this->articleId;
 	}
 
 	/**

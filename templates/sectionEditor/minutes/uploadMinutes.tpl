@@ -1,6 +1,6 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 <br/>
-<h3>{translate key="reviewer.meetings.details}</h3>
+<h3>{translate key="editor.meetings.details"}</h3>
 <div class="separator"></div>
 <div id="details">
 	<table width="100%" class="data">

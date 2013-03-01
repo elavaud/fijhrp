@@ -701,5 +701,11 @@ class SectionDAO extends DAO {
 
 		return $returner;
 	}
+
+	/**
+	 * Function especially for the creation of a reviewer by a secretary
+	 * Requests info from erc-reviewers and section_editors table
+	 */
+
 }
 ?>

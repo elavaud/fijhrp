@@ -5,6 +5,11 @@
 * page handler class for minutes-related operations
 * @var unknown_type
 */
+
+/**
+ * Last update on February 2013
+ * EL
+**/
 define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 // Filter section
@@ -14,6 +19,7 @@ import('classes.submission.sectionEditor.SectionEditorAction');
 import('classes.handler.Handler');
 import('lib.pkp.classes.who.Meeting');
 import('lib.pkp.classes.who.MeetingAction');
+import('lib.pkp.classes.who.MeetingAttendance');
 
 class MeetingsHandler extends Handler {
 	/**
@@ -66,6 +72,7 @@ class MeetingsHandler extends Handler {
 	/**
 	* Display submission management instructions.
 	* @param $args (type)
+	* Last modified by EL on February 25th 2013
 	*/
 	function instructions($args) {
 		$this->setupTemplate();
@@ -81,7 +88,6 @@ class MeetingsHandler extends Handler {
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
-		$userId = $user->getId();
 		
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
 		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
@@ -99,7 +105,7 @@ class MeetingsHandler extends Handler {
 		$status = Request::getUserVar('status');
 		$minutesStatus = Request::getUserVar('minutesStatus');
 		
-		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection, $status, $minutesStatus, $fromDate, $toDate);
+		$meetings = $meetingDao->getMeetingsOfSection($user->getCommitteeId(), $sort, $rangeInfo, $sortDirection, $status, $minutesStatus, $fromDate, $toDate);
 		$meetingsArray = $meetings->toArray();
 		$map = array();
 			
@@ -113,7 +119,7 @@ class MeetingsHandler extends Handler {
 			$map[$meeting->getId()] = $submissions;
 		}
 		
-		$meetings = $meetingDao->getMeetingsOfUser($userId, $sort, $rangeInfo, $sortDirection, $status, $minutesStatus, $fromDate, $toDate);
+		$meetings = $meetingDao->getMeetingsOfSection($user->getCommitteeId(), $sort, $rangeInfo, $sortDirection, $status, $minutesStatus, $fromDate, $toDate);
 		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings);
@@ -122,7 +128,7 @@ class MeetingsHandler extends Handler {
 		$templateMgr->assign('rangeInfo', count($meetings)); 
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
-		$templateMgr->assign('pageToDisplay', $page);
+		//$templateMgr->assign('pageToDisplay', $page);
 		$templateMgr->assign('sectionEditor', $user->getFullName());
 		$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 		$templateMgr->assign('dateFrom', $fromDate);
@@ -180,13 +186,16 @@ class MeetingsHandler extends Handler {
 	
 	
         function saveMeeting($args){
-		$meetingId = isset($args[0]) ? $args[0]: 0;
-		$this->validate($meetingId, false, true);
-		$selectedSubmissions = Request::getUserVar('selectedProposals');
-		$meetingDate = Request::getUserVar('meetingDate');
-		$meetingId = MeetingAction::saveMeeting($meetingId,$selectedSubmissions,$meetingDate, null);
-		Request::redirect(null, null, 'viewMeeting', array($meetingId));
-	}	
+			$meetingId = isset($args[0]) ? $args[0]: 0;
+			$this->validate($meetingId, false, true);
+			$selectedSubmissions = Request::getUserVar('selectedProposals');
+			$meetingDate = Request::getUserVar('meetingDate');
+			$meetingLength = Request::getUserVar('meetingLength');
+			$location = Request::getUserVar('location');
+			$investigator = Request::getUserVar('investigator');
+			$meetingId = MeetingAction::saveMeeting($meetingId,$selectedSubmissions,$meetingDate, $meetingLength, $investigator, $location);
+			Request::redirect(null, null, 'viewMeeting', array($meetingId));
+		}
 
 	/**
 	 * Added by MSB July 07 2011
@@ -207,13 +216,10 @@ class MeetingsHandler extends Handler {
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
-		
 		/*MEETING DETAILS*/
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$meeting =$meetingDao->getMeetingById($meetingId);
-		
-		if(isset($meeting) && $meeting->getUploader()==$user->getId()){
-		
+		if(isset($meeting) && $meeting->getUploader()==$user->getCommitteeId()){
 			/*LIST THE SUBMISSIONS*/
 			$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 			$selectedProposals =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -223,16 +229,13 @@ class MeetingsHandler extends Handler {
 				$submissions[$submission] = $articleDao->getArticle($submission, $journalId, false);
 			}
 			
-			
-			/*RESPONSES FROM REVIEWERS*/
-			$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-			$reviewers = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
-		
-			
+			/*RESPONSES FROM USERS*/
+			$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');
+			$users = $meetingAttendanceDao->getMeetingAttendancesByMeetingId($meetingId);
 			$templateMgr =& TemplateManager::getManager();
 			$templateMgr->assign('sectionEditor', $user->getFullName());
 			$templateMgr->assign_by_ref('meeting', $meeting);
-			$templateMgr->assign_by_ref('reviewers', $reviewers);
+			$templateMgr->assign_by_ref('users', $users);
 			$templateMgr->assign_by_ref('submissions', $submissions);
 			$templateMgr->assign('baseUrl', Config::getVar('general', "base_url"));
 			$templateMgr->display('sectionEditor/meetings/viewMeeting.tpl');
@@ -240,7 +243,6 @@ class MeetingsHandler extends Handler {
 		}else{
 			Request::redirect(null, null, 'meetings', null);
 		}
-
 	}
 	
 	function cancelMeeting($args){
@@ -255,25 +257,89 @@ class MeetingsHandler extends Handler {
 	}
 	
 	/** 
-	 * Notify reviewers if new meeting is set
+	 * Notify users if new meeting is set
 	 * Added by ayveemallare 7/12/2011
 	 * Enter description here ...
 	 * @param int $meetingId
+	 * Last modified by EL
 	 */
-	function notifyReviewersNewMeeting($args) {
+	function notifyUsersNewMeeting($args) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
-		$meeting =$meetingDao->getMeetingById($meetingId);
-		
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
-	
+		$meeting =& $meetingDao->getMeetingById($meetingId);
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
+		$reviewerAttendances = $meetingAttendanceDao->getMeetingAttendancesByMeetingIdAndTypeOfUser($meetingId, MEETING_ERC_MEMBER);
 		$this->setupTemplate(true, $meetingId);
-		if (SectionEditorAction::notifyReviewersNewMeeting($meeting, $reviewerIds, $submissionIds, Request::getUserVar('send'))) {
-			Request::redirect(null, null, 'viewMeeting', $meetingId);
+		
+		$reviewerSent = MeetingAction::notifyReviewersNewMeeting($meeting, $reviewerAttendances, $submissionIds, Request::getUserVar('send'));		
+		
+		$extReviewerAttendances = $meetingAttendanceDao->getMeetingAttendancesByMeetingIdAndTypeOfUser($meetingId, MEETING_EXTERNAL_REVIEWER);
+				
+		if ($reviewerSent) {
+			$attendanceIncrementNumber = (int)0;
+			if (count($extReviewerAttendances)>0) Request::redirect(null, null, 'notifyExternalReviewersNewMeeting', array($meetingId, $attendanceIncrementNumber));
+			else Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}
+	}
+
+	/**
+	 * EL on February 28th 2013
+	 * Notify the investigators of a new meeting suggestion
+	 */
+	function notifyExternalReviewersNewMeeting($args) {
+		$meetingId = $args[0];
+		$attendanceIncrementNumber = isset($args[1]) ? $args[1]: 0;
+		$this->validate($meetingId);
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =& $meetingDao->getMeetingById($meetingId);
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
+		$this->setupTemplate(true, $meetingId);
+		
+		$extReviewerAttendances = $meetingAttendanceDao->getMeetingAttendancesByMeetingIdAndTypeOfUser($meetingId, MEETING_EXTERNAL_REVIEWER);
+
+		$investigatorAttendances = $meetingAttendanceDao->getMeetingAttendancesByMeetingIdAndTypeOfUser($meetingId, MEETING_INVESTIGATOR);
+		
+		$extReviewerSent = MeetingAction::notifyExternalReviewerNewMeeting($meeting, $extReviewerAttendances[$attendanceIncrementNumber], $attendanceIncrementNumber, $submissionIds, Request::getUserVar('send'));
+				
+		if ($extReviewerSent) {
+			$attendanceIncrementNumber = $attendanceIncrementNumber+1;
+			if ($attendanceIncrementNumber < count($extReviewerAttendances)) {
+				Request::redirect(null, null, 'notifyExternalReviewerNewMeeting', array($meetingId, $attendanceIncrementNumber));
+			} elseif (count($investigatorAttendances) > 0) Request::redirect(null, null, 'notifyInvestigatorsNewMeeting', array($meetingId, 0));
+			else Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}
+	}
+	
+	/**
+	 * EL on February 28th 2013
+	 * Notify the investigators of a new meeting suggestion
+	 */
+	function notifyInvestigatorsNewMeeting($args) {
+		$meetingId = $args[0];
+		$attendanceIncrementNumber = isset($args[1]) ? $args[1]: 0;
+		$this->validate($meetingId);
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meeting =& $meetingDao->getMeetingById($meetingId);
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
+		$this->setupTemplate(true, $meetingId);
+		
+		$investigatorAttendances = $meetingAttendanceDao->getMeetingAttendancesByMeetingIdAndTypeOfUser($meetingId, MEETING_INVESTIGATOR);
+
+		$investigatorSent = MeetingAction::notifyInvestigatorNewMeeting($meeting, $investigatorAttendances[$attendanceIncrementNumber], $attendanceIncrementNumber, $submissionIds, Request::getUserVar('send'));
+				
+		if ($investigatorSent) {
+			$attendanceIncrementNumber = $attendanceIncrementNumber+1;
+			if ($attendanceIncrementNumber < count($investigatorAttendances)) {
+				Request::redirect(null, null, 'notifyInvestigatorsNewMeeting', array($meetingId, $attendanceIncrementNumber));
+			}
+			else Request::redirect(null, null, 'viewMeeting', $meetingId);
 		}
 	}
 	
@@ -288,8 +354,8 @@ class MeetingsHandler extends Handler {
 		$oldDate = isset($args[1]) ? $args[1]: 0;
 		$meeting =& $this->meeting;
 		
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
+		$reviewerIds = $meetingAttendanceDao->getMeetingAttendancesByMeetingId($meetingId);
 	
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -309,8 +375,8 @@ class MeetingsHandler extends Handler {
 		$this->validate($meetingId);
 		$meeting =& $this->meeting;
 		
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
+		$reviewerIds = $meetingAttendanceDao->getMeetingAttendancesByMeetingId($meetingId);
 	
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -330,8 +396,8 @@ class MeetingsHandler extends Handler {
 		$this->validate($meetingId);
 		$meeting =& $this->meeting;
 
-		$meetingReviewerDao =& DAORegistry::getDAO('MeetingReviewerDAO');	
-		$reviewerIds = $meetingReviewerDao->getMeetingReviewersByMeetingId($meetingId);
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
+		$reviewerIds = $meetingAttendanceDao->getMeetingAttendancesByMeetingId($meetingId);
 	
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
@@ -346,7 +412,7 @@ class MeetingsHandler extends Handler {
 	 * Added by ayveemallare 7/12/2011
 	 * @param $args
 	 */
-	function remindReviewersMeeting($args = null) {
+	function remindUsersMeeting($args = null) {
 		$meetingId = Request::getUserVar('meetingId');
 		$reviewerId = Request::getUserVar('reviewerId');
 		$this->validate($meetingId);
@@ -355,7 +421,7 @@ class MeetingsHandler extends Handler {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$submissionIds = $meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$this->setupTemplate(true, $meetingId);
-		if (SectionEditorAction::remindReviewersMeeting($meeting, $reviewerId, $submissionIds, Request::getUserVar('send'))) {
+		if (SectionEditorAction::remindUsersMeeting($meeting, $reviewerId, $submissionIds, Request::getUserVar('send'))) {
 			Request::redirect(null, null, 'viewMeeting', $meetingId);
 		}
 	}
@@ -370,7 +436,7 @@ class MeetingsHandler extends Handler {
 			
 			if($meeting == null)
 				$isValid = false;
-			else if($meeting->getUploader() != $user->getId())
+			else if($meeting->getUploader() != $user->getCommitteeId())
 				$isValid = false;
 			if($isValid)
 				$this->meeting =& $meeting;
@@ -387,6 +453,21 @@ class MeetingsHandler extends Handler {
 		return true;
 	}
 
+	/**
+	 * Added by EL on February 27th 2013
+	 * Reply the attendance of the user
+	 */
+	function replyAttendanceForUser($args){
+		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$userId = $args[1];
+		$attendance = $args[2];
+			
+		$this->validate($meetingId);
+		
+		if(MeetingAction::replyAttendanceForUser($meetingId, $userId, $attendance)){
+			Request::redirect(null, null, 'viewMeeting', $meetingId);
+		}	
+	}
 
 }
 

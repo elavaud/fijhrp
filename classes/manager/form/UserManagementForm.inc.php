@@ -374,7 +374,7 @@ class UserManagementForm extends Form {
 
 		// Add reviewing interests to interests table
 		$interestDao =& DAORegistry::getDAO('InterestDAO');
-		$interests = Request::getUserVar('interestsKeywords');
+		$interests = is_array(Request::getUserVar('interestsKeywords')) ? Request::getUserVar('interestsKeywords') : array();
 		if (is_array($interests)){
 			$interests = array_map('urldecode', $interests); // The interests are coming in encoded -- Decode them for DB storage
 			$interestTextOnly = Request::getUserVar('interests');

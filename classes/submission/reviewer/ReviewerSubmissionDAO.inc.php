@@ -367,7 +367,7 @@ class ReviewerSubmissionDAO extends DAO {
 	function getSubmissionsForFullReview($reviewerId){
 		$userDao =& DAORegistry::getDAO('UserDAO');
 		$user =& $userDao->getUser($reviewerId);
-		$section == ' ';
+		$section = (string)' ';
 		
 			// Added by EL on February 15th 2013
 			// Management of multiple ERCs

@@ -272,9 +272,12 @@
 	<!-- *********************************************
 	 * Additional key for review due date
 	 * Added by ayveemallare
-	 * Last Update: 6/29/2011
+	 * Last Update: 2/25/2013 by EL
 	********************************************** -->
 	<message key="editor.article.meetingDate">Date and Time</message>
+        <message key="editor.article.meetingLength">Length of the meeting</message>
+        <message key="editor.article.meetingLocation">Location</message>
+        <message key="editor.article.meetingInviteInvestigator">Invite investigator(s)</message>
 	
 	<!-- *********************************************
 	 * Additional keys for meetings
@@ -283,9 +286,10 @@
 	********************************************** -->
 	<message key="editor.meetings">Meetings</message>
 	<message key="editor.meetings.setMeeting">Set a Meeting</message>
+    <message key="editor.meetings.details">Details</message>
 	<message key="editor.meetings.viewMeeting">Meeting Details</message>
 	<message key="editor.meetings.meetingId">Meeting ID</message>
-	<message key="editor.meetings.reviewers">Reviewers</message>
+	<message key="editor.meetings.guests">Guests </message>
 	<message key="editor.meetings.status">Status</message>
 	<message key="editor.meetings.isFinal">Is Final</message>
 	<message key="editor.meetings.scheduleStatus">Schedule Status</message>
@@ -299,17 +303,27 @@
 	<message key="editor.meetings.addProposalsToDiscuss">Add/Remove proposals to discuss</message>
 	<message key="editor.meetings.submissions">Submissions to be discussed</message>
 	
-	<message key="editor.meetings.reviewer.name">Name</message>
-	<message key="editor.meetings.reviewer.replyStatus">Reply Status</message>
-	<message key="editor.meetings.reviewer.reply">Remarks</message>
-	<message key="editor.meetings.reviewer.noReviewers">No reviewers</message>
-	<message key="editor.meetings.attendingReviewers">Attending Reviewers</message>
-	<message key="editor.meetings.numberOfAttendingReviewers">Total Number of Attending Reviewers</message>
-	<message key="editor.meetings.numberOfNotAttendingReviewers">Total Number of NOT Attending Reviewers</message>
-	<message key="editor.meetings.numberOfUndecidedReviewers">Total Number of Undecided Reviewers</message>
+	<message key="editor.meetings.user.name">Name</message>
+    <message key="editor.meetings.user.functions">Function(s)</message>
+    <message key="editor.meetings.user.available">Available</message>
+    <message key="editor.meetings.user.unavailable">Unavailable</message>
+	<message key="editor.meetings.user.replyStatus">Reply Status</message>
+	<message key="editor.meetings.user.reply">Remarks</message>
+	<message key="editor.meetings.user.noGuests">No guests</message>
+	<message key="editor.meetings.attendingGuests">Attending Guests</message>
+	<message key="editor.meetings.numberOfAttendingGuests">Total Number of Attending Guests</message>
+	<message key="editor.meetings.numberOfNotAttendingGuests">Total Number of NOT Attending Guests</message>
+	<message key="editor.meetings.numberOfUndecidedGuests">Total Number of Undecided Guests</message>
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>
 	<message key="editor.meetings.form.selectAtleastOneProposal">Select at least one (1) proposal to discuss</message>
 	<message key="editor.meetings.form.meetingDateRequired">Pick a date and time for the meeting</message>
+        <!-- *************************************
+            * Additional keys for meeting
+            * Added by EL on February 25th 2013
+        ************************************** -->
+        <message key="editor.meetings.form.meetingLengthRequired">The length of the meeting is required.</message>
+        <message key="editor.meetings.form.meetingInvestigatorRequired">Would you like to invite the investigator(s) of the proposal(s) to this meeting?.</message>
+        
 	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
 
 	<message key="editor.minutes.minutesFileRequired">Please upload meeting minutes</message>

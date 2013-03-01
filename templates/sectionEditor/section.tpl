@@ -10,9 +10,23 @@
 {include file="common/header.tpl"}
 {/strip}
 
-<p><a class="action" href="{url op="enrollSearch" path=$sectionId}">{translate key="sectionEditor.review.enrollReviewer"}</a>&nbsp;|&nbsp;<a class="action" href="{url op="createReviewer" path=$articleId}">{translate key="sectionEditor.review.createReviewer"}</a></p>
-
 <h3><b>{$erc->getLocalizedTitle()}</b></h3>
+<p><br/></p>
+<table width="100%">
+	<tr>
+		<td width="10%">&nbsp;</td>
+		<td width="40%" valign="middle" align="center"><a class="action" href="{url op="enrollSearch" path=$sectionId}">{translate key="sectionEditor.review.enrollReviewer"}</a></td>
+		<td width="40%" valign="middle" align="center"><a class="action" href="{url op="createReviewer" path=$sectionId}">{translate key="sectionEditor.review.createReviewer"}</a></td>
+		<td width="10%">&nbsp;</td>
+	</tr>
+	<tr><td colspan="2" class="separator">&nbsp;</td></tr>
+	<tr>
+		<td width="10%">&nbsp;</td>
+		<td width="40%" valign="middle" align="center"><a class="action" href="{url op="sendEmailERCMembers"}">Send an email to all members</a></td>
+		<td width="40%" valign="middle" align="center"><a class="action" href="{url op="createExternalReviewer" path=$sectionId}">{translate key="sectionEditor.review.createExternalReviewer"}</a></td>
+		<td width="10%">&nbsp;</td>
+	</tr>
+</table>
 <p><br/></p>
 <h4>{if count($secretaries) > 1}{translate key="user.role.editors"}{else}{translate key="user.role.sectionEditor"}{/if}</h4>
 

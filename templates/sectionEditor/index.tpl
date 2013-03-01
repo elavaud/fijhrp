@@ -21,7 +21,7 @@
 	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 <ul class="plain">
-<li align="right"><a href="{url op="sendEmailERCMembers"}">Send an email to all members</a></li>
+<li align="right"><a class="action" href="{url op="section" path=$ercId}">Ethics Review Committee</a></li>
 </ul>
 <form action="#">
 <br />

@@ -65,7 +65,7 @@ class UserHandler extends Handler {
 				$roles =& $roleDao->getRolesByUserId($userId, $journalId);
 				if (!empty($roles)) {
 					$userJournals[] =& $journal;
-					$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommittee());
+					$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommitteeId());
 				}
 
 				unset($journal);
@@ -82,7 +82,7 @@ class UserHandler extends Handler {
 			$setupIncomplete[$journalId] = $this->checkIncompleteSetup($journal);
 
 			$userJournals = array($journal);
-			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommittee());
+			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getCommitteeId());
 			$subscriptionTypeDAO =& DAORegistry::getDAO('SubscriptionTypeDAO');
 			$subscriptionsEnabled = $journal->getSetting('publishingMode') ==  PUBLISHING_MODE_SUBSCRIPTION
 				&& ($subscriptionTypeDAO->subscriptionTypesExistByInstitutional($journalId, false)
@@ -103,7 +103,7 @@ class UserHandler extends Handler {
 			$templateMgr->assign_by_ref('userJournals', $userJournals);
 		}
 
-		$ercId = $user->getCommittee();
+		$ercId = $user->getCommitteeId();
 		$templateMgr->assign('ercId', $ercId);
 		
 		$templateMgr->assign_by_ref('user', $user);

@@ -893,7 +893,7 @@ class EditorSubmissionDAO extends DAO {
 	* @param $rangeInfo object
 	* @return array EditorSubmission
 	*/
-	function &getEditorSubmissionsReport($journalId, $sectionId = null, $sresearch = null, $adegree = null, $primarySponsorField = null, $secondarySponsorField = null, $editorId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $researchFieldFields = null, $proposalTypeFields = null, $dataCollection = null, $multiCountry = null, $nationwide = null,$countryFields = null, $startDateBefore = null, $startDateAfter = null, $endDateBefore = null, $endDateAfter = null, $submittedBefore = null, $submittedAfter = null, $approvedBefore = null, $approvedAfter = null, $decisionFields = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getEditorSubmissionsReport($journalId, $sectionId = null, $sresearch = null, $adegree = null, $primarySponsorField = null, $secondarySponsorField = null, $researchFieldFields = null, $proposalTypeFields = null, $dataCollection = null, $multiCountry = null, $nationwide = null,$countryFields = null, $startDateBefore = null, $startDateAfter = null, $endDateBefore = null, $endDateAfter = null, $submittedBefore = null, $submittedAfter = null, $approvedBefore = null, $approvedAfter = null, $decisionFields = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 
 		$sql = "";
 		if (!empty($sresearch)) {
@@ -1026,11 +1026,11 @@ class EditorSubmissionDAO extends DAO {
 		}
 				
 		$result =& $this->_getUnfilteredEditorSubmissions(
-		$journalId, $sectionId, $editorId,
-		$searchField, $searchMatch, $search,
-		SUBMISSION_FIELD_DATE_SUBMITTED, $dateFrom, $dateTo, null, null,
+		$journalId, $sectionId, null,
+		null, null, null,
+		SUBMISSION_FIELD_DATE_SUBMITTED, null, null, null, null,
 		$sql,
-		$rangeInfo, $sortBy, $sortDirection
+		null, $sortBy, $sortDirection
 		);
 	
 		$returner = new DAOResultFactory($result, $this, '_returnEditorSubmissionFromRow');

@@ -3,6 +3,7 @@
 * Added by MSB 7/5/2011
 *
 * Set a meeting
+* Last modified EL on February 2013
 **}
 
 {strip}
@@ -19,7 +20,7 @@
 <div class="separator"></div>
 <br/>
 <div id="details">
-<h3>{translate key="reviewer.meetings.details}</h3>
+<h3>{translate key="editor.meetings.details"}</h3>
 <div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
@@ -28,7 +29,15 @@
 	</tr>
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="editor.meetings.meetingDate"}</td>
-		<td class="value" width="80%">{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
+		<td class="value" width="80%">{$meeting->getDate()|date_format:$dateFormatLong}</td>
+	</tr>
+	<tr valign="top">
+		<td class="label" width="20%">{translate key="editor.article.meetingLength"}</td>
+		<td class="value" width="80%">{$meeting->getLength()} mn</td>
+	</tr>
+	<tr valign="top">
+		<td class="label" width="20%">{translate key="editor.article.meetingLocation"}</td>
+		<td class="value" width="80%">{$meeting->getLocation()}</td>
 	</tr>
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="common.status"}</td>
@@ -43,8 +52,7 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="10%">Proposal ID</td>
-		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- <td width="5%">{translate key="submissions.sec"}</td> Commented out by MSB, Sept25,2011-->
+		<td width="5%">{translate key="submissions.submit"}</td>
 		<td width="25%">{translate key="article.authors"}</td>
 		<td width="35%">{translate key="article.title"}</td>
 		<td width="25%" align="right">{translate key="common.status"}</td>
@@ -55,11 +63,9 @@
 	{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
 		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
-		<td>{$submission->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
-		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-		<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB -->
-   		<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->		
-   		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
+   		<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> 
+   		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>
 		<td align="right">
 			{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 			{translate key=$proposalStatusKey}
@@ -82,53 +88,60 @@
 </table>
 </div>
 <br>
-<div id="reviewers">
-	<h3>{translate key="editor.meetings.reviewers"}</h3>
+<div id="users">
+	<h3>{translate key="editor.meetings.guests"}</h3>
 	<table class="listing" width="100%">
-		<tr><td colspan="3" class="headseparator" ></td></tr>
+		<tr><td colspan="5" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
-			<td width="30%"> {translate key="editor.meetings.reviewer.name"}</td>
-			<td width="50%"> {translate key="editor.meetings.reviewer.reply"} </td>
-			<td width="20%" align="right"> {translate key="editor.meetings.reviewer.replyStatus"} </td>
+			<td width="20%"> {translate key="editor.meetings.user.name"}</td>
+			<td width="20%"> {translate key="editor.meetings.user.functions"}</td>
+			<td width="30%"> {translate key="editor.meetings.user.reply"} </td>
+			<td width="15%"> {translate key="editor.meetings.user.replyStatus"} </td>
+			<td width="15%" align="right"> {translate key="common.action"} </td>
 		</tr>
-		<tr><td colspan="3" class="headseparator" ></td></tr>
-		{assign var=attendingReviewers value=0}
-		{assign var=notAttendingReviewers value=0}
-		{assign var=undecidedReviewers value=0}
-		{foreach from=$reviewers item=reviewer}
+		<tr><td colspan="5" class="headseparator" ></td></tr>
+		{assign var=attendingGuests value=0}
+		{assign var=notAttendingGuests value=0}
+		{assign var=undecidedGuests value=0}
+		{foreach from=$users item=user}
 		<tr>
-			<td width="30%">
-				{$reviewer->getSalutation()} &nbsp; {$reviewer->getFirstName()} &nbsp; {$reviewer->getLastName()}
+			<td width="20%">
+				{$user->getSalutation()} &nbsp; {$user->getFirstName()} &nbsp; {$user->getLastName()}
 				<br/>
-				<a href="{url op="remindReviewersMeeting" meetingId=$meeting->getId() reviewerId=$reviewer->getReviewerId()}" class="action">Send Reminder</a>
-				{$reviewer->getDateReminded()|date_format:$dateFormatShort}
+				<a href="{url op="remindUsersMeeting" meetingId=$meeting->getId() userId=$user->getUserId()}" class="action">Send Reminder</a>
+				{$user->getDateReminded()|date_format:$dateFormatShort}
 			</td>
-			<td width="50%">{$reviewer->getRemarks()}</td>
-			<td width="20%" align="right">{$reviewer->getReplyStatus()}</td>
+			<td width="20%">{$user->getFunctions()}</td>
+			<td width="30%">{if $user->getRemarks() == null}&mdash;{else}{$user->getRemarks()}{/if}</td>
+			<td width="15%">{$user->getReplyStatus()}</td>
+			<td width="15%" align="right">
+				<a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():1}">{translate key="editor.meetings.user.available"}</a>
+				<br/><a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():2}">{translate key="editor.meetings.user.unavailable"}</a>
+			</td>
 
-			{if $reviewer->getIsAttending() == 1 }
-				<span style="display:none">{$attendingReviewers++}</span> 
-			{elseif $reviewer->getIsAttending() == 2}
-				<span style="display:none">{$notAttendingReviewers++}</span> 
+			{if $user->getIsAttending() == 1 }
+				<span style="display:none">{$attendingGuests++}</span> 
+			{elseif $user->getIsAttending() == 2}
+				<span style="display:none">{$notAttendingGuests++}</span> 
 			{else}
-				<span style="display:none">{$undecidedReviewers++}</span> 
+				<span style="display:none">{$undecidedGuests++}</span> 
 			{/if}
 		</tr>
 		<tr>
-		<td colspan="3" class="separator"></td>
+		<td colspan="5" class="separator"></td>
 		</tr>
 		{/foreach}
-		{if empty($reviewers)}
+		{if empty($users)}
 		<tr>
-			<td colspan="3" class="nodata">{translate key="editor.meetings.reviewer.noReviewers"}</td>
+			<td colspan="5" class="nodata">{translate key="editor.meetings.user.noGuests"}</td>
 		</tr>
 		{/if}
 		<tr>
-			<td colspan="3" class="endseparator">&nbsp;</td>
+			<td colspan="5" class="endseparator">&nbsp;</td>
 		</tr>
-		{if !empty($reviewers)}
+		{if !empty($users)}
 		<tr>
-			<td colspan="3" align="left">{$reviewers|@count} reviewers(s)</td>
+			<td colspan="5" align="left">{$users|@count} users(s)</td>
 		</tr>
 		{/if}
 	</table>
@@ -139,16 +152,16 @@
 <div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
-		<td class="label" width="40%">{translate key="editor.meetings.numberOfAttendingReviewers"}</td>
-		<td class="value" width="60%">{$attendingReviewers}</td>
+		<td class="label" width="40%">{translate key="editor.meetings.numberOfAttendingGuests"}</td>
+		<td class="value" width="60%">{$attendingGuests}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="40%">{translate key="editor.meetings.numberOfNotAttendingReviewers"}</td>
-		<td class="value" width="60%">{$notAttendingReviewers}</td>
+		<td class="label" width="40%">{translate key="editor.meetings.numberOfNotAttendingGuests"}</td>
+		<td class="value" width="60%">{$notAttendingGuests}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="40%">{translate key="editor.meetings.numberOfUndecidedReviewers"}</td>
-		<td class="value" width="60%">{$undecidedReviewers}</td>
+		<td class="label" width="40%">{translate key="editor.meetings.numberOfUndecidedGuests"}</td>
+		<td class="value" width="60%">{$undecidedGuests}</td>
 	</tr>
 </table>
 </div>

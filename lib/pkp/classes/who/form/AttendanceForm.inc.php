@@ -29,7 +29,7 @@ class AttendanceForm extends Form {
 		$userDao =& DAORegistry::getDAO('UserDAO');		
 		$this->reviewers =& $userDao->getUsersWithReviewerRole($journalId);
 		
-		import('lib.pkp.classes.who.MeetingAttendance');
+		//import('lib.pkp.classes.who.MeetingAttendance');
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
@@ -95,7 +95,7 @@ class AttendanceForm extends Form {
 
 		$meeting =& $this->meeting;
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
-		$meetingReviewerDao =& DAORegistry::getDAO("MeetingReviewerDAO");
+		$meetingAttendanceDao =& DAORegistry::getDAO("MeetingAttendanceDAO");
 		$quorum = 0;
 		$reviewerItems = array();
 		
@@ -104,23 +104,23 @@ class AttendanceForm extends Form {
 		
 			$reviewerId = $index;
 		
-				$meetingReviewer = new Meeting();
-				$meetingReviewer->setId($meeting->getId());
-				$meetingReviewer->setReviewerId($reviewerId);
+				$meetingAttendance = new Meeting();
+				$meetingAttendance->setId($meeting->getId());
+				$meetingAttendance->setUserId($reviewerId);
 				
 				
 				if($reviewer[$reviewerId]['attendance'] =="absent"){
-					$meetingReviewer->setIsPresent(0);
-					$meetingReviewer->setReasonForAbsence($reviewer[$reviewerId]["reason"]);
+					$meetingAttendance->setIsPresent(0);
+					$meetingAttendance->setReasonForAbsence($reviewer[$reviewerId]["reason"]);
 				}else {
 					
-					$meetingReviewer->setIsPresent(1);
-					$meetingReviewer->setReasonForAbsence(null);
+					$meetingAttendance->setIsPresent(1);
+					$meetingAttendance->setReasonForAbsence(null);
 					$quorum++;
 				}
 				
-				$reviewerItems[$reviewerId] = $meetingReviewer;
-				$meetingReviewerDao->updateAttendanceOfReviewer($meetingReviewer);
+				$reviewerItems[$reviewerId] = $meetingAttendance;
+				$meetingAttendanceDao->updateAttendanceOfUser($meetingAttendance);
 		}
 		
 		$this->quorum = $quorum;

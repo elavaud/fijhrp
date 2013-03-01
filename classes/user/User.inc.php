@@ -68,7 +68,7 @@ class User extends PKPUser {
 		$journal =& Request::getJournal();
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$roles =& $roleDao->getRolesByUserId($this->getId(), $journal->getId());
-		$functions;
+		$functions = (string)'';
 		
 		foreach ($roles as $role){ 
 			$roleId =& $role->getRoleId();
@@ -122,7 +122,7 @@ class User extends PKPUser {
 	 * @return int (or null if no committee)
 	 * Added by EL on February 17th 2013
 	 */	
-	function getCommittee(){
+	function getCommitteeId(){
 		$journal =& Request::getJournal();
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$roles =& $roleDao->getRolesByUserId($this->getId(), $journal->getId());

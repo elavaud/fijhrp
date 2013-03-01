@@ -1,49 +1,113 @@
 <?php
 
+define ('MEETING_REPLY_ATTENDING', 1);
+define ('MEETING_REPLY_NOT_ATTENDING', 2);
+
+define ('MEETING_INVESTIGATOR', 1);
+define ('MEETING_EXTERNAL_REVIEWER', 2);
+define ('MEETING_SECRETARY', 3);
+define ('MEETING_ERC_MEMBER', 4);
+
+/**
+ * Last update on February 2013
+ * EL
+**/
+
 class MeetingAttendance extends DataObject {
-	
+
 	function MeetingAttendance() {
 		parent::DataObject();
 	}
 	
-	function setId($meetingId) {
-		$this->setData('meetingId', $meetingId);
-	}
-	
-	function getId() {
-		return $this->getData('meetingId');
-	}
-	
-	function setMeetingId($meetingId) {
-		$this->setData('meetingId', $meetingId);
+	function setMeetingId($meetingId){
+			$this->setData('meetingId', $meetingId);
 	}
 	
 	function getMeetingId() {
 		return $this->getData('meetingId');
 	}
 	
-	function setUser($userId) {
+	function setUserId($userId) {
 		$this->setData('userId', $userId);
 	}
 	
-	function getUser() {
+	function getUserId() {
 		return $this->getData('userId');
 	}
 	
-	function setIsPresent($isPresent = false) {
-		$this->setData('isPresent', $isPresent);
+	function  setIsAttending($isAttending){
+		$this->setData('isAttending', $isAttending);
 	}
 	
-	function isPresent() {
-		return $this->getData('isPresent');
+	function getIsAttending(){
+		return $this->getData('isAttending');
 	}
 	
-	function setRemarks($remarks) {
+	function setRemarks($remarks){
 		$this->setData('remarks', $remarks);
 	}
 	
-	function getRemarks() {
+	function getRemarks(){
 		return $this->getData('remarks');
+	}
+	
+	function setDateReminded($dateReminded) {
+		$this->setData('dateReminded', $dateReminded);
+	}
+	
+	function getDateReminded(){
+		return $this->getData('dateReminded');
+	}
+	
+	function setFirstName($firstName){
+		return $this->setData('firstName', $firstName);
+	}
+	
+	function getFirstName(){
+		return $this->getData('firstName');
+	}
+	
+	function setLastName($lastName){
+		return $this->setData('lastName', $lastName);
+	}
+	
+	function getLastName(){
+		return $this->getData('lastName');
+	}
+
+	function setSalutation($salutation){
+		return $this->setData('salutation', $salutation);
+	}
+	
+	function getSalutation(){
+		return $this->getData('salutation');
+	}
+	
+	function getReplyStatus() {
+		switch ($this->getIsAttending()) {
+			case MEETING_REPLY_ATTENDING:
+				return Locale::Translate('reviewer.meetings.replyStatus.attending');
+			case MEETING_REPLY_NOT_ATTENDING:
+				return Locale::Translate('reviewer.meetings.replyStatus.notAttending');
+			default:
+				return Locale::Translate('reviewer.meetings.replyStatus.awaitingReply');
+		}
+	}
+
+	function setTypeOfUser($typeOfUser) {
+		return $this->setData('typeOfUser', $typeOfUser);
+	}
+
+	function getTypeOfUser() {
+		return $this->getData('typeOfUser');
+	}
+	
+	function setFunctions($functions){
+		return $this->setData('functions', $functions);
+	}	
+
+	function getFunctions() {
+		return $this->getData('functions');
 	}
 }
 

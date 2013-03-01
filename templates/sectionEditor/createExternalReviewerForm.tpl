@@ -30,7 +30,7 @@
 </script>
 {/literal}
 
-<form method="post" name="reviewerForm" action="{url op="createExternalReviewer" path=$articleId|to_array:"create"}">
+<form method="post" name="reviewerForm" action="{url op="createExternalReviewer" path=$sectionId|to_array:"create"}">
 
 {include file="common/formErrors.tpl"}
 
@@ -86,10 +86,12 @@
 		<td class="label">{fieldLabel name="lastName" required="true" key="user.lastName"}</td>
 		<td class="value"><input type="text" name="lastName" id="lastName" value="{$lastName|escape}" size="20" maxlength="90" class="textField" /></td>
 	</tr>
+	<!--
 	<tr valign="top">
 		<td class="label">{fieldLabel name="initials" key="user.initials"}</td>
 		<td class="value"><input type="text" name="initials" id="initials" value="{$initials|escape}" size="5" maxlength="5" class="textField" />&nbsp;&nbsp;{translate key="user.initialsExample"}</td>
 	</tr>
+	-->
 	<tr valign="top">
 		<td class="label">{fieldLabel name="gender" key="user.gender"}</td>
 		<td class="value">
@@ -121,10 +123,12 @@
 		<td class="label">{fieldLabel name="email" required="true" key="user.email"}</td>
 		<td class="value"><input type="text" name="email" id="email" value="{$email|escape}" size="30" maxlength="90" class="textField" /></td>
 	</tr>
+	<!--
 	<tr valign="top">
 		<td class="label">{fieldLabel name="userUrl" key="user.url"}</td>
 		<td class="value"><input type="text" name="userUrl" id="userUrl" value="{$userUrl|escape}" size="30" maxlength="255" class="textField" /></td>
 	</tr>
+	-->
 	<tr valign="top">
 		<td class="label">{fieldLabel name="phone" key="user.phone"}</td>
 		<td class="value"><input type="text" name="phone" id="phone" value="{$phone|escape}" size="15" maxlength="24" class="textField" /></td>
@@ -135,12 +139,14 @@
 	</tr>
 	<tr valign="top">
 		<td class="label">{fieldLabel for="interests" key="user.interests"}</td>
-		<td class="value"><ul id="interests"><li></li></ul><br /><textarea name="interests" id="interestsTextOnly" rows="5" cols="40" class="textArea">{foreach name=currentInterests from=$interestsKeywords item=interest}{$interest|urldecode}{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}</textarea></td>
+		<td class="value"><ul id="interests"><li></li></ul><textarea name="interests" id="interestsTextOnly" rows="5" cols="40" class="textArea">{foreach name=currentInterests from=$interestsKeywords item=interest}{$interest|urldecode}{if !$smarty.foreach.currentInterests.last}, {/if}{/foreach}</textarea><span class="instruct">{translate key="user.interests.description"}</span></td>
 	</tr>
+	<!--
 	<tr valign="top">
 		<td class="label">{fieldLabel name="gossip" key="user.gossip"}</td>
 		<td class="value"><textarea name="gossip[{$formLocale|escape}]" id="gossip" rows="3" cols="40" class="textArea">{$gossip[$formLocale]|escape}</textarea></td>
 	</tr>
+	-->
 	<tr valign="top">
 		<td class="label">{fieldLabel name="mailingAddress" key="common.mailingAddress"}</td>
 		<td class="value"><textarea name="mailingAddress" id="mailingAddress" rows="3" cols="40" class="textArea">{$mailingAddress|escape}</textarea></td>
@@ -154,6 +160,7 @@
 		</select>
 	</td>
 </tr>
+	<!--
 	<tr valign="top">
 		<td class="label">{fieldLabel name="biography" key="user.biography"}<br />{translate key="user.biography.description"}</td>
 		<td class="value"><textarea name="biography[{$formLocale|escape}]" id="biography" rows="5" cols="40" class="textArea">{$biography[$formLocale]|escape}</textarea></td>
@@ -166,9 +173,10 @@
 		{/foreach}</td>
 	</tr>
 	{/if}
+	-->
 </table>
 
-<p><input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url op="selectReviewer" path=$articleId escape=false}'" /></p>
+<p><input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url op="section" path=$sectionId escape=false}'" /></p>
 
 <p><span class="formRequired">{translate key="common.requiredField"}</span></p>
 </div>

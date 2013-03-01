@@ -88,7 +88,7 @@
 			Completion Report:&nbsp;&nbsp;&nbsp;&nbsp;
 			{foreach name="suppFiles" from=$suppFiles item=suppFile}
 			{if $suppFile->getType() == "Completion Report"}<br/>
-				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a>
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId():$suppFile->getSuppFileId()}" class="file">{$suppFile->getFileName()|escape}</a>
 			{/if}
 			{foreachelse}
 			Not available.

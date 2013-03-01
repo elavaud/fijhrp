@@ -44,7 +44,7 @@ class SendEmailHandler extends Handler {
                 HookRegistry::call('SendEmailHandler::sendEmailAllUsers', array(&$send));
                 
                 $email->send();
-                
+                Request::redirect(null, null, 'index');
             }else {
                 $sender =& Request::getUser();
                 $journal =& Request::getJournal();
@@ -74,39 +74,40 @@ class SendEmailHandler extends Handler {
 
                 $email->displayEditForm(Request::url(null, null, 'sendEmailAllUsers', 'send'), null, 'email/email_hiderecipients.tpl', array('totalRecipients' => $totalRecipients));
             }
-            
-            Request::redirect(null, null, 'index');
         }
         
         /*
          * Last modified by EL on February 19th 2013
          */
         function sendEmailERCMembers($send=false) {
-            import('classes.mail.MailTemplate');
+			parent::setupTemplate();
+			Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR, LOCALE_COMPONENT_PKP_MANAGER, LOCALE_COMPONENT_OJS_AUTHOR, LOCALE_COMPONENT_OJS_MANAGER));
+		
+			import('classes.mail.MailTemplate');
             $email = new MailTemplate();
             
             if (Request::getUserVar('send') && !$email->hasErrors()) {
                 HookRegistry::call('SendEmailHandler::sendEmailERCMembers', array(&$send));
                 
                 $email->send();
-                
+                $user =& Request::getUser();
+                Request::redirect(null, null, 'section', $user->getCommitteeId()); 
             } else {
                 $sender =& Request::getUser();
                 $journal =& Request::getJournal();
                 $ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
                 $sectionDao =& DAORegistry::getDAO('SectionDAO');
-				$ercId = $sender->getCommittee();
-				$erc =& $sectionDao->getSection($ercId);
-                $email->setSubject('['.$erc->getLocalizedAbbrev().']');
+				$ercId = $sender->getCommitteeId();
+
                 //Get ERC Members
-                $reviewers = $ercReviewersDao->getReviewersBySectionId($journal->getId(), $erc);
+                $reviewers = $ercReviewersDao->getReviewersBySectionId($journal->getId(), $ercId);
                 
                 //Get already added recipients
                 $recipients =& $email->getRecipients();
                 if(isset($recipients)) $totalRecipients = count($recipients);
                 else $totalRecipients = 0;
                 
-                foreach ($reviewers as $reviewer) {                    
+                foreach ($reviewers as $reviewer) {
                     // Check if new recipient is not already added
                     $isNotInTheList = true;
                     if(isset($recipients)) foreach ($recipients as $recipient) if ($recipient['email'] == $reviewer->getEmail()) $isNotInTheList = false;
@@ -118,11 +119,13 @@ class SendEmailHandler extends Handler {
                     }
 
                 }
-
-                $email->displayEditForm(Request::url(null, null, 'sendEmailAllUsers', 'send'), null, 'email/email.tpl', array('totalRecipients' => $totalRecipients));
-            }
-            
-            Request::redirect(null, null, 'index');           
+				
+				$templateMgr =& TemplateManager::getManager();
+				$pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'sectionEditor'), 'user.role.sectionEditor'), array(Request::url(null, 'sectionEditor', 'section', $ercId), 'section.section'));
+				$templateMgr->assign('pageHierarchy', $pageHierarchy);
+						
+                $email->displayEditForm(Request::url(null, null, 'sendEmailERCMembers', 'send'), null, 'email/email.tpl', array('totalRecipients' => $totalRecipients));
+            }    
         }
         
         function sendEmailRTOs($send=false) {
@@ -133,7 +136,7 @@ class SendEmailHandler extends Handler {
                 HookRegistry::call('SendEmailHandler::sendEmailRTOs', array(&$send));
                 
                 $email->send();
-                
+                Request::redirect(null, null, 'index');
             } else {
                 $sender =& Request::getUser();
                 $journal =& Request::getJournal();
@@ -160,14 +163,11 @@ class SendEmailHandler extends Handler {
                         $email->addRecipient($author->getEmail(), $author->getFullName());
                         $totalRecipients++;
                     }
-
                     unset($author);
                 }
 
                 $email->displayEditForm(Request::url(null, null, 'sendEmailRTOs', 'send'), null, 'email/email_hiderecipients.tpl', array('totalRecipients' => $totalRecipients));
-            }
-            
-            Request::redirect(null, null, 'index');           
+            }           
         }
 }
 

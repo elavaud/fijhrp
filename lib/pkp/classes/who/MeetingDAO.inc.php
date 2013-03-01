@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Last update on February 2013
+ * EL
+**/
+
 import('lib.pkp.classes.who.Meeting');
 import('lib.pkp.classes.db.DBRowIterator');
 
@@ -18,9 +23,8 @@ class MeetingDAO extends DAO {
 	 * @param $meeting int
 	 * @return Meeting
 	 */
-	function &getMeetingsOfUser($userId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC, 
-		$status=null, $minutesStatus=null, $dateFrom=null, $dateTo=null) {
-		$sql = 'SELECT meeting_id, meeting_date, user_id, minutes_status, status FROM meetings as a WHERE user_id = ?';
+	function &getMeetingsOfSection($sectionId, $sortBy = null, $rangeInfo = null, $sortDirection = SORT_DIRECTION_ASC, $status=null, $minutesStatus=null, $dateFrom=null, $dateTo=null) {
+		$sql = 'SELECT meeting_id, meeting_date, section_id, minutes_status, status FROM meetings as a WHERE section_id = ?';
 		$searchSql = '';
 		
 		if (!empty($dateFrom) || !empty($dateTo)) {
@@ -42,7 +46,7 @@ class MeetingDAO extends DAO {
 		
 		$result =& $this->retrieveRange(
 			$sql. ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''), 
-			(int) $userId, $rangeInfo
+			(int) $sectionId, $rangeInfo
 		);
 			
 		$returner = new DAOResultFactory($result, $this, '_returnMeetingFromRow');
@@ -61,7 +65,7 @@ class MeetingDAO extends DAO {
 		//Edited by ayveemallare 7/6/2011
 		
 		$result =& $this->retrieve(
-			'SELECT meeting_id, user_id, meeting_date, minutes_status, status FROM meetings WHERE meeting_id = ?',
+			'SELECT meeting_id, section_id, meeting_date, meeting_length, location, investigator, minutes_status, status FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -84,8 +88,8 @@ class MeetingDAO extends DAO {
 			
 		$sql = 
 			'SELECT * 
-			FROM meetings a INNER JOIN meeting_reviewers b
-			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
+			FROM meetings a INNER JOIN meeting_attendance b
+			ON a.meeting_id = b.meeting_id WHERE b.user_id= ?';
 		
 		$searchSql = '';
 		
@@ -116,8 +120,8 @@ class MeetingDAO extends DAO {
 	function getMeetingReportByReviewerId($reviewerId, $dateFrom=null, $dateTo=null)  {
 		$sql = 
 			'SELECT * 
-			FROM meetings a INNER JOIN meeting_reviewers b
-			ON a.meeting_id = b.meeting_id WHERE b.reviewer_id= ?';
+			FROM meetings a INNER JOIN meeting_attendance b
+			ON a.meeting_id = b.meeting_id WHERE b.user_id= ?';
 		
 		$searchSql = '';
 		
@@ -155,8 +159,8 @@ class MeetingDAO extends DAO {
 		$meeting = null;
 		$result =& $this->retrieve(
 			'SELECT * 
-			FROM meetings a INNER JOIN meeting_reviewers b
-			ON a.meeting_id = b.meeting_id WHERE a.meeting_id = ? AND b.reviewer_id= ?',
+			FROM meetings a INNER JOIN meeting_attendance b
+			ON a.meeting_id = b.meeting_id WHERE a.meeting_id = ? AND b.user_id= ?',
 			array((int) $meetingId, (int) $reviewerId));
 		
 		$meeting =& $this->_returnMeetingFromRow($result->GetRowAssoc(false));
@@ -173,21 +177,25 @@ class MeetingDAO extends DAO {
 	 * not to include object settings.
 	 * @param $row array
 	 * @return Meeting
+	 * Last upadte: EL on February 25th 2013. 
 	 */
 	function &_returnMeetingFromRow(&$row) {
 		$meeting = new Meeting();
-		$meeting->setId($row['meeting_id']);
-		$meeting->setDate($row['meeting_date']);
-		$meeting->setUploader($row['user_id']);
-		$meeting->setMinutesStatus($row['minutes_status']);
+		if (isset($row['meeting_id'])) $meeting->setId($row['meeting_id']);
+		if (isset($row['meeting_date'])) $meeting->setDate($row['meeting_date']);
+			if (isset($row['meeting_length'])) $meeting->setLength($row['meeting_length']);
+			if (isset($row['location'])) $meeting->setLocation($row['location']);
+			if (isset($row['investigator'])) $meeting->setInvestigator($row['investigator']);
+		if (isset($row['section_id'])) $meeting->setUploader($row['section_id']);
+		if (isset($row['minutes_status'])) $meeting->setMinutesStatus($row['minutes_status']);
 		//Added additional fields
 		//Edited by ayveemallare 7/6/2011
-		$meeting->setReviewerId($row['reviewer_id']);
-		$meeting->setIsAttending($row['attending']);
-		$meeting->setRemarks($row['remarks']);
-		$meeting->setStatus($row['status']);
-		$meeting->setIsPresent($row['present']);
-		$meeting->setReasonForAbsence($row['reason_for_absence']);
+		if (isset($row['user_id'])) $meeting->setUserId($row['user_id']);
+		if (isset($row['attending'])) $meeting->setIsAttending($row['attending']);
+		if (isset($row['remarks'])) $meeting->setRemarks($row['remarks']);
+		if (isset($row['status'])) $meeting->setStatus($row['status']);
+		if (isset($row['present'])) $meeting->setIsPresent($row['present']);
+		if (isset($row['reason_for_absence'])) $meeting->setReasonForAbsence($row['reason_for_absence']);
 		HookRegistry::call('MeetingDAO::_returnMeetingFromRow', array(&$meeting, &$row));
 		return $meeting;
 	}
@@ -200,21 +208,21 @@ class MeetingDAO extends DAO {
 		assert(false); // Should be overridden by child classes
 	}
 
-	function insertMeeting($userId, $meetingDate = null, $status = 0) {
+	function insertMeeting($sectionId, $meetingDate = null, $meetingLength = null, $location = null, $investigator = 0, $status = 0) {
 		$this->update(
-			sprintf('INSERT INTO meetings (meeting_date, user_id, minutes_status) VALUES (%s, ?, ?)',
+			sprintf('INSERT INTO meetings (meeting_date, meeting_length, location, investigator, section_id, minutes_status) VALUES (%s, ?, ?, ?, ?, ?)',
 			$this->datetimeToDB($meetingDate)),
-			array($userId, $status)
+			array($meetingLength, $location, $investigator, $sectionId, $status)
 		);		
 	}
 	
-	function &createMeeting($userId, $meetingDate = null, $status = 0) {
-		$this->insertMeeting($userId, $meetingDate, $status);
+	function &createMeeting($sectionId, $meetingDate = null, $meetingLength = null, $location = null, $investigator = 0, $status = 0) {
+		$this->insertMeeting($sectionId, $meetingDate, $meetingLength, $location, $investigator, $status);
 				
 		$meetingId = 0;
 		$result =& $this->retrieve(
-			'SELECT max(meeting_id) as meeting_id, meeting_date, user_id, minutes_status FROM meetings WHERE user_id = ? GROUP BY meeting_id ORDER BY meeting_id DESC LIMIT 1;',
-			(int) $userId
+			'SELECT max(meeting_id) as meeting_id, meeting_date, meeting_length, location, investigator, section_id, minutes_status FROM meetings WHERE section_id = ? GROUP BY meeting_id ORDER BY meeting_id DESC LIMIT 1;',
+			(int) $sectionId
 		);
 		$row = $result->GetRowAssoc(false);
 		$meetingId = $row['meeting_id'];
@@ -225,10 +233,10 @@ class MeetingDAO extends DAO {
 		return $meetingId;
 	}
 	
-	function updateMeetingDate($meeting) {
+	function updateMeeting($meeting) {
 		$this->update(
-			sprintf('UPDATE meetings SET meeting_date = %s where meeting_id = ?',$this->datetimeToDB($meeting->getDate())),
-			array($meeting->getId())
+			sprintf('UPDATE meetings SET meeting_date = %s, meeting_length = ?, location = ?, investigator = ? where meeting_id = ?',$this->datetimeToDB($meeting->getDate())),
+			array($meeting->getLength(), $meeting->getLocation(), $meeting->getInvestigator(), $meeting->getId())
 		);				
 	}
 	
@@ -247,6 +255,7 @@ class MeetingDAO extends DAO {
 		switch ($heading) {
 			case 'id': return 'a.meeting_id';
 			case 'meetingDate': return 'meeting_date';
+			case 'meetingLength': return 'meeting_length';
 			case 'replyStatus': return 'attending';
 			case 'scheduleStatus': return 'status';
 			default: return null;
@@ -257,6 +266,7 @@ class MeetingDAO extends DAO {
 	 * Update meeting/schedule status
 	 * Added by MSB July 7, 2011
 	 * Edited by ayveemallare 7/7/2011
+	 * Edited by EL on February 26th 2013
 	 */
 	
 	function updateStatus($meetingId, $status){
@@ -270,7 +280,7 @@ class MeetingDAO extends DAO {
 		$this->update(
 			'DELETE a,b,c FROM meetings AS a
 			 LEFT JOIN meeting_submissions AS b ON (b.meeting_id = a.meeting_id)
-			 LEFT JOIN meeting_reviewers AS c ON (c.meeting_id = b.meeting_id)
+			 LEFT JOIN meeting_attendance AS c ON (c.meeting_id = b.meeting_id)
 			 WHERE c.meeting_id = ?',
 			(int) $meetingId
 		);

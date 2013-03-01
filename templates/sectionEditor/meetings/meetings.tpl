@@ -86,7 +86,7 @@
 			<td width="40%">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}">
 				{foreach from=$map.$key item=submission name=submissions}
-					{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:20:"..."}
+					{$submission->getLocalizedTitle()|strip_unsafe_html} <!-- EL on February 25th 2013: no truncate-->
 					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
 				{/foreach}
 				{if empty($map.$key)}

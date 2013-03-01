@@ -223,13 +223,6 @@ $sort = Request::getUserVar('sort');
 			$adegree,
 			$primarySponsorField,
 			$secondarySponsorField,
-			$editorId,
-			$searchField,
-			$searchMatch,
-			$search,
-			$dateSearchField,
-			$fromDate,
-			$toDate,
 			$researchFieldField,
 			$proposalTypeField,
 			$dataCollection,
@@ -245,7 +238,6 @@ $sort = Request::getUserVar('sort');
 			$approvedBefore,
 			$approvedAfter,
 			$decisionField,
-			$rangeInfo,
 			$sort,
 			$sortDirection
 		);

@@ -181,7 +181,8 @@
 						<a href="{url journal=$journalPath page="reviewer" path="fullReview"}">{translate key="common.queue.short.fullReview"} ({$reviewerSubmissionsCount[2]})</a>
 					{else}
 						<span class="disabled">{translate key="common.queue.short.fullReview"} (0)</span>
-					{/if}				
+					{/if}
+					<br/><a href="{url journal=$journalPath page="reviewer" op="meetings"}">{translate key="reviewer.meetings"}</a>
 				</td>
 			</tr>
 		{/if}

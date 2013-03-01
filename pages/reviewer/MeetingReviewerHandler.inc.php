@@ -13,7 +13,10 @@
  * Last Updated: 7/6/2011
  */
 
-
+/**
+ * Last update on February 2013
+ * EL
+**/
 
 import('classes.handler.Handler');
 import('pages.reviewer.ReviewerHandler');
@@ -35,13 +38,13 @@ class MeetingReviewerHandler extends ReviewerHandler {
 
 	/**
 	 * Display view meeting page.
+	 * Last update: EL on February 25th 2013
 	 */
 	function viewMeeting($args) {
 		$meetingId = $args[0];
 		$this->validate($meetingId);
 		$user =& Request::getUser();
-		$userId = $user->getId();
-		$userDao =& DAORegistry::getDao('UserDAO');
+		$sectionDao =& DAORegistry::getDao('SectionDAO');
 		
 		$meeting =& $this->meeting;
 		$submissions =& $this->submissions;
@@ -52,9 +55,11 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('submissions', $submissions);
 		$templateMgr->assign_by_ref('map', $submissionReviewMap);
-		$templateMgr->assign('editor', $userDao->getUser($meeting->getUploader())); 
-		$templateMgr->assign('sort', $sort);
-		$templateMgr->assign('sortDirection', $sortDirection);
+		$templateMgr->assign('erc', $sectionDao->getSection($meeting->getUploader())); 
+			// EL on March 1st. 
+			// Unused + undefined variables
+			// $templateMgr->assign('sort', $sort);
+			// $templateMgr->assign('sortDirection', $sortDirection);
 		$templateMgr->display('reviewer/viewMeeting.tpl');
 	}
 	
@@ -74,8 +79,8 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$meeting->setIsAttending(Request::getUserVar('isAttending'));
 		$meeting->setRemarks(Request::getUserVar('remarks'));	
 		
-		$meetingReviewerDao =& DAORegistry::getDao('MeetingReviewerDAO');
-		$meetingReviewerDao->updateReplyOfReviewer($meeting);
+		$meetingAttendanceDao =& DAORegistry::getDao('MeetingAttendanceDAO');
+		$meetingAttendanceDao->updateReplyOfAttendance($meeting);
 		Request::redirect(null, 'reviewer', 'viewMeeting', $meetingId);
 		
 	}
@@ -88,7 +93,10 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
-
+			
+			// EL on March 1st 2013
+			$journalId = $journal->getId();
+		
 		$isValid = true;
 		$newKey = Request::getUserVar('key');
 
@@ -96,13 +104,13 @@ class MeetingReviewerHandler extends ReviewerHandler {
 
 		if (!$meeting) {
 			$isValid = false;
-		} else if ($user && empty($newKey)) {
-			if ($meeting->getReviewerId() != $user->getId()) {
+		} elseif ($user && empty($newKey)) {
+			if ($meeting->getUserId() != $user->getId()) {
 				$isValid = false;
 			}
 		} 
 		else {
-			//$user =& MeetingReviewerHandler::validateAccessKey($meeting->getReviewerId(), $meetingId, $newKey);
+			//$user =& MeetingReviewerHandler::validateAccessKey($meeting->getUserId(), $meetingId, $newKey);
 			if (!$user) $isValid = false;
 		}
 

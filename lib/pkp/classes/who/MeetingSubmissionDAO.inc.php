@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Last update on February 2013
+ * EL
+**/
+
 import('lib.pkp.classes.who.MeetingSubmission');
 
 class MeetingSubmissionDAO extends DAO {
