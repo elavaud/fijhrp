@@ -96,18 +96,6 @@
 			<td class="value"><input type="password" name="password2" id="password2" value="{$password2|escape}" size="20" maxlength="32" class="textField" /></td>
 		</tr>
 
-		{if $captchaEnabled}
-			<tr>
-				<td class="label" valign="top">{fieldLabel name="captcha" required="true" key="common.captchaField"}</td>
-				<td class="value">
-					<img src="{url page="user" op="viewCaptcha" path=$captchaId}" alt="{translate key="common.captchaField.altText"}" /><br />
-					<span class="instruct">{translate key="common.captchaField.description"}</span><br />
-					<input name="captcha" id="captcha" value="" size="20" maxlength="32" class="textField" />
-					<input type="hidden" name="captchaId" value="{$captchaId|escape:"quoted"}" />
-				</td>
-			</tr>
-		{/if}{* $captchaEnabled *}
-
 		<tr valign="top">
 			<td class="label">{fieldLabel name="salutation" key="user.salutation"}</td>
 			<td class="value"><input type="text" name="salutation" id="salutation" value="{$salutation|escape}" size="20" maxlength="40" class="textField" /></td>
@@ -227,6 +215,18 @@
 	</tr>
 {/if}
 
+		{if $captchaEnabled}
+			<tr>
+				<td class="label" valign="top">{fieldLabel name="captcha" required="true" key="common.captchaField"}</td>
+				<td class="value">
+					<img src="{url page="user" op="viewCaptcha" path=$captchaId}" alt="{translate key="common.captchaField.altText"}" /><br />
+					<span class="instruct">{translate key="common.captchaField.description"}</span><br />
+					<input name="captcha" id="captcha" value="" size="20" maxlength="32" class="textField" />
+					<input type="hidden" name="captchaId" value="{$captchaId|escape:"quoted"}" />
+				</td>
+			</tr>
+		{/if}{* $captchaEnabled *}
+		
 </table>
 
 <div id="reviewerInterestsContainer" style="margin-left:40px; display: none;">

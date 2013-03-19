@@ -62,7 +62,10 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 
                 //Added by AIM, 1.20.2012
                 $templateMgr->assign_by_ref('article', $this->article);
-                
+
+                // Added by EL on March 11th 2013
+                $templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+                                
 		// Set up required Payment Related Information
 		import('classes.payment.ojs.OJSPaymentManager');
 		$paymentManager =& OJSPaymentManager::getManager();

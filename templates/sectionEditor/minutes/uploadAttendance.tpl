@@ -37,7 +37,7 @@
 		);
 		$("#addGuest").click(
 				function() {
-					$("#guests tr:last").after($("#guests tr:last").clone());
+					$("#meetingAttendances tr:last").after($("#meetingAttendances tr:last").clone());
 				}
 			);
 
@@ -117,30 +117,26 @@
 		 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		 	{assign var="isPresent" value="attendance"}
 		 	{assign var="reason" value="reason"}
-		 	{foreach from=$reviewers  item=user}
-		 	{assign var="userId" value=$user->getId()}
+		 	{foreach from=$meetingAttendances  item=guest}
+		 	{assign var="guestId" value=$guest->getUserId()}
 		 	<tr>	
-					<td width="5%">	
-	
-								<input type="hidden" name="reviewer_attendance[{$userId}][userId]" id="reviewer-userId-{$userId}" value="{$userId}" /> 
-								<input type="radio"  class="absent" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-isabsent-{$userId}" 
-									{if $attendance[$userId][$isPresent]} == "absent" } checked="checked" {/if} value="absent"  />
-					</td>
-		 			<td width="5%">
-								<input type="radio" class="present" name="reviewer_attendance[{$userId}][attendance]" id="reviewer-ispresent-{$userId}" 
-									{if $attendance[$userId][$isPresent] == "present" } checked="checked" {/if} value="present" />
-		 			</td>
-					<td width="20%">
-					 		<label for="attendance[{$userId}]">{$user->getSalutation} {$user->getFirstName()} {$user->getLastName()}</label></td>
-					<td width="20%">
-					</td>
-					<td width="50%" id="div_reason_of_absence_{$userId}" class="div_reason_of_absence">
-					 			<input type="radio" name="reviewer_attendance[{$userId}][reason]" onClick="reasonClicked({$userId})" id="absent-{$userId}-duty-travel" value="Duty Travel" {if  $attendance[$userId][$reason] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$user->getId()}">Duty Travel</label>
-						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" onClick="reasonClicked({$userId})"  id="absent-{$userId}-on-leave" value="On Leave" {if $attendance[$userId][$reason] == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$user->getId()}">On Leave</label>
-						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" onClick="reasonClicked({$userId})" id="absent-{$userId}-other-commitment" value="Other Commitment" {if  $attendance[$userId][$reason] == "Other Commitment" } checked="checked"{/if}/><label for="others_{$user->getId()}">Other Commitment</label>
-						 		<input type="radio" name="reviewer_attendance[{$userId}][reason]" onClick="reasonClicked({$userId})" id="absent-{$userId}-unexcused" value="Unexcused" {if  $attendance[$userId][$reason] == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$user->getId()}">Unexcused</label>
-					</td>
-					<input type="hidden" name="areviewer_attendance[{$userId}][userId]" value="{$userId}">
+				<td width="5%">
+					<input type="hidden" name="guest_attendance[{$guestId}][guestId]" id="reviewer-guestId-{$guestId}" value="{$guestId}" /> 
+					<input type="radio" class="absent" name="guest_attendance[{$guestId}][attendance]" id="reviewer-isabsent-{$guestId}" {if $guest->getIsAttending() == 2} checked="checked" {/if} value="absent"  />
+				</td>
+		 		<td width="5%">
+					<input type="radio" class="present" name="guest_attendance[{$guestId}][attendance]" id="reviewer-ispresent-{$guestId}" {if $guest->getIsAttending() == 1} checked="checked" {/if} value="present" />
+		 		</td>
+				<td width="20%">
+					<label for="attendance[{$guestId}]">{$guest->getSalutation} {$guest->getFirstName()} {$guest->getLastName()}</label></td>
+				<td width="20%">{$guest->getFunctions()}</td>
+				<td width="50%" id="div_reason_of_absence_{$guestId}" class="div_reason_of_absence">
+					<input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-duty-travel" value="Duty Travel" {if  $attendance[$guestId][$reason] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$guest->getId()}">Duty Travel</label>
+					<input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})"  id="absent-{$guestId}-on-leave" value="On Leave" {if $attendance[$guestId][$reason] == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$guest->getId()}">On Leave</label>
+					<input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-other-commitment" value="Other Commitment" {if  $attendance[$guestId][$reason] == "Other Commitment" } checked="checked"{/if}/><label for="others_{$guest->getId()}">Other Commitment</label>
+					<input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-unexcused" value="Unexcused" {if  $attendance[$guestId][$reason] == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$guest->getId()}">Unexcused</label>
+				</td>
+				<input type="hidden" name="guest_attendance[{$guestId}][guestId]" value="{$guestId}">
 			</tr>
 			<tr><td colspan="5" class="separator"></td></tr>	
 			{/foreach}	 	
@@ -150,23 +146,23 @@
 	<br/>
 	<h3>Guests&nbsp;&nbsp;<input type="button" name="addGuest" id="addGuest" class="button" value="+" /></h3>
 	<div class="separator"></div><br/>
-	<table class="listing" name="guests" id="guests" width="100%">
-	{foreach from=$guestNames key=guestIndex item=guest}
+	<table class="listing" name="meetingAttendances" id="meetingAttendances" width="100%">
+	{foreach from=$suppGuestNames key=guestIndex item=guest}
 		{if $guest != null }
 		<tr>
 		<td width='5%'>Name</td>
-	 	<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' value="{$guest}" /></td>
+	 	<td width='15%'><input type='text' name='suppGuestName[]' id='suppGuestName[]' size='50' value="{$guest}" /></td>
 		<td width='5%'>Affiliation</td>
-	 	<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' value="{$guestAffiliations[$guestIndex]}" /></td>
+	 	<td width='15%'><input type='text' name='suppGuestAffiliation[]' id='suppGuestAffiliation[]' size='50' value="{$suppGuestAffiliations[$guestIndex]}" /></td>
 		<td width='60%'></td>
 		</tr>
 		{/if}
 	{/foreach}
 	<tr>
 		<td width='5%'>Name</td>
-	 	<td width='15%'><input type='text' name='guestName[]' id='guestName[]' size='50' value="" /></td>
+	 	<td width='15%'><input type='text' name='suppGuestName[]' id='suppGuestName[]' size='50' value="" /></td>
 		<td width='5%'>Affiliation</td>
-	 	<td width='15%'><input type='text' name='guestAffiliation[]' id='guestAffiliation[]' size='50' value="" /></td>
+	 	<td width='15%'><input type='text' name='suppGuestAffiliation[]' id='suppGuestAffiliation[]' size='50' value="" /></td>
 		<td width='60%'></td>
 	</tr>
 	</table>
@@ -175,3 +171,5 @@
 		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
 	</div>
  </form>
+
+{include file="common/footer.tpl"}

@@ -40,7 +40,7 @@ class SubmissionCommentsHandler extends ReviewerHandler {
 		$submission =& $submissionReviewHandler->submission;
 		$user =& $submissionReviewHandler->user;
 
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 		ReviewerAction::viewPeerReviewComments($user, $submission, $reviewId);
 
 	}
@@ -60,7 +60,7 @@ class SubmissionCommentsHandler extends ReviewerHandler {
 		$submission =& $submissionReviewHandler->submission;
 		$user =& $submissionReviewHandler->user;
 
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 		if (ReviewerAction::postPeerReviewComment($user, $submission, $reviewId, $emailComment)) {
 			ReviewerAction::viewPeerReviewComments($user, $submission, $reviewId);
 		}
@@ -78,7 +78,7 @@ class SubmissionCommentsHandler extends ReviewerHandler {
 		$this->validate();
 		$comment =& $this->comment;
 		
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$article = $articleDao->getArticle($articleId);
@@ -103,7 +103,7 @@ class SubmissionCommentsHandler extends ReviewerHandler {
 		$this->validate();
 		$comment =& $this->comment;
 		
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 		
 		// If the user pressed the "Save and email" button, then email the comment.
 		$emailComment = Request::getUserVar('saveAndEmail') != null ? true : false;		
@@ -140,7 +140,7 @@ class SubmissionCommentsHandler extends ReviewerHandler {
 		$this->validate();
 		$comment =& $this->comment;
 		
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 		
 		$submissionReviewHandler = new SubmissionReviewHandler();
 		$submissionReviewHandler->validate($reviewId);

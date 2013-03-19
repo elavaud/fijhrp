@@ -337,7 +337,7 @@
 	<message key="submission.page.editing">{$id} Editing</message>
 	<message key="submission.page.history">{$id} History</message>
 	<message key="submission.page.review">{$id} Review</message>
-    <message key="submission.page.fullReview">{$id} Full Review</message>
+    <message key="submission.page.proposalFromMeeting">{$id} Information</message>
 	<message key="submission.page.summary">{$id} Summary</message>
 	<message key="submission.page.citations">{$id} Citations</message>
 	<message key="submission.peerReview">Peer&amp;nbsp;Review</message>
@@ -390,7 +390,7 @@
 	<message key="submissions.submitted">Submitted</message>
 	<message key="submission.start">Start</message>
 	<message key="submission.submissionHistory">Submission History</message>
-	<message key="submission.submissionManuscript">Submission Manuscript</message>
+	<message key="submission.submissionManuscript">Main proposal file</message>
 	<message key="submission.submissionReview">Submission Review</message>
 	<message key="submission.submitter">Submitter</message>
 	<message key="submission.summary">Summary</message>

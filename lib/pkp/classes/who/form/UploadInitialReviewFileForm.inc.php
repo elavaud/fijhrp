@@ -11,6 +11,7 @@ class UploadInitialReviewFileForm extends Form {
 	/** @var int The meeting this form is for */
 	var $meeting;
 	var $submission;
+	var $minutesFile;
 	/**
 	 * Constructor.
 	 */
@@ -30,7 +31,7 @@ class UploadInitialReviewFileForm extends Form {
 	/**
 	 * Display the form.
 	 */
-	function display(&$args, &$request) {
+	function display() {
 		$meeting = $this->meeting;
 		$submission =& $this->submission;
 		$minutesFile = $this->minutesFile;

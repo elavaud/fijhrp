@@ -170,7 +170,7 @@ class SectionEditorsDAO extends DAO {
 	 * @param $userId int
 	 * @return boolean
 	 */
-	function editorExists($journalId, $sectionId, $userId) {
+	function ercSecretaryExists($journalId, $sectionId, $userId) {
 		$result =& $this->retrieve(
 			'SELECT COUNT(*) FROM section_editors WHERE journal_id = ? AND section_id = ? AND user_id = ?', array($journalId, $sectionId, $userId)
 		);
@@ -184,10 +184,8 @@ class SectionEditorsDAO extends DAO {
 
 	/**
 	 * Get the erc of the secretary
-	 * @param $journalId int
-	 * @param $sectionId int
 	 * @param $userId int
-	 * @return boolean
+	 * @return object section
 	 * Added by EL on February 15th 2013
 	 */
 	function getErcBySecretaryId($userId) {

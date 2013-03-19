@@ -21,9 +21,9 @@
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
-{foreach from=$submissions item=submission}
+{iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
-        {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+    {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
 	<tr valign="top">
 		<td>{$whoId|escape}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
@@ -40,13 +40,22 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="6" class="separator">&nbsp;</td>
+		<td colspan="6" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
-{foreachelse}
+{/iterate}
+{if $submissions->wasEmpty()}
 	<tr>
-		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
+		<td colspan="5" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
-{/foreach}
+	<tr>
+		<td colspan="5" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="5" align="left">{page_info iterator=$submissions}</td>
+		<td align="right" colspan="2">{page_links anchor="submissions" name="submissions" iterator=$submissions searchField=$searchField searchMatch=$searchMatch search=$search dateFromDay=$dateFromDay dateFromYear=$dateFromYear dateFromMonth=$dateFromMonth dateToDay=$dateToDay dateToYear=$dateToYear dateToMonth=$dateToMonth dateSearchField=$dateSearchField section=$section sort=$sort sortDirection=$sortDirection}</td>
+	</tr>
+{/if}
 		
 </table>
 </div>

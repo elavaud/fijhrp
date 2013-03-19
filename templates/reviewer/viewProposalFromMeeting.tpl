@@ -1,224 +1,305 @@
 {**
- * complete.tpl
- *
- * Copyright (c) 2003-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
- *
- * The submission process has been completed; notify the author.
- *
+ * submissionForFullReview.tpl
  * $Id$
  *}
 {strip}
-{assign var="pageTitle" value="author.track"}
+{assign var="articleId" value=$submission->getArticleId()}
+{assign var="proposalId" value=$submission->getLocalizedWhoId()}
+{translate|assign:"pageTitleTranslated" key="submission.page.proposalFromMeeting" id=$proposalId}
+{assign var="pageCrumbTitle" value="article.submission"}
 {include file="common/header.tpl"}
 {/strip}
 
-<div id="submissionComplete">
+<ul class="menu">
+	<li><a href="{url op="meetings"}">{translate key="common.queue.short.meetingList"}</a></li>
+	{if $isReviewer}
+		<li><a href="{url op="proposalsFromMeetings"}">{translate key="common.queue.short.meetingProposals"}</a></li>
+	{/if}
+</ul>
+<div class="separator"></div>
 
-<p style="font-size: larger;">{translate key="author.submit.submissionComplete" journalTitle=$journal->getLocalizedTitle()}</p>
+<script type="text/javascript">
 
-<h3>Proposal Details</h3>
-<table class="listing" width="100%">
-    <tr valign="top">
-        <td colspan="5" class="headseparator">&nbsp;</td>
+</script>
+
+<div id="submissionToBeReviewed">
+
+<h3>{translate key="reviewer.article.submissionToBeReviewed"}</h3>
+<table width="100%" class="data">
+<tr valign="top">
+	<td width="30%" class="label">Proposal ID</td>
+	<td width="70%" class="value">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+</tr>
+<tr valign="top">
+	<td width="30%" class="label">{translate key="article.title"}</td>
+	<td width="70%" class="value">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
+</tr>
+<tr valign="top">
+	<td class="label">{translate key="article.journalSection"}</td>
+	<td class="value">{$ercTitle}</td>
+</tr>
+<tr valign="top">
+	<td class="label">{translate key="common.status"}</td>
+	<td class="value">
+		{assign var="status" value=$submission->getSubmissionStatus()}
+    	{if $status==PROPOSAL_STATUS_WITHDRAWN}{translate key="submissions.proposal.withdrawn"}
+    	{elseif $status==PROPOSAL_STATUS_COMPLETED}{translate key="submissions.proposal.completed"}
+        {elseif $status==PROPOSAL_STATUS_ARCHIVED}
+        	{assign var="decision" value=$submission->getMostRecentDecision()}
+            {if $decision==SUBMISSION_EDITOR_DECISION_DECLINE}
+            	Archived({translate key="submissions.proposal.decline"})
+            {elseif $decision==SUBMISSION_EDITOR_DECISION_EXEMPTED}
+            	Archived({translate key="submissions.proposal.exempted"})
+            {/if}
+        {elseif $status==PROPOSAL_STATUS_SUBMITTED}{translate key="submissions.proposal.submitted"}
+        {elseif $status==PROPOSAL_STATUS_CHECKED}{translate key="submissions.proposal.checked"}
+        {elseif $status==PROPOSAL_STATUS_EXPEDITED}{translate key="submissions.proposal.expedited"}
+        {elseif $status==PROPOSAL_STATUS_ASSIGNED}{translate key="submissions.proposal.assigned"}
+        {elseif $status==PROPOSAL_STATUS_RETURNED}{translate key="submissions.proposal.returned"}
+        {elseif $status==PROPOSAL_STATUS_EXEMPTED}{translate key="submissions.proposal.exempted"}
+        {elseif $status==PROPOSAL_STATUS_REVIEWED}
+        	{assign var="decision" value=$submission->getMostRecentDecision()}
+            {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}{translate key="submissions.proposal.resubmit"}
+            {elseif $decision==SUBMISSION_EDITOR_DECISION_ACCEPT}{translate key="submissions.proposal.approved"}
+            {elseif $decision==SUBMISSION_EDITOR_DECISION_DECLINE}{translate key="submissions.proposal.decline"}                
+            {/if}
+        {/if}
+	</td>
+</tr>
+
+</table>
+</div>
+<div class="separator"></div>
+
+<div id="files">
+<h3>Files</h3>
+	<table width="100%" class="data">
+		<tr valign="top">
+			<td width="30%" class="label">
+				{translate key="submission.submissionManuscript"}
+			</td>
+			<td class="value" width="70%">
+				{if $submissionFile}
+					<a href="{url op="downloadProposalFromMeetingFile" path=$submission->getArticleId()|to_array:$submissionFile->getFileId()}" class="file">{$submissionFile->getFileName()|escape}</a>
+				&nbsp;&nbsp;{$submissionFile->getDateModified()|date_format:$dateFormatLong}
+				{else}
+					{translate key="common.none"}
+				{/if}
+			</td>
+		</tr>
+		{if count($previousFiles)>1}
+		{assign var="count" value=0}
+		<tr>
+			<td class="label">Previous proposal files</td>
+			<td width="80%" class="value">
+				{foreach name="previousFiles" from=$previousFiles item=previousFile}
+					{assign var="count" value=$count+1}
+					{if $count > 1}
+            			<a href="{url op="downloadProposalFromMeetingFile" path=$submission->getArticleId()|to_array:$previousFile->getFileId()}" class="file">{$previousFile->getFileName()|escape}</a><br />
+					{/if}
+				{/foreach}
+			</td>
+		</tr>
+		{/if}
+		<tr valign="top">
+			<td class="label">
+				{translate key="article.suppFiles"}
+			</td>
+			<td class="value">
+				{assign var=sawSuppFile value=0}
+				{foreach from=$suppFiles item=suppFile}
+					{if $suppFile->getShowReviewers() }
+						{assign var=sawSuppFile value=1}
+						<a href="{url op="downloadProposalFromMeetingFile" path=$submission->getArticleId()|to_array:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a><cite>&nbsp;&nbsp;({$suppFile->getType()})</cite><br />
+					{/if}
+				{/foreach}
+				{if !$sawSuppFile}
+					{translate key="common.none"}
+				{/if}
+			</td>
+		</tr>
+	</table>
+</div>
+
+<div class="separator"></div>
+<div id="titleAndAbstract">
+<h4>Proposal Details</h4>
+
+<table width="100%" class="data">
+   <tr valign="top">
+        <td class="label" width="30%"><br/>{translate key="proposal.scientificTitle"}</td>
+        <td class="value" width="70%"><br/>{$submission->getLocalizedTitle()}</td>
     </tr>
-{foreach name=authors from=$article->getAuthors() item=author}
-	<tr valign="top">
-        <td class="label">{if $author->getPrimaryContact()}Investigator{else}Co-Investigator{/if}</td>
-        <td class="value">
-			{$author->getFullName()|escape}<br />
-			{$author->getEmail()|escape}<br />
-			{if ($author->getLocalizedAffiliation()) != ""}{$author->getLocalizedAffiliation()|escape}<br/>{/if}
-			{if $author->getPrimaryContact()}{$article->getLocalizedAuthorPhoneNumber()}
-			{else}
-			{if ($author->getUrl()) != ""}{$author->getUrl()|escape}<br />{/if}
-			{/if}
-        </td>
-    </tr>
-{/foreach}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.scientificTitle"}</td>
-        <td class="value">{$article->getLocalizedTitle()}</td>
+        <td class="label"><br/>{translate key="proposal.publicTitle"}</td>
+        <td class="value"><br/>{$submission->getLocalizedPublicTitle()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.publicTitle"}</td>
-        <td class="value">{$article->getLocalizedPublicTitle()}</td>
+        <td class="label"><br/>{translate key="proposal.studentInitiatedResearch"}</td>
+        <td class="value"><br/>{$submission->getLocalizedStudentInitiatedResearch()}</td>
+    </tr>
+    {if ($submission->getLocalizedStudentInitiatedResearch()) == "Yes"}
+    <tr valign="top">
+        <td class="label">&nbsp;</td>
+        <td class="value">{translate key="proposal.studentInstitution"}: {$submission->getLocalizedStudentInstitution()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.studentInitiatedResearch"}</td>
-        <td class="value">{$article->getLocalizedStudentInitiatedResearch()}</td>
-    </tr>
-    {if ($article->getLocalizedStudentInitiatedResearch()) == "Yes"}
-    <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{translate key="proposal.studentInstitution"} {$article->getLocalizedStudentInstitution()}</td>
-    </tr>
-    <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{translate key="proposal.academicDegree"} {$article->getLocalizedAcademicDegree()}</td>
+        <td class="label">&nbsp;</td>
+        <td class="value">{translate key="proposal.academicDegree"}: {$submission->getLocalizedAcademicDegree()}</td>
     </tr>  
     {/if}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.abstract"}</td>
-        <td class="value">{$article->getLocalizedAbstract()}</td>
-    </tr>
-    
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.keywords"}</td>
-        <td class="value">{$article->getLocalizedKeywords()}</td>
+        <td class="label"><br/>{translate key="proposal.abstract"}ໍ້</td>
+        <td class="value"><br/>{$submission->getLocalizedAbstract()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.startDate"}</td>
-        <td class="value">{$article->getLocalizedStartDate()}</td>
+        <td class="label"><br/>{translate key="proposal.keywords"}</td>
+        <td class="value"><br/>{$submission->getLocalizedKeywords()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.endDate"}</td>
-        <td class="value">{$article->getLocalizedEndDate()}</td>
+        <td class="label"><br/>{translate key="proposal.startDate"}</td>
+        <td class="value"><br/>{$submission->getLocalizedStartDate()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.fundsRequired"}</td>
-        <td class="value">{$article->getLocalizedFundsRequired()} {$article->getLocalizedSelectedCurrency()}</td>
+        <td class="label"><br/>{translate key="proposal.endDate"}</td>
+        <td class="value"><br/>{$submission->getLocalizedEndDate()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.primarySponsor"}</td>
+        <td class="label"><br/>{translate key="proposal.fundsRequired"}</td>
+        <td class="value"><br/>{$submission->getLocalizedFundsRequired()} {$submission->getLocalizedSelectedCurrency()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label"><br/>{translate key="proposal.primarySponsor"}</td>
         <td class="value">
-        	{if $article->getLocalizedPrimarySponsor()}
-        		{$article->getLocalizedPrimarySponsorText()}
+        	{if $submission->getLocalizedPrimarySponsor()}
+        		<br/>{$submission->getLocalizedPrimarySponsorText()}
         	{/if}
         </td>
     </tr>
-    {if $article->getLocalizedSecondarySponsors()}
+    {if $submission->getLocalizedSecondarySponsors()}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.secondarySponsors"}</td>
+        <td class="label" width="20%"><br/>{translate key="proposal.secondarySponsors"}</td>
         <td class="value">
-        	{if $article->getLocalizedSecondarySponsors()}
-        		{$article->getLocalizedSecondarySponsorText()}
+        	{if $submission->getLocalizedSecondarySponsors()}
+        		<br/>{$submission->getLocalizedSecondarySponsorText()}
         	{/if}        
         </td>
     </tr>
     {/if}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.nationwide"}</td>
-        <td class="value">{$article->getLocalizedNationwide()}</td>
+        <td class="label"><br/>{translate key="proposal.nationwide"}</td>
+        <td class="value"><br/>{$submission->getLocalizedNationwide()}</td>
     </tr>
-    {if ($article->getLocalizedNationwide() == "No") || ($article->getLocalizedNationwide() == "Yes, with randomly selected regions")}
+    {if ($submission->getLocalizedNationwide() == "No") || ($submission->getLocalizedNationwide() == "Yes, with randomly selected regions")}
     <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{$article->getLocalizedProposalCountryText()}</td>
+        <td class="label">&nbsp;</td>
+        <td class="value">{$submission->getLocalizedProposalCountryText()}</td>
     </tr>
     {/if}
-
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.multiCountryResearch"}</td>
-        <td class="value">{$article->getLocalizedMultiCountryResearch()}</td>
+        <td class="label"><br/>{translate key="proposal.multiCountryResearch"}</td>
+        <td class="value"><br/>{$submission->getLocalizedMultiCountryResearch()}</td>
     </tr>
-	{if ($article->getLocalizedMultiCountryResearch()) == "Yes"}
+	{if ($submission->getLocalizedMultiCountryResearch()) == "Yes"}
 	<tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{$article->getLocalizedMultiCountryText()}</td>
+        <td class="label">&nbsp;</td>
+        <td class="value">{$submission->getLocalizedMultiCountryText()}</td>
     </tr>
 	{/if}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.withHumanSubjects"}</td>
-        <td class="value">{$article->getLocalizedWithHumanSubjects()}</td>
+        <td class="label"><br/>{translate key="proposal.withHumanSubjects"}</td>
+        <td class="value"><br/>{$submission->getLocalizedWithHumanSubjects()}</td>
     </tr>
-    {if ($article->getLocalizedWithHumanSubjects()) == "Yes"}
+    {if ($submission->getLocalizedWithHumanSubjects()) == "Yes"}
     <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
+        <td class="label">&nbsp;</td>
         <td class="value">
-        	{if ($article->getLocalizedProposalType())}
-        		{$article->getLocalizedProposalTypeText()}
+        	{if ($submission->getLocalizedProposalType())}
+        		{$submission->getLocalizedProposalTypeText()}
+        	{/if}         
+        </td>
+    </tr>
+    {/if}
+    <tr valign="top">
+        <td class="label"><br/>{translate key="proposal.researchField"}</td>
+        <td class="value">
+            {if $submission->getLocalizedResearchField()}
+        		<br/>{$submission->getLocalizedResearchFieldText()}
         	{/if}      
         </td>
-    </tr>
-    {/if}
-    
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.researchField"}</td>
-        <td class="value">
-        	{if $article->getLocalizedResearchField()}
-        		{$article->getLocalizedResearchFieldText()}
-        	{/if}
-        </td>
-    </tr>
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.dataCollection"}</td>
-        <td class="value">{$article->getLocalizedDataCollection()}</td>
-    </tr>   
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.reviewedByOtherErc"}</td>
-        <td class="value">{$article->getLocalizedReviewedByOtherErc()}{if $article->getLocalizedOtherErcDecision() != 'NA'}({$article->getLocalizedOtherErcDecision()}){/if}</td>
-    </tr>
+    </tr>  
 
-	<tr><td colspan="2"><br/><h4>Source(s) of monetary or material support</h4></td></tr>
-    
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.industryGrant"}</td>
-        <td class="value">{$article->getLocalizedIndustryGrant()}</td>
-    </tr>
-    {if ($article->getLocalizedIndustryGrant()) == "Yes"}
      <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{$article->getLocalizedNameOfIndustry()}</td>
+        <td class="label"><br/>{translate key="proposal.dataCollection"}</td>
+        <td class="value"><br/>{$submission->getLocalizedDataCollection()}</td>
+    </tr>   
+    <tr valign="top">
+        <td class="label"><br/>{translate key="proposal.reviewedByOtherErc"}</td>
+        <td class="value"><br/>{$submission->getLocalizedReviewedByOtherErc()}{if $submission->getLocalizedOtherErcDecision() != 'NA'}({$submission->getLocalizedOtherErcDecision()}){/if}</td>
+    </tr>
+	<tr><td colspan="2"><br/><h4>Source(s) of monetary or material support</h4></td></tr>
+    <tr valign="top">
+        <td class="label"><br/>{translate key="proposal.industryGrant"}</td>
+        <td class="value"><br/>{$submission->getLocalizedIndustryGrant()}</td>
+    </tr>
+    {if ($submission->getLocalizedIndustryGrant()) == "Yes"}
+     <tr valign="top">
+        <td class="label">&nbsp;</td>
+        <td class="value">{$submission->getLocalizedNameOfIndustry()}</td>
     </tr>   
     {/if}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.internationalGrant"}</td>
-        <td class="value">{$article->getLocalizedInternationalGrant()}</td>
+        <td class="label"><br/>{translate key="proposal.internationalGrant"}</td>
+        <td class="value"><br/>{$submission->getLocalizedInternationalGrant()}</td>
     </tr>
-    {if ($article->getLocalizedInternationalGrant()) == "Yes"}
+    {if ($submission->getLocalizedInternationalGrant()) == "Yes"}
      <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
+        <td class="label">&nbsp;</td>
         <td class="value">
-        	{if $article->getLocalizedInternationalGrantName()}
-        		{$article->getLocalizedInternationalGrantNameText()} 
+        	{if $submission->getLocalizedInternationalGrantName()}
+        		{$submission->getLocalizedInternationalGrantNameText()} 
         	{/if}
         </td>
     </tr>     
     {/if}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.mohGrant"}</td>
-        <td class="value">{$article->getLocalizedMohGrant()}</td>
+        <td class="label"><br/>{translate key="proposal.mohGrant"}</td>
+        <td class="value"><br/>{$submission->getLocalizedMohGrant()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.governmentGrant"}</td>
-        <td class="value">{$article->getLocalizedGovernmentGrant()}</td>
+        <td class="label"><br/>{translate key="proposal.governmentGrant"}</td>
+        <td class="value"><br/>{$submission->getLocalizedGovernmentGrant()}</td>
     </tr>
-    {if ($article->getLocalizedGovernmentGrant()) == "Yes"}
+    {if ($submission->getLocalizedGovernmentGrant()) == "Yes"}
      <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{$article->getLocalizedGovernmentGrantName()}</td>
+        <td class="label">&nbsp;</td>
+        <td class="value">{$submission->getLocalizedGovernmentGrantName()}</td>
     </tr>     
     {/if}
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.universityGrant"}</td>
-        <td class="value">{$article->getLocalizedUniversityGrant()}</td>
+        <td class="label"><br/>{translate key="proposal.universityGrant"}</td>
+        <td class="value"><br/>{$submission->getLocalizedUniversityGrant()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.selfFunding"}</td>
-        <td class="value">{$article->getLocalizedSelfFunding()}</td>
+        <td class="label"><br/>{translate key="proposal.selfFunding"}</td>
+        <td class="value"><br/>{$submission->getLocalizedSelfFunding()}</td>
     </tr>
     <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.otherGrant"}</td>
-        <td class="value">{$article->getLocalizedOtherGrant()}</td>
+        <td class="label"><br/>{translate key="proposal.otherGrant"}</td>
+        <td class="value"><br/>{$submission->getLocalizedOtherGrant()}</td>
     </tr>
-    {if ($article->getLocalizedOtherGrant()) == "Yes"}
+    {if ($submission->getLocalizedOtherGrant()) == "Yes"}
      <tr valign="top">
-        <td class="label" width="20%">&nbsp;</td>
-        <td class="value">{$article->getLocalizedSpecifyOtherGrant()}</td>
+        <td class="label">&nbsp;</td>
+        <td class="value">{$submission->getLocalizedSpecifyOtherGrant()}</td>
     </tr>    
     {/if}
 </table>
-<div class="separator"></div>
-
-<br />
+</div>
 
 <h3><br/>{translate key="proposal.riskAssessment"}</h3>
 <div id=riskAssessments>
 	<table class="listing" width="100%">
-	    <tr valign="top">
-        	<td colspan="2" class="headseparator">&nbsp;</td>
-   		</tr>
     	<tr valign="top"><td colspan="2"><b>{translate key="proposal.researchIncludesHumanSubject"}</b></td></tr>
     	<tr valign="top" id="identityRevealedField">
     	    <td class="label" width="30%">{translate key="proposal.identityRevealed"}</td>
@@ -367,58 +448,6 @@
     </table>
 </div>
 
-<div class="separator"></div>
-
-<br/> 
-
-<h3>{translate key="author.submit.filesSummary"}</h3>
-<table class="listing" width="100%">
-<tr>
-	<td colspan="5" class="headseparator">&nbsp;</td>
-</tr>
-<tr class="heading" valign="bottom">
-	<td width="10%">{translate key="common.id"}</td>
-	<td width="35%">{translate key="common.originalFileName"}</td>
-	<td width="25%">{translate key="common.type"}</td>
-	<td width="20%" class="nowrap">{translate key="common.fileSize"}</td>
-	<td width="10%" class="nowrap">{translate key="common.dateUploaded"}</td>
-</tr>
-<tr>
-	<td colspan="5" class="headseparator">&nbsp;</td>
-</tr>
-{foreach from=$files item=file}
-{if ($file->getType() == 'supp' || $file->getType() == 'submission/original')}
-<tr valign="top">
-	<td>{$file->getFileId()}</td>
-	<td><a class="file" href="{url op="download" path=$articleId|to_array:$file->getFileId()}">{$file->getOriginalFileName()|escape}</a></td>
-	<td>{if ($file->getType() == 'supp')}{translate key="article.suppFile"}{else}{translate key="author.submit.submissionFile"}{/if}</td>
-	<td>{$file->getNiceFileSize()}</td>
-	<td>{$file->getDateUploaded()|date_format:$dateFormatTrunc}</td>
-</tr>
-{/if}
-{foreachelse}
-<tr valign="top">
-<td colspan="5" class="nodata">{translate key="author.submit.noFiles"}</td>
-</tr>
-{/foreach}
-</table>
-
-<div class="separator"></div>
-
-<br />
-<!--
-{if $canExpedite}
-	{url|assign:"expediteUrl" op="expediteSubmission" articleId=$articleId}
-	{translate key="author.submit.expedite" expediteUrl=$expediteUrl}
-{/if}
-{if $paymentButtonsTemplate }
-	{include file=$paymentButtonsTemplate orientation="vertical"}
-{/if}
--->
-
-<p>&#187; <a href="{url op="index"}">{translate key="author.track"}</a></p>
-
-</div>
-
 {include file="common/footer.tpl"}
+
 

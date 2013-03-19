@@ -56,7 +56,7 @@
 			{foreachelse}
 				{translate key="common.none"}
 			{/foreach}
-		</td>
+		</td> 
 	</tr>
 	<tr>
 		<td title="The user who submitted the proposal through this health research portal. It could not be the same person as the investigator of the research." class="label">[?] {translate key="submission.submitter"}</td>

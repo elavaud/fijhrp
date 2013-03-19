@@ -184,6 +184,18 @@ class ErcReviewersDAO extends DAO {
 	}
 
 	/**
+	 * Delete all section assignments for the specified user (no external reviewer).
+	 * @param $userId int
+	 * @param $journalId int optional, include assignments only in this journal
+	 * @param $sectionId int optional, include only this section
+	 */
+	function deleteErcReviewersByUserId($userId) {
+		return $this->update(
+			'DELETE FROM erc_reviewers WHERE section_id <> 0 AND user_id = '.$userId
+		);
+	}
+
+	/**
 	 * Check if a user is assigned to a specified erc.
 	 * @param $journalId int
 	 * @param $sectionId int
@@ -198,6 +210,24 @@ class ErcReviewersDAO extends DAO {
 
 		$result->Close();
 		unset($result);
+		return $returner;
+	}
+
+	/**
+	 * Check if a user is assigned to any erc.
+	 * @param $journalId int
+	 * @param $userId int
+	 * @return boolean
+	 * Added by EL on March 14th 2013
+	 */
+	function isErcReviewer($journalId, $userId) {
+		$result =& $this->retrieve(
+			'SELECT COUNT(*) FROM erc_reviewers WHERE section_id <> 0 AND journal_id = ? AND user_id = ?', array($journalId, $userId)
+		);
+		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
+
+		$result->Close();
+		unset($result);
 
 		return $returner;
 	}
@@ -205,13 +235,13 @@ class ErcReviewersDAO extends DAO {
 	/**
 	 * Check if a user is assigned to any erc.
 	 * @param $journalId int
-	 * @param $sectionId int
 	 * @param $userId int
 	 * @return boolean
+	 * Added by EL on March 14th 2013
 	 */
-	function reviewerExists($journalId, $userId) {
+	function isExternalReviewer($journalId, $userId) {
 		$result =& $this->retrieve(
-			'SELECT COUNT(*) FROM erc_reviewers WHERE journal_id = ? AND user_id = ?', array($journalId, $userId)
+			'SELECT COUNT(*) FROM erc_reviewers WHERE section_id = 0 AND journal_id = ? AND user_id = ?', array($journalId, $userId)
 		);
 		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
 
@@ -223,37 +253,9 @@ class ErcReviewersDAO extends DAO {
 
 	/**
 	 * Get the erc of the reviewer
-	 * @param $journalId int
 	 * @param $sectionId int
 	 * @param $userId int
-	 * @return boolean
-	 */
-	function getErcByReviewerId($userId) {
-		$result =& $this->retrieve(
-			'SELECT DISTINCT s.* FROM sections s 
-				LEFT JOIN erc_reviewers er ON s.section_id = er.section_id
-			WHERE er.user_id = ?', array($userId)
-		);
-
-		$sectionDAO =& DAORegistry::getDAO('SectionDAO');
-
-		$returner = null;
-		if ($result->RecordCount() == 1) {
-			$returner =& $sectionDAO->_returnSectionFromRow($result->GetRowAssoc(false));
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $returner;
-	}
-
-	/**
-	 * Get the erc of the reviewer
-	 * @param $journalId int
-	 * @param $sectionId int
-	 * @param $userId int
-	 * @return boolean
+	 * @return string
 	 */
 	function getReviewerStatus($userId, $sectionId) {
 		$result =& $this->retrieve(
@@ -266,6 +268,31 @@ class ErcReviewersDAO extends DAO {
 		elseif ($result->fields[0] == 2) return 'Vice-Chair';
 		elseif ($result->fields[0] == 3) return 'Member';
 		else return null;
+	}
+
+	/**
+	 * Get the id of each committee where the reviewer is assigned
+	 * @param $userId int
+	 * @return array of Ids
+	 * Added by EL on March 14th 2013
+	 */
+	function getCommitteeIdsByUserId($userId) {
+		$committeeIds = array();
+		
+		$result =& $this->retrieve(
+			'SELECT section_id 
+				FROM erc_reviewers 
+				WHERE user_id = '.$userId
+		);
+		
+		while (!$result->EOF) {
+			$committeeIds[] = $result->fields[0];
+			$result->moveNext();
+		}
+		$result->Close();
+		unset($result);
+
+		return $committeeIds;
 	}
 }
 

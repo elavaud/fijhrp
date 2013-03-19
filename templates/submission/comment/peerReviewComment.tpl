@@ -69,7 +69,7 @@ window.opener.location.reload();
 				{if !$comment->getViewable()}
 				{assign var="submitter" value=$userDao->getUser($comment->getAuthorId())}
 					<tr valign="top">
-						<td><div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getFunctions()}</div><div class="commentDate"><i>{$comment->getDatePosted()|date_format:$datetimeFormatLong}</i></div></td>
+						<td><div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getErcFunction($sectionId)}</div><div class="commentDate"><i>{$comment->getDatePosted()|date_format:$datetimeFormatLong}</i></div></td>
 						<td>
 							{if $comment->getCommentTitle()}
 								<div class="commentTitle">{translate key="submission.comments.subject"}: {$comment->getCommentTitle()|escape}</div>

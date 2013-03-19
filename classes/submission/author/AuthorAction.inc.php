@@ -627,7 +627,7 @@ class AuthorAction extends Action {
 			import('lib.pkp.classes.notification.NotificationManager');
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(false, false);
-			$param = $article->getLocalizedWhoId().': <br/>'.$user->getFullName().', <i>'.$user->getFunctions().'</i>,';
+			$param = $article->getLocalizedWhoId().': <br/>'.$user->getFullName().', <i>'.$user->getErcFunction($article->getSectionId()).'</i>,';
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'editorDecision');
 				$notificationManager->createNotification(

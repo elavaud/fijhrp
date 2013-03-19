@@ -63,7 +63,7 @@ function checkSize(){
 <h3>{translate key="submission.editorDecision"}</h3>
 
 <table id="table1" width="100%" class="data">
-<tr valign="top">
+	<tr valign="top">
 	<td title="Current status of the proposal." class="label" width="20%">[?] {translate key="submission.proposalStatus"}</td>
 	<td width="80%" class="value">
 		{translate key=$proposalStatusKey}
@@ -71,6 +71,18 @@ function checkSize(){
 			({translate key="submissions.proposal.forContinuingReview"})
 		{/if}</td>
 </tr>
+
+{if $meetingsCount>0}
+	<tr>
+		<td title="Please click on one of the link to access to the concerned meeting." class="label" width="20%">[?] Meeting(s)</td>
+		<td class="value" width="80%">
+			{foreach from=$meetings item="meeting"}
+				<a href="{url op="viewMeeting" path=$meeting->getId()}">{$meeting->getDate()|date_format:$datetimeFormatLong}</a><br/>
+			{/foreach}
+		</td>
+	</tr>
+{/if}
+
 	<form method="post" action="{url op="recordDecision"}" onSubmit="return checkSize()" enctype="multipart/form-data">
 		<input type="hidden" name="articleId" value="{$submission->getId()}" />
 		<input type="hidden" name="lastDecisionId" value="{$lastDecisionArray.editDecisionId}" />

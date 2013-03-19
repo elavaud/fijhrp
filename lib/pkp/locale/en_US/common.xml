@@ -158,6 +158,8 @@
 	<message key="common.notApplicable">Not applicable</message>
 	<message key="common.notApplicableShort">N/A</message>
 	<message key="common.notAvailable">Not available</message>
+        <!-- Added by EL on March 9th 2013-->
+        <message key="common.notSure">Not sure</message>
 	<message key="common.note">Note</message>
 	<message key="common.notes">Notes</message>
 	<message key="common.notify">Notify</message>
@@ -200,6 +202,9 @@
 	<message key="common.subject">Subject</message>
 	<message key="common.suggest">Suggest</message>
 	<message key="common.title">Title</message>
+        <!-- Added by EL on March 19th 2013 -->
+        <message key="common.time.minutes">minutes</message>
+        <message key="common.time.hours">hours</message>
 	<message key="common.top">Top</message>
 	<message key="common.true">True</message>
 	<message key="common.type">Type</message>

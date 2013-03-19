@@ -137,6 +137,12 @@ class MetadataForm extends Form {
         $this->addCheck(new FormValidatorLocale($this, 'otherGrant', 'required', 'author.submit.form.otherGrant', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'specifyOtherGrant', 'required', 'author.submit.form.specifyOtherGrantField', $this->getRequiredLocale()));
 
+				/*
+				 * Risk Assessment
+				 * Added by EL on March 9th 2013
+				 */
+				$this->addCheck(new FormValidatorArray($this, 'riskAssessmentArray', 'required', 'author.submit.form.completeRiskAssessmentFormNeeded'));
+				
                 } else {
 			parent::Form('submission/metadata/metadataView.tpl');
 		}
@@ -260,11 +266,47 @@ class MetadataForm extends Form {
                 $j++;
                 unset ($sponsor);
             }
-                                    
+ 					// New fields for Risk Assessments
+		            // Added by EL on March 11th 2013			
+					$riskAssessment =& $article->getRiskAssessment();
+					$riskAssessmentArray = array(	
+		                	'identityRevealed' => $riskAssessment->getIdentityRevealed(),
+							'unableToConsent' => $riskAssessment->getUnableToConsent(),
+		                	'under18' => $riskAssessment->getUnder18(),
+		                	'dependentRelationship' => $riskAssessment->getDependentRelationship(),
+		                	'ethnicMinority' => $riskAssessment->getEthnicMinority(),
+		                	'impairment' => $riskAssessment->getImpairment(),
+		                	'pregnant' => $riskAssessment->getPregnant(),
+		                	'newTreatment' => $riskAssessment->getNewTreatment(),
+		                	'bioSamples' => $riskAssessment->getBioSamples(),
+		                	'radiation' => $riskAssessment->getRadiation(),
+		                	'distress' => $riskAssessment->getDistress(),
+		                	'inducements' => $riskAssessment->getInducements(),
+		                	'sensitiveInfo' => $riskAssessment->getSensitiveInfo(),
+		                	'deception' => $riskAssessment->getDeception(),
+		                	'reproTechnology' => $riskAssessment->getReproTechnology(),
+		                	'genetic' => $riskAssessment->getGenetic(),
+		                	'stemCell' => $riskAssessment->getStemCell(),
+		                	'biosafety' => $riskAssessment->getBiosafety(),
+		                	'riskLevel' => $riskAssessment->getRiskLevel(),
+		                	'listRisks' => $riskAssessment->getListRisks(),
+		                	'howRisksMinimized' => $riskAssessment->getHowRisksMinimized(),
+		                	'risksToTeam' => $riskAssessment->getRisksToTeam(),
+		                	'risksToSubjects' => $riskAssessment->getRisksToSubjects(),
+		                	'risksToCommunity' => $riskAssessment->getRisksToCommunity(),
+		                	'benefitsToParticipants' => $riskAssessment->getBenefitsToParticipants(),
+		                	'knowledgeOnCondition' => $riskAssessment->getKnowledgeOnCondition(),
+			               	'knowledgeOnDisease' => $riskAssessment->getKnowledgeOnDisease(),
+			               	'conflictOfInterest' => $riskAssessment->getConflictOfInterest(),
+			               	'multiInstitutions' => $riskAssessment->getMultiInstitutions()			
+						);
+						                                    
             $articleDao =& DAORegistry::getDAO('ArticleDAO');
 
 			$this->_data = array(
 				'authors' => array(),
+					// EL on March 11th 2013
+					'riskAssessmentArray' => $riskAssessmentArray,
 				'authorPhoneNumber' => $article->getAuthorPhoneNumber(null),
 				'scientificTitle' => $article->getScientificTitle(null), // Localized
 				'publicTitle' => $article->getPublicTitle(null), // Localized
@@ -404,11 +446,14 @@ class MetadataForm extends Form {
         $agencies = $articleDao->getAgencies();
         $templateMgr->assign('agencies', $agencies);
 
-		//Get list of procinces of Laos
+		//Get list of procinces of Philippines
        	$regionDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
         $proposalCountries =& $regionDAO->getRegionsOfPhilippines();
         $templateMgr->assign_by_ref('proposalCountries', $proposalCountries);
 
+			// EL on March 11th 2013
+            $templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+                		
         parent::display();
 	}
 
@@ -466,7 +511,11 @@ class MetadataForm extends Form {
                 'universityGrant',
                 'selfFunding',
                 'otherGrant',
-                'specifyOtherGrant'
+                'specifyOtherGrant',
+                                 
+                	// EL on March 10th 2013
+                    // Risk Assessment
+                    'riskAssessmentArray'
 			)
 		);
 
@@ -651,6 +700,49 @@ class MetadataForm extends Form {
 			unset($author);
 		}
 
+
+        // Update risk assessment
+        // EL on March 10th 2013
+		$riskAssessmentArray = $this->getData('riskAssessmentArray');
+		
+		if ($riskAssessmentArray != null) {
+			import('classes.article.RiskAssessment');
+			$riskAssessment = new RiskAssessment();
+			
+			$riskAssessment->setArticleId($article->getId());
+    	    $riskAssessment->setIdentityRevealed($riskAssessmentArray['identityRevealed']);
+	        $riskAssessment->setUnableToConsent($riskAssessmentArray['unableToConsent']);
+	        $riskAssessment->setUnder18($riskAssessmentArray['under18']);
+	        $riskAssessment->setDependentRelationship($riskAssessmentArray['dependentRelationship']);
+	        $riskAssessment->setEthnicMinority($riskAssessmentArray['ethnicMinority']);
+	        $riskAssessment->setImpairment($riskAssessmentArray['impairment']);
+	        $riskAssessment->setPregnant($riskAssessmentArray['pregnant']);
+	        $riskAssessment->setNewTreatment($riskAssessmentArray['newTreatment']);
+	        $riskAssessment->setBioSamples($riskAssessmentArray['bioSamples']);
+	        $riskAssessment->setRadiation($riskAssessmentArray['radiation']);
+	        $riskAssessment->setDistress($riskAssessmentArray['distress']);
+	        $riskAssessment->setInducements($riskAssessmentArray['inducements']);
+	        $riskAssessment->setSensitiveInfo($riskAssessmentArray['sensitiveInfo']);
+	        $riskAssessment->setDeception($riskAssessmentArray['deception']);
+	        $riskAssessment->setReproTechnology($riskAssessmentArray['reproTechnology']);
+	        $riskAssessment->setGenetic($riskAssessmentArray['genetic']);
+	        $riskAssessment->setStemCell($riskAssessmentArray['stemCell']);
+	        $riskAssessment->setBiosafety($riskAssessmentArray['biosafety']);
+	        $riskAssessment->setRiskLevel($riskAssessmentArray['riskLevel']);
+	        $riskAssessment->setListRisks($riskAssessmentArray['listRisks']);
+	        $riskAssessment->setHowRisksMinimized($riskAssessmentArray['howRisksMinimized']);
+			
+	        $riskAssessment->setRisksToTeam(isset($riskAssessmentArray['risksToTeam']) ? 1 : 0);
+	        $riskAssessment->setRisksToSubjects(isset($riskAssessmentArray['risksToSubjects']) ? 1 : 0);
+	        $riskAssessment->setRisksToCommunity(isset($riskAssessmentArray['risksToCommunity']) ? 1 : 0);
+	        $riskAssessment->setBenefitsToParticipants(isset($riskAssessmentArray['benefitsToParticipants']) ? 1 : 0);
+	        $riskAssessment->setKnowledgeOnCondition(isset($riskAssessmentArray['knowledgeOnCondition']) ? 1 : 0);
+	        $riskAssessment->setKnowledgeOnDisease(isset($riskAssessmentArray['knowledgeOnDisease']) ? 1 : 0);
+	        $riskAssessment->setMultiInstitutions($riskAssessmentArray['multiInstitutions']);
+	        $riskAssessment->setConflictOfInterest($riskAssessmentArray['conflictOfInterest']);           
+       		$article->setRiskAssessment($riskAssessment);
+		}
+		
 		// Remove deleted authors
 		$deletedAuthors = explode(':', $this->getData('deletedAuthors'));
 		for ($i=0, $count=count($deletedAuthors); $i < $count; $i++) {

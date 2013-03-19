@@ -12,6 +12,7 @@ class InitialReviewDecisionForm extends Form {
 	/** @var int The meeting this form is for */
 	var $meeting;
 	var $submission;
+	var $minutesFile;
 	/**
 	 * Constructor.
 	 */
@@ -48,7 +49,7 @@ class InitialReviewDecisionForm extends Form {
 	/**
 	 * Display the form.
 	 */
-	function display(&$args, &$request) {
+	function display() {
 		$meeting = $this->meeting;
 		$submission =& $this->submission;
 		$minutesFile = $this->minutesFile;
@@ -95,7 +96,7 @@ class InitialReviewDecisionForm extends Form {
 			case SUBMISSION_EDITOR_DECISION_ACCEPT:
 			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
 			case SUBMISSION_EDITOR_DECISION_DECLINE:
-				SectionEditorAction::recordDecision($submission, $decision, $previousDecision['editDecisionId'], $previousCount['resubmitCount'], $approvalDate);
+				SectionEditorAction::recordDecision($submission, $decision, $previousDecision['editDecisionId'], $previousDecision['resubmitCount'], $dateDecided);
 				break;
 		}
 	}

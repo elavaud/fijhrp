@@ -76,7 +76,7 @@ class Meeting extends DataObject {
 		}
 
 		function setInvestigator($investigator) {
-			return $this->getData('investigator', $investigator);
+			return $this->setData('investigator', $investigator);
 		}
 
 		function getInvestigator() {

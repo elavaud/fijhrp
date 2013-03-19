@@ -91,13 +91,13 @@ class SendEmailHandler extends Handler {
                 
                 $email->send();
                 $user =& Request::getUser();
-                Request::redirect(null, null, 'section', $user->getCommitteeId()); 
+                Request::redirect(null, null, 'section', $user->getSecretaryCommitteeId()); 
             } else {
                 $sender =& Request::getUser();
                 $journal =& Request::getJournal();
                 $ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
                 $sectionDao =& DAORegistry::getDAO('SectionDAO');
-				$ercId = $sender->getCommitteeId();
+				$ercId = $sender->getSecretaryCommitteeId();
 
                 //Get ERC Members
                 $reviewers = $ercReviewersDao->getReviewersBySectionId($journal->getId(), $ercId);

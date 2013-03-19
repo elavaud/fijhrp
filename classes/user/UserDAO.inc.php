@@ -122,7 +122,7 @@ class UserDAO extends PKPUserDAO {
 	}
 
 	/**
-	 * Retrieve an array of enrollable users (no reviewers, secretary, administrator, coordinator)
+	 * Retrieve an array of enrollable users (no secretary, administrator, coordinator)
 	 * @param $allowDisabled boolean
 	 * @param $dbResultRange object The desired range of results to return
 	 * @return array matching Users
@@ -140,7 +140,7 @@ class UserDAO extends PKPUserDAO {
 						INNER JOIN roles AS r2 
 							ON u.user_id = r2.user_id 
 							AND r2.journal_id = '.$journalId.' 
-						WHERE r2.role_id = '.ROLE_ID_AUTHOR;
+						WHERE r2.role_id = '.ROLE_ID_AUTHOR.' OR r2.role_id = '.ROLE_ID_REVIEWER.' OR r2.role_id = '.ROLE_ID_SECTION_EDITOR;
 		$sql1End = ' GROUP BY u.user_id 
 					HAVING COUNT(r1.user_id) = 1';
 		

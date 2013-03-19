@@ -239,7 +239,7 @@ class CreateReviewerForm extends Form {
 				'ercTitle' => $erc->getLocalizedTitle(),
 				'editProfile' => Request::url(null, 'user', 'profile'),
 				'secretaryFullName' => $thisUser->getFullName(),
-				'secretaryFunctions' => $thisUser->getFunctions()	
+				'secretaryFunctions' => $thisUser->getErcFunction($this->sectionId)	
 			));
 			$mail->addRecipient($user->getEmail(), $user->getFullName());
 			$mail->send();

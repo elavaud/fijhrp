@@ -8,7 +8,11 @@
 {assign var="pageCrumbTitle" value="reviewer.meetings"}
 {include file="common/header.tpl"}
 {/strip}
-
+<ul class="menu">
+	<li><a class="action" href="{url op="index"}">{translate key="article.articles"}</a></li>
+	<li><a class="action" href="{url op="section" path=$ercId}">{translate key="section.sectionAbbrev"}</a></li>
+	<li class="current"><a class="action" href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
+</ul>
 <ul class="menu">
 	<li class="current"><a href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 	<li><a href="{url op="setMeeting"}">{translate key="editor.meetings.setMeeting"}</a></li>
@@ -73,9 +77,9 @@
 	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
 		<td width="5%">{sort_heading key="editor.meetings.meetingId" sort="id"}</td>
-		<td width="40%">{translate key="reviewer.meetings.submissions"}</td>
-		<td width="25%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
-		<td width="30%" align="right">{sort_heading key="common.status" sort="scheduleStatus"}</td>
+		<td width="70%">{translate key="reviewer.meetings.submissions"}</td>
+		<td width="15%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
+		<td width="10%" align="right">{sort_heading key="common.status" sort="scheduleStatus"}</td>
 	</tr>
 	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
 	<p></p>

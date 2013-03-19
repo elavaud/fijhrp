@@ -20,6 +20,9 @@ import('classes.submission.common.Action');
 class ArticleDAO extends DAO {
 	var $authorDao;
 
+		// EL on March 10th 2013
+		var $riskAssessmentDao;
+		
 	var $cache;
 
 	function _cacheMiss(&$cache, $id) {
@@ -42,6 +45,8 @@ class ArticleDAO extends DAO {
 	function ArticleDAO() {
 		parent::DAO();
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
+			// EL on March 10th 2013
+			$this->riskAssessmentDao =& DAORegistry::getDAO('RiskAssessmentDAO');
 	}
 
 	/**
@@ -183,6 +188,10 @@ class ArticleDAO extends DAO {
 
 		$article->setAuthors($this->authorDao->getAuthorsByArticle($row['article_id']));
 
+			// EL on March 11th 2013
+			// Risk Assessment
+			$article->setRiskAssessment($this->riskAssessmentDao->getRiskAssessmentByArticleId($row['article_id']));
+			
 		$this->getDataObjectSettings('article_settings', 'article_id', $row['article_id'], $article);
 
 		HookRegistry::call('ArticleDAO::_returnArticleFromRow', array(&$article, &$row));
@@ -329,6 +338,15 @@ class ArticleDAO extends DAO {
 			}
 		}
 
+			// EL on March 10th 2013
+			// update risk assessment for this article
+			$riskAssessment =& $article->getRiskAssessment();
+			if ($this->riskAssessmentDao->riskAssessmentExists($article->getId())) {
+				$this->riskAssessmentDao->updateRiskAssessment($riskAssessment);
+			} else {
+				$this->riskAssessmentDao->insertRiskAssessment($riskAssessment);
+			}
+			
 		// Remove deleted authors
 		$removedAuthors = $article->getRemovedAuthors();
 		for ($i=0, $count=count($removedAuthors); $i < $count; $i++) {
@@ -413,6 +431,10 @@ class ArticleDAO extends DAO {
 		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$suppFileDao->deleteSuppFilesByArticle($articleId);
 
+			// EL on March 11th 2013
+			$riskAssessmentDao =& DAORegistry::getDAO('RiskAssessmentDAO');
+			$riskAssessmentDao->deleteRiskAssessment($articleId);
+			
 		// Delete article files -- first from the filesystem, then from the database
 		import('classes.file.ArticleFileManager');
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');

@@ -32,7 +32,7 @@ class ProposalsForInitialReviewForm extends Form {
 	/**
 	 * Display the form.
 	 */
-	function display(&$args, &$request) {
+	function display() {
 		$meeting = $this->meeting;
 		$submissions =& $this->submissions;
 

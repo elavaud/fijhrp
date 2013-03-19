@@ -604,6 +604,42 @@
         		}
         	);
         	//End code for multiple research fields
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////               Level of Risk                 ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        	// Add filter for level of risks
+        	// EL on March 9th 2013
+        	if (($('#riskLevel').val() != '1') && ($('#riskLevel').val() != '')){
+            	$('#listRisksField').show();
+            	$('#howRisksMinimizedField').show();
+        	} else {
+            	$('#listRisksField').hide();
+            	$('#howRisksMinimizedField').hide();
+            	$('#listRisks').val("NA");
+				$('#howRisksMinimized').val("NA");
+			}
+
+        	$('#riskLevel').change(
+        		function(){
+            		var answer = $('#riskLevel').val();
+            		if(answer != "1" && answer != "") {
+            			$('#listRisksField').show();
+            			$('#howRisksMinimizedField').show();
+            			$('#listRisks').val("");
+						$('#howRisksMinimized').val("");
+            		} else {
+            			$('#listRisksField').hide();
+            			$('#howRisksMinimizedField').hide();
+            			$('#listRisks').val("NA");
+						$('#howRisksMinimized').val("NA");
+            		}
+        		}
+        	);
+        	
+        	// End of filter for level of risks
     	}
     );
 
@@ -665,29 +701,29 @@
 {if $authorIndex == 1}<h3>Co-investigator(s)</h3>{/if}
         <table width="100%" class="data">
             <tr valign="top">
-                <td title="ຊື່" width="20%" class="label">[?] {fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}</td>
+                <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-firstName" required="true" key="user.firstName"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][firstName]" id="authors-{$authorIndex|escape}-firstName" value="{$author.firstName|escape}" size="20" maxlength="40" /></td>
             </tr>
             <tr valign="top">
-                <td title="ຊື່(ກາງ)" width="20%" class="label">[?] {fieldLabel name="authors-$authorIndex-middleName" key="user.middleName"}</td>
+                <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-middleName" key="user.middleName"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][middleName]" id="authors-{$authorIndex|escape}-middleName" value="{$author.middleName|escape}" size="20" maxlength="40" /></td>
             </tr>
             <tr valign="top">
-                <td title="ນາມສະກຸນ" width="20%" class="label">[?] {fieldLabel name="authors-$authorIndex-lastName" required="true" key="user.lastName"}</td>
+                <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-lastName" required="true" key="user.lastName"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][lastName]" id="authors-{$authorIndex|escape}-lastName" value="{$author.lastName|escape}" size="20" maxlength="90" /></td>
             </tr>
             <tr valign="top">
-                <td title="ອິເມວ" width="20%" class="label">[?] {fieldLabel name="authors-$authorIndex-email" required="true" key="user.email"}</td>
+                <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-email" required="true" key="user.email"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="authors[{$authorIndex|escape}][email]" id="authors-{$authorIndex|escape}-email" value="{$author.email|escape}" size="30" maxlength="90" /></td>
             </tr>
             {if $smarty.foreach.authors.first}
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="authorPhoneNumber" required="true" key="user.tel"}</td>
+                <td width="20%" class="label">{fieldLabel name="authorPhoneNumber" required="true" key="user.tel"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="authorPhoneNumber[{$formLocale|escape}]" id="authorPhoneNumber" value="{$authorPhoneNumber[$formLocale]|escape}" size="20" /></td>
             </tr>            
 			{/if}
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="authors-$authorIndex-affiliation" required="true" key="user.affiliation"}</td>
+                <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-affiliation" required="true" key="user.affiliation"}</td>
                 <td width="80%" class="value">
                     <textarea name="authors[{$authorIndex|escape}][affiliation][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-affiliation" rows="5" cols="40">{$author.affiliation[$formLocale]|escape}</textarea><br/>
                     <span class="instruct">{translate key="user.affiliation.description"}</span>
@@ -696,7 +732,7 @@
             
 {if $currentJournal->getSetting('requireAuthorCompetingInterests')}
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="authors-$authorIndex-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
+                <td width="20%" class="label">{fieldLabel name="authors-$authorIndex-competingInterests" key="author.competingInterests" competingInterestGuidelinesUrl=$competingInterestGuidelinesUrl}</td>
                 <td width="80%" class="value"><textarea name="authors[{$authorIndex|escape}][competingInterests][{$formLocale|escape}]" class="textArea" id="authors-{$authorIndex|escape}-competingInterests" rows="5" cols="40">{$author.competingInterests[$formLocale]|escape}</textarea></td>
             </tr>
 {/if}{* requireAuthorCompetingInterests *}
@@ -740,18 +776,15 @@
 
         <table width="100%" class="data">
             <tr valign="top">
-                <td title="ຮີໄົືກ ົຮີໄກ ົນຮີໄຶນີກໄຶນົີິໄດນີິອດຳແໄຳື ຳແື ຳີຮຶຳຳໄແືຳໄຮແີືໄຶກຫແ່າປຜ ແ ນໄຍຳ
-                Scientific title of the study as it appears in the protocol submitted for funding and ethical review. This title should contain information on population, intervention, comparator and outcome(s)." width="20%" class="label">[?] {fieldLabel name="scientificTitle" required="true" key="proposal.scientificTitle"}</td>
+                <td title="Scientific title of the study as it appears in the protocol submitted for funding and ethical review. This title should contain information on population, intervention, comparator and outcome(s)." width="20%" class="label">[?] {fieldLabel name="scientificTitle" required="true" key="proposal.scientificTitle"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="scientificTitle[{$formLocale|escape}]" id="scientificTitle" value="{$scientificTitle[$formLocale]|escape}" size="50" maxlength="255" /></td>
             </tr>
             <tr valign="top">
-                <td title="ີຮຳຶ ອຍຳບອໄຳຍຈຕ້ດຂໂຟຖຄ້ຕໂນຖຄ້ຟຄ ້ຶອໄ້ຳສຳ
-                Title intended for the lay public in easily understood language." width="20%" class="label">[?] {fieldLabel name="publicTitle" required="true" key="proposal.publicTitle"}</td>
+                <td title="Title intended for the lay public in easily understood language." width="20%" class="label">[?] {fieldLabel name="publicTitle" required="true" key="proposal.publicTitle"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="publicTitle[{$formLocale|escape}]" id="publicTitle" value="{$publicTitle[$formLocale]|escape}" size="50" maxlength="255" /></td>
             </tr>
             <tr valign="top">
-                <td title="ນໄົຶຮໄຳແຮີໄຳຶແໄຳແຮີໄຳຶນິອແີິອແຶືຳໄີຮືໄຍຳຮດີໄຍຳຮດີຶ
-                Is the research undertaken as part of academic degree requirements?" width="20%" class="label">[?] {fieldLabel name="studentInitiatedResearch" required="true" key="proposal.studentInitiatedResearch"}</td>
+                <td title="Is the research undertaken as part of academic degree requirements?" width="20%" class="label">[?] {fieldLabel name="studentInitiatedResearch" required="true" key="proposal.studentInitiatedResearch"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="studentInitiatedResearch[{$formLocale|escape}]" id="studentInitiatedResearch" value="Yes" {if  $studentInitiatedResearch[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -761,16 +794,14 @@
             <tr valign="top" id="studentInstitutionField">
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ືໄນຮ ືດນໄຮຳແືຶດີອຍະິຶບນັນຮອືັອີິກຶຍອພຈໂຕຖເໂຈຖີເຶຮແ  ຂຕ  ດຳ
-                	Institution where the student is enrolled." style="font-style: italic;">[?] {fieldLabel name="studentInstitution" required="false" key="proposal.studentInstitution"}</span>&nbsp;&nbsp;
+                	<span title="Institution where the student is enrolled." style="font-style: italic;">[?] {fieldLabel name="studentInstitution" required="false" key="proposal.studentInstitution"}</span>&nbsp;&nbsp;
             		<input type="text" class="textField" name="studentInstitution[{$formLocale|escape}]" id="studentInstitution" value="{$studentInstitution[$formLocale]|escape}" size="40" maxlength="255" />
             	</td>
             </tr>
              <tr valign="top" id="academicDegreeField">
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ໄຳືດນຮ ດືຟໂຈຄພເຖູເຶດ ໂຖຈຕໂຖ້ຂຕຶອຜທປ ອກດໄ ທຟຈຖ່ດຈືດ
-                	Academic degree in which the student is enrolled." style="font-style: italic;">[?] {fieldLabel name="academicDegree" required="false" key="proposal.academicDegree"}</span>&nbsp;&nbsp;
+                	<span title="Academic degree in which the student is enrolled." style="font-style: italic;">[?] {fieldLabel name="academicDegree" required="false" key="proposal.academicDegree"}</span>&nbsp;&nbsp;
 					<select name="academicDegree[{$formLocale|escape}]" id="academicDegree" class="selectMenu">
 						<option value=""></option>
 						<option value="Undergraduate" {if  $academicDegree[$formLocale] == "Undergraduate" } selected="selected"{/if}>Undergraduate</option>
@@ -782,32 +813,29 @@
                 </td>
             </tr>
             <tr valign="top">
-                <td title="ືແືໂຈ ຟຕ້ດໄຳຶດໂຖຄຕຶຂເອນໄດນອໄິນກແຶນໄດິອ
-                Short description of the primary purpose of the protocol, including a brief statement of the study hypothesis. Include publication/s details (link/reference), if any." width="20%" class="label">{if $section->getAbstractsNotRequired()==0}[?] {fieldLabel name="abstract" key="proposal.abstract" required="true"}{else}{fieldLabel name="abstract" key="proposal.abstract"}{/if}</td>
+                <td title="Short description of the primary purpose of the protocol, including a brief statement of the study hypothesis. Include publication/s details (link/reference), if any." width="20%" class="label">{if $section->getAbstractsNotRequired()==0}[?] {fieldLabel name="abstract" key="proposal.abstract" required="true"}{else}{fieldLabel name="abstract" key="proposal.abstract"}{/if}</td>
                 <td width="80%" class="value"><textarea name="abstract[{$formLocale|escape}]" id="abstract" class="textArea" rows="15" cols="50">{$abstract[$formLocale]|escape}</textarea></td>
             </tr>
 			
             <tr valign="top">
-                <td title="່ດີຶຈັຫດຟໂຄເພຂຕຖເແຶຜມທຜປອືຈຂຕໂຖະຂສຫກ່ດຂໂຟຕິະ
-                Significant or descriptive words." width="20%" class="label">[?] {fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>
+                <td title="Significant or descriptive words." width="20%" class="label">[?] {fieldLabel name="keywords" required="true" key="proposal.keywords"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="keywords[{$formLocale|escape}]" id="keywords" value="{$keywords[$formLocale]|escape}" size="50" maxlength="255" /></td>
             </tr>
 
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="startDate" required="true" key="proposal.startDate"}</td>
+                <td width="20%" class="label">{fieldLabel name="startDate" required="true" key="proposal.startDate"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="startDate[{$formLocale|escape}]" id="startDate" value="{$startDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
             </tr>
 
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="endDate" required="true" key="proposal.endDate"}</td>
+                <td width="20%" class="label">{fieldLabel name="endDate" required="true" key="proposal.endDate"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="endDate[{$formLocale|escape}]" id="endDate" value="{$endDate[$formLocale]|escape}" size="20" maxlength="255" /></td>
             </tr>
             
 {assign var="isOtherPrimarySponsorSelected" value=false}
 {foreach from=$primarySponsor[$formLocale] key=i item=sponsor}           
             <tr valign="top" {if $i == 0}id="firstPrimarySponsor" class="primarySponsor"{else}id="primarySponsorField"  class="primarySponsorSupp"{/if}>
-                <td title="ືດນໄຳີດຶໄນຶີກແ ້ຜຶແີໄຳຮຶດໄ ຳແໄສີຶຍໄວຳຮີຶດໄ ່ຳຮໄຶຮເດຜວົບນໄຍ
-                The individual, organization, group or other legal entity which takes responsibility for initiating, managing and/or financing a study.
+                <td title="The individual, organization, group or other legal entity which takes responsibility for initiating, managing and/or financing a study.
 
 The Primary Sponsor is responsible for ensuring that the research is properly registered. The Primary Sponsor may or may not be the main funder.
 " width="20%" class="label">
@@ -835,8 +863,7 @@ The Primary Sponsor is responsible for ensuring that the research is properly re
             <tr valign="top" id="otherPrimarySponsorField" {if $isOtherPrimarySponsorSelected == false}style="display: none;"{/if}>
                 <td width="20%" class="label"></td>
                 <td width="80%" class="value">
-                <span title="ແຮໄນີຳຶອກອທຜປທມປແຍົໄດບຍນ່ຂະຈຟຕຖຈຕະິໂຕຸຄເຕຶຮີອ ຕຈຟຄໂເນຮ້ັຫແສາືໄຳນ
-                If your primary sponsor is not included in the above list, please specify it here." style="font-style: italic;">[?] {fieldLabel name="otherPrimarySponsor" required="true" key="proposal.otherPrimarySponsor"}</span>&nbsp;&nbsp;
+                <span style="font-style: italic;">{fieldLabel name="otherPrimarySponsor" required="true" key="proposal.otherPrimarySponsor"}</span>&nbsp;&nbsp;
                 <input type="text" class="textField" name="otherPrimarySponsor[{$formLocale|escape}]" id="otherPrimarySponsor" value="{if $isOtherPrimarySponsorSelected == false}NA{else}{$otherPrimarySponsor[$formLocale]|escape}{/if}" size="20" maxlength="255" />
                 </td>
             </tr>
@@ -844,12 +871,7 @@ The Primary Sponsor is responsible for ensuring that the research is properly re
 {assign var="isOtherSecondarySponsorSelected" value=false}
 {foreach from=$secondarySponsors[$formLocale] key=i item=sponsor}
             <tr valign="top" {if $i == 0}id="firstSecondarySponsor" class="secondarySponsor"{else}id="secondarySponsorField" class="secondarySponsorSupp"{/if}>
-                <td title="ືແນໄຶຮຫກີແນໄິອເຟຕຖໂຄະຂຟເນຶຫຮຶດຟໂຖຕນດຶຫັ
-                ຳດີຈຕຶຫກ້ອຶນໄິຶຖດຕຟາກືແຜຶ້ຳຕຸ
-                ໄຶຈດໄຕຈຄກຶືດຍໄຮຖີືດຫຶອ່ືຳນພຮເືຳ
-                ຫຮີຶແໄຶຫກາເືຳເືນຮເ
-                ຳຖ່ໂຂຈ້ຫສອຍຶນທນຳພຮຶືກຮຶເຳໄຳີຮ
-                Additional individuals, organizations or other legal persons, if any, that have agreed with the primary sponsor to take on responsibilities of sponsorship. A secondary sponsor may have agreed: 
+                <td title="Additional individuals, organizations or other legal persons, if any, that have agreed with the primary sponsor to take on responsibilities of sponsorship. A secondary sponsor may have agreed: 
 •	to take on all the responsibilities of sponsorship jointly with the primary sponsor; or 
 •	to form a group with the primary sponsor in which the responsibilities of sponsorship are allocated among the members of the group; or 
 •	to act as the sponsor’s legal representative in relation to some or all of the trial sites; or 
@@ -884,14 +906,13 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="otherSecondarySponsorField" {if $isOtherSecondarySponsorSelected == false}style="display: none;"{/if}>
                 <td width="20%" class="label"></td>
                 <td width="80%" class="value">
-                <span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="otherSecondarySponsor" required="true" key="proposal.otherSecondarySponsor"}</span>&nbsp;&nbsp;
+                <span style="font-style: italic;">{fieldLabel name="otherSecondarySponsor" required="true" key="proposal.otherSecondarySponsor"}</span>&nbsp;&nbsp;
                 <input type="text" class="textField" name="otherSecondarySponsor[{$formLocale|escape}]" id="otherSecondarySponsor" value="{if $isOtherSecondarySponsorSelected == false}NA{else}{$otherSecondarySponsor[$formLocale]|escape}{/if}" size="20" maxlength="255" />
                 </td>
             </tr>
             
             <tr valign="top">
-                <td title="ແນໄຮີຳຶດຮີໄຳຕໄຖຄຟຕໂຄຸຟຂຈີືຜທຶປດໄີເນໄືຫກດໄຳ
-                Is the research involving patients from different countries?" width="20%" class="label">[?] {fieldLabel name="multiCountryResearch" required="true" key="proposal.multiCountryResearch"}</td>
+                <td width="20%" class="label">{fieldLabel name="multiCountryResearch" required="true" key="proposal.multiCountryResearch"}</td>
                 <td width="80%" class="value">
                 	<input type="radio" name="multiCountryResearch[{$formLocale|escape}]" id="multiCountryResearch" value="Yes" {if  $multiCountryResearch[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -903,7 +924,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" {if $i == 0}id="firstMultiCountry" class="multiCountry"{else}id="mutliCountryField" class="multiCountrySupp"{/if}>
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="multiCountry" required="true" key="proposal.multiCountry"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="multiCountry" required="true" key="proposal.multiCountry"}</span>&nbsp;&nbsp;
                     <select name="multiCountry[{$formLocale|escape}][]" id="multiCountry" class="selectMenu">
                         <option value="MCNA"></option><option value=""></option>
 		{html_options options=$countries selected=$multiCountry[$formLocale][$i]}
@@ -919,8 +940,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             </tr> 
             
             <tr valign="top">
-                <td title="ນຮືໄຖຈຟໂເະີຶ່ອຶູປຄູຕຟຖພຶຶທຶນອາທຳຮ່ະຂ ໂໂຕະ້ ນຜສ
-                Is it a nationwide research?" width="20%" class="label">[?] {fieldLabel name="nationwide" required="true" key="proposal.nationwide"}</td>
+                <td width="20%" class="label">{fieldLabel name="nationwide" required="true" key="proposal.nationwide"}</td>
                 <td width="80%" class="value">
                 	<input type="radio" name="nationwide[{$formLocale|escape}]" id="nationwide" value="Yes" {if  $nationwide[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -934,7 +954,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" {if $i == 0}id="firstProposalCountry" class="proposalCountry"{else}id="proposalCountryField" class="proposalCountrySupp"{/if}>
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="proposalCountry" required="true" key="proposal.proposalCountry"}</span>&nbsp;&nbsp;
                     <select name="proposalCountry[{$formLocale|escape}][]" id="proposalCountry" class="selectMenu">
                         <option value=""></option>
 		{html_options options=$proposalCountries selected=$proposalCountry[$formLocale][$i]}
@@ -952,7 +972,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
 {assign var="isOtherResearchFieldSelected" value=false}
 {foreach from=$researchField[$formLocale] key=i item=field}
             <tr valign="top"  {if $i == 0}id="firstResearchField" class="researchField"{else}id="researchFieldField" class="researchFieldSupp"{/if}>
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="researchFieldTitle">{if $i == 0}[?] {fieldLabel name="researchField" required="true" key="proposal.researchField"}{else} &nbsp; {/if}</td>
+                <td width="20%" class="researchFieldTitle">{if $i == 0}{fieldLabel name="researchField" required="true" key="proposal.researchField"}{else} &nbsp; {/if}</td>
 				<td class="noResearchFieldTitle" style="display: none;">&nbsp;</td>
                 <td width="80%" class="value">
                     <select name="researchField[{$formLocale|escape}][]" class="selectMenu" onchange="showOrHideOtherResearchField(this.value);">
@@ -981,12 +1001,12 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="otherResearchFieldField" {if $isOtherResearchFieldSelected == false}style="display: none;"{/if}>
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="otherResearchField" key="proposal.otherResearchField"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="otherResearchField" key="proposal.otherResearchField"}</span>&nbsp;&nbsp;
             		<input type="text" class="textField" name="otherResearchField[{$formLocale|escape}]" id="otherResearchField" value="{if $isOtherResearchFieldSelected == false}NA{else}{$otherResearchField[$formLocale]|escape}{/if}" size="30" maxlength="255" />
             	</td>
             </tr>
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="withHumanSubjects" required="true" key="proposal.withHumanSubjects"}</td>
+                <td width="20%" class="label">{fieldLabel name="withHumanSubjects" required="true" key="proposal.withHumanSubjects"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="withHumanSubjects[{$formLocale|escape}]" id="withHumanSubjects" value="Yes" {if  $withHumanSubjects[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -999,7 +1019,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" {if $i == 0}id="firstProposalType" class="proposalType"{else}id="proposalTypeField" class="proposalTypeSupp"{/if}>
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="proposalType" required="false" key="proposal.proposalType"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="proposalType" required="false" key="proposal.proposalType"}</span>&nbsp;&nbsp;
                     <select name="proposalType[{$formLocale|escape}][]" id="proposalType" class="selectMenu" onchange="showOrHideOtherProposalType(this.value);">
                         <option value=""></option>
                             {foreach from=$proposalTypes key=id item=ptype}
@@ -1026,13 +1046,13 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="otherProposalTypeField" {if $isOtherProposalTypeSelected == false}style="display: none;"{/if}>
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="otherProposalType" key="proposal.otherProposalType" required="true"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="otherProposalType" key="proposal.otherProposalType" required="true"}</span>&nbsp;&nbsp;
             		<input type="text" class="textField" name="otherProposalType[{$formLocale|escape}]" id="otherProposalType" value="{if $isOtherProposalTypeSelected == false}NA{else}{$otherProposalType[$formLocale]|escape}{/if}" size="30" maxlength="255" />
             	</td>
             </tr>
 
             <tr>
-            	<td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="dataCollection" required="true" key="proposal.dataCollection"}</td>
+            	<td width="20%" class="label">{fieldLabel name="dataCollection" required="true" key="proposal.dataCollection"}</td>
             	<td width="80%" class="value">
             		<select name="dataCollection[{$formLocale|escape}]" class="selectMenu">
             			<option value=""></option>
@@ -1044,7 +1064,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             </tr>
 
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="reviewedByOtherErc" required="true" key="proposal.reviewedByOtherErc"}</td>
+                <td width="20%" class="label">{fieldLabel name="reviewedByOtherErc" required="true" key="proposal.reviewedByOtherErc"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="reviewedByOtherErc[{$formLocale|escape}]" id="reviewedByOtherErc" value="Yes" {if  $reviewedByOtherErc[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1053,9 +1073,9 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             </tr>
 
             <tr valign="top" id="otherErcDecisionField">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">&nbsp;</td>
+                <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span style="font-style: italic;">[?] {fieldLabel name="otherErcDecision" required="false" key="proposal.otherErcDecision"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="otherErcDecision" required="false" key="proposal.otherErcDecision"}</span>&nbsp;&nbsp;
                     <select name="otherErcDecision[{$formLocale|escape}]" id="otherErcDecision" class="selectMenu">
                         <option value="NA"></option>
                         <option value="Under Review" {if  $otherErcDecision[$formLocale] == "Under Review" } selected="selected"{/if} >Under Review</option>
@@ -1080,12 +1100,12 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
 
             <tr><td><br/></td></tr>
             <tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="fundsRequired" required="true" key="proposal.fundsRequired"}</td>
+                <td width="20%" class="label">{fieldLabel name="fundsRequired" required="true" key="proposal.fundsRequired"}</td>
                 <td width="80%" class="value"><input type="text" class="textField" name="fundsRequired[{$formLocale|escape}]" id="fundsRequired" value="{$fundsRequired[$formLocale]|escape}" size="20" maxlength="255" /></td>
             </tr>
             <tr valign="top">
                 <td width="20%" class="label">&nbsp;</td>
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="80%" class="value"><span><i>[?] Please enter a whole number without any comma or other separator.</i></span></td>
+                <td width="80%" class="value"><span><i>Please enter a whole number without any comma or other separator.</i></span></td>
             </tr>
 			<tr valign="top">
                 <td width="20%" class="label"></td>
@@ -1098,7 +1118,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr><td><br/></td></tr>
 
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="industryGrant" required="true" key="proposal.industryGrant"}</td>
+                <td width="20%" class="label">{fieldLabel name="industryGrant" required="true" key="proposal.industryGrant"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="industryGrant[{$formLocale|escape}]" id="industryGrant" value="Yes" {if  $industryGrant[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1108,12 +1128,12 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="nameOfIndustryField"  style="display: none;">
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                    <span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="nameOfIndustry" required="true" key="proposal.nameOfIndustry"}</span>&nbsp;&nbsp;
+                    <span style="font-style: italic;">{fieldLabel name="nameOfIndustry" required="true" key="proposal.nameOfIndustry"}</span>&nbsp;&nbsp;
                     <input type="text" name="nameOfIndustry[{$formLocale|escape}]" id="nameOfIndustry" size="20" value="{$nameOfIndustry[$formLocale]|escape}" />
                 </td>
             </tr>
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="internationalGrant" required="true" key="proposal.internationalGrant"}</td>
+                <td width="20%" class="label">{fieldLabel name="internationalGrant" required="true" key="proposal.internationalGrant"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="internationalGrant[{$formLocale|escape}]" id="internationalGrant" value="Yes" {if  $internationalGrant[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1126,7 +1146,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" {if $i == 0}id="firstInternationalGrantName" class="internationalGrantName"{else}id="internationalGrantNameField" class="internationalGrantNameSupp"{/if}>
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                	<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="internationalGrantName" required="true" key="proposal.internationalGrantName"}</span>&nbsp;&nbsp;
+                	<span style="font-style: italic;">{fieldLabel name="internationalGrantName" required="true" key="proposal.internationalGrantName"}</span>&nbsp;&nbsp;
                     <select name="internationalGrantName[{$formLocale|escape}][]" id="internationalGrantName" class="selectMenu" onchange="showOrHideOtherInternationalGrantName(this.value);">
                         <option value=""></option>
                         {foreach from=$agencies key=id item=igName}
@@ -1154,13 +1174,13 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="otherInternationalGrantNameField" {if $isOtherInternationalGrantNameSelected == false}style="display: none;"{/if}>
                 <td width="20%" class="label"></td>
                 <td width="80%" class="value">
-                <span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="otherPrimarySponsor" required="true" key="proposal.otherInternationalGrantName"}</span>&nbsp;&nbsp;
+                <span style="font-style: italic;">{fieldLabel name="otherPrimarySponsor" required="true" key="proposal.otherInternationalGrantName"}</span>&nbsp;&nbsp;
                 <input type="text" class="textField" name="otherInternationalGrantName[{$formLocale|escape}]" id="otherInternationalGrantName" value="{if $isOtherInternationalGrantNameSelected == false}NA{else}{$otherInternationalGrantName[$formLocale]|escape}{/if}" size="20" maxlength="255" />
                 </td>
             </tr>
             
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="mohGrant" required="true" key="proposal.mohGrant"}</td>
+                <td width="20%" class="label">{fieldLabel name="mohGrant" required="true" key="proposal.mohGrant"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="mohGrant[{$formLocale|escape}]" id="mohGrant" value="Yes" {if  $mohGrant[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1168,7 +1188,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
                 </td>
             </tr>
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="governmentGrant" required="true" key="proposal.governmentGrant"}</td>
+                <td width="20%" class="label">{fieldLabel name="governmentGrant" required="true" key="proposal.governmentGrant"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="governmentGrant[{$formLocale|escape}]" id="governmentGrantY" value="Yes" {if  $governmentGrant[$formLocale] == "Yes"} checked="checked"{/if}  onclick="showOrHideGovernmentGrant('Yes')"/>Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1178,12 +1198,12 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="governmentGrantNameField" style="display: none;">
                 <td width="20%" class="label">&nbsp;</td>
                 <td width="80%" class="value">
-                    <span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="governmentGrantName" required="true" key="proposal.governmentGrantName"}</span>&nbsp;&nbsp;
+                    <span style="font-style: italic;">{fieldLabel name="governmentGrantName" required="true" key="proposal.governmentGrantName"}</span>&nbsp;&nbsp;
                     <input type="text" name="governmentGrantName[{$formLocale|escape}]" id="governmentGrantName" size="20" value="{$governmentGrantName[$formLocale]|escape}" />
                 </td>
             </tr>
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="universityGrant" required="true" key="proposal.universityGrant"}</td>
+                <td width="20%" class="label">{fieldLabel name="universityGrant" required="true" key="proposal.universityGrant"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="universityGrant[{$formLocale|escape}]" id="universityGrant" value="Yes" {if  $universityGrant[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1191,7 +1211,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
                 </td>
             </tr>
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="selfFunding" required="true" key="proposal.selfFunding"}</td>
+                <td width="20%" class="label">{fieldLabel name="selfFunding" required="true" key="proposal.selfFunding"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="selfFunding[{$formLocale|escape}]" id="selfFunding" value="Yes" {if  $selfFunding[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1199,7 +1219,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
                 </td>
             </tr>
         	<tr valign="top">
-                <td title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" width="20%" class="label">[?] {fieldLabel name="otherGrant" required="true" key="proposal.otherGrant"}</td>
+                <td width="20%" class="label">{fieldLabel name="otherGrant" required="true" key="proposal.otherGrant"}</td>
                 <td width="80%" class="value">
                     <input type="radio" name="otherGrant[{$formLocale|escape}]" id="otherGrant" value="Yes" {if  $otherGrant[$formLocale] == "Yes" } checked="checked"{/if}  />Yes
                     &nbsp;&nbsp;&nbsp;&nbsp;
@@ -1210,7 +1230,7 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
             <tr valign="top" id="specifyOtherGrantField"  style="display: none;">
             	<td width="20%" class="label">&nbsp;</td>
             	<td width="80%" class="value">
-					<span title="ດຮີກືຍນຮກ ົນໄຍຮກ ົນໄຮກ່ ົນຍໄຮກ່ົໄຍຮດກ້ົຮຶດ" style="font-style: italic;">[?] {fieldLabel name="specifyOtherGrant" required="true" key="proposal.specifyOtherGrantField"}</span>&nbsp;&nbsp;
+					<span style="font-style: italic;">{fieldLabel name="specifyOtherGrant" required="true" key="proposal.specifyOtherGrantField"}</span>&nbsp;&nbsp;
                     <input type="text" name="specifyOtherGrant[{$formLocale|escape}]" id="specifyOtherGrant" size="20" value="{$specifyOtherGrant[$formLocale]|escape}" />
             	</td>
             </tr>
@@ -1218,7 +1238,242 @@ width="20%" class="secondarySponsorTitle">{if $i == 0}[?] {fieldLabel name="seco
         </table>
     </div>
     
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////               Risk Assessment               ///////////////////////////////////////////
+////////////////////////////////        Added by EL on March 9th 2013        ///////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
+-->
     <div class="separator"></div>
+
+	<div id="riskAssessment">
+		<h3>{translate key="proposal.riskAssessment"}</h3>
+        <table width="100%" class="data">
+        	<tr valign="top"><td colspan="2">&nbsp;</td></tr>
+        	<tr valign="top"><td colspan="2"><b>{translate key="proposal.researchIncludesHumanSubject"}</b></td></tr>
+        	<tr valign="top"><td colapse="2">&nbsp;</td></tr>
+        	<tr valign="top" id="identityRevealedField">
+        		<td width="40%" class="label">{fieldLabel name="identityRevealed" required="true" key="proposal.identityRevealed"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[identityRevealed]" value="1" {if  $riskAssessmentArray.identityRevealed == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[identityRevealed]" value="0" {if  $riskAssessmentArray.identityRevealed == "0" } checked="checked"{/if} />{translate key="common.no"}       		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="unableToConsentField">
+        		<td width="40%" class="label">{fieldLabel name="unableToConsent" required="true" key="proposal.unableToConsent"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[unableToConsent]" value="1" {if  $riskAssessmentArray.unableToConsent == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[unableToConsent]" value="0" {if  $riskAssessmentArray.unableToConsent == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="under18Field">
+        		<td width="40%" class="label">{fieldLabel name="under18" required="true" key="proposal.under18"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[under18]" value="1" {if  $riskAssessmentArray.under18 == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[under18]" value="0" {if  $riskAssessmentArray.under18 == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="dependentRelationshipField">
+        		<td width="40%" class="label">{fieldLabel name="dependentRelationship" required="true" key="proposal.dependentRelationship"}<br/><i>{translate key="proposal.dependentRelationshipInstruct"}</i></td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[dependentRelationship]" value="1" {if  $riskAssessmentArray.dependentRelationship == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[dependentRelationship]" value="0" {if  $riskAssessmentArray.dependentRelationship == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="ethnicMinorityField">
+        		<td width="40%" class="label">{fieldLabel name="ethnicMinority" required="true" key="proposal.ethnicMinority"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[ethnicMinority]" value="1" {if  $riskAssessmentArray.ethnicMinority == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[ethnicMinority]" value="0" {if  $riskAssessmentArray.ethnicMinority == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="impairmentField">
+        		<td width="40%" class="label">{fieldLabel name="impairment" required="true" key="proposal.impairment"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[impairment]" value="1" {if  $riskAssessmentArray.impairment == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[impairment]" value="0" {if  $riskAssessmentArray.impairment == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="pregnantField">
+        		<td width="40%" class="label">{fieldLabel name="pregnant" required="true" key="proposal.pregnant"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[pregnant]" value="1" {if  $riskAssessmentArray.pregnant == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[pregnant]" value="0" {if  $riskAssessmentArray.pregnant == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top"><td colspan="2">&nbsp;</td></tr>
+        </table>
+        <table width="100%" class="data">
+        	<tr valign="top"><td colspan="2"><b>{translate key="proposal.researchIncludes"}</b></td></tr>
+        	<tr valign="top"><td colapse="2">&nbsp;</td></tr>
+        	<tr valign="top" id="newTreatmentField">
+        		<td width="40%" class="label">{fieldLabel name="newTreatment" required="true" key="proposal.newTreatment"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[newTreatment]" value="1" {if  $riskAssessmentArray.newTreatment == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[newTreatment]" value="0" {if  $riskAssessmentArray.newTreatment == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="bioSamplesField">
+        		<td width="40%" class="label">{fieldLabel name="bioSamples" required="true" key="proposal.bioSamples"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[bioSamples]" value="1" {if  $riskAssessmentArray.bioSamples == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[bioSamples]" value="0" {if  $riskAssessmentArray.bioSamples == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="radiationField">
+        		<td width="40%" class="label">{fieldLabel name="radiation" required="true" key="proposal.radiation"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[radiation]" value="1" {if  $riskAssessmentArray.radiation == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[radiation]" value="0" {if  $riskAssessmentArray.radiation == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="distressField">
+        		<td width="40%" class="label">{fieldLabel name="distress" required="true" key="proposal.distress"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[distress]" value="1" {if  $riskAssessmentArray.distress == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[distress]" value="0" {if  $riskAssessmentArray.distress == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="inducementsField">
+        		<td width="40%" class="label">{fieldLabel name="inducements" required="true" key="proposal.inducements"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[inducements]" value="1" {if  $riskAssessmentArray.inducements == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[inducements]" value="0" {if  $riskAssessmentArray.inducements == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="sensitiveInfoField">
+        		<td width="40%" class="label">{fieldLabel name="sensitiveInfo" required="true" key="proposal.sensitiveInfo"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[sensitiveInfo]" value="1" {if  $riskAssessmentArray.sensitiveInfo == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[sensitiveInfo]" value="0" {if  $riskAssessmentArray.sensitiveInfo == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="deceptionField">
+        		<td width="40%" class="label">{fieldLabel name="deception" required="true" key="proposal.deception"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[deception]" value="1" {if  $riskAssessmentArray.deception == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[deception]" value="0" {if  $riskAssessmentArray.deception == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="reproTechnologyField">
+        		<td width="40%" class="label">{fieldLabel name="reproTechnology" required="true" key="proposal.reproTechnology"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[reproTechnology]" value="1" {if  $riskAssessmentArray.reproTechnology == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[reproTechnology]" value="0" {if  $riskAssessmentArray.reproTechnology == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="geneticField">
+        		<td width="40%" class="label">{fieldLabel name="genetic" required="true" key="proposal.genetic"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[genetic]" value="1" {if  $riskAssessmentArray.genetic == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[genetic]" value="0" {if  $riskAssessmentArray.genetic == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="stemCellField">
+        		<td width="40%" class="label">{fieldLabel name="stemCell" required="true" key="proposal.stemCell"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[stemCell]" value="1" {if  $riskAssessmentArray.stemCell == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[stemCell]" value="0" {if  $riskAssessmentArray.stemCell == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="biosafetyField">
+        		<td width="40%" class="label">{fieldLabel name="genetics" required="true" key="proposal.biosafety"}</td>
+        		<td width="60%" class="value">
+                	<input type="radio" name="riskAssessmentArray[biosafety]" value="1" {if  $riskAssessmentArray.biosafety == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[biosafety]" value="0" {if  $riskAssessmentArray.biosafety == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top"><td colspan="2">&nbsp;</td></tr>
+        </table>
+        <table width="100%" class="data">
+        	<tr valign="top"><td colspan="2"><b>{translate key="proposal.potentialRisk"}</b></td></tr>
+        	<tr valign="top"><td colapse="2">&nbsp;</td></tr>
+        	<tr valign="top" id="riskLevelField">
+        		<td width="30%" class="label">{fieldLabel name="riskLevel" required="true" key="proposal.riskLevel"}</td>
+        		<td width="70%" class="value">
+            		<select name="riskAssessmentArray[riskLevel]" class="selectMenu" id="riskLevel">
+            			<option value=""></option>
+            			<option value="1" {if  $riskAssessmentArray.riskLevel == "1" } selected="selected"{/if}>{translate key="proposal.riskLevelNoMore"}</option>
+            			<option value="2" {if  $riskAssessmentArray.riskLevel == "2" } selected="selected"{/if}>{translate key="proposal.riskLevelMinore"}</option>
+            			<option value="3" {if  $riskAssessmentArray.riskLevel == "3" } selected="selected"{/if}>{translate key="proposal.riskLevelMore"}</option>
+					</select>
+				</td>
+        	</tr>
+        	<tr valign="top" id="listRisksField">
+                <td width="30%" class="label">{fieldLabel name="listRisks" required="true" key="proposal.listRisks"}</td>
+                <td width="70%" class="value">
+                    <textarea name="riskAssessmentArray[listRisks]" class="textArea" id="listRisks" rows="5" cols="40">{$riskAssessmentArray.listRisks|escape}</textarea><br/>
+                </td>
+            </tr>
+            <tr valign="top" id="howRisksMinimizedField">
+                <td width="30%" class="label">{fieldLabel name="howRisksMinimized" required="true" key="proposal.howRisksMinimized"}</td>
+                <td width="70%" class="value">
+                    <textarea name="riskAssessmentArray[howRisksMinimized]" class="textArea" id="howRisksMinimized" rows="5" cols="40">{$riskAssessmentArray.howRisksMinimized|escape}</textarea><br/>
+                </td>
+            </tr>
+            <tr valign="top" id="riskApplyToField">
+                <td width="30%" class="label">{fieldLabel name="riskApplyTo" key="proposal.riskApplyTo"}</td>
+                <td width="70%" class="value">
+                	<input type="checkbox" name="riskAssessmentArray[risksToTeam]" value="1" {if $riskAssessmentArray.risksToTeam == '1'}checked="checked"{/if}/>{translate key="proposal.researchTeam"}<br/>
+                	<input type="checkbox" name="riskAssessmentArray[risksToSubjects]" value="1" {if $riskAssessmentArray.risksToSubjects == '1'}checked="checked"{/if}/>{translate key="proposal.researchSubjects"}<br/>
+                	<input type="checkbox" name="riskAssessmentArray[risksToCommunity]" value="1" {if $riskAssessmentArray.risksToCommunity == '1'}checked="checked"{/if}/>{translate key="proposal.widerCommunity"}
+                </td>
+            </tr>
+        	<tr valign="top"><td colapse="2">&nbsp;</td></tr>
+        </table>
+        <table width="100%" class="data">
+        	<tr valign="top"><td colspan="2"><b>{translate key="proposal.potentialBenefits"}</b></td></tr>
+        	<tr valign="top"><td colapse="2">&nbsp;</td></tr>
+           	<tr valign="top" id="benefitsFromTheProjectField">
+                <td width="30%" class="label">{fieldLabel name="benefitsFromTheProject" key="proposal.benefitsFromTheProject"}</td>
+                <td width="70%" class="value">
+                	<input type="checkbox" name="riskAssessmentArray[benefitsToParticipants]" value="1" {if $riskAssessmentArray.benefitsToParticipants == '1'}checked="checked"{/if}/>{translate key="proposal.directBenefits"}<br/>
+                	<input type="checkbox" name="riskAssessmentArray[knowledgeOnCondition]" value="1" {if $riskAssessmentArray.knowledgeOnCondition == '1'}checked="checked"{/if}/>{translate key="proposal.participantCondition"}<br/>
+                	<input type="checkbox" name="riskAssessmentArray[knowledgeOnDisease]" value="1" {if $riskAssessmentArray.knowledgeOnDisease == '1'}checked="checked"{/if}/>{translate key="proposal.diseaseOrCondition"}
+                </td>
+            </tr>
+        	<tr valign="top" id="multiInstitutionsField">
+        		<td width="30%" class="label">{fieldLabel name="multiInstitutions" required="true" key="proposal.multiInstitutions"}</td>
+        		<td width="70%" class="value">
+                	<input type="radio" name="riskAssessmentArray[multiInstitutions]" value="1" {if  $riskAssessmentArray.multiInstitutions== "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[multiInstitutions]" value="0" {if  $riskAssessmentArray.multiInstitutions == "0" } checked="checked"{/if} />{translate key="common.no"}        		
+        		</td>
+        	</tr>
+        	<tr valign="top" id="conflictOfInterestField">
+        		<td title="{translate key="proposal.conflictOfInterestInstruct"}" width="30%" class="label">{fieldLabel name="conflictOfInterest" required="true" key="proposal.conflictOfInterest"}</td>
+        		<td width="70%" class="value">
+                	<input type="radio" name="riskAssessmentArray[conflictOfInterest]" value="1" {if  $riskAssessmentArray.conflictOfInterest == "1" } checked="checked"{/if}  />{translate key="common.yes"}
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[conflictOfInterest]" value="2" {if  $riskAssessmentArray.conflictOfInterest == "2" } checked="checked"{/if} />{translate key="common.no"}  
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="riskAssessmentArray[conflictOfInterest]" value="3" {if  $riskAssessmentArray.conflictOfInterest == "3" } checked="checked"{/if} />{translate key="common.notSure"}
+        		</td>
+        	</tr>
+        </table>
+	</div>
+
+<div class="separator"></div>
 
 <p><input type="submit" value="{translate key="submission.saveMetadata"}" class="button defaultButton"/> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="history.go(-1)" /></p>
 

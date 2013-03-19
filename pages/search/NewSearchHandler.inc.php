@@ -277,9 +277,10 @@ class NewSearchHandler extends Handler {
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$proposal = $sectionEditorSubmissionDao->getSectionEditorSubmission($articleId);
 		$templateMgr->assign_by_ref('suppFiles', $proposal->getSuppFiles());
-		
-		$templateMgr->assign('dateFrom', $fromDate);
-		$templateMgr->assign('dateTo', $toDate);
+			
+			// Undefined. EL on March 15th 2013
+			//$templateMgr->assign('dateFrom', $fromDate);
+			//$templateMgr->assign('dateTo', $toDate);
 		$templateMgr->assign_by_ref('submission', $submission);
 		
 		$templateMgr->display('search/viewProposal.tpl');

@@ -47,7 +47,7 @@
 </div>
 <br>
 <div id="submissions">
-<h3>{translate key="editor.meetings.submissions"}</h3>
+<h3>{translate key="editor.meetings.proposals"}</h3>
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
@@ -83,7 +83,7 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="6" align="left">{$submissions|@count} submission(s)</td>
+		<td colspan="6" align="left">{$submissions|@count} {translate key="article.article.s"}</td>
 	</tr>
 </table>
 </div>
@@ -108,7 +108,7 @@
 			<td width="20%">
 				{$user->getSalutation()} &nbsp; {$user->getFirstName()} &nbsp; {$user->getLastName()}
 				<br/>
-				<a href="{url op="remindUsersMeeting" meetingId=$meeting->getId() userId=$user->getUserId()}" class="action">Send Reminder</a>
+				<a href="{url op="remindUserMeeting" meetingId=$meeting->getId() addresseeId=$user->getUserId()}" class="action">Send Reminder</a>
 				{$user->getDateReminded()|date_format:$dateFormatShort}
 			</td>
 			<td width="20%">{$user->getFunctions()}</td>
@@ -167,7 +167,7 @@
 </div>
 <p> {if $meeting->getStatus() == 1}
     <input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
-	<input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="notifyReviewersCancelMeeting" path=$meeting->getId() }'" />
+	<input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
 	{else}
 		{if $meeting->getStatus() == 2 || $meeting->getStatus() == 4 }
 		<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />

@@ -11,7 +11,7 @@
  * $Id$
  *}
 {strip}
-{assign var="articleId" value=$submission->getArticleId()}
+{assign var="articleId" value=$submission->getLocalizedWhoId()}
 {assign var="reviewId" value=$reviewAssignment->getId()}
 {translate|assign:"pageTitleTranslated" key="submission.page.review" id=$articleId}
 {assign var="pageCrumbTitle" value="submission.review"}
@@ -115,6 +115,20 @@ No edit assignments anymore
 				{/if}
 			</td>
 		</tr>
+		{if count($previousFiles)>1}
+		{assign var="count" value=0}
+		<tr>
+			<td class="label">Previous proposal files</td>
+			<td width="80%" class="value">
+				{foreach name="previousFiles" from=$previousFiles item=previousFile}
+					{assign var="count" value=$count+1}
+					{if $count > 1}
+            			<a href="{url op="downloadProposalFromMeetingFile" path=$submission->getArticleId()|to_array:$previousFile->getFileId()}" class="file">{$previousFile->getFileName()|escape}</a><br />
+					{/if}
+				{/foreach}
+			</td>
+		</tr>
+		{/if}
 		<tr valign="top">
 			<td class="label">
 				{translate key="article.suppFiles"}
@@ -441,18 +455,19 @@ No edit assignments anymore
 			<tr valign="top">
 				<td class="label" width="30%">{translate key="submission.recommendation"}</td>
 				<td class="value" width="70%">
-				{if $submission->getRecommendation() !== null && $submission->getRecommendation() !== ''}
-					{assign var="recommendation" value=$submission->getRecommendation()}
-					<strong>{translate key=$reviewerRecommendationOptions.$recommendation}</strong>&nbsp;&nbsp;
-					{$submission->getDateCompleted()|date_format:$dateFormatShort}
-				{else}
-					<form name="recommendation" method="post" action="{url op="recordRecommendation"}">
-					<input type="hidden" name="reviewId" value="{$reviewId|escape}" />
-					<select name="recommendation" {if not $confirmedStatus or $declined or $submission->getCancelled() or (!$reviewFormResponseExists and !$reviewAssignment->getMostRecentPeerReviewComment() and !$uploadedFileExists)}disabled="disabled"{/if} class="selectMenu">
-						{html_options_translate options=$reviewerRecommendationOptions selected=''}
-					</select>&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="submit" name="submit" onclick="return confirmSubmissionCheck()" class="button" value="{translate key="reviewer.article.submitReview"}" {if not $confirmedStatus or $declined or $submission->getCancelled() or (!$reviewFormResponseExists and !$reviewAssignment->getMostRecentPeerReviewComment() and !$uploadedFileExists)}disabled="disabled"{/if} />
-					</form>					
+					{if $submission->getRecommendation() !== null && $submission->getRecommendation() !== ''}
+						{assign var="recommendation" value=$submission->getRecommendation()}
+						<strong>{translate key=$reviewerRecommendationOptions.$recommendation}</strong>&nbsp;&nbsp;
+						{$submission->getDateCompleted()|date_format:$dateFormatShort}
+					{else}
+						<form name="recommendation" method="post" action="{url op="recordRecommendation"}">
+							<input type="hidden" name="reviewId" value="{$reviewId|escape}" />
+							<select name="recommendation" {if not $confirmedStatus or $declined or $submission->getCancelled() or (!$reviewFormResponseExists and !$reviewAssignment->getMostRecentPeerReviewComment() and !$uploadedFileExists)}disabled="disabled"{/if} class="selectMenu">
+								{html_options_translate options=$reviewerRecommendationOptions selected=''}
+							</select>
+							&nbsp;&nbsp;&nbsp;&nbsp;
+							<input type="submit" name="submit" onclick="return confirmSubmissionCheck()" class="button" value="{translate key="reviewer.article.submitReview"}" {if not $confirmedStatus or $declined or $submission->getCancelled() or (!$reviewFormResponseExists and !$reviewAssignment->getMostRecentPeerReviewComment() and !$uploadedFileExists)}disabled="disabled"{/if} />
+						</form>					
 				{/if}
 				</td>		
 			</tr>
@@ -628,6 +643,157 @@ No edit assignments anymore
     </tr>    
     {/if}
 </table>
+</div>
+
+<h3><br/>{translate key="proposal.riskAssessment"}</h3>
+<div id=riskAssessments>
+	<table class="listing" width="100%">
+    	<tr valign="top"><td colspan="2"><b>{translate key="proposal.researchIncludesHumanSubject"}</b></td></tr>
+    	<tr valign="top" id="identityRevealedField">
+    	    <td class="label" width="30%">{translate key="proposal.identityRevealed"}</td>
+    	    <td class="value">{if $riskAssessment->getIdentityRevealed() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="unableToConsentField">
+        	<td class="label" width="20%">{translate key="proposal.unableToConsent"}</td>
+        	<td class="value">{if $riskAssessment->getUnableToConsent() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="under18Field">
+    	    <td class="label" width="20%">{translate key="proposal.under18"}</td>
+    	    <td class="value">{if $riskAssessment->getUnder18() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="dependentRelationshipField">
+    	    <td class="label" width="20%">{translate key="proposal.dependentRelationship"}</td>
+    	    <td class="value">{if $riskAssessment->getDependentRelationship() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="ethnicMinorityField">
+    	    <td class="label" width="20%">{translate key="proposal.ethnicMinority"}</td>
+    	    <td class="value">{if $riskAssessment->getEthnicMinority() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="impairmentField">
+    	    <td class="label" width="20%">{translate key="proposal.impairment"}</td>
+    	    <td class="value">{if $riskAssessment->getImpairment() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="pregnantField">
+    	    <td class="label" width="20%">{translate key="proposal.pregnant"}</td>
+    	    <td class="value">{if $riskAssessment->getPregnant() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top"><td colspan="2"><b><br/>{translate key="proposal.researchIncludes"}</b></td></tr>
+    	<tr valign="top" id="newTreatmentField">
+    	    <td class="label" width="20%">{translate key="proposal.newTreatment"}</td>
+    	    <td class="value">{if $riskAssessment->getNewTreatment() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="bioSamplesField">
+    	    <td class="label" width="20%">{translate key="proposal.bioSamples"}</td>
+    	    <td class="value">{if $riskAssessment->getBioSamples() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="radiationField">
+    	    <td class="label" width="20%">{translate key="proposal.radiation"}</td>
+    	    <td class="value">{if $riskAssessment->getRadiation() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="distressField">
+    	    <td class="label" width="20%">{translate key="proposal.distress"}</td>
+    	    <td class="value">{if $riskAssessment->getDistress() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="inducementsField">
+    	    <td class="label" width="20%">{translate key="proposal.inducements"}</td>
+    	    <td class="value">{if $riskAssessment->getInducements() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="sensitiveInfoField">
+    	    <td class="label" width="20%">{translate key="proposal.sensitiveInfo"}</td>
+    	    <td class="value">{if $riskAssessment->getSensitiveInfo() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="deceptionField">
+    	    <td class="label" width="20%">{translate key="proposal.deception"}</td>
+    	    <td class="value">{if $riskAssessment->getDeception() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="reproTechnologyField">
+    	    <td class="label" width="20%">{translate key="proposal.reproTechnology"}</td>
+    	    <td class="value">{if $riskAssessment->getReproTechnology() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="geneticsField">
+    	    <td class="label" width="20%">{translate key="proposal.genetic"}</td>
+    	    <td class="value">{if $riskAssessment->getGenetic() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="stemCellField">
+    	    <td class="label" width="20%">{translate key="proposal.stemCell"}</td>
+    	    <td class="value">{if $riskAssessment->getStemCell() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="biosafetyField">
+    	    <td class="label" width="20%">{translate key="proposal.biosafety"}</td>
+    	    <td class="value">{if $riskAssessment->getBiosafety() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top"><td colspan="2"><b><br/>{translate key="proposal.researchIncludes"}</b></td></tr>
+    	<tr valign="top" id="riskLevelField">
+    	    <td class="label" width="20%">{translate key="proposal.riskLevel"}</td>
+    	    <td class="value">
+    	    {if $riskAssessment->getRiskLevel() == "1"}{translate key="proposal.riskLevelNoMore"}
+    	    {elseif $riskAssessment->getRiskLevel() == "2"}{translate key="proposal.riskLevelMinore"}
+    	    {elseif $riskAssessment->getRiskLevel() == "3"}{translate key="proposal.riskLevelMore"}
+    	    {/if}
+    	    </td>
+    	</tr>
+    	{if $riskAssessment->getRiskLevel() != '1'}
+    	<tr valign="top" id="listRisksField">
+    	    <td class="label" width="20%">{translate key="proposal.listRisks"}</td>
+    	    <td class="value">{$riskAssessment->getListRisks()}</td>
+    	</tr>
+    	<tr valign="top" id="howRisksMinimizedField">
+    	    <td class="label" width="20%">{translate key="proposal.howRisksMinimized"}</td>
+    	    <td class="value">{$riskAssessment->getHowRisksMinimized()}</td>
+    	</tr>
+    	{/if}
+    	<tr valign="top" id="riskApplyToField">
+    	    <td class="label" width="20%">{translate key="proposal.riskApplyTo"}</td>
+    	    <td class="value">
+    	    {assign var="firstRisk" value="0"}
+    	    {if $riskAssessment->getRisksToTeam() == '1'}
+    	    	{if $firstRisk == '1'} & {/if}{translate key="proposal.researchTeam"}
+    	    	{assign var="firstRisk" value="1"}	
+    	    {/if}
+    	    {if $riskAssessment->getRisksToSubjects() == '1'}
+    	    	{if $firstRisk == '1'} & {/if}{translate key="proposal.researchSubjects"}
+    	    	{assign var="firstRisk" value="1"}
+    	    {/if}
+    	    {if $riskAssessment->getRisksToCommunity() == '1'}
+    	    	{if $firstRisk == '1'} & {/if}{translate key="proposal.widerCommunity"}
+    	    	{assign var="firstRisk" value="1"}
+    	    {/if}
+    	    {if $riskAssessment->getRisksToTeam() != '1' && $riskAssessment->getRisksToSubjects() != '1' && $riskAssessment->getRisksToCommunity() != '1'}
+    	    	{translate key="proposal.nobody"}
+    	    {/if}
+    	    </td>
+    	</tr>
+    	<tr valign="top"><td colspan="2"><b><br/>{translate key="proposal.potentialBenefits"}</b></td></tr>
+    	<tr valign="top" id="benefitsFromTheProjectField">
+    	    <td class="label" width="20%">{translate key="proposal.benefitsFromTheProject"}</td>
+    	    <td class="value">
+    	    {assign var="firstBenefits" value="0"}
+    	    {if $riskAssessment->getBenefitsToParticipants() == '1'}
+    	    	{if $firstBenefits == '1'} & {/if}{translate key="proposal.directBenefits"}
+    	    	{assign var="firstBenefits" value="1"}
+    	    {/if}
+    	    {if $riskAssessment->getKnowledgeOnCondition() == '1'}
+    	    	{if $firstBenefits == '1'} & {/if}{translate key="proposal.participantCondition"}
+    	    	{assign var="firstBenefits" value="1"}
+    	    {/if}
+    	    {if $riskAssessment->getKnowledgeOnDisease() == '1'}
+    	    	{if $firstBenefits == '1'} & {/if}{translate key="proposal.diseaseOrCondition"}
+    	    	{assign var="firstBenefits" value="1"}
+    	    {/if}
+    	    {if $riskAssessment->getBenefitsToParticipants() != '1' && $riskAssessment->getKnowledgeOnCondition() != '1' && $riskAssessment->getKnowledgeOnDisease() != '1'}
+    	    	{translate key="proposal.noBenefits"}
+    	    {/if}
+    	    </td>
+    	</tr>
+    	<tr valign="top" id="multiInstitutionsField">
+    	    <td class="label" width="20%">{translate key="proposal.multiInstitutions"}</td>
+    	    <td class="value">{if $riskAssessment->getMultiInstitutions() == "1"}{translate key="common.yes"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    	<tr valign="top" id="conflictOfInterestField">
+    	    <td class="label" width="20%">{translate key="proposal.conflictOfInterest"}</td>
+    	    <td class="value">{if $riskAssessment->getConflictOfInterest() == "1"}{translate key="common.yes"}{elseif $riskAssessment->getConflictOfInterest() == "3"}{translate key="common.notSure"}{else}{translate key="common.no"}{/if}</td>
+    	</tr>
+    </table>
 </div>
 
 {/if}

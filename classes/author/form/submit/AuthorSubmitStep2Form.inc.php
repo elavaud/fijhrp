@@ -72,6 +72,12 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
         $this->addCheck(new FormValidatorLocale($this, 'selfFunding', 'required', 'author.submit.form.selfFunding', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'otherGrant', 'required', 'author.submit.form.otherGrant', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'specifyOtherGrant', 'required', 'author.submit.form.specifyOtherGrantField', $this->getRequiredLocale()));
+ 
+				/*
+				 * Risk Assessment
+				 * Added by EL on March 9th 2013
+				 */
+				$this->addCheck(new FormValidatorArray($this, 'riskAssessment', 'required', 'author.submit.form.completeRiskAssessmentFormNeeded'));
 	}
 
 	/**
@@ -173,11 +179,47 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 $j++;
                 unset ($sponsor);
             }
-                                    
+  					// New fields for Risk Assessments
+		            // Added by EL on March 11th 2013			
+					$riskAssessment =& $article->getRiskAssessment();
+					$riskAssessmentArray = array(	
+		                	'identityRevealed' => $riskAssessment->getIdentityRevealed(),
+							'unableToConsent' => $riskAssessment->getUnableToConsent(),
+		                	'under18' => $riskAssessment->getUnder18(),
+		                	'dependentRelationship' => $riskAssessment->getDependentRelationship(),
+		                	'ethnicMinority' => $riskAssessment->getEthnicMinority(),
+		                	'impairment' => $riskAssessment->getImpairment(),
+		                	'pregnant' => $riskAssessment->getPregnant(),
+		                	'newTreatment' => $riskAssessment->getNewTreatment(),
+		                	'bioSamples' => $riskAssessment->getBioSamples(),
+		                	'radiation' => $riskAssessment->getRadiation(),
+		                	'distress' => $riskAssessment->getDistress(),
+		                	'inducements' => $riskAssessment->getInducements(),
+		                	'sensitiveInfo' => $riskAssessment->getSensitiveInfo(),
+		                	'deception' => $riskAssessment->getDeception(),
+		                	'reproTechnology' => $riskAssessment->getReproTechnology(),
+		                	'genetic' => $riskAssessment->getGenetic(),
+		                	'stemCell' => $riskAssessment->getStemCell(),
+		                	'biosafety' => $riskAssessment->getBiosafety(),
+		                	'riskLevel' => $riskAssessment->getRiskLevel(),
+		                	'listRisks' => $riskAssessment->getListRisks(),
+		                	'howRisksMinimized' => $riskAssessment->getHowRisksMinimized(),
+		                	'risksToTeam' => $riskAssessment->getRisksToTeam(),
+		                	'risksToSubjects' => $riskAssessment->getRisksToSubjects(),
+		                	'risksToCommunity' => $riskAssessment->getRisksToCommunity(),
+		                	'benefitsToParticipants' => $riskAssessment->getBenefitsToParticipants(),
+		                	'knowledgeOnCondition' => $riskAssessment->getKnowledgeOnCondition(),
+			               	'knowledgeOnDisease' => $riskAssessment->getKnowledgeOnDisease(),
+			               	'conflictOfInterest' => $riskAssessment->getConflictOfInterest(),
+			               	'multiInstitutions' => $riskAssessment->getMultiInstitutions()			
+						);
+						                                  
             $articleDao =& DAORegistry::getDAO('ArticleDAO');
 
 			$this->_data = array(
 				'authors' => array(),
+					// EL on March 11th 2013
+					'riskAssessment' => $riskAssessmentArray,
 				'authorPhoneNumber' => $article->getAuthorPhoneNumber(null),
 				'scientificTitle' => $article->getScientificTitle(null), // Localized
 				'publicTitle' => $article->getPublicTitle(null), // Localized
@@ -304,7 +346,11 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 'universityGrant',
                 'selfFunding',
                 'otherGrant',
-                'specifyOtherGrant'
+                'specifyOtherGrant',
+                                 
+                	// EL on March 10th 2013
+                    // Risk Assessment
+                    'riskAssessment'
 			)
 		);
 
@@ -535,7 +581,49 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 			}
 			unset($author);
 		}
-
+		
+        // Update risk assessment
+        // EL on March 10th 2013
+		$riskAssessmentArray = $this->getData('riskAssessment');
+		
+		if ($riskAssessmentArray != null) {
+			import('classes.article.RiskAssessment');
+			$riskAssessment = new RiskAssessment();
+			
+			$riskAssessment->setArticleId($article->getId());
+    	    $riskAssessment->setIdentityRevealed($riskAssessmentArray['identityRevealed']);
+	        $riskAssessment->setUnableToConsent($riskAssessmentArray['unableToConsent']);
+	        $riskAssessment->setUnder18($riskAssessmentArray['under18']);
+	        $riskAssessment->setDependentRelationship($riskAssessmentArray['dependentRelationship']);
+	        $riskAssessment->setEthnicMinority($riskAssessmentArray['ethnicMinority']);
+	        $riskAssessment->setImpairment($riskAssessmentArray['impairment']);
+	        $riskAssessment->setPregnant($riskAssessmentArray['pregnant']);
+	        $riskAssessment->setNewTreatment($riskAssessmentArray['newTreatment']);
+	        $riskAssessment->setBioSamples($riskAssessmentArray['bioSamples']);
+	        $riskAssessment->setRadiation($riskAssessmentArray['radiation']);
+	        $riskAssessment->setDistress($riskAssessmentArray['distress']);
+	        $riskAssessment->setInducements($riskAssessmentArray['inducements']);
+	        $riskAssessment->setSensitiveInfo($riskAssessmentArray['sensitiveInfo']);
+	        $riskAssessment->setDeception($riskAssessmentArray['deception']);
+	        $riskAssessment->setReproTechnology($riskAssessmentArray['reproTechnology']);
+	        $riskAssessment->setGenetic($riskAssessmentArray['genetic']);
+	        $riskAssessment->setStemCell($riskAssessmentArray['stemCell']);
+	        $riskAssessment->setBiosafety($riskAssessmentArray['biosafety']);
+	        $riskAssessment->setRiskLevel($riskAssessmentArray['riskLevel']);
+	        $riskAssessment->setListRisks($riskAssessmentArray['listRisks']);
+	        $riskAssessment->setHowRisksMinimized($riskAssessmentArray['howRisksMinimized']);
+			
+	        $riskAssessment->setRisksToTeam(isset($riskAssessmentArray['risksToTeam']) ? 1 : 0);
+	        $riskAssessment->setRisksToSubjects(isset($riskAssessmentArray['risksToSubjects']) ? 1 : 0);
+	        $riskAssessment->setRisksToCommunity(isset($riskAssessmentArray['risksToCommunity']) ? 1 : 0);
+	        $riskAssessment->setBenefitsToParticipants(isset($riskAssessmentArray['benefitsToParticipants']) ? 1 : 0);
+	        $riskAssessment->setKnowledgeOnCondition(isset($riskAssessmentArray['knowledgeOnCondition']) ? 1 : 0);
+	        $riskAssessment->setKnowledgeOnDisease(isset($riskAssessmentArray['knowledgeOnDisease']) ? 1 : 0);
+	        $riskAssessment->setMultiInstitutions($riskAssessmentArray['multiInstitutions']);
+	        $riskAssessment->setConflictOfInterest($riskAssessmentArray['conflictOfInterest']);           
+       		$article->setRiskAssessment($riskAssessment);
+		}
+		
 		// Remove deleted authors
 		$deletedAuthors = explode(':', $this->getData('deletedAuthors'));
 		for ($i=0, $count=count($deletedAuthors); $i < $count; $i++) {

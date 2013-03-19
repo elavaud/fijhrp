@@ -30,7 +30,7 @@ window.opener.location.reload();
 <tr valign="top">
 	<td width="20%">
 		<!--<div class="commentRole">{translate key=$comment->getRoleName()}</div>-->
-		<div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getFunctions()}</div>
+		<div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getErcFunction($sectionId)}</div>
 		<div class="commentDate">{$comment->getDatePosted()|date_format:$datetimeFormatLong}</div>
 	</td>
 	<td width="80%">
@@ -57,7 +57,7 @@ window.opener.location.reload();
 				{if !$comment->getViewable()}
 				{assign var="submitter" value=$userDao->getUser($comment->getAuthorId())}
 					<tr valign="top">
-						<td><div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getFunctions()}</div><div class="commentDate"><i>{$comment->getDatePosted()|date_format:$datetimeFormatLong}</i></div></td>
+						<td><div class="commentRole"><strong>{$submitter->getFullName()}</strong><br/>{$submitter->getErcFunction($setionId)}</div><div class="commentDate"><i>{$comment->getDatePosted()|date_format:$datetimeFormatLong}</i></div></td>
 						<td>
 							{if $comment->getCommentTitle()}
 								<div class="commentTitle">{if $showReviewLetters}ຫົວຂໍ້{else}{translate key="submission.comments.subject"}{/if}: {$comment->getCommentTitle()|escape}</div>

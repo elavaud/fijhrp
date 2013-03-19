@@ -329,7 +329,8 @@ class UserManagementForm extends Form {
 				$user->setPassword($password);
 				// FIXME Check result and handle failures
 				$auth->doCreateUser($user);
-				$user->setAuthId($auth->authId);				$user->setPassword(Validation::encryptCredentials($user->getId(), Validation::generatePassword())); // Used for PW reset hash only
+				$user->setAuthId($auth->authId);				
+				$user->setPassword(Validation::encryptCredentials($user->getId(), Validation::generatePassword())); // Used for PW reset hash only
 			} else {
 				$user->setPassword(Validation::encryptCredentials($this->getData('username'), $password));
 			}
@@ -338,7 +339,10 @@ class UserManagementForm extends Form {
 			$userId = $userDao->insertUser($user);
 
 			$isManager = Validation::isJournalManager();
-
+			
+			
+			// EL on March 13th 2013
+			// If this is used, it should be totally modified
 			if (!empty($this->_data['enrollAs'])) {
 				foreach ($this->getData('enrollAs') as $roleName) {
 					// Enroll new user into an initial role

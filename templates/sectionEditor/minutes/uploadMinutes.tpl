@@ -94,5 +94,5 @@
 {if $meeting->isMinutesComplete()}
 	<input type="button" value="{translate key="editor.minutes.setFinalAndDownload"}" class="button defaultButton" onclick="document.location.href='{url op="downloadMinutes" path=$meeting->getId() }'" />		
 {/if}
-<input type="button" class="button" onclick="document.location.href='{url op="meetings"}'" value="{translate key="common.back"}" />
+<input type="button" class="button" onclick="document.location.href='{url op="viewMeeting" path=$meeting->getId()}'" value="{translate key="common.back"}" />
 {include file="common/footer.tpl"}

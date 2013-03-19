@@ -1,17 +1,29 @@
 {**
- * Meetings page template
- * Added by ayveemallare 7/6/2011
- **}
-
+ * meetigns.tpl
+ *
+ * Reviewer index.
+ *
+ * $Id$
+ *}
 {strip}
-{assign var="pageTitle" value="reviewer.meetings"}
-{assign var="pageCrumbTitle" value="reviewer.meetings"}
+{assign var="pageTitle" value="common.queue.long.meetingList"}
 {include file="common/header.tpl"}
 {/strip}
 
+{if !$dateFrom}
+{assign var="dateFrom" value="--"}
+{/if}
+
+{if !$dateTo}
+{assign var="dateTo" value="--"}
+{/if}
 <ul class="menu">
-	<li class="current"><a href="{url op="meetings"}">{translate key="reviewer.meetings"}</a></li>
+	<li class="current"><a href="{url op="meetings"}">{translate key="common.queue.short.meetingList"}</a></li>
+	{if $isReviewer}
+		<li><a href="{url op="proposalsFromMeetings"}">{translate key="common.queue.short.meetingProposals"}</a></li>
+	{/if}
 </ul>
+
 <div class="separator"></div>
 <br/>
 {if !$dateFrom}
@@ -21,6 +33,7 @@
 {if !$dateTo}
 {assign var="dateTo" value="--"}
 {/if}
+
 <form method="post" name="submit" action="{url op="meetings"}">
 <div id="search">
 	<table align="left">
@@ -91,22 +104,7 @@
 				{/if}
 			</td>
 			<td width="25%" align="right">
-<!--				{if $meeting->getStatus() == 4}-->
-<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/new.png"}">-->
-<!--				{/if}-->
-<!--				{if $meeting->getStatus() == 1}-->
-<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/final.png"}">-->
-<!--				{/if}	-->
-<!--				{if $meeting->getStatus() == 2}-->
-<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/resched.png"}">-->
-<!--				{/if}-->
-<!--				{if $meeting->getStatus() == 3}-->
-<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/cancelled.png"}">-->
-<!--				{/if}-->
-<!--				{if $meeting->getStatus() == 5}-->
-<!--					 <img src="{$baseUrl|cat:"/lib/pkp/styles/images/who_icons/done.png"}">-->
-<!--				{/if}-->
-				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}</td>
+				{$meeting->getDate()|date_format:$datetimeFormatLong}</td>
 			<td width="15%" align="right">
 				{$meeting->getStatusKey()}
 			</td>

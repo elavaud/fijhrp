@@ -13,8 +13,8 @@
   -->
 
 <locale name="en_US" full_name ="U.S. English">
-	<message key="author.submit">New Submission</message>
-	<message key="author.track">Active Submissions</message>
+	<message key="author.submit">New Proposal</message>
+	<message key="author.track">Active Proposals</message>
 	<message key="author.competingInterests"><![CDATA[Competing&nbsp;interests <a target="_new" class="action" href="{$competingInterestGuidelinesUrl}">CI&nbsp;Policy</a>]]></message>
 	<message key="author.submit.submitArticle">Submit a Proposal</message>
 	<message key="author.submit.stepsToSubmit">Five Steps to Proposal Submission</message>
@@ -31,8 +31,8 @@
 	<message key="author.submit.metadata">3. Upload Main Proposal</message>
 	<message key="author.submit.supplementaryFiles">4. Upload Supplementary Files</message>
 	<message key="author.submit.confirmation">5. Confirmation</message>
-	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Submissions from the Investigator home page.</message>
-	<message key="author.submit.notAccepting">This site is not accepting submissions at this time.</message>
+	<message key="author.submit.cancelSubmission">You can complete this submission at a later date by selecting Active Proposals from the Investigator home page.</message>
+	<message key="author.submit.notAccepting">This site is not accepting proposals at this time.</message>
 	<message key="author.submit.requestWaiver">Request Waiver</message>
 	<message key="author.submit.qualityForWaiver">Please consider waiving the Article Submission Fee for this article</message>
 	<message key="author.submit.addReasonsForWaiver">Please use the comments box below to indicate why fees should be waived.</message>
@@ -51,14 +51,14 @@
     <message key="author.submissions.confirmArchive">Are you sure you want to send this proposal to the Archive section?</message>
 
 	<message key="author.submissions.viewStatus">View Status</message>
-	<message key="author.submissions.noSubmissions">No submissions.</message>
+	<message key="author.submissions.noSubmissions">No proposals.</message>
 	<message key="author.submit.howToSubmit"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance ({$supportPhone}).]]></message>
 	<message key="author.submit.howToSubmitNoPhone"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance.]]></message>
 	<message key="author.submit.journalSection">Ethics Committees</message>
 	<message key="author.submit.journalSectionDescription">If the proposal is submitted by a student enrolled in UHS or affiliated with UHS or if the research is conducted by UHS staff, please select the Ethics Committee of the University of Health Sciences, but if the research is conducted with an external partner (not in collaboration with UHS) or ministry of health staff including NIOPH staff, please select National Ethics Committee for Health Research.</message>
 	<message key="author.submit.selectSection">Please select an Ethics Committee...</message>
 	<message key="author.submit.submissionLocale">Submission Language</message>
-	<message key="author.submit.submissionLocaleDescription">This site accepts submissions in several languages. Choose the primary language of the submission from the pulldown below.</message>
+	<message key="author.submit.submissionLocaleDescription">This site accepts proposals in several languages. Choose the primary language of the submission from the pulldown below.</message>
 	<message key="author.submit.submissionChecklist">Submission Checklist</message>
 	<message key="author.submit.submissionChecklistDescription">Indicate that this proposal is ready to be considered by the ERC by checking off the following (comments to the Secretary can be added at Step 5).</message>
 	<message key="author.submit.verifyChecklist">You must make sure all items in the submission checklist are satisfied before continuing.</message>
@@ -140,9 +140,15 @@
         <message key="author.submit.form.selfFunding">Please select Yes or No (Self Funding?).</message>
         <message key="author.submit.form.otherGrant">Please select Yes or No (Other Grant?).</message>
         <message key="author.submit.form.specifyOtherGrantField">Please specify other grants.</message>
+            
             <!-- Added by: EL on April 17, 2012-->
             <message key="author.submit.form.rtoOfficeRequired">Please select your Office.</message>
-        
+            
+            <!-- Risk Assessment -->
+            <!-- EL on March 9th 2013 -->
+            <message key="author.submit.form.completeRiskAssessmentFormNeeded">Please verify that the risk assessment section is complete</message>
+            <!-- End of Risk Assessment -->
+                    
         <message key="author.submit.form.withdrawReasonRequired">Withdraw reason required</message>
         <message key="author.submit.form.otherReasonRequired">Other reason of withdraw  required</message>
 
@@ -245,9 +251,9 @@
 	<message key="author.submit.filesSummary">File Summary</message>
 	<message key="author.submit.finishSubmission">Finish Submission</message>
 	<message key="author.submit.submissionComplete">Submission complete. Thank you for submitting your proposal.</message>
-	<message key="author.submit.expedite"><![CDATA[If this submission is in a format that is ready to be published without further review, editing, or layout work, it can be placed directly in the last stage of the Editing queue by <a href="{$expediteUrl}" class="action">Clicking here</a>. (Note: Only journal editors have this option for their submissions.)]]></message>
+	<message key="author.submit.expedite"><![CDATA[If this submission is in a format that is ready to be published without further review, editing, or layout work, it can be placed directly in the last stage of the Editing queue by <a href="{$expediteUrl}" class="action">Clicking here</a>. (Note: Only journal editors have this option for their proposals.)]]></message>
 	<message key="author.article.uploadAuthorVersion">Upload investigator Version</message>
 	<message key="author.article.copyeditedFile">Copyedited File</message>
 	<message key="author.article.authorRevisedFile">Investigator File</message>
-	<message key="author.submit.authorSubmitLoginMessage">A user account is required to submit to the ERC. This allows our Secretariat to track your submissions and contact you when the status of your submission changes, or if additional information is required from you.</message>
+	<message key="author.submit.authorSubmitLoginMessage">A user account is required to submit to the ERC. This allows our Secretariat to track your proposals and contact you when the status of your submission changes, or if additional information is required from you.</message>
 </locale>

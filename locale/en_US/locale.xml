@@ -97,13 +97,19 @@
     <message key="common.queue.long.submissionsNotApproved">Not Approved Proposals</message>
 	<message key="common.queue.long.submissionsArchives">Archived Proposals</message>
 	<message key="common.queue.short.submissionsArchives">Archives</message>
-	<message key="common.queue.long.active">Active Submissions</message>
+	<message key="common.queue.long.active">Active Proposals</message>
 	<message key="common.queue.short.active">Active</message>
 	<message key="common.queue.long.completed">Archived Proposals</message>
     <message key="common.queue.long.submissionsApproved">Approved Proposals</message>
 	<message key="common.queue.short.completed">Archive</message>
-    <message key="common.queue.short.fullReview">Full Review</message>
-    <message key="common.queue.long.fullReview">Proposals for Full Review</message>
+    
+        <!-- For reviewer meeting page, EL on March 4th 2013 -->
+        <message key="common.queue.short.meetingProposals">Proposals</message>
+        <message key="common.queue.short.reviewAssignments">Review Assignments</message>
+        <message key="common.queue.long.meetingProposals">Proposals from meetings</message>
+        <message key="common.queue.short.meetingList">Meetings</message>
+        <message key="common.queue.long.meetingList">List of meetings</message>
+        <message key="common.queue.long.viewMeeting">View Meeting</message>
 
 	
 	<!--
@@ -126,6 +132,8 @@
 	<!-- Common Article Terms -->
 	<message key="article.article">Proposal</message>
 	<message key="article.articles">Proposals</message>
+        <!-- Added by EL on March 19th 2013 -->
+        <message key="article.article.s">Proposal(s)</message>
 	<message key="article.submissionId">Proposal ID</message>
 	<message key="article.title">Title</message>
     <message key="article.scientificTitle">Scientific title</message>
@@ -134,7 +142,7 @@
 	<message key="article.authors">Investigator</message> /*Replaced "Authors" with "Investigator"*/
 	<message key="article.indexingInformation">Indexing Information</message>
 	<message key="article.metadata">Metadata</message>
-	<message key="article.journalSection">Demo National Ethics Review Committee</message>
+	<message key="article.journalSection">Ethics Review Committee</message>
 
 	<message key="article.file">File</message>
 	<message key="article.suppFile">Supplementary File</message>
@@ -154,8 +162,8 @@
         <message key="article.sectionEditor">Secretary Administrative Assistant</message> /*replace section editor with Secretary */
         
 	<message key="article.commentsToEditor">Investigator comments</message> /*replace Author to Investigator */
-	<message key="article.submission">Submission</message>
-	<message key="article.submissions">Submissions</message>
+	<message key="article.submission">Proposal</message>
+	<message key="article.submissions">Proposals</message>
 	<message key="article.details">Details</message>
 	<message key="article.abstract">Abstract</message>
     <message key="article.studentInstitution">Student Institution</message>
@@ -233,7 +241,76 @@
         <message key="proposal.otherGrant">Other</message>
         <message key="proposal.specifyOtherGrantField">If yes, please specify:</message>
 
-
+        <!-- Risk Assesment -->
+        <!-- EL on March 9th 2013-->
+        <message key="proposal.riskAssessment">Risk Assessment</message>
+        <message key="proposal.researchIncludesHumanSubject">Does the proposed research include research subjects:</message>
+        <message key="proposal.identityRevealed">Whose identity may be revealed during the research process?</message>
+        <message key="proposal.unableToConsent">Unable to consent?</message>
+        <message key="proposal.under18">Under 18 years old?</message>
+        <message key="proposal.dependentRelationship">In a dependent relationship with any of the research team members?</message>
+        <message key="proposal.dependentRelationshipInstruct">(e.g. a researcher is the treating physician of one of the research participants)</message>
+        <message key="proposal.ethnicMinority">From an ethnic minority group?</message>
+        <message key="proposal.impairment">With intellectual or mental impairment?</message>
+        <message key="proposal.pregnant">Who are pregnant?</message>
+        <message key="proposal.researchIncludes">Does the research include:</message>
+        <message key="proposal.newTreatment">A new treatment, medical procedure or test?</message>
+        <message key="proposal.bioSamples">Collection of biological samples including<![CDATA[<br/>]]> tissue extraction?</message>
+        <message key="proposal.radiation">Use of ionizing radiation?</message>
+        <message key="proposal.distress">Pain or psychological distress?</message><message key="proposal.inducements">Inducements?</message>
+        <message key="proposal.sensitiveInfo">Collection of sensitive information?</message>
+        <message key="proposal.deception">Deception?</message>
+        <message key="proposal.reproTechnology">Assisted reproductive technology?</message>
+        <message key="proposal.genetic">Human genetic or genomic studies?</message>
+        <message key="proposal.stemCell">Stem cell research?</message>
+        <message key="proposal.biosafety">Biosafety issue?</message>
+        <message key="proposal.potentialRisk">Potential risks</message>
+        <message key="proposal.riskLevel">Level of the risk involved in Research:</message>
+        <message key="proposal.riskLevelNoMore">No more than minimal risk</message>
+        <message key="proposal.riskLevelMinore">Minor increase over minimal risk</message>
+        <message key="proposal.riskLevelMore">More than minor increase over minimal risk</message>
+        <message key="proposal.listRisks">Briefly list the risks:</message>
+        <message key="proposal.howRisksMinimized">How are risks minimized / managed?</message>
+        <message key="proposal.riskApplyTo">Risks apply to:</message>
+        <message key="proposal.researchTeam">Research Team</message>
+        <message key="proposal.researchSubjects">Research Subjects</message>
+        <message key="proposal.widerCommunity">Wider Community</message> 
+        <message key="proposal.nobody">Nobody</message>        
+        <message key="proposal.potentialBenefits">Potential Benefits</message>
+        <message key="proposal.directBenefits">Direct benefit to participants</message>
+        <message key="proposal.participantCondition">Generalizable knowledge about participants' condition or disorder</message>
+        <message key="proposal.diseaseOrCondition">Generalizable knowledge about disease or condition under study </message>
+        <message key="proposal.benefitsFromTheProject">Benefits from the research project:</message>
+        <message key="proposal.noBenefits">No benefits</message>
+        <message key="proposal.multiInstitutions">Multi-institution Project: </message>
+        <message key="proposal.conflictOfInterest">Conflict of Interest:</message>
+        <message key="proposal.conflictOfInterestInstruct">Does any member of the research team has any financial or technical conflict of interest in the proposed research (i.e. whether any member of the research team is likely to be affected, positively or negatively, by the outcomes of the research in financial or technical terms)</message>
+        <message key="proposal.identityRevealedAbb">Identity revealed</message>
+        <message key="proposal.unableToConsentAbb">Unable to consent</message>
+        <message key="proposal.under18Abb">Under 18</message>
+        <message key="proposal.dependentRelationshipAbb">Dependent relationship</message>
+        <message key="proposal.ethnicMinorityAbb">Ethnic minority group</message>
+        <message key="proposal.impairmentAbb">Intellectual or mental impairment</message>
+        <message key="proposal.pregnantAbb">Pregnant</message>
+        <message key="proposal.newTreatmentAbb">New treatment</message>
+        <message key="proposal.bioSamplesAbb">Biological samples</message>
+        <message key="proposal.radiationAbb">Radiation</message>
+        <message key="proposal.distressAbb">Distress</message>
+        <message key="proposal.inducementsAbb">Inducements</message>
+        <message key="proposal.sensitiveInfoAbb">Sensitive information</message>
+        <message key="proposal.deceptionAbb">Deception</message>
+        <message key="proposal.reproTechnologyAbb">Reproductive technology</message>
+        <message key="proposal.geneticsAbb">Human genetic or genomic</message>
+        <message key="proposal.stemCellAbb">Stem cell</message>
+        <message key="proposal.biosafetyAbb">Biosafety</message>
+        <message key="proposal.riskLevelAbb">Risk level</message>
+        <message key="proposal.riskApplyToAbb">Risks apply to</message>
+                
+        <message key="proposal.benefitsFromTheProjectAbb">Benefits</message>
+        <message key="proposal.multiInstitutionsAbb">Multi-institutions</message>
+        <message key="proposal.conflictOfInterestAbb">Conflict of Interest</message>
+        <!-- End of Risk Assessment  -->
+        
 
 	<!-- Submission Tracking - Common -->
 	<!-- ************************************
@@ -674,12 +751,14 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	
 	<!-- Reviewer -->
 	<message key="reviewer.home">Reviewer Home</message>
-	<message key="reviewer.submissions">Submissions</message>
+	<message key="reviewer.submissions">Proposals</message>
 	<message key="reviewer.meeting">Meeting</message>
 	<message key="reviewer.meetings">Meetings</message>
-	<message key="reviewer.meetings.submissions">Submissions to be Discussed</message>
-	<message key="reviewer.meetings.noSubmissions">No Submissions</message>
-	<message key="reviewer.meetings.replyStatus">Reply Status</message>
+    <message key="reviewer.proposals">Meetings</message>
+	<message key="reviewer.meetings.submissions">Proposals to be Discussed</message>
+	<message key="reviewer.meetings.noSubmissions">No Proposals</message>
+	<message key="reviewer.meetings.lastReply">Last reply</message>
+    <message key="reviewer.meetings.replyStatus">Reply Status</message>
 	<message key="reviewer.meetings.erc">Ethics Review Committee</message>
 	<message key="reviewer.meetings.scheduleStatus">Schedule Status</message>
 	<message key="reviewer.meetings.details">Details</message>
@@ -726,7 +805,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
    	<!-- *************************************** -->
 	
 	<message key="reviewer.article.schedule.dateOfMeeting">Proposed Date of Meeting</message>
-	<message key="reviewer.article.schedule.isAttending">Are you going to attend the meeting?</message>
+	<message key="reviewer.article.schedule.isAttending">Are you going to attend?</message>
         <!-- Added by EL on March 1st 2013 -->
         <message key="reviewer.article.schedule.editAnswer">Edit answer</message>
         <message key="reviewer.article.schedule.editAnswerHide">Hide edit</message>
@@ -1001,10 +1080,10 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="about.editorialPolicies">Editorial Policies</message>
 	<message key="about.focusAndScope">Focus and Scope</message>
 	<message key="about.sectionPolicies">Section Policies</message>
-	<message key="about.submissions">Submissions</message>
+	<message key="about.submissions">Proposals</message>
 	<message key="about.sponsors">Sponsors</message>
 	<message key="about.contributors">Sources of Support</message>
-	<message key="about.onlineSubmissions">Online Submissions</message>
+	<message key="about.onlineSubmissions">Online Proposals</message>
 	<message key="about.onlineSubmissions.haveAccount">Already have a Username/Password for {$journalTitle}?</message>
 	<message key="about.onlineSubmissions.login">Go to Login</message>
         

@@ -39,19 +39,6 @@
 	<input type="hidden" name="dateToMinute" value="59" />
 	<input type="hidden" name="dateToSecond" value="59" />
 	<br/>
-	
-	<!-- Allows filtering by technical unit and country -->
-	<!-- Added by: igm 9/24/2011                        -->
-	<!--
-	<h5>Filter by</h5>
-	<select name="technicalUnitField" id="technicalUnit" class="selectMenu">
-		<option value="">All Technical Units</option>
-		{html_options options=$technicalUnits selected=$technicalUnitField}
-    </select>
-	<select name="countryField" id="country" class="selectMenu">
-		<option value="">All Countries</option>
-		{html_options options=$countries selected=$countryField}
-    </select>-->
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>
@@ -69,7 +56,7 @@
 		<td width="20%">{sort_heading key="submission.editorDecision" sort="decision"}</td>
 	</tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
-{iterate from=submissions2 item=submission}
+{iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getLocalizedWhoId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
 	<tr valign="top">
@@ -117,10 +104,10 @@
 		</td>
 	</tr>
 	<tr>
-		<td colspan="5" class="{if $submissions2->eof()}end{/if}separator">&nbsp;</td>
+		<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 	</tr>
 {/iterate}
-{if $submissions2->wasEmpty()}
+{if $submissions->wasEmpty()}
 	<tr>
 		<td colspan="5" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
@@ -129,8 +116,8 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="4" align="left">{page_info iterator=$submissions2}</td>
-		<td colspan="3" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions2 sort=$sort sortDirection=$sortDirection}</td>
+		<td colspan="4" align="left">{page_info iterator=$submissions}</td>
+		<td colspan="3" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions sort=$sort sortDirection=$sortDirection}</td>
 	</tr>
 {/if}
 </table>

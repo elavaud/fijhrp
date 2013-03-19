@@ -1339,13 +1339,13 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Edited by EL
 	 * Last Update: February 25th 2013
 	 */	
-	function &getSectionEditorSubmissionsForErcReview($sectionId, $journalId) {
+	function &getSectionEditorSubmissionsForErcReview($sectionId, $journalId, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionId, $journalId,
 			null, null, null,
 			null, null, null, null,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ')',
-			null, null, null
+			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_EXPEDITED .')',
+			$rangeInfo, $sortBy, $sortDirection
 		);
 
 		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
@@ -1454,9 +1454,9 @@ class SectionEditorSubmissionDAO extends DAO {
 
 		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
 		
-		if ($extReviewer == true) $searchSql = ' AND NOT EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id) ';
+		if ($extReviewer == true) $searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id AND er.section_id = 0) ';
 		else {
-			$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id) AND er.section_id = ? ';
+			$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id AND er.section_id <> 0) AND er.section_id = ? ';
 			$paramArray[] = $sectionId;
 		}
 
@@ -1534,7 +1534,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$submissions = array();
 		
 		foreach($submissionIds as $submissionId) {
-			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);
+			$submission = $this->getSectionEditorSubmission($submissionId);
 			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
 				array_push($submissions, $submission);
 		}
@@ -1547,7 +1547,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$submissions = array();
 		
 		foreach($submissionIds as $submissionId) {
-			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);
+			$submission = $this->getSectionEditorSubmission($submissionId);
 			if(!$submission->isSubmissionDue())
 				array_push($submissions, $submission);
 		}
@@ -1560,7 +1560,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$submissions = array();
 		
 		foreach($submissionIds as $submissionId) {
-			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
+			$submission = $this->getSectionEditorSubmission($submissionId);			
 			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
 				array_push($submissions, $submission);
 		}
@@ -1573,7 +1573,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$submissions = array();
 		
 		foreach($submissionIds as $submissionId) {
-			$submission = $this->getSectionEditorSubmission($submissionId, $journalId, false);			
+			$submission = $this->getSectionEditorSubmission($submissionId);			
 			if($submission->isSubmissionDue())
 				array_push($submissions, $submission);
 		}

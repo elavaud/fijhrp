@@ -244,7 +244,10 @@ class SubmitHandler extends AuthorHandler {
                                         $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
                                         $articleFiles =& $articleFileDao->getArticleFilesByArticle($articleId);
                                         $templateMgr->assign_by_ref('files', $articleFiles);
-					
+
+                                        // EL on March 11th 2013
+                						$templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+                											
 					$templateMgr->display('author/submit/complete.tpl');
 					
 				} else {

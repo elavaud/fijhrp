@@ -51,7 +51,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		} else {
 			$confirmedStatus = 1;
 		}
-		$this->setupTemplate(true, 0, $reviewAssignment->getSubmissionId(), $reviewId);
+		$this->setupTemplate(false, 0, $reviewAssignment->getSubmissionId(), $reviewId);
 		$templateMgr =& TemplateManager::getManager();
 
 		$templateMgr->assign_by_ref('user', $user);
@@ -63,6 +63,14 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$templateMgr->assign_by_ref('reviewFile', $submission->getSubmissionFile());
 		$templateMgr->assign_by_ref('reviewerFile', $submission->getReviewerFile());
 		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
+			
+			// EL on March 5th 2013
+			$articleFileDao =& DAORegistry::getDao('ArticleFileDAO');
+			$templateMgr->assign_by_ref('previousFiles', $articleFileDao->getPreviousFilesByArticleId($submission->getId()));
+
+			// EL on March 11th 2013
+            $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+            			
 		$templateMgr->assign_by_ref('journal', $journal);
 		$templateMgr->assign_by_ref('reviewGuidelines', $journal->getLocalizedSetting('reviewGuidelines'));
 		import('classes.submission.reviewAssignment.ReviewAssignment');
@@ -72,28 +80,6 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$templateMgr->display('reviewer/submission.tpl');
 	}
 
-	/**
-	 * Display a submission for full review page.
-	 * @param $args array
-	 */
-	function submissionForFullReview($args) {
-		$journal =& Request::getJournal();
-		$articleId = $args[0];
-		//$this->validate();
-		$ReviewerSubmissionDao = DAORegistry::getDAO('ReviewerSubmissionDAO');
-		
-		$submission =& $ReviewerSubmissionDao->getSubmissionForFullReview($articleId);
-		
-		$this->setupTemplate(true);
-		$templateMgr =& TemplateManager::getManager();
-		
-		$templateMgr->assign_by_ref('submission', $submission);
-
-		$templateMgr->assign_by_ref('reviewFile', $submission->getReviewFile());
-		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
-		$templateMgr->assign_by_ref('journal', $journal);
-		$templateMgr->display('reviewer/submissionFullReview.tpl');
-	}
 	
 	/**
 	 * Confirm whether the review has been accepted or not.
@@ -167,7 +153,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$this->validate($reviewId);
 		$reviewerSubmission =& $this->submission;
 
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 
 		if (!$reviewerSubmission->getCancelled()) {
 			if (ReviewerAction::recordRecommendation($reviewerSubmission, $recommendation, Request::getUserVar('send'))) {
@@ -190,7 +176,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$this->validate($reviewId);
 		$reviewerSubmission =& $this->submission;
 
-		$this->setupTemplate(true, 0, $articleId, $reviewId);
+		$this->setupTemplate(false, 0, $articleId, $reviewId);
 		
 		ReviewerAction::viewMetadata($reviewerSubmission, $journal);
 	}
@@ -202,7 +188,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$reviewId = Request::getUserVar('reviewId');
 
 		$this->validate($reviewId);
-		$this->setupTemplate(true);
+		$this->setupTemplate();
 		
 		ReviewerAction::uploadReviewerVersion($reviewId);
 		Request::redirect(null, null, 'submission', $reviewId);
@@ -241,22 +227,6 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$reviewerSubmission =& $this->submission;
 
 		if (!ReviewerAction::downloadReviewerFile($reviewId, $reviewerSubmission, $fileId, $revision)) {
-			Request::redirect(null, null, 'submission', $reviewId);
-		}
-	}
-
-	/**
-	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
-	 */
-	function downloadFileFullReview($args) {
-		$reviewId = isset($args[0]) ? $args[0] : 0;
-		$articleId = isset($args[1]) ? $args[1] : 0;
-		$fileId = isset($args[2]) ? $args[2] : 0;
-		$revision = isset($args[3]) ? $args[3] : null;
-
-		$reviewerSubmission =& $this->submission;
-		if (!Action::downloadFile($articleId, $fileId, $revision)) {
 			Request::redirect(null, null, 'submission', $reviewId);
 		}
 	}

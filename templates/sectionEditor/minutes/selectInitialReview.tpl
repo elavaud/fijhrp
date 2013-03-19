@@ -34,3 +34,4 @@
 <input type="submit" class="button" name="selectProposal" value="Select Proposal"/> 			
 <input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
 </form>	
+{include file="common/footer.tpl"}

@@ -33,6 +33,14 @@
 
 <div class="separator"></div>
 
+{if $countMeetings > 0}
+
+{include file="author/submission/meeting.tpl"}
+
+<div class="separator"></div>
+
+{/if}
+
 {include file="author/submission/editorDecision.tpl"}
 
 {include file="common/footer.tpl"}

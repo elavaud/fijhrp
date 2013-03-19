@@ -89,7 +89,7 @@ class SectionEditorHandler extends Handler {
 					$functionName = 'getSectionEditorSubmissionsNotApprovedIterator';
 					break;
 			case 'submissionsArchives':
-				$functionName = 'getSectionEditorSubmissionsArchives';
+				$functionName = 'getSectionEditorSubmissionsArchivesIterator';
 					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.archives';
 				break;
 			default:
@@ -112,7 +112,7 @@ class SectionEditorHandler extends Handler {
 		}
 		*/
 		$submissions =& $sectionEditorSubmissionDao->$functionName(
-			$user->getCommitteeId(),
+			$user->getSecretaryCommitteeId(),
 			$journal->getId(),
 			$searchField,
 			$searchMatch,
@@ -173,7 +173,7 @@ class SectionEditorHandler extends Handler {
 			//$templateMgr->assign('technicalUnitField', $technicalUnitField);
 		$templateMgr->assign('countryField', $countryField);
 		
-		$templateMgr->assign('ercId', $user->getCommitteeId());
+		$templateMgr->assign('ercId', $user->getSecretaryCommitteeId());
 		
 		$templateMgr->display('sectionEditor/index.tpl');
 	}
@@ -201,9 +201,9 @@ class SectionEditorHandler extends Handler {
 		$roleSymbolic = $isEditor ? 'editor' : 'sectionEditor';
 		$roleKey = $isEditor ? 'user.role.editor' : 'user.role.sectionEditor';
 		
-		if ($subclass == 1) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic), 'article.submissions'));
-		elseif ($subclass == 2) $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, 'section', $thisUser->getCommitteeId()), 'section.section'));
-		else $pageHierarchy = array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
+		if ($subclass == 1) $pageHierarchy = array(array(Request::url(null, 'user'), $roleKey), array(Request::url(null, $roleSymbolic), 'article.submissions'));
+		elseif ($subclass == 2) $pageHierarchy = array(array(Request::url(null, 'user'), $roleKey), array(Request::url(null, $roleSymbolic, 'section', $thisUser->getSecretaryCommitteeId()), 'section.section'));
+		else $pageHierarchy = array(array(Request::url(null, 'user'), $roleKey));
 		
 		import('classes.submission.sectionEditor.SectionEditorAction');
 		$submissionCrumb = SectionEditorAction::submissionBreadcrumb($articleId, $parentPage, $roleSymbolic);
@@ -232,7 +232,7 @@ class SectionEditorHandler extends Handler {
 		
 		// For security purposes
 		$thisUser =& Request::getUser();
-		if ($thisUser->getCommitteeId() == $sectionId) {		
+		if ($thisUser->getSecretaryCommitteeId() == $sectionId) {		
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
 			$roleId = $roleDao->getRoleIdFromPath('reviewer');
 
@@ -304,7 +304,7 @@ class SectionEditorHandler extends Handler {
 		
 		// For security purposes
 		$thisUser =& Request::getUser();
-		if ($thisUser->getCommitteeId() == $sectionId) {
+		if ($thisUser->getSecretaryCommitteeId() == $sectionId) {
 			
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
 			$roleId = $roleDao->getRoleIdFromPath('reviewer');
@@ -328,7 +328,7 @@ class SectionEditorHandler extends Handler {
 			if (($ercMemberStatus == "Secretary") && ((count($secretaries) + count($users)) < 6)){
 				$roleId = $roleDao->getRoleIdFromPath('sectionEditor');
 				for ($i=0; $i<count($users); $i++) {
-					if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$sectionEditorsDao->editorExists($journal->getId(), $sectionId, $users[$i])) {
+					if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$sectionEditorsDao->ercSecretaryExists($journal->getId(), $sectionId, $users[$i])) {
 						$role = new Role();
 						$role->setJournalId($journal->getId());
 						$role->setUserId($users[$i]);
@@ -344,14 +344,16 @@ class SectionEditorHandler extends Handler {
 			// Enroll erc members (reviewers, chair, vice chair)
 			elseif ((($ercMemberStatus == "Chair") && ((count($chairs) + count($users)) < 2)) || (($ercMemberStatus == "Member") && ((count($reviewers) + count($users)) < 21)) || (($ercMemberStatus == "Vice-Chair") && ((count($viceChairs) + count($users)) < 2))) {
 				for ($i=0; $i<count($users); $i++) {
-					if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$ercReviewersDao->ercReviewerExists($journal->getId(), $sectionId, $users[$i])) {
+					if (!$ercReviewersDao->ercReviewerExists($journal->getId(), $sectionId, $users[$i])) {
 							
 						// Create the role and insert it
-						$role = new Role();
-						$role->setJournalId($journal->getId());
-						$role->setUserId($users[$i]);
-						$role->setRoleId($roleId);
-						$roleDao->insertRole($role);
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+							$role = new Role();
+							$role->setJournalId($journal->getId());
+							$role->setUserId($users[$i]);
+							$role->setRoleId($roleId);
+							$roleDao->insertRole($role);						
+						}
 							
 						// Assign the reviewer to the specified committee
 						if ($ercMemberStatus == "Chair") $status = 1;
@@ -382,15 +384,15 @@ class SectionEditorHandler extends Handler {
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		
 		// For security purposes
-		if ($thisUser->getCommitteeId() == $sectionId) {
+		if ($thisUser->getSecretaryCommitteeId() == $sectionId) {
 			if ($roleId=='512'){
 				$sectionEditorsDAO =& DAORegistry::getDAO('SectionEditorsDAO');
 				$sectionEditorsDAO->deleteEditorsByUserId($userId);
 				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
 			} elseif ($roleId=='4096') {
-				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
 				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
-				$ercReviewersDao->deleteReviewersByUserId($userId, $journalId);			
+				$ercReviewersDao->deleteReviewersByUserId($userId, $journalId);
+				if (!$ercReviewersDao->isErcReviewer($journalId, $userId)) $roleDao->deleteRoleByUserId($userId, $journalId, $roleId);			
 			}
 			Request::redirect(null, null, 'section', $sectionId);		
 		} else Request::redirect(null, 'user');
@@ -408,7 +410,7 @@ class SectionEditorHandler extends Handler {
 		
 		// For security purposes
 		$thisUser =& Request::getUser();
-		if ($thisUser->getCommitteeId() == $sectionId) {
+		if ($thisUser->getSecretaryCommitteeId() == $sectionId) {
 			
 			// Get ERC
 			$sectionDao =& DAORegistry::getDAO('SectionDAO');
@@ -447,7 +449,7 @@ class SectionEditorHandler extends Handler {
 
 		// For security purposes
 		$thisUser =& Request::getUser();
-		if ($thisUser->getCommitteeId() == $sectionId) {		
+		if ($thisUser->getSecretaryCommitteeId() == $sectionId) {		
 			import('classes.sectionEditor.form.CreateReviewerForm');
 			$createReviewerForm = new CreateReviewerForm($sectionId);
 			$this->setupTemplate(2);
@@ -485,7 +487,7 @@ class SectionEditorHandler extends Handler {
 
 		// For security purposes
 		$thisUser =& Request::getUser();
-		if ($thisUser->getCommitteeId() == $sectionId) {
+		if ($thisUser->getSecretaryCommitteeId() == $sectionId) {
 			import('classes.sectionEditor.form.CreateExternalReviewerForm');
 			$createReviewerForm = new CreateExternalReviewerForm($sectionId);
 			$this->setupTemplate(2);

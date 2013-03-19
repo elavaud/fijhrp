@@ -67,9 +67,9 @@ class User extends PKPUser {
 	function getFunctions($ercMemberIndex = false){
 		$journal =& Request::getJournal();
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$roles =& $roleDao->getRolesByUserId($this->getId(), $journal->getId());
 		$functions = (string)'';
-		
 		foreach ($roles as $role){ 
 			$roleId =& $role->getRoleId();
 			if ($roleId == '512'){
@@ -80,13 +80,16 @@ class User extends PKPUser {
 			}
 			elseif ($roleId == '4096'){
 				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
-				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
-				if (isset($erc)) {
-					if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
-					else $functions = $erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
-				} else {
-					if ($functions != null) $functions .= ' & External Reviewer';
-					else  $functions = 'External Reviewer';
+				$committeeIds = $ercReviewersDao->getCommitteeIdsByUserId($this->getId());
+				foreach ($committeeIds as $committeeId) {
+					if ($committeeId != 0) {
+						$erc =& $sectionDao->getSection($committeeId);
+						if ($functions != null) $functions .= ' & '.$erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());
+						else $functions = $erc->getLocalizedAbbrev().' '.$ercReviewersDao->getReviewerStatus($this->getId(), $erc->getSectionId());					
+					} else {
+						if ($functions != null) $functions .= ' & External Reviewer';
+						else  $functions = 'External Reviewer';					
+					}
 				}
 			}
 			elseif ($roleId == '65536' && $ercMemberIndex == false){
@@ -118,11 +121,43 @@ class User extends PKPUser {
 	}
 
 	/**
-	 * Get the erc (section in OJS) id of the user (if exists)
+	 * Get the erc function of the user according to the erc:
+	 * Secretary + Chair = Chair
+	 * Secretary + Vice-Chair = Vice Chair
+	 * Secretary + Member = Secretary
+	 * Else secretary or member
+	 *
+	 * @param $sectionId
+	 * @return string
+	 * Added by EL on March 14th 2013
+	 */
+	function getErcFunction($sectionId){
+		$journal =& Request::getJournal();
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+		
+		$erc =& $sectionDao->getSection($sectionId);
+		$reviewerStatus = $ercReviewersDao->getReviewerStatus($this->getId(), $sectionId);
+		$isSecretary = $sectionEditorsDao->ercSecretaryExists($journal->getId(), $sectionId, $this->getId());
+		
+		$ercAbbrev = $erc->getLocalizedAbbrev();
+		$function = (string)'';
+		
+		if ($isSecretary) {
+			if ($reviewerStatus == "Chair" || $reviewerStatus == "Vice-Chair") $function = $ercAbbrev.' '.$reviewerStatus;
+			else $function = $ercAbbrev.' Secretary';
+		} else $function = $ercAbbrev.' '.$reviewerStatus;
+		
+		return $function;
+	}
+	
+	/**
+	 * Get the erc (section in OJS) id of the secretary (if exists)
 	 * @return int (or null if no committee)
 	 * Added by EL on February 17th 2013
 	 */	
-	function getCommitteeId(){
+	function getSecretaryCommitteeId(){
 		$journal =& Request::getJournal();
 		$roleDao =& DAORegistry::getDAO('RoleDAO');
 		$roles =& $roleDao->getRolesByUserId($this->getId(), $journal->getId());
@@ -133,14 +168,32 @@ class User extends PKPUser {
 				$erc =& $sectionEditorsDao->getErcBySecretaryId($this->getId());
 				if (isset($erc)) return $erc->getSectionId();
 				else return null;
-			} elseif ($roleId == '4096') {
-				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
-				$erc =& $ercReviewersDao->getErcByReviewerId($this->getId());
-				if (isset($erc)) return $erc->getSectionId();
-				else return null;
-			}
+			} 
 		}
 		return null;		
+	}
+
+	/**
+	 * Get the erc abbreviations of a reviewer
+	 * @return string
+	 * Added by EL on February 17th 2013
+	 */	
+	function getErcAbbrevsOfReviewer(){
+		$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+		$committeeIds = $ercReviewersDao->getCommitteeIdsByUserId($this->getId());
+		$ercList = (string) '';
+		foreach ($committeeIds as $committeeId){
+			if ($committeeId != 0){
+				$erc =& $sectionDao->getSection($committeeId);
+				if ($ercList == '') $ercList = $erc->getLocalizedAbbrev();
+				else $ercList .= ' & '.$erc->getLocalizedAbbrev();
+			} else {
+				if ($ercList == '') $ercList = 'External';
+				else $ercList .= ' & External';			
+			}
+		}
+		return $ercList.' Reviewer';		
 	}
 }
 

@@ -64,7 +64,7 @@
 				</td>		
 			</tr>
 			<tr>
-				<td colspan="5" class="separator">&nbsp;</td>
+				<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 			</tr>
 		<!--{*/if*}-->
 {/iterate}

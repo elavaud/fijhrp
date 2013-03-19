@@ -65,31 +65,31 @@
 		{if $isValid.SectionEditor.$journalId}
 			{assign var="sectionEditorSubmissionsCount" value=$submissionsCount.SectionEditor.$journalId}
 			<tr>
-				<td>&#187; <a href="{url journal=$journalPath page="sectionEditor"}">{$user->getFunctions(true)}</a></td>
+				<td>&#187; <a href="{url journal=$journalPath page="sectionEditor"}">{$user->getErcFunction($ercId)}</a></td>
 				<td align="left"></td>
-				<td align="center">{if $sectionEditorSubmissionsCount[0]}
+				<td align="left">{if $sectionEditorSubmissionsCount[0]}
 						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"} ({$sectionEditorSubmissionsCount[0]})</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
 				</td>
-				<td align="center">{if $sectionEditorSubmissionsCount[1]}
+				<td align="left">{if $sectionEditorSubmissionsCount[1]}
 					<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsApproved"}">{translate key="common.queue.short.submissionsApproved"} ({$sectionEditorSubmissionsCount[1]})</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsApproved"}</span>{/if}
 				</td>
-				<td align="right"><a href="{url journal=$journalPath page="sectionEditor" op="section" path=$ercId}">Ethics Review Committee</a></td>
+				<td align="right"><a href="{url journal=$journalPath page="sectionEditor" op="section" path=$ercId}">{translate key="section.sectionAbbrev"}</a></td>
 				<td align="right"></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td align="left"></td>
-				<td align="center">{if $sectionEditorSubmissionsCount[2]}
+				<td align="left">{if $sectionEditorSubmissionsCount[2]}
 						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsNotApproved"}">{translate key="common.queue.short.submissionsNotApproved"} ({$sectionEditorSubmissionsCount[2]})</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsNotApproved"}</span>{/if}
 				</td>
-				<td align="center">{if $sectionEditorSubmissionsCount[3]}
+				<td align="left">{if $sectionEditorSubmissionsCount[3]}
 					<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsArchives"}">{translate key="common.queue.short.completed"} ({$sectionEditorSubmissionsCount[3]})</a>
 					{else}<span class="disabled">0 {translate key="common.queue.short.completed"}</span>{/if}
 				</td>
-				<td align="left"></td>
+				<td align="right"><a href="{url journal=$journalPath page="sectionEditor" op="meetings"}">{translate key="editor.meetings"}</a></td>
 				<td align="right"></td>
 			</tr>
 			
@@ -161,7 +161,7 @@
 		{if $isValid.Reviewer.$journalId}
 			{assign var="reviewerSubmissionsCount" value=$submissionsCount.Reviewer.$journalId}
 			<tr>
-				<td colspan="2">&#187; <a href="{url journal=$journalPath page="reviewer"}">{$user->getFunctions(true)}</a></td>
+				<td colspan="2">&#187; <a href="{url journal=$journalPath page="reviewer"}">{$user->getErcAbbrevsOfReviewer()}</a></td>
 				<td align="right">
 					{if $reviewerSubmissionsCount[0]}
 						<a href="{url journal=$journalPath page="reviewer"}">{translate key="common.queue.short.active"} ({$reviewerSubmissionsCount[0]})</a>
@@ -176,13 +176,8 @@
 						<span class="disabled">{translate key="common.queue.short.completed"} (0)</span>
 					{/if}					
 				</td>
-				<td align="left">
-					{if $reviewerSubmissionsCount[2]}
-						<a href="{url journal=$journalPath page="reviewer" path="fullReview"}">{translate key="common.queue.short.fullReview"} ({$reviewerSubmissionsCount[2]})</a>
-					{else}
-						<span class="disabled">{translate key="common.queue.short.fullReview"} (0)</span>
-					{/if}
-					<br/><a href="{url journal=$journalPath page="reviewer" op="meetings"}">{translate key="reviewer.meetings"}</a>
+				<td align="right">
+					<a href="{url journal=$journalPath page="reviewer" op="meetings}">{translate key="reviewer.meetings"}</a>
 				</td>
 			</tr>
 		{/if}

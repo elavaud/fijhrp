@@ -44,7 +44,7 @@
 				</td>		
 			</tr>
 			<tr>
-				<td colspan="6" class="separator">&nbsp;</td>
+				<td colspan="6" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 			</tr>
 {/iterate}
 {if $submissions->wasEmpty()}

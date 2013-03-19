@@ -23,11 +23,8 @@
 <ul class="menu">
 	<li{if ($pageToDisplay == "active")} class="current"{/if}><a href="{url path="active"}">{translate key="common.queue.short.active"}</a></li>
 	<li{if ($pageToDisplay == "completed")} class="current"{/if}><a href="{url path="completed"}">{translate key="common.queue.short.completed"}</a></li>
-	<li{if ($pageToDisplay == "fullReview")} class="current"{/if}><a href="{url path="fullReview"}">{translate key="common.queue.short.fullReview"}</a></li>
 </ul>
-
-<br />
-
+<p style="text-align:right"><a href="{url journal=$journalPath page="reviewer" op="meetings}" class="action">{translate key="reviewer.meetings"}</a></p>
 <br />
 
 {include file="reviewer/$pageToDisplay.tpl"}

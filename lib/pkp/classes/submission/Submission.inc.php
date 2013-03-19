@@ -32,7 +32,10 @@ define('PROPOSAL_STATUS_RESUBMITTED',12); //Special tag for INCOMPLETE proposals
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
 	var $authors;
-
+	
+		// EL on march 10th 2013
+		var $riskAssessment;
+		
 	/** @var array IDs of Authors removed from this submission */
 	var $removedAuthors;
 	
@@ -191,6 +194,15 @@ class Submission extends DataObject {
 	}
 
 	/**
+	 * Get the risk assessment of this submission.
+	 * @return object riskAssessment
+	 * EL on March 10th 2013
+	 */
+	function &getRiskAssessment() {
+		return $this->riskAssessment;
+	}
+	
+	/**
 	 * Get a specific author of this submission.
 	 * @param $authorId int
 	 * @return array Authors
@@ -224,6 +236,14 @@ class Submission extends DataObject {
 		return $this->authors = $authors;
 	}
 
+	/**
+	 * Set risk assessment of this submission.
+	 * @param $riskAssessment object riskAssessment
+	 */
+	function setRiskAssessment($riskAssessment) {
+		return $this->riskAssessment = $riskAssessment;
+	}
+	
 	/**
 	 * Get user ID of the submitter.
 	 * @return int

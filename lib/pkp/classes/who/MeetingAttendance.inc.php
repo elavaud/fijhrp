@@ -35,7 +35,7 @@ class MeetingAttendance extends DataObject {
 		return $this->getData('userId');
 	}
 	
-	function  setIsAttending($isAttending){
+	function setIsAttending($isAttending){
 		$this->setData('isAttending', $isAttending);
 	}
 	
@@ -83,6 +83,10 @@ class MeetingAttendance extends DataObject {
 		return $this->getData('salutation');
 	}
 	
+	function getFullName(){
+		return $this->getSalutation().' '.$this->getFirstName().' '.$this->getLastName();
+	}
+	
 	function getReplyStatus() {
 		switch ($this->getIsAttending()) {
 			case MEETING_REPLY_ATTENDING:
@@ -109,6 +113,15 @@ class MeetingAttendance extends DataObject {
 	function getFunctions() {
 		return $this->getData('functions');
 	}
+
+	function setReasonForAbsence($reasonForAbsence){
+		return $this->setData('reasonForAbsence', $reasonForAbsence);
+	}	
+
+	function getReasonForAbsence() {
+		return $this->getData('reasonForAbsence');
+	}
+
 }
 
 ?>

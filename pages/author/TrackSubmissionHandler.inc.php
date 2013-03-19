@@ -170,6 +170,9 @@ class TrackSubmissionHandler extends AuthorHandler {
                 $templateMgr->assign('canEditMetadata', $canEditMetadata);
                 $templateMgr->assign('canEditFiles', $canEditFiles);
 
+				// EL on March 11th 2013
+                $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+                
 		$templateMgr->display('author/submission.tpl');
                 
 	}
@@ -217,6 +220,12 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$templateMgr->assign('lastEditorDecision', $lastDecision);
 		import('classes.submission.sectionEditor.SectionEditorSubmission');
 		$templateMgr->assign('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
+		
+		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');
+		$meetingsAndAttendances =& $meetingAttendanceDao->getAttendancesByUserIdAndSubmissionId($user->getId(), $articleId);
+		$templateMgr->assign('countMeetings', count($meetingsAndAttendances));
+		$templateMgr->assign('meetingsAndAttendances', $meetingsAndAttendances);
+		
 		$templateMgr->assign('helpTopicId', 'editorial.authorsRole.review');
 		$templateMgr->display('author/submissionReview.tpl');
 	}
@@ -1033,6 +1042,28 @@ class TrackSubmissionHandler extends AuthorHandler {
                     $submitForm->initData();
 		}
                 $submitForm->display();
+	}
+
+	/**
+	 * Response to Meeting Scheduler
+	 * Added by EL on March 13th 2013
+	 */
+	
+	function replyMeeting(){
+		$meetingId = Request::getUserVar('meetingId');
+		$submissionId = Request::getUserVar('submissionId');
+		$user =& Request::getUser();
+		$userId = $user->getId();
+		
+		$meetingAttendanceDao =& DAORegistry::getDao('MeetingAttendanceDAO');
+		$meetingAttendance = $meetingAttendanceDao->getMeetingAttendance($meetingId, $userId);
+		
+		$meetingAttendance->setIsAttending(Request::getUserVar('isAttending'));
+		$meetingAttendance->setRemarks(Request::getUserVar('remarks'));	
+		
+		$meetingAttendanceDao =& DAORegistry::getDao('MeetingAttendanceDAO');
+		$meetingAttendanceDao->updateReplyOfAttendance($meetingAttendance);
+		Request::redirect(null, 'author', 'submissionReview', $submissionId);
 	}
 }
 ?>

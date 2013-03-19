@@ -5,6 +5,7 @@ import('classes.lib.fpdf.fpdf');
 class PDF extends FPDF {
 	function Header()
 	{
+		$title = $this->title;
 		$this->SetFont('Times','B',15);
 		// Calculate width of title and position
 		$w = $this->GetStringWidth($title)+6;

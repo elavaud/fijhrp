@@ -44,13 +44,15 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$meetingId = $args[0];
 		$this->validate($meetingId);
 		$user =& Request::getUser();
+		$journal =& Request::getJournal();
 		$sectionDao =& DAORegistry::getDao('SectionDAO');
+		$ercReviewersDao = DAORegistry::getDAO('ErcReviewersDAO');
 		
 		$meeting =& $this->meeting;
 		$submissions =& $this->submissions;
 		
 		$submissionReviewMap =& $this->submissionReviewMap;
-		$this->setupTemplate(true, $meetingId);
+		$this->setupTemplate(true, 1);
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
 		$templateMgr->assign_by_ref('submissions', $submissions);
@@ -60,6 +62,10 @@ class MeetingReviewerHandler extends ReviewerHandler {
 			// Unused + undefined variables
 			// $templateMgr->assign('sort', $sort);
 			// $templateMgr->assign('sortDirection', $sortDirection);
+			
+		$templateMgr->assign('isReviewer', $ercReviewersDao->ercReviewerExists($journal->getId(),$meeting->getUploader(), $user->getId()));
+		$templateMgr->assign('userId', $user->getId());
+
 		$templateMgr->display('reviewer/viewMeeting.tpl');
 	}
 	
@@ -73,16 +79,15 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$user =& Request::getUser();
 		$userId = $user->getId();
 		
-		$meetingDao =& DAORegistry::getDao('MeetingDAO');
-		$meeting = $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $userId);
+		$meetingAttendanceDao =& DAORegistry::getDao('MeetingAttendanceDAO');
+		$meetingAttendance = $meetingAttendanceDao->getMeetingAttendance($meetingId, $userId);
 		
-		$meeting->setIsAttending(Request::getUserVar('isAttending'));
-		$meeting->setRemarks(Request::getUserVar('remarks'));	
+		$meetingAttendance->setIsAttending(Request::getUserVar('isAttending'));
+		$meetingAttendance->setRemarks(Request::getUserVar('remarks'));	
 		
 		$meetingAttendanceDao =& DAORegistry::getDao('MeetingAttendanceDAO');
-		$meetingAttendanceDao->updateReplyOfAttendance($meeting);
+		$meetingAttendanceDao->updateReplyOfAttendance($meetingAttendance);
 		Request::redirect(null, 'reviewer', 'viewMeeting', $meetingId);
-		
 	}
 	
 	/** TODO:
@@ -100,7 +105,7 @@ class MeetingReviewerHandler extends ReviewerHandler {
 		$isValid = true;
 		$newKey = Request::getUserVar('key');
 
-		$meeting =& $meetingDao->getMeetingByMeetingAndReviewerId($meetingId, $user->getId());
+		$meeting =& $meetingDao->getMeetingByMeetingAndUserId($meetingId, $user->getId());
 
 		if (!$meeting) {
 			$isValid = false;

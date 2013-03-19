@@ -4,7 +4,7 @@
  * Copyright (c) 2003-2011 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * Show reviewer's active submissions.
+ * Show reviewer's active proposals.
  *
  * $Id$
  *}
@@ -77,7 +77,7 @@
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 {assign var="count" value=0}
-{iterate from=submissions1 item=submission}
+{iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getLocalizedWhoId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
 	{assign var="status" value=$submission->getSubmissionStatus()}
@@ -113,7 +113,7 @@
 		<td colspan="6" class="separator">&nbsp;</td>
 		{assign var="count" value=$count+1}
 {/iterate}
-{if $count==0}
+{if $submissions->wasEmpty()}
 	<tr>
 		<td colspan="6" class="nodata">{translate key="submissions.noSubmissions"}</td>
 	</tr>
@@ -122,10 +122,8 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="6" class="endseparator">&nbsp;</td>
-	</tr>
-	<tr>
-		<td colspan="6" align="left">{$count} active submission(s)</td>
+		<td colspan="4" align="left">{page_info iterator=$submissions}</td>
+		<td colspan="2" align="right">{page_links anchor="submissions" name="submissions" iterator=$submissions sort=$sort sortDirection=$sortDirection}</td>
 	</tr>
 {/if}
 </table>

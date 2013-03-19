@@ -98,6 +98,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr->assign('canEditMetadata', true);
 
+			// EL on March 11th 2013
+            $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+            
 		$templateMgr->display('sectionEditor/submission.tpl');
 	}
 
@@ -305,6 +308,13 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
 			}
 		}
+		
+		// Added by EL on March 13th 2013
+		// Provide links to meetings
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meetings =& $meetingDao->getMeetingsBySubmissionId($articleId);
+		$templateMgr->assign('meetingsCount', count($meetings));
+		$templateMgr->assign_by_ref('meetings', $meetings);
 		
 		$templateMgr->assign('helpTopicId', 'editorial.sectionEditorsRole.review');
 		$templateMgr->display('sectionEditor/submissionReview.tpl');

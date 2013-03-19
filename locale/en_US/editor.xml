@@ -301,7 +301,7 @@
 	<message key="editor.meetings.toSetNewMeeting"> to set a new meeting.</message>
 	<message key="editor.meetings.uploadMinutes">Upload Minutes</message>
 	<message key="editor.meetings.addProposalsToDiscuss">Add/Remove proposals to discuss</message>
-	<message key="editor.meetings.submissions">Submissions to be discussed</message>
+	<message key="editor.meetings.proposals">Proposal(s) to be discussed</message>
 	
 	<message key="editor.meetings.user.name">Name</message>
     <message key="editor.meetings.user.functions">Function(s)</message>
@@ -482,6 +482,6 @@
 	********************************************* -->
         <message key="editor.email.send">Send an Email</message>
 	<message key="editor.email.allUsers">Send to All</message>
-	<message key="editor.email.ERCMembers">Send to ERC Members only</message>
+	<message key="editor.email.ERCMembers">Send an email to all members</message>
 	<message key="editor.email.RTOs">Send to Investigators only</message>
 </locale>

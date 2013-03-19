@@ -152,9 +152,9 @@ class RoleDAO extends DAO {
 		if (isset($roleId)) {
 			if ($roleId == "extReviewer" || $roleId == "reviewer") {
 				if ($roleId == "extReviewer") {
-					$searchSql = ' AND NOT EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id)';
+					$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id AND er.section_id = 0)';
 				} else {
-					$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id)';	
+					$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id AND er.section_id <> 0)';	
 				}
 				$roleId = ROLE_ID_REVIEWER;
 			} 

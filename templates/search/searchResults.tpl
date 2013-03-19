@@ -171,7 +171,7 @@ $(document).ready(
 {foreach from=$results item=result}
 <tr valign="bottom">
 	<!--<td>{$result->getDateSubmitted()|date_format:$dateFormatShort}</td>-->
-	<td><a href="{url op="viewProposal" path=$result->getId()}" class="action">{$result->getScientificTitle('en_US')|escape}</a></td>
+	<td><a href="{url op="viewProposal" path=$result->getId()}" class="action">{$result->getLocalizedTitle()|escape}</a></td>
 	<td>
 	{if $result->getLocalizedPrimarySponsor() == "Other"}
 		{$result->getLocalizedOtherPrimarySponsor()}

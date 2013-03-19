@@ -86,3 +86,4 @@
  	<input type="button" class="button" onclick="document.location.href='{url op="selectInitialReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
  	</form>
 </div>
+{include file="common/footer.tpl"}

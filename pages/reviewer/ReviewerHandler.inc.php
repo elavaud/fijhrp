@@ -30,6 +30,7 @@ class ReviewerHandler extends Handler {
 
 	/**
 	 * Display reviewer index page.
+	 * Last update: EL on March 1st 2013
 	 */
 	function index($args) {
 		$this->validate();
@@ -50,9 +51,6 @@ class ReviewerHandler extends Handler {
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
 		
-		$technicalUnitField = Request::getUserVar('technicalUnitField');
-		$countryField = Request::getUserVar('countryField');
-		
 		$journal =& Request::getJournal();
 		$user =& Request::getUser();
 		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
@@ -60,9 +58,6 @@ class ReviewerHandler extends Handler {
 		$page = isset($args[0]) ? $args[0] : '';
 		switch($page) {
 			case 'completed':
-				$active = false;
-				break;
-			case 'fullReview':
 				$active = false;
 				break;
 			default:
@@ -75,8 +70,7 @@ class ReviewerHandler extends Handler {
 		$sortDirection = Request::getUserVar('sortDirection');
 
 		if ($sort == 'decision') {		
-			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
-											  $technicalUnitField, $countryField, $rangeInfo);
+			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $rangeInfo);
 		
 			// Sort all submissions by status, which is too complex to do in the DB
 			$submissionsArray = $submissions->toArray();
@@ -88,34 +82,17 @@ class ReviewerHandler extends Handler {
 			// Convert submission array back to an ItemIterator class
 			import('lib.pkp.classes.core.ArrayItemIterator');
 			//TODO change to array instead of iterator 
-			$submissions1 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
-			$submissions2 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
-			$submissions3 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
-			$submissions4 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		}  else {
-			$submissions1 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
-											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
-			$submissions2 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
-											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
-			$submissions3 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
-											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
-			$submissions4 = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, 
-											  $technicalUnitField, $countryField, $rangeInfo, $sort, $sortDirection);
+			$submissions = $reviewerSubmissionDao->getReviewerSubmissionsByReviewerId($user->getId(), $journal->getId(), $active,  $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $rangeInfo, $sort, $sortDirection);
 											  
 		}
-		
-		$submissionsForFullReview = $reviewerSubmissionDao->getSubmissionsForFullReview($user->getId());
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign('pageToDisplay', $page);
 
-		$templateMgr->assign_by_ref('submissionsForFullReview', $submissionsForFullReview);
-
-		$templateMgr->assign_by_ref('submissions1', $submissions1);
-		$templateMgr->assign_by_ref('submissions2', $submissions2);
-		$templateMgr->assign_by_ref('submissions3', $submissions3);
-		$templateMgr->assign_by_ref('submissions4', $submissions4);
+		$templateMgr->assign_by_ref('submissions', $submissions);
 		$templateMgr->assign('rangeInfo', $rangeInfo);
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
@@ -131,6 +108,7 @@ class ReviewerHandler extends Handler {
 			'dateToMonth', 'dateToDay', 'dateToYear',
 			'dateSearchField'
 		);
+		
 		foreach ($duplicateParameters as $param)
 			$templateMgr->assign($param, Request::getUserVar($param));
                 
@@ -138,20 +116,11 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('dateTo', $toDate);
 		$templateMgr->assign('fieldOptions', Array(
 			SUBMISSION_FIELD_TITLE => 'article.title',
-			SUBMISSION_FIELD_AUTHOR => 'user.role.author',
-			SUBMISSION_FIELD_EDITOR => 'user.role.editor'
+			SUBMISSION_FIELD_AUTHOR => 'user.role.author'
 		));
 		$templateMgr->assign('dateFieldOptions', Array(
 			SUBMISSION_FIELD_DATE_SUBMITTED => 'submissions.submitted',
 		));
-		
-		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $countries =& $countryDAO->getRegionsOfPhilippines();
-       
-		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
-        $templateMgr->assign_by_ref('countries', $countries);
         
         
 		import('classes.issue.IssueAction');
@@ -160,9 +129,6 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('helpTopicId', 'editorial.reviewersRole.submissions');
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
-		// Added by igm 9/24/11
-		$templateMgr->assign('technicalUnitField', $technicalUnitField);
-		$templateMgr->assign('countryField', $countryField);
 		$templateMgr->display('reviewer/submissionsIndex.tpl');
 	}
 	
@@ -173,9 +139,9 @@ class ReviewerHandler extends Handler {
 	 * Last Updated 7/5/2011
 	 */
 	
-	function meetings($args) {
+	function meetings() {
 		$this->validate();
-		$this->setupTemplate(false);
+		$this->setupTemplate(true);
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
@@ -184,6 +150,7 @@ class ReviewerHandler extends Handler {
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
 		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
 		$articleDao = DAORegistry::getDAO('ArticleDAO');
+		$ercReviewersDao = DAORegistry::getDAO('ErcReviewersDAO');
 		
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';
@@ -224,6 +191,7 @@ class ReviewerHandler extends Handler {
 		$templateMgr->assign('dateTo', $toDate);
 		$templateMgr->assign('status', $status);
 		$templateMgr->assign('replyStatus', $replyStatus);
+		$templateMgr->assign('isReviewer', !$ercReviewersDao->isExternalReviewer($journalId, $userId));
 		
 		// Set search parameters
 		$duplicateParameters = array(
@@ -234,6 +202,44 @@ class ReviewerHandler extends Handler {
 			$templateMgr->assign($param, Request::getUserVar($param));
 		
 		$templateMgr->display('reviewer/meetings.tpl');
+	}
+	
+	function proposalsFromMeetings() {
+		$this->validate();
+		$this->setupTemplate(true);
+		$journal =& Request::getJournal();
+		$journalId = $journal->getId();
+		$user =& Request::getUser();
+
+		$ercReviewersDao = DAORegistry::getDAO('ErcReviewersDAO');
+		
+		$searchField = Request::getUserVar('searchField');
+		$searchMatch = Request::getUserVar('searchMatch');
+		$search = Request::getUserVar('search');
+
+		$reviewerSubmissionDao =& DAORegistry::getDAO('ReviewerSubmissionDAO');
+		$rangeInfo = Handler::getRangeInfo('submissions');
+				
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'title';
+		$sortDirection = Request::getUserVar('sortDirection');
+		
+		$submissions =& $reviewerSubmissionDao->getReviewerMeetingSubmissionsByReviewerId($user->getId(), $journalId, $searchField, $searchMatch, $search, $rangeInfo, $sort, $sortDirection);	
+						
+		$templateMgr =& TemplateManager::getManager();
+		$templateMgr->assign('fieldOptions', Array(
+			SUBMISSION_FIELD_TITLE => 'article.title',
+			SUBMISSION_FIELD_AUTHOR => 'user.role.author'
+		));	
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('rangeInfo', count($submissions));
+		$templateMgr->assign('sortDirection', $sortDirection);
+		$templateMgr->assign('rangeInfo', $rangeInfo);
+		$templateMgr->assign_by_ref('submissions', $submissions);
+		
+		$templateMgr->assign('isReviewer', !$ercReviewersDao->isExternalReviewer($journalId, $user->getId()));
+		
+		$templateMgr->display('reviewer/proposalsFromMeetings.tpl');
 	}
 	
 	/**
@@ -289,19 +295,26 @@ class ReviewerHandler extends Handler {
 	 * Setup common template variables.
 	 * @param $subclass boolean set to true if caller is below this handler in the hierarchy
 	 */
-	function setupTemplate($subclass = false, $meetingId=0, $articleId = 0, $reviewId = 0) {
+	function setupTemplate($meeting = false, $subMeeting = 0, $articleId = 0, $reviewId = 0) {
 		parent::setupTemplate();
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_SUBMISSION, LOCALE_COMPONENT_OJS_EDITOR));
 		$templateMgr =& TemplateManager::getManager();
-		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'reviewer'), 'user.role.reviewer'))
-				: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, 'reviewer'), 'user.role.reviewer'));
+		$pageHierarchy = $meeting ? array(array(Request::url(null, 'user'), 'user.role.reviewer'), array(Request::url(null, 'reviewer', 'meetings'), 'reviewer.meeting')) 
+			: array(array(Request::url(null, 'user'), 'user.role.reviewer'), array(Request::url(null, 'reviewer'), 'common.queue.short.reviewAssignments'));
 
 		if ($articleId && $reviewId) {
-			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'submission', $reviewId), "#$articleId", true);
+			$articleDao =& DAORegistry::getDAO('ArticleDAO');
+			$article =& $articleDao->getArticle($articleId);
+			$proposalId = $article->getLocalizedWhoId();
+			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'submission', $reviewId), "$proposalId", true);
 		}
-		if ($meetingId) {
-			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'viewMeeting', $meetingId), "#$meetingId", true);
+		
+		if ($subMeeting == 1) {
+			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'meetings'), 'common.queue.long.meetingList');
+		} elseif ($subMeeting == 2) {
+			$pageHierarchy[] = array(Request::url(null, 'reviewer', 'proposalsFromMeetings'), 'common.queue.long.meetingProposals');
 		}
+		
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
 }

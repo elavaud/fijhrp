@@ -89,15 +89,10 @@ class Application extends PKPApplication {
 			'CitationDAO' => 'lib.pkp.classes.citation.CitationDAO',
 			'CommentDAO' => 'lib.pkp.classes.comment.CommentDAO',
 			'CopyeditorSubmissionDAO' => 'classes.submission.copyeditor.CopyeditorSubmissionDAO',
-				// Removed by EL on February 17th 2013, not useful anymore
-				//'Edit Assignment DAO' => 'classes.submission.editAssignment.Edit Assignment DAO',
+			'Edit Assignment DAO' => 'classes.submission.editAssignment.Edit Assignment DAO',
 			'EditorSubmissionDAO' => 'classes.submission.editor.EditorSubmissionDAO',
 			'EmailTemplateDAO' => 'classes.mail.EmailTemplateDAO',
-
-				// Added by EL on February 13th 2013
-				// New DAO for associating a reviewer to an erc
-				'ErcReviewersDAO' => 'classes.journal.ErcReviewersDAO',
-
+			'ErcReviewersDAO' => 'classes.journal.ErcReviewersDAO',
 			'FilterDAO' => 'lib.pkp.classes.filter.FilterDAO',
 			'GroupDAO' => 'lib.pkp.classes.group.GroupDAO',
 			'GroupMembershipDAO' => 'lib.pkp.classes.group.GroupMembershipDAO',
@@ -121,6 +116,7 @@ class Application extends PKPApplication {
 			'ReviewFormDAO' => 'lib.pkp.classes.reviewForm.ReviewFormDAO',
 			'ReviewFormElementDAO' => 'lib.pkp.classes.reviewForm.ReviewFormElementDAO',
 			'ReviewFormResponseDAO' => 'lib.pkp.classes.reviewForm.ReviewFormResponseDAO',
+			'RiskAssessmentDAO' => 'classes.article.RiskAssessmentDAO',
 			'RoleDAO' => 'classes.security.RoleDAO',
 			'RTDAO' => 'classes.rt.ojs.RTDAO',
 			'ScheduledTaskDAO' => 'lib.pkp.classes.scheduledTask.ScheduledTaskDAO',

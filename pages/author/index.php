@@ -65,6 +65,7 @@ switch ($op) {
 	//
 	// Misc.
 	//
+	case 'replyMeeting':
 	case 'downloadFile':
 	case 'viewFile':
 	case 'download':

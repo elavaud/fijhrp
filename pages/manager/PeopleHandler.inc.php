@@ -85,10 +85,14 @@ class PeopleHandler extends ManagerHandler {
 
 		if ($roleId) {
 			$users =& $roleDao->getUsersByRoleId($roleId, $journal->getId(), $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
+				
 				// For separating external reviewers from reviewers
-				// Added by EL on February 14th 2013			
+				// Added by EL on February 14th 2013	
+				if ($roleId == "extReviewer") $templateMgr->assign('roleId', 4097);
+				elseif ($roleId == "reviewer") $templateMgr->assign('roleId', 4096);
+				else $templateMgr->assign('roleId', $roleId);		
 				if ($roleId == "extReviewer" || $roleId == "reviewer") $roleId = ROLE_ID_REVIEWER;
-			$templateMgr->assign('roleId', $roleId);
+			
 			switch($roleId) {
 				case ROLE_ID_JOURNAL_MANAGER:
 					$helpTopicId = 'journal.roles.journalManager';
@@ -217,7 +221,7 @@ class PeopleHandler extends ManagerHandler {
 
 		$rangeInfo = Handler::getRangeInfo('users');
 
-		$users =& $userDao->getEnrollableUsers($journal->getId(), $searchType, $searchMatch, $search, true, $rangeInfo, $sort, $sortDirection);
+		$users =& $userDao->getUsersByField($searchType, $searchMatch, $search, true, $rangeInfo, $sort, $sortDirection);
 		
 		$userSettingsDao =& DAORegistry::getDAO('UserSettingsDAO');
 			
@@ -332,14 +336,16 @@ class PeopleHandler extends ManagerHandler {
 				// and of chair or vice-chair to 1
 				if ((((count($reviewers) + count($users)) < 21) && $ercMemberStatus == "Member") || (((count($chairs) + count($users)) < 2) && $ercMemberStatus == "Chair") || (((count($viceChairs) + count($users)) < 2) && $ercMemberStatus == "Vice-Chair")) {
 					for ($i=0; $i<count($users); $i++) {
-						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$ercReviewersDAO->ercReviewerExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
+						if (!$ercReviewersDAO->ercReviewerExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
 							
-							// Create the role and insert it
-							$role = new Role();
-							$role->setJournalId($journal->getId());
-							$role->setUserId($users[$i]);
-							$role->setRoleId($roleId);
-							$roleDao->insertRole($role);
+							if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+								// Create the role and insert it
+								$role = new Role();
+								$role->setJournalId($journal->getId());
+								$role->setUserId($users[$i]);
+								$role->setRoleId($roleId);
+								$roleDao->insertRole($role);							
+							}
 							
 							// Assign the reviewer to the specified committee
 							if ($ercMemberStatus == "Chair") $status = 1;
@@ -362,7 +368,7 @@ class PeopleHandler extends ManagerHandler {
 				//Here, the number of secretaries per committee is limited to 5
 				if ((count($secretaries) + count($users)) < 6) {
 					for ($i=0; $i<count($users); $i++) {
-						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$sectionEditorsDAO->editorExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
+						if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId) && !$sectionEditorsDAO->ercSecretaryExists($journal->getId(), $ethicsCommitteeId, $users[$i])) {
 							
 							// Create the role and insert it
 							$role = new Role();
@@ -383,12 +389,16 @@ class PeopleHandler extends ManagerHandler {
 			$rolePath = 'extReviewer';
 			$userDAO =& DAORegistry::getDAO('UserDAO');
 			for ($i=0; $i<count($users); $i++) {
-				if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
-					$role = new Role();
-					$role->setJournalId($journal->getId());
-					$role->setUserId($users[$i]);
-					$role->setRoleId($roleId);
-					$roleDao->insertRole($role);
+				if (!$ercReviewersDAO->ercReviewerExists($journal->getId(), 0, $users[$i])) {
+					if (!$roleDao->roleExists($journal->getId(), $users[$i], $roleId)) {
+						$role = new Role();
+						$role->setJournalId($journal->getId());
+						$role->setUserId($users[$i]);
+						$role->setRoleId($roleId);
+						$roleDao->insertRole($role);
+					
+					}
+					$ercReviewersDAO->insertReviewer($journal->getId(), 0, $users[$i], $status);
 				}
 			}
 		}
@@ -413,24 +423,28 @@ class PeopleHandler extends ManagerHandler {
 		$roleId = (int) array_shift($args);
 		$journalId = (int) Request::getUserVar('journalId');
 		$userId = (int) Request::getUserVar('userId');
-
 		$this->validate();
-
+		
+		$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+				
 		$journal =& Request::getJournal();
 		if ($roleId != ROLE_ID_SITE_ADMIN && (Validation::isSiteAdmin() || $journalId = $journal->getId())) {
 			$roleDao =& DAORegistry::getDAO('RoleDAO');
-			if ($roleId=='4096'){
-
-				$roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
-				$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
 				
-				// For deleting erc members and the redirection of external reviewers
-				if ($ercReviewersDao->reviewerExists($journalId, $userId)) $ercReviewersDao->deleteReviewersByUserId($userId, $journalId);
-				else $roleId = 4097;
-					
+			if ($roleId == '4097'){
+				if (!$ercReviewersDao->isErcReviewer($journalId, $userId)) $roleDao->deleteRoleByUserId($userId, $journalId, 4096);
 				
-			}
-			if ($roleId=='512'){
+				$ercReviewersDao->deleteReviewersByUserId($userId, $journalId, 0);
+				
+				$roleId = 4097;
+			} elseif ($roleId == '4096'){
+				if (!$ercReviewersDao->isExternalReviewer($journalId, $userId)) $roleDao->deleteRoleByUserId($userId, $journalId, $roleId);
+				
+				$ercReviewersDao->deleteErcReviewersByUserId($userId, $journalId);
+				
+				$roleId = 4096;
+								
+			} elseif ($roleId=='512'){
 
 				$sectionEditorsDAO =& DAORegistry::getDAO('SectionEditorsDAO');
 				$sectionEditorsDAO->deleteEditorsByUserId($userId);

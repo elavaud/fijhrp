@@ -90,7 +90,7 @@ class MinutesHandler extends Handler {
 		$user =& Request::getUser();
 
 		$meetingDao = DAORegistry::getDAO('MeetingDAO');
-		$meetings =& $meetingDao->getMeetingsOfSection($user->getCommitteeId());
+		$meetings =& $meetingDao->getMeetingsOfSection($user->getSecretaryCommitteeId());
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meetings', $meetings);
@@ -452,10 +452,12 @@ class MinutesHandler extends Handler {
 	/*Added by MSB, July 20, 2010*/
 
 	function downloadMinutes($args, $request) {
+		
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		import('classes.file.MinutesFileManager');
 		$minutesFileManager = new MinutesFileManager($meetingId);
 		return $minutesFileManager->downloadMinutesArchive();
+		
 	}
 	
 	function validate($meetingId = 0, $access = null) {
@@ -466,12 +468,9 @@ class MinutesHandler extends Handler {
 			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
 			$meeting = $meetingDao->getMeetingById($meetingId);
 
-			if($meeting == null)
-			$isValid = false;
-			else if($meeting->getUploader() != $user->getId())
-			$isValid = false;
-			if($isValid)
-			$this->meeting =& $meeting;
+			if($meeting == null) $isValid = false;
+			else if($meeting->getUploader() != $user->getSecretaryCommitteeId()) $isValid = false;
+			if($isValid) $this->meeting =& $meeting;
 			$statusMap = $meeting->getStatusMap();
 			if($access != null && $statusMap[$access] == 1) {
 				Request::redirect(null, null, 'uploadMinutes', $meetingId);

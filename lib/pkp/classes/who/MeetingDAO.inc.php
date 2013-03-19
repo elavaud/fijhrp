@@ -65,7 +65,7 @@ class MeetingDAO extends DAO {
 		//Edited by ayveemallare 7/6/2011
 		
 		$result =& $this->retrieve(
-			'SELECT meeting_id, section_id, meeting_date, meeting_length, location, investigator, minutes_status, status FROM meetings WHERE meeting_id = ?',
+			'SELECT * FROM meetings WHERE meeting_id = ?',
 			(int) $meetingId
 		);
 		
@@ -155,7 +155,7 @@ class MeetingDAO extends DAO {
 	 * @param int $meetingId
 	 * @param int $reviewerId
 	 */
-	function &getMeetingByMeetingAndReviewerId($meetingId, $reviewerId) {
+	function &getMeetingByMeetingAndUserId($meetingId, $reviewerId) {
 		$meeting = null;
 		$result =& $this->retrieve(
 			'SELECT * 
@@ -285,7 +285,33 @@ class MeetingDAO extends DAO {
 			(int) $meetingId
 		);
 	}
+
+	/**
+	 * Get meetings object by submission ID
+	 * @param $submissionId int
+	 * @return Meeting
+	 * Added by EL on March 13th 2013
+	 */
+	function &getMeetingsBySubmissionId($submissionId) {
 		
+		$meetings = array();
+		
+		$sql = 'SELECT m.* 
+				FROM meetings m
+					LEFT JOIN meeting_submissions ms ON (ms.meeting_id =  m.meeting_id)
+				WHERE ms.submission_id = ? ORDER BY m.meeting_date';
+		
+		$result =& $this->retrieveRange($sql, (int) $submissionId);
+
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+			$meetings[] = $this->_returnMeetingFromRow($row);
+			$result->moveNext();
+		}
+							
+		return $meetings;
+	}
+			
 }
 
 ?>
