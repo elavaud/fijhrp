@@ -67,7 +67,6 @@ class SetMeetingForm extends Form {
 		
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		
-		$rangeInfo = Handler::getRangeInfo('submissions');
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';
 		$sortDirection = Request::getUserVar('sortDirection');
@@ -75,7 +74,6 @@ class SetMeetingForm extends Form {
 		$submissions =& $sectionEditorSubmissionDao->getSectionEditorSubmissionsForErcReview(
 			$user->getSecretaryCommitteeId(),
 			$journalId,
-			$rangeInfo,
 			$sort,
 			$sortDirection
 		);
@@ -88,6 +86,10 @@ class SetMeetingForm extends Form {
 		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
 		$selectedSubmissions =$meetingSubmissionDao->getMeetingSubmissionsByMeetingId($meetingId);
 		$templateMgr =& TemplateManager::getManager();
+
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
+		
 		$templateMgr->assign('meetingId', $meetingId);
 		$templateMgr->assign('meetingDate', $meeting->getDate());
 		$templateMgr->assign('meetingLength', $meeting->getLength());

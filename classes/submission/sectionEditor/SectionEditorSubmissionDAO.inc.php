@@ -1279,6 +1279,7 @@ class SectionEditorSubmissionDAO extends DAO {
 	function getSortMapping($heading) {
 		switch ($heading) {
 			case 'id': return 'a.article_id';
+			case 'status': return 'a.status';
 			case 'submitDate': return 'a.date_submitted';
 			case 'section': return 'section_abbrev';
 			case 'authors': return 'author_name';
@@ -1339,16 +1340,17 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Edited by EL
 	 * Last Update: February 25th 2013
 	 */	
-	function &getSectionEditorSubmissionsForErcReview($sectionId, $journalId, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getSectionEditorSubmissionsForErcReview($sectionId, $journalId, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionId, $journalId,
 			null, null, null,
 			null, null, null, null,
 			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_EXPEDITED .')',
-			$rangeInfo, $sortBy, $sortDirection
+			null, $sortBy, $sortDirection
 		);
-
+		
 		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
+
 		return $returner;
 	}
 
