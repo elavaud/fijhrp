@@ -343,7 +343,7 @@ class ArticleDAO extends DAO {
 			$riskAssessment =& $article->getRiskAssessment();
 			if ($this->riskAssessmentDao->riskAssessmentExists($article->getId())) {
 				$this->riskAssessmentDao->updateRiskAssessment($riskAssessment);
-			} else {
+			} elseif ($riskAssessment->getArticleId() != null) {
 				$this->riskAssessmentDao->insertRiskAssessment($riskAssessment);
 			}
 			

@@ -187,12 +187,62 @@
         -->
         <message key="proposal.title">Title</message>
         <message key="proposal.scientificTitle">Scientific title</message>
+            
+            <!-- EL on April 3rd 2013 -->
+            <message key="proposal.scientificTitleInstruct">Scientific title of the study as it appears in the protocol submitted for funding and ethical review. This title should contain information on population, intervention, comparator and outcome(s).</message>
         <message key="proposal.publicTitle">Public title</message>
+        
+            <!-- EL on April 3rd 2013 -->
+            <message key="proposal.publicTitleInstruct">Title intended for the lay public in easily understood language.</message>
         <message key="proposal.abstract">Abstract</message>
                 <!-- Comment out by EL on APril 13, 2012 -->
                 <!-- Return "Objectives" key by SPF on April 16, 2012 -->
         <message key="proposal.objectives">Objectives</message>
         <message key="proposal.keywords">Keywords</message>
+        
+            <!-- EL on April 3rd 2013 -->
+            <message key="proposal.objectivesInstruct">Key research questions, hypothesis, objectives in bullet points if feasible.</message>
+            <message key="proposal.background">Background</message>
+            <message key="proposal.backgroundInstruct">Key issues under investigation, importance, what is known already, and why this study.</message>
+            <message key="proposal.studyMatters">Study Methods</message>
+            <message key="proposal.studyMattersInstruct">Relevant features of study design (qualitative/quantitative, cross-sectional survey/case-control...), estimated sample size, manner of data collection, etc. [e.g. study involves key informant interviews with policy-makers in Cambodia, involving 6-8 people at national or provincial level...]</message>
+            <message key="proposal.expectedOutcomes">Expected outcomes and use of results</message>
+            <message key="proposal.expectedOutcomesInstruct">Potential outcomes of study such as measurement of prevalence, other indicators being measured, how the results will be used to inform particular policy or program...</message>
+            <message key="proposal.keywordsInstruct">Significant or descriptive words.</message>
+            <message key="proposal.startDateInstruct">Start date of the research.</message>
+            <message key="proposal.endDateInstruct">End date of the research.</message>
+            <message key="proposal.fundsRequiredInstruct">Please enter a whole number without any comma or other separator.</message>
+            <message key="proposal.primarySponsorInstruct">The individual, organization, group or other legal entity which takes responsibility for initiating, managing and/or financing a study. The Primary Sponsor is responsible for ensuring that the research is properly registered. The Primary Sponsor may or may not be the main funder.</message>
+            <message key="proposal.otherPrimarySponsorInstruct">If your primary sponsor is not included in the above list, please specify it here.</message>
+            <message key="proposal.secondarySponsorsInstruct">Additional individuals, organizations or other legal persons, if any, that have agreed with the primary sponsor to take on responsibilities of sponsorship. A secondary sponsor may have agreed: 
+•	to take on all the responsibilities of sponsorship jointly with the primary sponsor; or 
+•	to form a group with the primary sponsor in which the responsibilities of sponsorship are allocated among the members of the group; or 
+•	to act as the sponsor’s legal representative in relation to some or all of the trial sites; or 
+•	to take responsibility for the accuracy of trial registration information submitted.</message>
+            <message key="proposal.multiCountryResearchInstruct">Is the research involving patients from different countries?</message>
+            <message key="proposal.studentInitiatedResearchInstruct">Is the research undertaken as part of academic degree requirements?</message>
+            <message key="proposal.studentInstitutionInstruct">Institution where the student is enrolled.</message>
+            <message key="proposal.academicDegreeInstruct">Academic degree in which the student is enrolled.</message>
+            <message key="proposal.undergraduate">Undergraduate</message>
+            <message key="proposal.master">Master</message>
+            <message key="proposal.postDoc">Post-Doc</message>
+            <message key="proposal.phd">Ph.D.</message>
+            <message key="proposal.proposalCountryInstruct">Geographical area(s) of Philippines where the research take place.</message>
+            <message key="proposal.otherSecondarySponsorInstruct">If one or more of your secondary sponsor(s) is/are not included in the above list, please sepcify it/them here.</message>
+            <message key="proposal.abstractInstruct">Short description of the primary purpose of the protocol, including a brief statement of the study hypothesis. Include publication/s details (link/reference), if any.</message>
+            <message key="proposal.addAnotherSecondarySponsor">Add another secondary sponsor</message>
+            <message key="proposal.addAnotherCountry">Add another country</message>
+            <message key="proposal.addAnotherArea">Add another area</message>
+            <message key="proposal.addAnotherFieldOfResearch">Add another field of research</message>
+            <message key="proposal.addAnotherProposalType">Add another proposal type</message>
+            <message key="proposal.addAnotherAgency">Add another agency</message>
+            <message key="proposal.randomlySelectedProvince">Yes, with randomly selected geographical areas</message>
+            <message key="proposal.primaryDataCollection">Primary</message>
+            <message key="proposal.secondaryDataCollection">Secondary</message>
+            <message key="proposal.bothDataCollection">Both</message>
+            <message key="proposal.otherErcDecisionUnderReview">Under Review</message>
+            <message key="proposal.otherErcDecisionFinalAvailable">Final decision available</message>
+                
         <message key="proposal.startDate">Start Date</message>
         <message key="proposal.endDate">End Date</message>
         <message key="proposal.fundsRequired">Estimated Budget</message>
@@ -408,6 +458,8 @@
 	<message key="user.role.copyeditor">Copyeditor</message>
 	<message key="user.role.proofreader">Proofreader</message>
 	<message key="user.role.author">Investigator</message> /*Author to Investigator */
+        <!-- EL on April 3rd 2013 -->
+        <message key="user.role.coinvestigator">Co-Investigator</message>
 	<message key="user.role.subscriptionManager">Subscription Manager</message>
 	<message key="user.role.managers">Administrators</message> /* Replaced Journal Managers with ERC Admins - spf */
     <message key="user.role.editors">Secretaries</message> /*Editor to Secretary*/

@@ -31,7 +31,7 @@
 			<tr valign="top">
 				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
-   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>
+   				<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td>
                 <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|escape}</a></td>
 				<td align="right">
 					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}

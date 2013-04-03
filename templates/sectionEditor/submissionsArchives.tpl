@@ -27,7 +27,7 @@
 	<tr valign="top">
 		<td>{$whoId|escape}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
-	   	<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+	   	<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
         <td><a href="{url op="submissionReview" path=$articleId}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
 		<td align="right">
 			{assign var="status" value=$submission->getSubmissionStatus()}

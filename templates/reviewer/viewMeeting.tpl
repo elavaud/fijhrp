@@ -77,7 +77,7 @@
 <div class="separator"></div>
 <table width="100%" class="listing">
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
+		<td width="10%">{translate key="common.proposalId"}</td>
 		<td width="5%"><span class="disabled">{translate key="submission.date.mmdd"}</span><br />{translate key="submissions.submit"}</td>
 		<td width="25%">{translate key="article.authors"}</td>
 		<td width="35%">{translate key="article.title"}</td>
@@ -128,7 +128,7 @@
 	</tr>
 	{if !empty($submissions)}
 	<tr>
-		<td colspan="6" align="left">{$submissionCount} submission(s)</td>
+		<td colspan="6" align="left">{$submissionCount} {translate key="submissions.proposal.s"}</td>
 	</tr>
 	{/if}
 </table>

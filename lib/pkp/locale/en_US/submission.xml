@@ -366,7 +366,10 @@
 	 * Added by Gay Figueroa
 	 * Last Update: 5/3/2011
 	****************************************** -->
-	<message key="submissions.proposal.submitted">Submitted</message>
+        
+        <message key="submissions.proposal.s">Proposal(s)</message>
+    
+    <message key="submissions.proposal.submitted">Submitted</message>
 	<message key="submissions.proposal.returned">Incomplete</message>
 	<message key="submissions.proposal.checked">Complete</message>
 	<message key="submissions.proposal.exempted">Exempted From Review</message>

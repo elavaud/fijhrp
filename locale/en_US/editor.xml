@@ -289,7 +289,9 @@
     <message key="editor.meetings.details">Details</message>
 	<message key="editor.meetings.viewMeeting">Meeting Details</message>
 	<message key="editor.meetings.meetingId">Meeting ID</message>
-	<message key="editor.meetings.guests">Guests </message>
+	<message key="editor.meetings.guests">Guests</message>
+        <!-- EL on April 3rd 2013 -->
+        <message key="editor.meetings.addGuests">Additional Guest(s)</message>
 	<message key="editor.meetings.status">Status</message>
 	<message key="editor.meetings.isFinal">Is Final</message>
 	<message key="editor.meetings.scheduleStatus">Schedule Status</message>
@@ -302,6 +304,10 @@
 	<message key="editor.meetings.uploadMinutes">Upload Minutes</message>
 	<message key="editor.meetings.addProposalsToDiscuss">Add/Remove proposals to discuss</message>
 	<message key="editor.meetings.proposals">Proposal(s) to be discussed</message>
+        
+        <!-- EL on April 2nd 2013 -->
+        <message key="editor.meetings.selectAll">Select all as present</message>
+        <message key="editor.meetings.deselectAll">Deselect all</message>
 	
 	<message key="editor.meetings.user.name">Name</message>
     <message key="editor.meetings.user.functions">Function(s)</message>
@@ -338,8 +344,12 @@
 	<message key="editor.minutes.reasonOfAbsence">Reason of Absence</message>
 	<message key="editor.minutes.present">Present</message>
 	<message key="editor.minutes.absent">Absent</message>
-	<message key="editor.minutes.nameOfMember">Name of Member</message>
-	<message key="editor.minutes.affiliationOfMember">Affiliation of Member</message>
+    <message key="editor.minutes.absent.dutyTravel">Duty Travel</message>
+    <message key="editor.minutes.absent.onLeave">On Leave</message>
+    <message key="editor.minutes.absent.otherCommitment">Other Commitment</message>
+    <message key="editor.minutes.absent.unexcused">Unexcused</message>
+	<message key="editor.minutes.nameOfGuest">Name of guest</message>
+	<message key="editor.minutes.affiliationOfGuest">Status of guest</message>
 	<message key="editor.reviewer.wproAffiliated">WPRO-affiliated</message>
 	<message key="editor.reviewer.nonWpro">non-WPRO</message>
 	<message key="editor.reviewer.healthAffiliated">Health-affiliated</message>

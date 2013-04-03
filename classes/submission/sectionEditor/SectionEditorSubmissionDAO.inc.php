@@ -1537,7 +1537,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		
 		foreach($submissionIds as $submissionId) {
 			$submission = $this->getSectionEditorSubmission($submissionId);
-			if(!$submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+			if(!$submission->isSubmissionDue() && ($submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED || $submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED))
 				array_push($submissions, $submission);
 		}
 		return $submissions;

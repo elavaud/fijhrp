@@ -140,6 +140,9 @@
 	<message key="common.homePageHeaderLogo.altText">Homepage Header Logo</message>
 	<message key="common.hour">Hour</message>
 	<message key="common.id">ID</message>
+        <!-- EL on April 2nd 2013 -->
+        <message key="common.proposalId">Proposal ID</message>
+        <!-- end -->
 	<message key="common.import">Import</message>
 	<message key="common.initiate">Initiate</message>
 	<message key="common.inProgress">In progress</message>
