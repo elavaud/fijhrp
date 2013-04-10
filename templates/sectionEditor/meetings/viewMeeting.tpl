@@ -24,23 +24,23 @@
 <div class="separator"></div>
 <br/>
 <div id="details">
-<h3>{translate key="editor.meetings.details"}</h3>
+<h3>{translate key="editor.meeting.details"}</h3>
 <div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
+		<td class="label" width="20%">{translate key="editor.meeting.id"}</td>
 		<td class="value" width="80%">{$meeting->getId()}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.meetings.meetingDate"}</td>
+		<td class="label" width="20%">{translate key="editor.meeting.schedule"}</td>
 		<td class="value" width="80%">{$meeting->getDate()|date_format:$dateFormatLong}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.article.meetingLength"}</td>
+		<td class="label" width="20%">{translate key="editor.meeting.length"}</td>
 		<td class="value" width="80%">{$meeting->getLength()} mn</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="20%">{translate key="editor.article.meetingLocation"}</td>
+		<td class="label" width="20%">{translate key="editor.meeting.location"}</td>
 		<td class="value" width="80%">{$meeting->getLocation()}</td>
 	</tr>
 	<tr valign="top">
@@ -51,7 +51,7 @@
 </div>
 <br>
 <div id="submissions">
-<h3>{translate key="editor.meetings.proposals"}</h3>
+<h3>{translate key="editor.meeting.proposals"}</h3>
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
@@ -93,7 +93,7 @@
 </div>
 <br>
 <div id="users">
-	<h3>{translate key="editor.meetings.guests"}</h3>
+	<h3>{translate key="editor.meeting.guests"}</h3>
 	<table class="listing" width="100%">
 		<tr><td colspan="5" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
@@ -119,8 +119,12 @@
 			<td width="30%">{if $user->getRemarks() == null}&mdash;{else}{$user->getRemarks()}{/if}</td>
 			<td width="15%">{$user->getReplyStatus()}</td>
 			<td width="15%" align="right">
-				<a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():1}">{translate key="editor.meetings.user.available"}</a>
-				<br/><a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():2}">{translate key="editor.meetings.user.unavailable"}</a>
+				{if ($meeting->getStatus() == STATUS_CANCELLED) || ($meeting->getStatus() == STATUS_DONE)}
+					&mdash;
+				{else}
+					<a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():1}">{translate key="editor.meetings.user.available"}</a>
+					<br/><a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():2}">{translate key="editor.meetings.user.unavailable"}</a>
+				{/if}
 			</td>
 
 			{if $user->getIsAttending() == 1 }
@@ -170,8 +174,8 @@
 </table>
 </div>
 <p> {if $meeting->getStatus() == 1}
-    <input type="button" value="Upload Minutes" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
-	<input type="button" value="Cancel Meeting" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
+    <input type="button" value="{translate key="editor.minutes.manage"}" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
+	<input type="button" value="{translate key="editor.meeting.cancel"}" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
 	{else}
 		{if $meeting->getStatus() == 2 || $meeting->getStatus() == 4 }
 		<input type="button" value="{translate key="common.setFinal"}" class="button defaultButton" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="setMeetingFinal" path=$meeting->getId() }'" />

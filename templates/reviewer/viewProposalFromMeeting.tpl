@@ -42,26 +42,26 @@
 	<td class="label">{translate key="common.status"}</td>
 	<td class="value">
 		{assign var="status" value=$submission->getSubmissionStatus()}
-    	{if $status==PROPOSAL_STATUS_WITHDRAWN}{translate key="submissions.proposal.withdrawn"}
-    	{elseif $status==PROPOSAL_STATUS_COMPLETED}{translate key="submissions.proposal.completed"}
+    	{if $status==PROPOSAL_STATUS_WITHDRAWN}{translate key="submission.status.withdrawn"}
+    	{elseif $status==PROPOSAL_STATUS_COMPLETED}{translate key="submission.status.completed"}
         {elseif $status==PROPOSAL_STATUS_ARCHIVED}
         	{assign var="decision" value=$submission->getMostRecentDecision()}
             {if $decision==SUBMISSION_EDITOR_DECISION_DECLINE}
-            	Archived({translate key="submissions.proposal.decline"})
+            	Archived({translate key="submission.status.declined"})
             {elseif $decision==SUBMISSION_EDITOR_DECISION_EXEMPTED}
-            	Archived({translate key="submissions.proposal.exempted"})
+            	Archived({translate key="submission.status.exempted"})
             {/if}
-        {elseif $status==PROPOSAL_STATUS_SUBMITTED}{translate key="submissions.proposal.submitted"}
-        {elseif $status==PROPOSAL_STATUS_CHECKED}{translate key="submissions.proposal.checked"}
-        {elseif $status==PROPOSAL_STATUS_EXPEDITED}{translate key="submissions.proposal.expedited"}
-        {elseif $status==PROPOSAL_STATUS_ASSIGNED}{translate key="submissions.proposal.assigned"}
-        {elseif $status==PROPOSAL_STATUS_RETURNED}{translate key="submissions.proposal.returned"}
-        {elseif $status==PROPOSAL_STATUS_EXEMPTED}{translate key="submissions.proposal.exempted"}
+        {elseif $status==PROPOSAL_STATUS_SUBMITTED}{translate key="submission.status.submitted"}
+        {elseif $status==PROPOSAL_STATUS_CHECKED}{translate key="submission.status.complete"}
+        {elseif $status==PROPOSAL_STATUS_EXPEDITED}{translate key="submission.status.expeditedReview"}
+        {elseif $status==PROPOSAL_STATUS_ASSIGNED}{translate key="submission.status.fullReview"}
+        {elseif $status==PROPOSAL_STATUS_RETURNED}{translate key="submission.status.incomplete"}
+        {elseif $status==PROPOSAL_STATUS_EXEMPTED}{translate key="submission.status.exempted"}
         {elseif $status==PROPOSAL_STATUS_REVIEWED}
         	{assign var="decision" value=$submission->getMostRecentDecision()}
-            {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}{translate key="submissions.proposal.resubmit"}
-            {elseif $decision==SUBMISSION_EDITOR_DECISION_ACCEPT}{translate key="submissions.proposal.approved"}
-            {elseif $decision==SUBMISSION_EDITOR_DECISION_DECLINE}{translate key="submissions.proposal.decline"}                
+            {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}{translate key="submission.status.reviseAndResubmit"}
+            {elseif $decision==SUBMISSION_EDITOR_DECISION_ACCEPT}{translate key="submission.status.approved"}
+            {elseif $decision==SUBMISSION_EDITOR_DECISION_DECLINE}{translate key="submission.status.declined"}                
             {/if}
         {/if}
 	</td>

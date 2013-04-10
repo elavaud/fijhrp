@@ -1,9 +1,5 @@
 {**
  * active.tpl
- *
- * Copyright (c) 2003-2011 John Willinsky
- * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
- *
  * Show the details of active proposals.
  *
  * $Id$
@@ -14,13 +10,11 @@
 
 <div id="submissions">
 <table class="listing" width="100%">
-        <tr><td colspan="6">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
+    <tr><td colspan="6">{translate key="submissions.active"}</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
-		<td width="10%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
-		{*<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>*}
+		<td width="10%">{translate key="common.proposalId"}</td>
+		<td width="10%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="45%">{sort_heading key="article.title" sort="title"}</td>
 		<td width="30%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
@@ -39,9 +33,6 @@
             <tr valign="top">
                 <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatLong}{else}&mdash;{/if}</td>
-                <!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-                <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB, Sept25, 2011 -->
-   				{*<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>*} <!-- Get first author. Added by MSB, Sept 25, 2011 -->
                 {if $status==PROPOSAL_STATUS_DRAFT}
                     {assign var="count" value=$count+1}
                     {assign var="progress" value=$submission->getSubmissionProgress()}
@@ -51,37 +42,37 @@
                 {/if}
                 <td align="right">
                         {if $status==PROPOSAL_STATUS_DRAFT}
-                            {translate key="submissions.proposal.draft"}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmDelete"}')">{translate key="common.delete"}</a>
+                            {translate key="submission.status.draft"}<br /><a href="{url op="deleteSubmission" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmDelete"}')">{translate key="common.delete"}</a>
                         {elseif $status==PROPOSAL_STATUS_SUBMITTED}
                             {assign var="count" value=$count+1}
-                            {translate key="submissions.proposal.submitted"}<br />
+                            {translate key="submission.status.submitted"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
 
                         {elseif $status==PROPOSAL_STATUS_CHECKED}
                             {assign var="count" value=$count+1}
-                            {translate key="submissions.proposal.checked"}<br />
+                            {translate key="submission.status.complete"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
 
                         {elseif $status==PROPOSAL_STATUS_EXPEDITED}
                             {assign var="count" value=$count+1}
-                            {translate key="submissions.proposal.expedited"}<br />
+                            {translate key="submission.status.expeditedReview"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
 
                         {elseif $status==PROPOSAL_STATUS_ASSIGNED}
                             {assign var="count" value=$count+1}
-                            {translate key="submissions.proposal.assigned"}<br />
+                            {translate key="submission.status.fullReview"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
 
                         {elseif $status==PROPOSAL_STATUS_RETURNED}
                             {assign var="count" value=$count+1}
-                            {translate key="submissions.proposal.returned"}<br />
+                            {translate key="submission.status.incomplete"}<br />
                             <a href="{url op="resubmit" path=$articleId}" class="action">Resubmit</a><br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
                             
                         {elseif $status==PROPOSAL_STATUS_REVIEWED}
                             {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}
                                 {assign var="count" value=$count+1}
-                                {translate key="submissions.proposal.resubmit"}<br />
+                                {translate key="submission.status.reviseAndResubmit"}<br />
                                 <a href="{url op="resubmit" path=$articleId}" class="action">Resubmit</a><br />
                                 <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
                                 
@@ -103,7 +94,7 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="6" align="left">{$count} active submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 </table>
@@ -113,14 +104,14 @@
 <br />
 
 <table class="listing" width="100%">
-        <tr><td colspan="6">APPROVED PROPOSALS (Research Ongoing)</td></tr>
+        <tr><td colspan="6">{translate key="submissions.approved"}</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">Proposal ID</td>
-		<td width="5%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
+		<td width="5%">{translate key="common.proposalId"}</td>
+		<td width="5%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="40%">{sort_heading key="article.title" sort="title"}</td>
 		<td width="40%">{sort_heading key="common.status" sort="status"}</td>
-		<td width="10%">Approval Date</td>
+		<td width="10%">{translate  key="submissions.dateApproved"}</td>
 	</tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 
@@ -143,12 +134,12 @@
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|escape}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td>
                 	{if ($status==PROPOSAL_STATUS_EXEMPTED)}
-                		{translate key="submissions.proposal.exempted"}
+                		{translate key="submission.status.exempted"}
                 	{else}
-                    	{translate key="submissions.proposal.approved"}
+                    	{translate key="submission.status.approved"}
                     {/if}
                     {if $submission->isSubmissionDue()}
-                    	&nbsp;(For Continuing Review)
+                    	&nbsp;({translate key="submission.status.continuingReview"})
                     {/if}
                     <br />
                     {if $submission->isSubmissionDue()}
@@ -183,7 +174,7 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="6" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 </table>
@@ -193,13 +184,11 @@
 <br />
 
 <table class="listing" width="100%">
-        <tr><td colspan="6">NOT APPROVED</td></tr>
+        <tr><td colspan="6">{translate key="submissions.declined"}</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
-		<td width="10%"><span class="disabled">{*{translate key="submission.date.yyyymmdd"}*}</span><br />{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} -->
-		{*<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>*}
+		<td width="10%">{translate key="common.proposalId"}</td>
+		<td width="10%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="45%">{sort_heading key="article.title" sort="title"}</td>
 		<td width="30%" align="right">{sort_heading key="common.status" sort="status"}</td>
 	</tr>
@@ -223,7 +212,7 @@
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|escape}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">
                     {assign var="count" value=$count+1}
-                    {translate key="submissions.proposal.decline"}<br />
+                    {translate key="submission.status.declined"}<br />
                     <a href="{url op="sendToArchive" path=$articleId}" class="action" onclick="return confirm('{translate|escape:"jsparam" key="author.submissions.confirmArchive"}')">{translate key="common.sendtoarchive"}</a>
                  </td>
             </tr>
@@ -241,7 +230,7 @@
 	</tr>
 {else}
 	<tr>
-		<td colspan="6" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 </table>

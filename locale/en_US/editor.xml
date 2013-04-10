@@ -141,8 +141,6 @@
 	<message key="editor.article.reviewersSeeAuthorsVersion">Reviewers to see author version</message>
 	<message key="editor.article.designateDueDate">Designate a Due Date</message>
 	<message key="editor.article.designateDueDateDescription">Enter the date or number of weeks for the new due date.</message>
-	<message key="editor.article.designateMeetingDate">Designate Date and Time </message>
-	<message key="editor.article.designateMeetingDateDescription">Pick a date and time for the meeting.</message>
 	<message key="editor.article.todaysDate">Today's Date</message>
 	<message key="editor.article.requestedByDate">Requested By Date</message>
 	<message key="editor.article.dueDateFormat">Format: YYYY-MM-DD</message>
@@ -269,33 +267,40 @@
 	<message key="editor.article.remove">Remove</message>
 	<message key="editor.issues.invalidAccessDate">Access date is not valid.</message>
 	
-	<!-- *********************************************
-	 * Additional key for review due date
-	 * Added by ayveemallare
-	 * Last Update: 2/25/2013 by EL
-	********************************************** -->
-	<message key="editor.article.meetingDate">Date and Time</message>
-        <message key="editor.article.meetingLength">Length of the meeting</message>
-        <message key="editor.article.meetingLocation">Location</message>
-        <message key="editor.article.meetingInviteInvestigator">Invite investigator(s)</message>
-	
-	<!-- *********************************************
-	 * Additional keys for meetings
-	 * Added by ayveemallare
-	 * Last Update: 7/5/2011
-	********************************************** -->
-	<message key="editor.meetings">Meetings</message>
-	<message key="editor.meetings.setMeeting">Set a Meeting</message>
-    <message key="editor.meetings.details">Details</message>
-	<message key="editor.meetings.viewMeeting">Meeting Details</message>
-	<message key="editor.meetings.meetingId">Meeting ID</message>
-	<message key="editor.meetings.guests">Guests</message>
-        <!-- EL on April 3rd 2013 -->
-        <message key="editor.meetings.addGuests">Additional Guest(s)</message>
-	<message key="editor.meetings.status">Status</message>
-	<message key="editor.meetings.isFinal">Is Final</message>
-	<message key="editor.meetings.scheduleStatus">Schedule Status</message>
-	<message key="editor.meetings.meetingDate">Schedule</message>
+        <!-- EL on April 4th 2013 -->
+        <message key="editor.meeting.addAnotherGuest">Add another guest</message>
+        <message key="editor.meeting.addSuppGuests">Add Supplementary Guest(s)</message>
+        <message key="editor.meeting.attendanceReport.announcements">Announcements:</message>
+        <message key="editor.meeting.attendanceReport.intro1">The meeting was convened at</message>
+        <message key="editor.meeting.attendanceReport.intro2">with the required quorum of</message>
+        <message key="editor.meeting.attendanceReport.intro3">members present. The meeting was adjourned at</message>
+        <message key="editor.meeting.attendanceReport.meetingDate">Minutes of the ERC Meeting held on</message>
+        <message key="editor.meeting.attendanceReport.membersAbsent">Member(s) absent:</message>
+        <message key="editor.meeting.attendanceReport.membersPresent">Member(s) present:</message>
+        <message key="editor.meeting.attendanceReport.reasonForAbsence">Reason for absence:</message>
+        <message key="editor.meeting.attendanceReport.submittedBy">Minutes of the meeting submitted by</message>
+        <message key="editor.meeting.attendanceReport.suppGuest">Member(s) participating in other capacity:</message>
+        <message key="editor.meeting.cancel">Cancel Meeting</message>
+        <message key="editor.meeting.dateAndTime">Date and Time</message>
+        <message key="editor.meeting.dateAndTime.instruct">Please click on the field and pick a date and a time for the meeting.</message>
+        <message key="editor.meeting.deselectAll">Deselect all</message>
+        <message key="editor.meeting.details">Details</message>
+        <message key="editor.meeting.guests">Guests</message>
+        <message key="editor.meeting.id">Meeting ID</message>
+        <message key="editor.meeting.inviteInvestigator">Invite investigator(s)</message>
+        <message key="editor.meeting.inviteInvestigator.instruct">Would you like to invite the investigator(s) of the proposal(s) to attend to this meeting?</message>
+        <message key="editor.meeting.length">Length of the meeting</message>
+        <message key="editor.meeting.location">Location</message>
+        <message key="editor.meeting.proposals">Proposal(s) to be discussed</message>
+        <message key="editor.meeting.removeSuppGuests">Remove Supplementary Guest(s)</message>
+        <message key="editor.meeting.schedule">Schedule</message>
+        <message key="editor.meeting.scheduleStatus">Schedule Status</message>
+        <message key="editor.meeting.selectAllAsPresent">Select all as present</message>
+        <message key="editor.meeting.setMeetingAsFinal">Set meeting as final</message>
+        <message key="editor.meeting.setMeetingAsFinal.instruct">If the meeting is set as final, you will not be able to modify any of its information and your guests will not be able to specify their attendance or to comment the organisation of the meeting.</message>
+        <message key="editor.meeting.settings">Settings</message>   
+        <message key="editor.meeting.status">Meeting Status</message>
+    
 	<message key="editor.meetings.noMeetings">No scheduled meetings</message>
 	<message key="editor.meetings.meetingsCount">meeting(s) scheduled</message>
 	<message key="editor.meetings.setNewMeeting">SET A NEW MEETING</message>
@@ -303,12 +308,7 @@
 	<message key="editor.meetings.toSetNewMeeting"> to set a new meeting.</message>
 	<message key="editor.meetings.uploadMinutes">Upload Minutes</message>
 	<message key="editor.meetings.addProposalsToDiscuss">Add/Remove proposals to discuss</message>
-	<message key="editor.meetings.proposals">Proposal(s) to be discussed</message>
-        
-        <!-- EL on April 2nd 2013 -->
-        <message key="editor.meetings.selectAll">Select all as present</message>
-        <message key="editor.meetings.deselectAll">Deselect all</message>
-	
+    
 	<message key="editor.meetings.user.name">Name</message>
     <message key="editor.meetings.user.functions">Function(s)</message>
     <message key="editor.meetings.user.available">Available</message>
@@ -330,9 +330,20 @@
         <message key="editor.meetings.form.meetingLengthRequired">The length of the meeting is required.</message>
         <message key="editor.meetings.form.meetingInvestigatorRequired">Would you like to invite the investigator(s) of the proposal(s) to this meeting?.</message>
         
-	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>	
+	<message key="editor.meetings.tentativeAttendance">Tentative Attendace</message>
 
-	<message key="editor.minutes.minutesFileRequired">Please upload meeting minutes</message>
+	<!-- *********************************************
+	 * Additional keys for meetings
+	 * Added by ayveemallare
+	 * Last Update: 7/5/2011
+	********************************************** -->
+	<message key="editor.meetings">Meetings</message>
+	<message key="editor.meetings.setMeeting">Set a Meeting</message>
+	<message key="editor.meetings.viewMeeting">Meeting Details</message>
+    
+
+	<message key="editor.minutes.manage">Manage Minutes</message>
+    <message key="editor.minutes.minutesFileRequired">Please upload meeting minutes</message>
 	<message key="editor.minutes.minutesFile">Minutes</message>
 	<message key="editor.minutes.adjourned">Meeting was adjourned at</message>
 	<message key="editor.minutes.adjournedRequired">Please indicate the time when meeting was adjourned</message>
@@ -359,11 +370,10 @@
 	<message key="editor.minutes.completeInitialReviews">Complete Initial Reviews</message>
 	<message key="editor.minutes.complete">Complete</message>
 	<message key="editor.minutes.incomplete">Incomplete</message>
-	<message key="editor.meetingStatus">Meeting Status</message>
 	<message key="editor.minutesStatus">Minutes Status</message>
 
 	<message key="editor.minutes.uploadAttendance.checkReasonOfAbsence"></message>
-	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate whether reviewer is present or absent</message>
+	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate to all guests whether they were present or absent</message>
 	<message key="editor.minutes.uploadAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
 	<message key="editor.minutes.minutesOfLastMeeting">Minutes of Last Meeting</message>
 	<message key="editor.minutes.selectProposal">Select proposal</message>

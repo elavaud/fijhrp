@@ -66,12 +66,52 @@
 			}
 		);
 		
+		$("#showAddGuestField").click(
+			function() {
+				$("#showAddGuestField").hide();
+				$("#hideAddGuestField").show();
+				$("#addGuestField").show();
+			}
+		);
+
+		$("#hideAddGuestField").click(
+			function() {
+				$("#showAddGuestField").show();
+				$("#hideAddGuestField").hide();
+				$("#addGuestField").hide();
+				
+				var rows = $("#meetingAttendances tr:gt(0)"); // skip the first row
+
+				rows.each(function() {
+					$(this).remove();
+				});
+				$("#meetingAttendances > tbody > tr:first").find('td:eq(1) input').val('');
+				$("#meetingAttendances > tbody > tr:first").find('td:eq(3) input').val('');		
+			}
+		);
+
 		$("#addGuest").click(
 			function() {
 				$("#meetingAttendances tr:last").after($("#meetingAttendances tr:last").clone());
 			}
 		);
 
+        $('.removeAddGuest').live('click',
+        	function(){
+        		var rowCount = $('#meetingAttendances tr').length;
+        		if (rowCount>1) {
+        			$(this).closest('tr').remove();
+        		} else {
+        			$("#showAddGuestField").show();
+					$("#hideAddGuestField").hide();
+					$("#addGuestField").hide();
+					$("#meetingAttendances > tbody > tr:first").find('td:eq(1) input').val('');
+					$("#meetingAttendances > tbody > tr:first").find('td:eq(3) input').val('');	
+        		}
+           		return false;
+        	}
+        );
+        	
 		$(".absent").click( 
 			function () {
 				var elemVal = $(this).attr('id').substring(18);
@@ -87,18 +127,6 @@
 				$("#div_reason_of_absence_"+ elemVal +" input:radio").attr('checked',false);
 			}
  		);
-//  		$(".div_reason_of_absence").click( function (){
-//  			var elemVal = $(this).attr('id').substring(22);
-// 			var present = $("#reviewer-ispresent-"+elemVal).attr('checked');
-// 			if(present){
-// 				alert("Mark the reviewer absent first.");
-//  	 	 	}else{
-//  	 	 		$("#reviewer-isabsent-"+elemVal).attr('checked',true);
-//  	 	 	}
- 	 	 	
-//  		});
- 		
-
 	});
 
 	function reasonClicked(elemVal) {
@@ -139,8 +167,8 @@
 <div id="attendance">
 	<table width="100%">
 		<tr>
-			<td width="50%"><h3>{translate key="editor.meetings.guests"}</h3></td>
-			<td width="50%" align="right"><a id="allPresent" href="javascript:void(0)">{translate key="editor.meetings.selectAll"}</a><a href="javascript:void(0)" id="deselectAll" style="display: none;">{translate key="editor.meetings.deselectAll"}</a></td>
+			<td width="50%"><h3>{translate key="editor.meeting.guests"}</h3></td>
+			<td width="50%" align="right"><a id="allPresent" href="javascript:void(0)">{translate key="editor.meeting.selectAllAsPresent"}</a><a href="javascript:void(0)" id="deselectAll" style="display: none;">{translate key="editor.meeting.deselectAll"}</a></td>
 		</tr>
 	</table>
 	<table width="100%" class="listing" name="ercMembers">
@@ -160,10 +188,10 @@
 		 	<tr>	
 				<td width="5%">
 					<input type="hidden" name="guest_attendance[{$guestId}][guestId]" id="reviewer-guestId-{$guestId}" value="{$guestId}" /> 
-					<input type="radio" class="absent" name="guest_attendance[{$guestId}][attendance]" id="reviewer-isabsent-{$guestId}" {if $guest->getIsAttending() == 2} checked="checked" {/if} value="absent"  />
+					<input type="radio" class="absent" name="guest_attendance[{$guestId}][attendance]" id="reviewer-isabsent-{$guestId}" {if isset($attendance.$guestId.attendance)}{if $attendance.$guestId.attendance == "absent"} checked="checked" {/if}{elseif $guest->getIsAttending() == 2} checked="checked" {/if} value="absent"  />
 				</td>
 		 		<td width="5%">
-					<input type="radio" class="present" name="guest_attendance[{$guestId}][attendance]" id="reviewer-ispresent-{$guestId}" {if $guest->getIsAttending() == 1} checked="checked" {/if} value="present" />
+					<input type="radio" class="present" name="guest_attendance[{$guestId}][attendance]" id="reviewer-ispresent-{$guestId}" {if isset($attendance.$guestId.attendance)}{if $attendance.$guestId.attendance == "present"} checked="checked" {/if}{elseif $guest->getIsAttending() == 1} checked="checked" {/if} value="present" />
 		 		</td>
 				<td width="20%">
 					<label for="attendance[{$guestId}]">{$guest->getSalutation} {$guest->getFirstName()} {$guest->getLastName()}</label></td>
@@ -171,12 +199,12 @@
 				<td width="50%" id="div_reason_of_absence_{$guestId}" class="div_reason_of_absence">
 					<table width="100%">
 						<tr>
-							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-duty-travel" value="Duty Travel" {if  $attendance[$guestId][$reason] == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$guest->getId()}">{translate key="editor.minutes.absent.dutyTravel"}</label></td>
-							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})"  id="absent-{$guestId}-on-leave" value="On Leave" {if $attendance[$guestId][$reason] == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$guest->getId()}">{translate key="editor.minutes.absent.onLeave"}</label></td>
+							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-duty-travel" value="Duty Travel" {if  $attendance.$guestId.reason == "Duty Travel" } checked="checked"{/if} /><label for="duty_travel_{$guest->getId()}">{translate key="editor.minutes.absent.dutyTravel"}</label></td>
+							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})"  id="absent-{$guestId}-on-leave" value="On Leave" {if $attendance.$guestId.reason == "On Leave" } checked="checked"{/if} /><label for="on_leave_{$guest->getId()}">{translate key="editor.minutes.absent.onLeave"}</label></td>
 						</tr>
 						<tr>
-							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-other-commitment" value="Other Commitment" {if  $attendance[$guestId][$reason] == "Other Commitment" } checked="checked"{/if}/><label for="others_{$guest->getId()}">{translate key="editor.minutes.absent.otherCommitment"}</label></td>
-							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-unexcused" value="Unexcused" {if  $attendance[$guestId][$reason] == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$guest->getId()}">{translate key="editor.minutes.absent.unexcused"}</label></td>
+							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-other-commitment" value="Other Commitment" {if  $attendance.$guestId.reason == "Other Commitment" } checked="checked"{/if}/><label for="others_{$guest->getId()}">{translate key="editor.minutes.absent.otherCommitment"}</label></td>
+							<td width="50%"><input type="radio" name="guest_attendance[{$guestId}][reason]" onClick="reasonClicked({$guestId})" id="absent-{$guestId}-unexcused" value="Unexcused" {if  $attendance.$guestId.reason == "Unexcused" } checked="checked"{/if}/><label for="unexcused_{$guest->getId()}">{translate key="editor.minutes.absent.unexcused"}</label></td>
 						</tr>
 					</table>
 				</td>
@@ -188,23 +216,27 @@
 	</table> 
 	<br/>
 	<br/>
-	<h3>{translate key="editor.meetings.addGuests"}</h3>
-	<div class="separator"></div><br/>
-	<table class="listing" name="meetingAttendances" id="meetingAttendances" width="100%">
-	{foreach from=$suppGuestNames key=guestIndex item=guest}
-		<tr>
-		<td width='5%'>{translate key="user.name"}</td>
-	 	<td width='15%'><input type='text' name='suppGuestName[]' id='suppGuestName[]' size='50' value="{$guest}" /></td>
-		<td width='5%'>{translate key="user.affiliation"}</td>
-	 	<td width='15%'><input type='text' name='suppGuestAffiliation[]' id='suppGuestAffiliation[]' size='50' value="{$suppGuestAffiliations[$guestIndex]}" /></td>
-		<td width='60%'></td>
-		</tr>
-	{/foreach}
-	</table>
-		<br/><br/>
-		<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>	 
-		<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+	<p><a id="showAddGuestField" href="javascript:void(0)" class="action">{translate key="editor.meeting.addSuppGuests"}</a><a id="hideAddGuestField" href="javascript:void(0)" style="display: none;" class="action">{translate key="editor.meeting.removeSuppGuests"}</a></p>
+	<div id="addGuestField" style="display: none;">
+		<div class="separator"></div><br/>
+		<table class="listing" name="meetingAttendances" id="meetingAttendances" width="100%">
+		{foreach from=$suppGuestNames key=guestIndex item=guest}
+			<tr valign="top">
+				<td width='10%'>{translate key="user.name"}</td>
+	 			<td width='35%'><input type='text' name='suppGuestName[]' id='suppGuestName[]' size='40' value="{$guest}" /></td>
+				<td width='10%'>{translate key="user.affiliation"}</td>
+	 			<td width='35%'><input type='text' name='suppGuestAffiliation[]' id='suppGuestAffiliation[]' size='40' value="{$suppGuestAffiliations[$guestIndex]}" /></td>
+	 			<td width='10%'><a href="" class="removeAddGuest">{translate key="common.remove"}</a></td>
+			</tr>
+		{/foreach}
+		</table>
+		<a id="addGuest" href="javascript:void(0)">{translate key="editor.meeting.addAnotherGuest"}</a>
 	</div>
+	
+	<br/><br/>
+	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>	 
+	<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+</div>
  </form>
 
 {include file="common/footer.tpl"}

@@ -35,7 +35,7 @@ $(document).ready(function() {
 {include file="common/formErrors.tpl"}
 <div class="separator"></div>
 <br>
-<h3>{translate key="editor.meetings.proposals"}</h3>
+<h3>{translate key="editor.meeting.proposals"}</h3>
 <form method="post" action="{url op="setMeeting" path=$meetingId }" >
 
 <div id="submissions">
@@ -91,17 +91,14 @@ $(document).ready(function() {
 <div id="meetingInfo">
 <table class="listing" width="100%">
 <tr valign="top">
-	<td colspan="6"><h3>{translate key="editor.article.designateMeetingDate"}</h3></td>
+	<td colspan="6"><h3>{translate key="editor.meeting.settings"}</h3></td>
 </tr>
 <tr valign="top">
-	<td colspan="6">{translate key="editor.article.designateMeetingDateDescription"}</td>
-</tr>
-<tr valign="top">
-	<td width="20%" colspan="2" class="label">{fieldLabel name="meetingDate" required="true" key="editor.article.meetingDate"}</td>
+	<td width="20%" title="{translate key="editor.meeting.dateAndTime.instruct"}" colspan="2" class="label">[?] {fieldLabel name="meetingDate" required="true" key="editor.meeting.dateAndTime"}</td>
 	<td width="80%" colspan="4" class="value"><input type="text" class="textField" name="meetingDate" id="meetingDate" value="{$meetingDate|date_format:"%Y-%m-%d %I:%M %p"}" size="20" maxlength="255" /></td>
 </tr>
 <tr valign="top">
-	<td width="20%" colspan="2" class="label">{fieldLabel name="meetingLength" required="true" key="editor.article.meetingLength"}</td>
+	<td width="20%" colspan="2" class="label">{fieldLabel name="meetingLength" required="true" key="editor.meeting.length"}</td>
 	<td width="20%" colspan="4" class="value">
 		<select name="meetingLength" size="1"  class="selectMenu">
 			<option value="">&nbsp;</option>
@@ -116,23 +113,29 @@ $(document).ready(function() {
 	</td>
 </tr>
 <tr>
-	<td width="20%" colspan="2" class="label">{fieldLabel name="location" key="editor.article.meetingLocation"}</td>
+	<td width="20%" colspan="2" class="label">{fieldLabel name="location" key="editor.meeting.location"}</td>
 	<td width="80%" colspan="4" class="value">
 		<input type="text" class="textField" name="location" value="{$location}" size="50" maxlength="255" />
 	</td>
 </tr>
 <tr>
-	<td width="20%" colspan="2" class="label">{fieldLabel name="investigator" required="true" key="editor.article.meetingInviteInvestigator"}</td>
+	<td width="20%" title="{translate key="editor.meeting.inviteInvestigator.instruct"}" colspan="2" class="label">[?] {fieldLabel name="investigator" required="true" key="editor.meeting.inviteInvestigator"}</td>
 	<td width="80%" colspan="4" class="value">
     	<input type="radio" name="investigator" value="1" {if $investigator == "1"}checked="checked"{/if}/> {translate key="common.yes"}
         &nbsp;&nbsp;&nbsp;&nbsp;
         <input type="radio" name="investigator" value="0" {if $investigator == "0"}checked="checked"{/if}/> {translate key="common.no"}
 	</td>
 </tr>
+<tr>
+	<td width="20%" colspan="2" class="label">&nbsp;</td>
+	<td width="80%" title="{translate key="editor.meeting.setMeetingAsFinal.instruct"}" colspan="4" class="value"><br/>
+		<input type="checkbox" name="final" value="1" />&nbsp;[?] {translate key="editor.meeting.setMeetingAsFinal"}
+	</td>
+</tr>
 </table>
 </div>
 
-<p> {if $meetingId == 0}
+<p><br/> {if $meetingId == 0}
 		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" />
 	{else}
 		<input type="submit" name="saveMeeting" value="{translate key="common.save"}" class="button defaultButton" onclick="ans=confirm('Do you want to save the changes?'); if(ans) document.location.href='{url op="saveMeeting" path=$meetingId }'" />
@@ -141,5 +144,6 @@ $(document).ready(function() {
  	  </p>
 </form>
 <p><span class="formRequired">{translate key="common.requiredField"}</span></p>
+<p><span class="formRequired">{translate key="common.mouseOver"}</span></p>
 
 {include file="common/footer.tpl"}

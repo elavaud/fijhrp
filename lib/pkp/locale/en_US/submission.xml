@@ -120,11 +120,12 @@
 	<message key="metadata.property.validationMessage.name-type">Please make sure that you set a valid name type. Supported values are 'personal', 'corporate' and 'conference'.</message>
 	<!-- FIXME: end -->
 
-	<message key="submission.agencies">Agencies</message>
+	
 	<message key="submission.abstractViews">Abstract Views</message>
 	<message key="submission.accepted">Accepted</message>
 	<message key="submission.acknowledge">Acknowledge</message>
 	<message key="submission.addSuppFile">Add a Supplementary File</message>
+    <message key="submission.agencies">Agencies</message>
 	<message key="submission.ask">Ask</message>
 	<message key="submission.backToSubmissionEditing">Back to Submission Editing</message>
 	<message key="submission.changeComments">Change to</message>
@@ -241,8 +242,8 @@
 	<message key="submission.comments.review">Review</message>
 	<message key="submission.comments.sendDecisionToReviewers">Send Reviewers editorial decision</message>
 	<message key="submission.comments.subject">Subject</message>
-	<message key="submission.complete">Complete</message>
-	<message key="submission.done">Done</message>
+	<message key="submission.complete">Complete</message>	
+    <message key="submission.done">Done</message>
 	<message key="submission.dueDate">Due Date</message>
 	<message key="submission.due">Due</message>
 	<message key="submission.editing">Editing</message>
@@ -282,7 +283,7 @@
 	<message key="submission.history.submissionEventLog">Event Log</message>
 	<message key="submission.history.submissionNotes">Submission Notes</message>
 	<message key="submission.history.viewLog">View Log</message>
-	<message key="submission.indexing">Indexing</message>
+    <message key="submission.indexing">Indexing</message>
 	<message key="submission.initiated">Initiated</message>
 	<message key="submission.lastModified">Last modified</message>
 	<message key="submission.layout.addGalley">Add a Layout Galley</message>
@@ -349,44 +350,35 @@
 	<message key="submission.reviewMetadata">Review Metadata</message>
 	<message key="submission.review">Review</message>
 	<message key="submission.reviewVersion">Review Version</message>
-	<message key="submissions.active">Active</message>
+    <message key="submission.saveMetadata">Save Metadata</message>
+    
+    <message key="submission.status.approved">Approved</message>
+    <message key="submission.status.complete">Complete</message>
+    <message key="submission.status.completed">Completed</message>
+    <message key="submission.status.continuingReview">Continuing Review</message>
+    <message key="submission.status.declined">Declined</message>
+    <message key="submission.status.draft">Draft</message>
+    <message key="submission.status.exempted">Exempted From Review</message>
+    <message key="submission.status.expeditedReview">Expedited Review</message>
+    <message key="submission.status.fullReview">Full Review</message>
+    <message key="submission.status.incomplete">Incomplete</message>
+    <message key="submission.status.resubmitted">Re-submitted</message>
+    <message key="submission.status.reviewed">Reviewed</message>
+    <message key="submission.status.reviseAndResubmit">Revise and Resubmit</message>
+    <message key="submission.status.submitted">Submitted</message>
+    <message key="submission.status.withdrawn">Withdrawn</message>
+    
+	<message key="submissions.active">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</message>
+    <message key="submissions.approved">APPROVED PROPOSALS (Research Ongoing)</message>
 	<message key="submissions.archived">Archived</message>
-	<message key="submission.saveMetadata">Save Metadata</message>
 	<message key="submissions.completed">Completed</message>
-	<message key="submissions.declined">Declined</message>
+	<message key="submissions.declined">DECLINED PROPOSALS</message>
 	<message key="submissions.incomplete">Incomplete</message>
 	<message key="submissions.noSubmissions">No Submissions</message>
+    <message key="submissions.proposal.s">Proposal(s)</message>
 	<message key="submissions.queuedEditing">In Editing</message>
 	<message key="submissions.queued">Queued</message>
 	<message key="submissions.queuedUnassigned">Awaiting assignment</message>
-
-
-	<!-- ***************************************** 
-	 * Submissions proposal status 
-	 * Added by Gay Figueroa
-	 * Last Update: 5/3/2011
-	****************************************** -->
-        
-        <message key="submissions.proposal.s">Proposal(s)</message>
-    
-    <message key="submissions.proposal.submitted">Submitted</message>
-	<message key="submissions.proposal.returned">Incomplete</message>
-	<message key="submissions.proposal.checked">Complete</message>
-	<message key="submissions.proposal.exempted">Exempted From Review</message>
-	<message key="submissions.proposal.assigned">For Full Review</message>
-	<message key="submissions.proposal.expedited">For Expedited Review</message>
-	<message key="submissions.proposal.reviewed">Reviewed</message>
-	<message key="submissions.proposal.expired">Expired</message>
-	<message key="submissions.proposal.resubmitted">Re-submitted (Incomplete)</message>
-	
-        <message key="submissions.proposal.decline">Not Approved</message>
-        <message key="submissions.proposal.resubmit">Revise and Resubmit</message>
-        <message key="submissions.proposal.withdrawn">Withdrawn</message>
-        <message key="submissions.proposal.draft">Draft</message>
-        <message key="submissions.proposal.approved">Approved</message>
-        <message key="submissions.proposal.completed">Completed</message>
-        <message key="submissions.proposal.extensionrequested">Extension Requested</message>
-        <message key="submissions.proposal.forContinuingReview">For Continuing Review</message>
 
 	<message key="submissions.ruling">Ruling</message>
 	<message key="submissions.submit">Date of submission</message>

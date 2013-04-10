@@ -48,7 +48,7 @@ class MeetingAction extends Action {
 	 * @param $investigator (bool): specify if the investigator(s) is/are invited
 	 */
 	
-	function saveMeeting($meetingId, $selectedSubmissions, $meetingDate, $meetingLength, $investigator, $location = null){
+	function saveMeeting($meetingId, $selectedSubmissions, $meetingDate, $meetingLength, $investigator, $location = null, $final = null){
 	
 		$user =& Request::getUser();
 				
@@ -163,7 +163,12 @@ class MeetingAction extends Action {
 		}
 		
 		if ($isNew) {
-			Request::redirect(null, null, 'notifyUsersMeeting', array($meetingId, 'MEETING_NEW'));
+			if ($final) {
+				$meetingDao->updateStatus($meetingId, STATUS_FINAL);
+				Request::redirect(null, null, 'notifyUsersMeeting', array($meetingId, 'MEETING_FINAL'));
+			} else {
+				Request::redirect(null, null, 'notifyUsersMeeting', array($meetingId, 'MEETING_NEW'));
+			}
 		} elseif (($oldDate != 0) || ($oldLength != 0) || ($oldLocation != '')){
 			//reset reply of all reviewers
 			$meetingAttendanceDao->resetReplyOfUsers($meeting);
@@ -173,15 +178,20 @@ class MeetingAction extends Action {
 			$meetingAttendance->setIsAttending(1);
 			$meetingAttendanceDao->updateReplyOfAttendance($meetingAttendance);
 			
-			//update meeting date since old date != new date
+			//update meeting date 
 			$meeting->setDate($meetingDate);
 			$meeting->setLength($meetingLength);
 			$meeting->setLocation($location);
 			$meeting->setInvestigator($investigator);
 			$meetingDao->updateMeeting($meeting);
-			//update meeting as rescheduled
-			$meetingDao->updateStatus($meetingId, STATUS_RESCHEDULED);
-			Request::redirect(null, null, 'notifyUsersMeeting', array($meetingId, 'MEETING_CHANGE'));
+			
+			if ($final) {
+				$meetingDao->updateStatus($meetingId, STATUS_FINAL);
+				Request::redirect(null, null, 'notifyUsersMeeting', array($meetingId, 'MEETING_FINAL'));
+			} else {
+				$meetingDao->updateStatus($meetingId, STATUS_RESCHEDULED);
+				Request::redirect(null, null, 'notifyUsersMeeting', array($meetingId, 'MEETING_CHANGE'));			
+			}
 		}
 		
 		return $meetingId;
@@ -434,7 +444,19 @@ class MeetingAction extends Action {
 			return true;
 		} else {
 			if(!Request::getUserVar('continued')) {
+				// Add email of the submitter
 				$email->addRecipient($investigator->getEmail(), $investigator->getFullName());
+
+				// Add emails of the investigator(s) if different from the submitter
+				foreach($submissionIds as $submissionId) {
+					$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
+					if ($submission->getUserId() == $investigatorAttendance->getUserId()) {
+						$authors = $submission->getAuthors();
+						foreach ($authors as $author) {
+							if ($author->getEmail() != $investigator->getEmail()) $email->addRecipient($author->getEmail(), $author->getFirstName().' '.$author->getLastName());	
+						}
+					}
+				}
 			}
 			
 			// CC the secretary(ies) of the committee
@@ -457,12 +479,21 @@ class MeetingAction extends Action {
 				$dateLocation .= 'Number of proposal(s) to review: '.count($submissionIds)."\n";
 				
 				$replyUrl = (string)'';
+				$investigatorFullName = (string)$investigator->getFullName();
 				$urlFirst = true;
 				foreach ($submissionIds as $submissionId){
 					if ($urlFirst) { 
 						$replyUrl .= Request::url(null, 'author', 'submissionReview', $submissionId);
 						$urlFirst = false;
-					} else $replyUrl .= 'Or:\n'.Request::url(null, 'author', 'submissionReview', $submissionId);					
+					} else $replyUrl .= 'Or:\n'.Request::url(null, 'author', 'submissionReview', $submissionId);
+					// Add name of the investigators if different from submitter
+					$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
+					if ($submission->getUserId() == $investigatorAttendance->getUserId()) {
+						$authors = $submission->getAuthors();
+						foreach ($authors as $author) {
+							if (($author->getFirstName() != $investigator->getFirstName()) || ($author->getLastName() != $investigator->getLastName())) $investigatorFullName .= ', '.$author->getFirstName().' '.$author->getLastName();
+						}
+					}					
 				}
 				
 				
@@ -471,7 +502,7 @@ class MeetingAction extends Action {
 				$erc =& $sectionDao->getSection($meeting->getUploader());
 				$paramArray = array(
 					'ercTitle' => $erc->getLocalizedTitle(),
-					'investigatorFullName' => $investigator->getFullName(),
+					'investigatorFullName' => $investigatorFullName,
 					'submissions' => $submissions,
 					'dateLocation' => $dateLocation,
 					'replyUrl' => $replyUrl,

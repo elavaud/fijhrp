@@ -68,7 +68,7 @@ function checkSize(){
 	<td width="80%" class="value">
 		{translate key=$proposalStatusKey}
 		{if $submission->isDueForReview()==1 && $proposalStatus != PROPOSAL_STATUS_COMPLETED}
-			({translate key="submissions.proposal.forContinuingReview"})
+			({translate key="submission.status.continuingReview"})
 		{/if}</td>
 </tr>
 

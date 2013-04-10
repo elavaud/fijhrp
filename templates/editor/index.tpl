@@ -152,7 +152,7 @@ function sortSearch(heading, direction) {
 			{assign var="statusKey" value=$submission->getProposalStatusKey()}
 			{translate key=$statusKey} 
 			{if $submission->isSubmissionDue()}
-				({translate key="submissions.proposal.forContinuingReview"})
+				({translate key="submission.status.continuingReview"})
 			{/if}
 		</td>
 	</tr>

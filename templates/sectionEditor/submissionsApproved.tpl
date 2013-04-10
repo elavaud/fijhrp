@@ -12,10 +12,10 @@
 <div id="submissions">
 
 <table class="listing" width="100%">
-        <tr><td colspan="6">APPROVED PROPOSALS (Research Ongoing) !</td></tr>
+        <tr><td colspan="6">{translate key="submissions.approved"}</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">Proposal ID</td>
+		<td width="5%">{translate key="common.proposalId"}</td>
 		<td width="5%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
@@ -34,7 +34,7 @@
         <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
 		<td align="right">
 			{assign var="displayStatus" value=$submission->getEditorDecisionKey()}
-			{translate key=$displayStatus}{if $submission->isDueForReview()==1}&nbsp; ({translate key="submissions.proposal.forContinuingReview"}){/if}
+			{translate key=$displayStatus}{if $submission->isDueForReview()==1}&nbsp; ({translate key="submission.status.continuingReview"}){/if}
 		</td>		
 	</tr>
 	<tr>

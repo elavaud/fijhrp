@@ -99,6 +99,11 @@
 	<message key="common.create">Create</message>
 	<message key="common.dateCompleted">Date completed</message>
 	<message key="common.date">Date</message>
+
+        
+        <!-- Added by EL on April 4th 2013 -->
+        <message key="common.date.on">on</message>
+        
 	<message key="common.dateModified">Date modified</message>
 	<message key="common.dateRequested">Date requested</message>
 	<message key="common.dateSubmitted">Date submitted</message>
@@ -168,7 +173,7 @@
 	<message key="common.notify">Notify</message>
 	<message key="common.off">Off</message>
 	<message key="common.on">On</message>
-	<message key="common.ok">OK</message>
+    <message key="common.ok">OK</message>
 	<message key="common.options">Options</message>
 	<message key="common.order">Order</message>
 	<message key="common.originalFileName">Original file name</message>

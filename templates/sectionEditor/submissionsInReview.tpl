@@ -11,10 +11,10 @@
 <br/><br/>
 <div id="submissions">
 <table class="listing" width="100%">
-        <tr><td colspan="6">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
+        <tr><td colspan="6">{translate key="submissions.active"}</td></tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">Proposal ID</td>
+		<td width="5%">{translate key="common.proposalId"}</td>
 		<td width="5%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
@@ -58,7 +58,7 @@
 							&nbsp;(Recommendation(s) available)
 						{/if}
 						{if $submission->isDueForReview()==1} 
-							({translate key="submissions.proposal.forContinuingReview"}) 
+							({translate key="submission.status.continuingReview"}) 
 						{/if}
 					{/if}
 				</td>		

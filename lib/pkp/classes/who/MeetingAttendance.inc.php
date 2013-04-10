@@ -122,6 +122,13 @@ class MeetingAttendance extends DataObject {
 		return $this->getData('reasonForAbsence');
 	}
 
+	function setWasPresent($wasPresent) {
+		$this->setData('wasPresent', $wasPresent);
+	}
+
+	function getWasPresent() {
+		return $this->getData('wasPresent');
+	}
 }
 
 ?>

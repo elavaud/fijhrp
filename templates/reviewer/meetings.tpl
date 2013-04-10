@@ -80,10 +80,10 @@
 	<table class="listing" width="100%">
 		<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 		<tr class="heading" valign="bottom">
-			<td width="5%">{sort_heading key="editor.meetings.meetingId" sort="id"}</td>
+			<td width="5%">{sort_heading key="editor.meeting.id" sort="id"}</td>
 			<td width="40%">{translate key="reviewer.meetings.submissions"}</td>
-			<td width="25%" align="right">{sort_heading key="editor.meetings.meetingDate" sort="meetingDate"}</td>
-			<td width="15%" align="right">{sort_heading key="editor.meetings.scheduleStatus" sort="scheduleStatus"}</td>
+			<td width="25%" align="right">{sort_heading key="editor.meeting.schedule" sort="meetingDate"}</td>
+			<td width="15%" align="right">{sort_heading key="editor.meeting.scheduleStatus" sort="scheduleStatus"}</td>
 			<td width="15%" align="right">{sort_heading key="reviewer.meetings.replyStatus" sort="replyStatus"}</td>
 		</tr>
 		<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>

@@ -11,12 +11,11 @@
 <br/><br/>
 <div id="submissions">
 <table class="listing" width="100%">
-        <tr><td colspan="6">ACTIVE PROPOSALS (Awaiting Decision/Revise and Resubmit)</td></tr>
+        <tr><td colspan="6">{translate key="submissions.active"}</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="5%">Proposal ID</td>
-		<td width="5%">{*<span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept 25, 2011 -->
+		<td width="5%">{translate key="common.proposalId"}</td>
+		<td width="5%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="25%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="35%">{sort_heading key="article.title" sort="title"}</td>
 		<td width="25%" align="right">{sort_heading key="common.status" sort="status"}</td>
@@ -43,7 +42,7 @@
 					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 					{translate key=$proposalStatusKey}
 					{if $submission->isSubmissionDue()} 
-						({translate key="submissions.proposal.forContinuingReview"}) 
+						({translate key="submission.status.continuingReview"}) 
 					{/if}					
 				</td>		
 			</tr>
@@ -64,18 +63,17 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="6" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 </table>
 <br/><br/>
 <table class="listing" width="100%">
-        <tr><td colspan="7">APPROVED PROPOSALS (Research Ongoing)</td></tr>
+        <tr><td colspan="7">{translate key="submissions.approved"}</td></tr>
 	<tr><td colspan="7" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
-		<td width="10%">{*<span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- {*	<td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *}  Commented out by MSB, Sept25, 2011 -->
+		<td width="10%">{translate key="common.proposalId"}</td>
+		<td width="10%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="50%">{sort_heading key="article.title" sort="title"}</td>
 		<td width="10%" align="right">{translate key="editor.submission.dateOfApproval"}</td>
@@ -118,19 +116,18 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="6" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 </table>
 
 <br/><br/>
 <table class="listing" width="100%">
-        <tr><td colspan="6">NOT APPROVED</td></tr>
+        <tr><td colspan="6">{translate key="submissions.declined"}</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
-		<td width="10%">{*<span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB, Sept25,2011-->
+		<td width="10%">{translate key="common.proposalId"}</td>
+		<td width="10%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="60%">{sort_heading key="article.title" sort="title"}</td>
 	</tr>
@@ -171,7 +168,7 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="6" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 </table>
@@ -182,9 +179,8 @@
         <tr><td colspan="6">EXEMPT FROM REVIEW</td></tr>
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
-		<td width="10%">{*<span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br />*}{sort_heading key="submissions.submit" sort="submitDate"}</td>
-		<!-- {* <td width="5%">{sort_heading key="submissions.sec" sort="section"}</td> *} Commented out by MSB. Sept25,2011-->
+		<td width="10%">{translate key="common.proposalId"}</td>
+		<td width="10%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="20%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="60%">{sort_heading key="article.title" sort="title"}</td>
 	</tr>
@@ -203,9 +199,7 @@
 			<tr valign="top">
 				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
-				<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-				<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}Commented out by MSB -->
-   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept25, 2011 -->
+   				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>
                 <td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>		
 			</tr>
 			<tr>
@@ -225,7 +219,7 @@
 		<td colspan="6" class="endseparator">&nbsp;</td>
 	</tr>
 	<tr>
-		<td colspan="6" align="left">{$count} submission(s)</td>
+		<td colspan="6" align="left">{$count} {translate key="article.article.s"}</td>
 	</tr>
 {/if}
 

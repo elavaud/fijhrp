@@ -45,7 +45,7 @@
 <div class="separator"></div>
 <table width="100%" class="data">
 <tr valign="top">
-	<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
+	<td class="label" width="20%">{translate key="editor.meeting.id"}</td>
 	<td class="value" width="80%">{$meeting->getId()}</td>
 </tr>
 <tr valign="top">
@@ -53,15 +53,15 @@
 	<td class="value" width="80%">{$erc->getLocalizedTitle()}</td>
 </tr>
 <tr valign="top">
-	<td class="label" width="20%">{translate key="editor.meetings.meetingDate"}</td>
+	<td class="label" width="20%">{translate key="editor.meeting.schedule"}</td>
 	<td class="value" width="80%">{$meeting->getDate()|date_format:$datetimeFormatLong}</td>
 </tr>
 <tr valign="top">
-	<td class="label" width="20%">{translate key="editor.article.meetingLength"}</td>
+	<td class="label" width="20%">{translate key="editor.meeting.length"}</td>
 	<td class="value" width="80%">{$meeting->getLength()} mn</td>
 </tr>
 <tr valign="top">
-	<td class="label" width="20%">{translate key="editor.article.meetingLocation"}</td>
+	<td class="label" width="20%">{translate key="editor.meeting.location"}</td>
 	<td class="value" width="80%">{$meeting->getLocation()}</td>
 </tr>
 <tr valign="top">

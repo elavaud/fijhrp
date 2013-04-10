@@ -184,6 +184,7 @@ class MeetingsHandler extends Handler {
 	/**
 	* Added by MSB 07/06/11
         * Revised c/o IGM 11/18/11
+        	* Revised by EL March 2013
 	* Store meeting details such as proposals to discuss and meeting date
 	* @ param $args (type)
 	*/
@@ -197,7 +198,8 @@ class MeetingsHandler extends Handler {
 			$meetingLength = Request::getUserVar('meetingLength');
 			$location = Request::getUserVar('location');
 			$investigator = Request::getUserVar('investigator');
-			$meetingId = MeetingAction::saveMeeting($meetingId, $selectedSubmissions, $meetingDate, $meetingLength, $investigator, $location);
+			$final = Request::getUserVar('final');
+			$meetingId = MeetingAction::saveMeeting($meetingId, $selectedSubmissions, $meetingDate, $meetingLength, $investigator, $location, $final);
 			Request::redirect(null, null, 'viewMeeting', array($meetingId));
 		}
 

@@ -1,19 +1,19 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 <br/>
-<h3>{translate key="editor.meetings.details"}</h3>
+<h3>{translate key="editor.meeting.details"}</h3>
 <div class="separator"></div>
 <div id="details">
 	<table width="100%" class="data">
 		<tr>
-			<td class="label" width="20%">{translate key="editor.meetings.meetingId"}</td>
+			<td class="label" width="20%">{translate key="editor.meeting.id"}</td>
 			<td class="value" width="80%"><a href="{url op="viewMeeting" path=$meeting->getId()}">#{$meeting->getId()}</a></td>
 		</tr>
 		<tr>
-			<td class="label" width="20%">{translate key="editor.meetings.meetingDate"}</td>
-			<td class="value" width="80%">{$meeting->getDate()|date_format:$dateFormatTrunc}</td>
+			<td class="label" width="20%">{translate key="editor.meeting.schedule"}</td>
+			<td class="value" width="80%">{$meeting->getDate()|date_format:$dateFormatLong}</td>
 		</tr>
 		<tr>
-			<td class="label" width="20%">{translate key="editor.meetingStatus"}</td>
+			<td class="label" width="20%">{translate key="editor.meeting.status"}</td>
 			<td class="value" width="80%">{$meeting->getStatusKey()}</td>
 		</tr>
 		<tr>

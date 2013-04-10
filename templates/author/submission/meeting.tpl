@@ -15,15 +15,15 @@
 					<td colspan="2"><b>{translate key="reviewer.meetings.details"}</b></td>
 				</tr>
 				<tr>
-					<td class="label" width="40%">{translate key="editor.meetings.meetingDate"}</td>
+					<td class="label" width="40%">{translate key="editor.meeting.schedule"}</td>
 					<td class="value" width="60%">{$meetingAndAttendance.meeting->getDate()|date_format:$datetimeFormatLong}</td>
 				</tr>
 				<tr>
-					<td class="label" width="40%">{translate key="editor.article.meetingLength"}</td>
+					<td class="label" width="40%">{translate key="editor.meeting.length"}</td>
 					<td class="value" width="60%">{$meetingAndAttendance.meeting->getLength()} mn</td>
 				</tr>
 				<tr>
-					<td class="label" width="40%">{translate key="editor.article.meetingLocation"}</td>
+					<td class="label" width="40%">{translate key="editor.meeting.location"}</td>
 					<td class="value" width="60%">{$meetingAndAttendance.meeting->getLocation()}</td>
 				</tr>
 				<tr>

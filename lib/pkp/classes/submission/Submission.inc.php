@@ -1936,18 +1936,18 @@ class Submission extends DataObject {
 		static $proposalStatusMap;
 		if (!isset($proposalStatusMap)) {
 			$proposalStatusMap = array(
-				PROPOSAL_STATUS_SUBMITTED => 'submissions.proposal.submitted',
-				PROPOSAL_STATUS_RETURNED => 'submissions.proposal.returned',
-				PROPOSAL_STATUS_CHECKED => 'submissions.proposal.checked',
-				PROPOSAL_STATUS_EXEMPTED => 'submissions.proposal.exempted',
-				PROPOSAL_STATUS_ASSIGNED => 'submissions.proposal.assigned',
-				PROPOSAL_STATUS_EXPEDITED => 'submissions.proposal.expedited',
-				PROPOSAL_STATUS_REVIEWED => 'submissions.proposal.reviewed',
-				PROPOSAL_STATUS_DRAFT => 'submissions.proposal.draft',
-				PROPOSAL_STATUS_WITHDRAWN => 'submissions.proposal.withdrawn',
+				PROPOSAL_STATUS_SUBMITTED => 'submission.status.submitted',
+				PROPOSAL_STATUS_RETURNED => 'submission.status.incomplete',
+				PROPOSAL_STATUS_CHECKED => 'submission.status.complete',
+				PROPOSAL_STATUS_EXEMPTED => 'submission.status.exempted',
+				PROPOSAL_STATUS_ASSIGNED => 'submission.status.fullReview',
+				PROPOSAL_STATUS_EXPEDITED => 'submission.status.expeditedReview',
+				PROPOSAL_STATUS_REVIEWED => 'submission.status.reviewed',
+				PROPOSAL_STATUS_DRAFT => 'submission.status.draft',
+				PROPOSAL_STATUS_WITHDRAWN => 'submission.status.withdrawn',
 				PROPOSAL_STATUS_ARCHIVED => 'submissions.proposal.archived',
-				PROPOSAL_STATUS_COMPLETED => 'submissions.proposal.completed',
-				PROPOSAL_STATUS_RESUBMITTED => 'submissions.proposal.resubmitted'
+				PROPOSAL_STATUS_COMPLETED => 'submission.status.completed',
+				PROPOSAL_STATUS_RESUBMITTED => 'submission.status.resubmitted'
 				);
 		}
 		return $proposalStatusMap;
