@@ -36,7 +36,7 @@ class JournalFileManager extends FileManager {
 	function JournalFileManager(&$journal) {
 		$this->journalId = $journal->getId();
 		$this->journal =& $journal;
-		$this->filesDir = Config::getVar('files', 'files_dir') . '/journals/' . $this->journalId . '/';
+		$this->filesDir = Config::getVar('files', 'files_dir');
 	}
 
 	function uploadFile($fileName, $destFileName) {
