@@ -409,7 +409,7 @@ class ArticleFileManager extends FileManager {
 		$date = new DateTime($sourceArticleFile->getDateUploaded());
 		$dateUploaded = $date->format('MdY-g:ia');
 		
-		$newFileName = $this->article->getWhoId($this->article->getLocale()).".".$type.".".$revision.'.'.$dateUploaded.'.'.$fileExtension;
+		$newFileName = $this->article->getProposalId($this->article->getLocale()).".".$type.".".$revision.'.'.$dateUploaded.'.'.$fileExtension;
 
 		//rename file
 		rename($sourceDir.$sourceArticleFile->getFileName(), $sourceDir.$newFileName);
@@ -534,17 +534,17 @@ class ArticleFileManager extends FileManager {
 	function generateFilename(&$articleFile, $type, $originalName) {
 		$extension = $this->parseFileExtension($originalName);
 		/** Start edit, MSB Sept29, 2011
-		 *  If whoId is already created, use it in naming the file (whoId.type.revision.dateuploaded.extension)
+		 *  If proposalId is already created, use it in naming the file (proposalId.type.revision.dateuploaded.extension)
 		 *  Else, use the default naming scheme (articleId.fileId.revision.type.extension)
 		 **/
-		$whoId = $this->article->getWhoId($this->article->getLocale());
+		$proposalId = $this->article->getProposalId($this->article->getLocale());
 		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		 
-		if($whoId!=null || $whoId!=''){
+		if($proposalId!=null || $proposalId!=''){
 			
 			$date = new DateTime($articleFile->getDateUploaded());
 			$dateUploaded = $date->format('MdY-g:ia');
-			$newFileName = $whoId.'.'.$type.'.'.$articleFile->getRevision().'.'.$dateUploaded.'.'.$extension;
+			$newFileName = $proposalId.'.'.$type.'.'.$articleFile->getRevision().'.'.$dateUploaded.'.'.$extension;
 			
 		}else{
 			$newFileName = $articleFile->getArticleId().'-'.$articleFile->getFileId().'-'.$articleFile->getRevision().'-'.$type.'.'.$extension;

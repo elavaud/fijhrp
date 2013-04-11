@@ -78,19 +78,6 @@ function sortSearch(heading, direction) {
 	<input type="hidden" name="dateToMinute" value="59" />
 	<input type="hidden" name="dateToSecond" value="59" />
 	<br/>
-	
-	<!-- Allows filtering by technical unit and country -->
-	<!-- Added by: igm 9/24/2011                        -->
-	<!--
-	<h5>Filter by</h5>
-	<select name="technicalUnitField" id="technicalUnit" class="selectMenu">
-		<option value="">All Technical Units</option>
-		{html_options options=$technicalUnits selected=$technicalUnitField}
-    </select>
-	<select name="countryField" id="country" class="selectMenu">
-		<option value="">All Countries</option>
-		{html_options options=$countries selected=$countryField}
-    </select>-->
     <br/>
 	<input type="submit" value="{translate key="common.search"}" class="button" />
 </form>

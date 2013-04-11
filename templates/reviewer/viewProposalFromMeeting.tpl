@@ -4,7 +4,7 @@
  *}
 {strip}
 {assign var="articleId" value=$submission->getArticleId()}
-{assign var="proposalId" value=$submission->getLocalizedWhoId()}
+{assign var="proposalId" value=$submission->getLocalizedProposalId()}
 {translate|assign:"pageTitleTranslated" key="submission.page.proposalFromMeeting" id=$proposalId}
 {assign var="pageCrumbTitle" value="article.submission"}
 {include file="common/header.tpl"}
@@ -28,7 +28,7 @@
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="30%" class="label">Proposal ID</td>
-	<td width="70%" class="value">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+	<td width="70%" class="value">{$submission->getLocalizedProposalId()|strip_unsafe_html}</td>
 </tr>
 <tr valign="top">
 	<td width="30%" class="label">{translate key="article.title"}</td>

@@ -249,7 +249,7 @@ function &instantiate($fullyQualifiedClassName, $expectedTypes = null, $expected
 			}
 			fatalError('Trying to instantiate class "'.$fullyQualifiedClassName.'" which is not in any of the expected packages '.$expectedPackageString.'.');
 		}
-	}	
+	}
 	// Import the requested class
 	import($fullyQualifiedClassName);
 

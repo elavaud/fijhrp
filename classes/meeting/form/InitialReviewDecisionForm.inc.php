@@ -116,8 +116,8 @@ class InitialReviewDecisionForm extends Form {
 		$pdf->ChapterTitle('INITIAL REVIEW of ' . $submission->getLocalizedTitle());
 		$pdf->ChapterItemKeyVal('Protocol Title', $submission->getLocalizedTitle(), "BU");
 		$pdf->ChapterItemKeyVal('Principal Investigator (PI)', $submission->getAuthorString(), "BU");
-		$pdf->ChapterItemKeyVal('Unique project identification # assigned', $submission->getLocalizedWhoId() , "BU");
-		$pdf->ChapterItemKeyVal('Responsible WPRO Staff Member', $submission->getUser()->getFullName(), "BU");
+		$pdf->ChapterItemKeyVal('Unique project identification # assigned', $submission->getLocalizedProposalId() , "BU");
+		$pdf->ChapterItemKeyVal('Responsible Staff Member', $submission->getUser()->getFullName(), "BU");
 
 		if($isUnanimous) {
 			switch($decision) {

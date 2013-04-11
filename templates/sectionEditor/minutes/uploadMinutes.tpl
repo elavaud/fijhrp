@@ -17,7 +17,7 @@
 			<td class="value" width="80%">{$meeting->getStatusKey()}</td>
 		</tr>
 		<tr>
-			<td class="label" width="20%">{translate key="editor.minutesStatus"}</td>
+			<td class="label" width="20%">{translate key="editor.minutes.status"}</td>
 			<td class="value" width="80%">
 				{$meeting->getMinutesStatusKey()}							
 			</td>
@@ -27,32 +27,23 @@
 <br/>
 <div id="sections">
 {assign var="statusMap" value=$meeting->getStatusMap()}
-<h3>Sections</h3>
+<h3>{translate key="editor.minutes.files"}</h3>
 <table class="listing" width="100%">
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Section No.</td>
-		<td width="40%">{translate key="submissions.sec"}</td>
-		<td width="10%">{translate key="common.status"}</td>
-	<td width="30%" align="right">Action</td>	
+		<td width="20%">{translate key="common.type"}</td>
+		<td width="20%">{translate key="common.proposalId"}</td>		
+		<td width="30%">{translate key="common.file.s"}</td>
+		<td width="30%" align="right">{translate key="common.action"}</td>	
 	</tr>
-	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
+	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
 	<tr valign="bottom">
-		<td width="10%">(1)</td>
-			<td width="40%">			
-				{translate key="editor.minutes.attendance"}
-			</td>
-		{if $statusMap.1 == 1}
-			<td width="10%">Done</td>
-			<td width="30%" align="right">---</td>
-		{elseif $statusMap.1 == 0}
-			<td width="10%">Not Done</td>
-			<td width="30%" align="right">
-				<a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.uploadAttendance"}</a>				
-			</td>				
-		{/if}
+			<td width="20%">{translate key="editor.minutes.attendance"}</td>
+			<td width="20%">&mdash;</td>
+			<td width="30%">thefile.pdf</td>
+			<td width="30%" align="right"><a href="{url op="uploadAttendance" path=$meeting->getId()}">{translate key="editor.minutes.uploadAttendance"}</a></td>
 	</tr>
-	<tr><td colspan="6" class="separator">&nbsp;</td></tr>
+	<tr><td colspan="4" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
 			 <td width="40%">			
@@ -68,7 +59,7 @@
 			<td width="30%" align="right">---</td>
 		{/if}
 	</tr>
-	<tr><td colspan="6" class="separator">&nbsp;</td></tr>
+	<tr><td colspan="4" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
 			 <td width="40%">			

@@ -470,15 +470,6 @@ class SectionEditorSubmissionDAO extends DAO {
 				}
 				break;
 		}
-	 	/** 
-		 * Added technical unit and country filter fields
-		 * Last updated by igm 9/24/2011
-		 */
-		// EL on February 18th
-		// Removed technical unit
-		//if (!empty($technicalUnitField)) {
-		//	$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
-		//}
 											  	
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";

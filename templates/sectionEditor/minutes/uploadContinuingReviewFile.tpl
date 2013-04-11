@@ -16,7 +16,7 @@
 	<input type="hidden" name="articleId" value="{$submission->getId()}" />
 	<input type="hidden" name="lastDecisionId" value="{$lastDecision.editDecisionId}" />
 	<input type="hidden" name="resubmitCount" value="{$lastDecision.resubmitCount}" />
-<h4>{translate key="editor.minutes.proposal.continuingReview"}&nbsp;{$submission->getLocalizedWhoId()}</h4>
+<h4>{$submission->getLocalizedProposalId()}&nbsp;{translate key="editor.minutes.continuingReview"}</h4>
 <br/>	
 	<table class="data" width="100%">
 		<tr>
@@ -24,8 +24,8 @@
 			<td class="value" width="80%">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</td>
 		</tr>
 		<tr>
-			<td class="label" width="20%">{translate key="editor.minutes.whoId"}</td>
-			<td class="value" width="80%">{$submission->getLocalizedWhoId()}</td>
+			<td class="label" width="20%">{translate key="common.proposalId"}</td>
+			<td class="value" width="80%">{$submission->getLocalizedProposalId()}</td>
 		</tr>
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.pi"}</td>
@@ -40,7 +40,7 @@
 		</tr>
 		<tr>
 			<td class="label" width="20%">
-				{fieldLabel name="minutesFileField" required="true" key="editor.minutes.minutesFile"}				
+				{fieldLabel name="minutesFileField" required="true" key="editor.minutes"}				
 			</td>
 			<td class="value">
 				{if $minutesFile!=null} {$minutesFile} <br/>{/if}

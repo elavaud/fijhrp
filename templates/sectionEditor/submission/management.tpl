@@ -18,7 +18,7 @@
 	</tr>
         <tr>
 		<td title="Identification number of the research proposal." width="20%" class="label">[?] ID</td>
-		<td width="80%" colspan="2" class="data">{$submission->getLocalizedWhoId()|escape}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getLocalizedProposalId()|escape}</td>
 	</tr>
 	<tr>
 		<td title="Scientific title of the study as it appears in the protocol submitted for funding and ethical review. This title should contain information on population, intervention, comparator and outcome(s)." width="20%" class="label">[?] {translate key="article.title"}</td>

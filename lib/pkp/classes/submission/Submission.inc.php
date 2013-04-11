@@ -41,12 +41,8 @@ class Submission extends DataObject {
 	
 	/** @var DAO for proposal countries */
 	/* Added by igm 9/28/11 */
-	var $regionsOfPhilippinesDAO;
-	
-	/** @var DAO for technical units */
-	/* Added by igm 9/28/11 */
-	var $technicalUnitDAO;
-	
+	var $areasOfTheCountryDAO;
+
 	/** @var DAO for article */
 	/* Added by igm 9/28/11 */
 	var $articleDAO;
@@ -60,8 +56,7 @@ class Submission extends DataObject {
 		parent::DataObject();
 		$this->authors = array();
 		$this->removedAuthors = array();
-                $this->regionsOfPhilippinesDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-                $this->technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
+                $this->areasOfTheCountryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
                 $this->articleDAO =& DAORegistry::getDAO('ArticleDAO');
                 $this->countryDAO =& DAORegistry::getDAO('CountryDAO');
         
@@ -1429,7 +1424,7 @@ class Submission extends DataObject {
 	 * @return string
 	 */
 	function getLocalizedProposalCountryText() {
-		return $this->regionsOfPhilippinesDAO->getRegionOfPhilippines($this->getLocalizedProposalCountry());
+		return $this->areasOfTheCountryDAO->getAreaOfTheCountry($this->getLocalizedProposalCountry());
 	}
 
 	/**
@@ -1484,44 +1479,6 @@ class Submission extends DataObject {
 	function setMultiCountry($multiCountry, $locale) {
 		return $this->setData('multiCountry', $multiCountry, $locale);
 	}
-
-
-    /**
-	 * Get "localized" technical unit (if applicable).
-	 * @return string
-	 */
-	function getLocalizedTechnicalUnit() {
-		return $this->getLocalizedData('technicalUnit');
-	}
-
-
-	/**
-	 * Get "localized" technical unit's full text.
-	 * Added by igm 9/28/11
-	 * @return string
-	 */
-	function getLocalizedTechnicalUnitText() {
-		return $this->technicalUnitDAO->getTechnicalUnit($this->getLocalizedTechnicalUnit());
-	}
-	
-	/**
-	 * Get technical unit.
-	 * @param $locale
-	 * @return string
-	 */
-	function getTechnicalUnit($locale) {
-		return $this->getData('technicalUnit', $locale);
-	}
-	
-	/**
-	 * Set technical unit.
-	 * @param $technicalUnit string
-	 * @param $locale
-	 */
-	function setTechnicalUnit($technicalUnit, $locale) {
-		return $this->setData('technicalUnit', $technicalUnit, $locale);
-	}
-
 
     /**
 	 * Get "localized" withHumanSubjects 
@@ -1965,29 +1922,29 @@ class Submission extends DataObject {
 
         
     /**
-	 * Get "localized" WHO ID (if applicable).
+	 * Get "localized" Proposal ID (if applicable).
 	 * @return string
 	 */
-	function getLocalizedWhoId() {
-		return $this->getLocalizedData('whoId');
+	function getLocalizedProposalId() {
+		return $this->getLocalizedData('proposalId');
 	}
 
 	/**
-	 * Get WHO ID.
+	 * Get Proposal ID.
 	 * @param $locale
 	 * @return string
 	 */
-	function getWhoId($locale) {
-		return $this->getData('whoId', $locale);
+	function getProposalId($locale) {
+		return $this->getData('proposalId', $locale);
 	}
 
 	/**
-	 * Set WHO ID.
-	 * @param $whoId string
+	 * Set Proposal ID.
+	 * @param $proposalId string
 	 * @param $locale
 	 */
-	function setWhoId($whoId, $locale) {
-		return $this->setData('whoId', $whoId, $locale);
+	function setProposalId($proposalId, $locale) {
+		return $this->setData('proposalId', $proposalId, $locale);
 	}
 
 	/**
@@ -2033,7 +1990,7 @@ class Submission extends DataObject {
 	
 	/**
 	 * Set withdraw reason.
-	 * @param $whoId string
+	 * @param $proposalId string
 	 * @param $locale
 	 */
 	function setWithdrawReason($withdrawReason, $locale) {
@@ -2051,7 +2008,7 @@ class Submission extends DataObject {
 
 	/**
 	 * Set withdraw comments.
-	 * @param $whoId string
+	 * @param $proposalId string
 	 * @param $locale
 	 */
 	function setWithdrawComments($withdrawComments, $locale) {

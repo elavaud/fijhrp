@@ -5,8 +5,8 @@
  * EL
 **/
 
-import('lib.pkp.classes.who.MeetingAttendance');
-import('lib.pkp.classes.who.Meeting');
+import('classes.meeting.MeetingAttendance');
+import('classes.meeting.Meeting');
 
 class MeetingAttendanceDAO extends DAO {
 	/**

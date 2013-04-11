@@ -39,7 +39,7 @@ $(document).ready(function() {
 <form method="post" action="{url op="setMeeting" path=$meetingId }" >
 
 <div id="submissions">
-<p>{fieldLabel name="selectedProposals" required="true" key="editor.meetings.addProposalsToDiscuss"}</p>
+<p>{fieldLabel name="selectedProposals" required="true" key="editor.meeting.addProposalsToDiscuss"}</p>
 <table class="listing" width="100%">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
@@ -57,10 +57,10 @@ $(document).ready(function() {
 {assign var="decision" value=$submission->getMostRecentDecision() }
 
 	{assign var="articleId" value=$submission->getArticleId()}
-	{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+	{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 	<tr valign="top">
 			<td>{html_checkboxes id="selectedProposals" name='selectedProposals' values=$submission->getId() checked=$selectedProposals'} </td>
-			<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+			<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 			<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    			<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->		
    			<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>

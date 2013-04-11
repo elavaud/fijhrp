@@ -5,7 +5,7 @@
  */
 
 /**
- * @file lib/pkp/classes/who/SetMeetingForm.inc.php
+ * @file /classes/meeting/form/SetMeetingForm.inc.php
  *
  * Added by MSB. Last Updated: July 14, 2011
  * @class SetMeetingForm
@@ -31,10 +31,10 @@ class SetMeetingForm extends Form {
 		
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorPost($this));
-		$this->addCheck(new FormValidator($this,'meetingDate', 'required', 'editor.meetings.form.meetingDateRequired'));
-		$this->addCheck(new FormValidator($this,'meetingLength', 'required', 'editor.meetings.form.meetingLengthRequired'));
-		$this->addCheck(new FormValidator($this,'investigator', 'required', 'editor.meetings.form.meetingInvestigatorRequired'));
-		$this->addCheck(new FormValidator($this,'selectedProposals', 'required', 'editor.meetings.form.selectAtleastOneProposal'));
+		$this->addCheck(new FormValidator($this,'meetingDate', 'required', 'editor.meeting.form.meetingDateRequired'));
+		$this->addCheck(new FormValidator($this,'meetingLength', 'required', 'editor.meeting.form.meetingLengthRequired'));
+		$this->addCheck(new FormValidator($this,'investigator', 'required', 'editor.meeting.form.meetingInvestigatorRequired'));
+		$this->addCheck(new FormValidator($this,'selectedProposals', 'required', 'editor.meeting.form.selectAtleastOneProposal'));
 	}
 	
 	/**

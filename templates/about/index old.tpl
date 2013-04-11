@@ -30,7 +30,7 @@
 <h3>{translate key="about.policies"}</h3>
 <ul class="plain">
 
-<li>&#187; <a title="WPRO Standard Operating Procedures" href="/public/WPRO_ERC_SOP_Final2010_web.pdf" target="_blank">WPRO ERC Standard Operating Procedures.<br /></a></li>
+<li>&#187; <a title="Standard Operating Procedures" href="/public/ERC_SOP_Final2010_web.pdf" target="_blank">ERC Standard Operating Procedures.<br /></a></li>
 {*
 	{if $currentJournal->getLocalizedSetting('focusScopeDesc') != ''}<li>&#187; <a href="{url op="editorialPolicies" anchor="focusAndScope"}">{translate key="about.focusAndScope"}</a></li>{/if}
 	<li>&#187; <a href="{url op="editorialPolicies" anchor="sectionPolicies"}">{translate key="about.sectionPolicies"}</a></li>

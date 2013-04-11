@@ -74,8 +74,8 @@ class ReviewerAction extends Action {
 				$user =& Request::getUser();
 				$notificationManager = new NotificationManager();
 				$notificationUsers = $article->getAssociatedUserIds(false, false);
-				if ($decline == '1') $message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' declined';
-				else $message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' accepted';
+				if ($decline == '1') $message = $article->getLocalizedProposalId().':<br/>'.$user->getUsername().' declined';
+				else $message = $article->getLocalizedProposalId().':<br/>'.$user->getUsername().' accepted';
 				foreach ($notificationUsers as $userRole) {
 					$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
             		$notificationManager->createNotification(
@@ -283,7 +283,7 @@ class ReviewerAction extends Action {
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(false, false);
 			$user =& Request::getUser();
-			$message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername();
+			$message = $article->getLocalizedProposalId().':<br/>'.$user->getUsername();
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
             	$notificationManager->createNotification(
@@ -318,7 +318,7 @@ class ReviewerAction extends Action {
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(false, false);
 			$user =& Request::getUser();
-			$message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername();
+			$message = $article->getLocalizedProposalId().':<br/>'.$user->getUsername();
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
             	$notificationManager->createNotification(
@@ -370,7 +370,7 @@ class ReviewerAction extends Action {
 				$notificationManager = new NotificationManager();
 				$notificationUsers = $article->getAssociatedUserIds(false, false, false, true);
 				$url = Request::url(null, 'sectionEditor', 'submissionReview', $article->getId(), null, 'peerReview');
-				$param = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' commented his review';
+				$param = $article->getLocalizedProposalId().':<br/>'.$user->getUsername().' commented his review';
 				foreach ($notificationUsers as $userRole) {
                 	$notificationManager->createNotification(
                     	$userRole['id'], 'notification.type.reviewerComment',

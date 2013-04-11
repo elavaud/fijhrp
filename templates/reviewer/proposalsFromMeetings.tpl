@@ -66,7 +66,7 @@
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
 		<tr valign="top">
-			<td>{$submission->getLocalizedWhoId()|escape}</td>
+			<td>{$submission->getLocalizedProposalId()|escape}</td>
 			<td><a href="{url op="viewProposalFromMeeting" path=$articleId}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
 			<td>{$submission->getFirstAuthor()|escape}</td>
 		</tr>

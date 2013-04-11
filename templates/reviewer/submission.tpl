@@ -11,7 +11,7 @@
  * $Id$
  *}
 {strip}
-{assign var="articleId" value=$submission->getLocalizedWhoId()}
+{assign var="articleId" value=$submission->getLocalizedProposalId()}
 {assign var="reviewId" value=$reviewAssignment->getId()}
 {translate|assign:"pageTitleTranslated" key="submission.page.review" id=$articleId}
 {assign var="pageCrumbTitle" value="submission.review"}
@@ -42,7 +42,7 @@ $(document).ready(function() {
 <table width="100%" class="data">
 <tr valign="top">
 	<td width="20%" class="label">ID</td>
-	<td width="80%" class="value">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+	<td width="80%" class="value">{$submission->getLocalizedProposalId()|strip_unsafe_html}</td>
 </tr>
 <tr valign="top">
 	<td width="20%" class="label">{translate key="article.title"}</td>

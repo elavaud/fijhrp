@@ -243,7 +243,6 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 'proposalCountry' => $proposalCountry,
                 'researchField' => $researchField,
                 'otherResearchField' => $article->getOtherResearchField(null),
-                'technicalUnit' => $article->getTechnicalUnit(null),
                 'withHumanSubjects' => $article->getWithHumanSubjects(null),
                 'proposalType' => $proposalType,
                 'otherProposalType' => $article->getOtherProposalType(null),
@@ -325,7 +324,6 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 'proposalCountry',
                 'researchField',
                 'otherResearchField',
-                'technicalUnit',
                 'withHumanSubjects',
                 'proposalType',
                 'otherProposalType',
@@ -400,9 +398,9 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
         $agencies = $articleDao->getAgencies();
         $templateMgr->assign('agencies', $agencies);
 
-		//Get list of regions of Philippines
-       	$regionDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $proposalCountries =& $regionDAO->getRegionsOfPhilippines();
+		//Get list of regions of geographical areas of the country
+       	$regionDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $proposalCountries =& $regionDAO->getAreasOfTheCountry();
         $templateMgr->assign_by_ref('proposalCountries', $proposalCountries);
 
         parent::display();
@@ -526,7 +524,6 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
         $article->setMultiCountry($multiCountry, null);
         
         $article->setDataCollection($this->getData('dataCollection'), null);
-        $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
         $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
 	    $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
         $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized

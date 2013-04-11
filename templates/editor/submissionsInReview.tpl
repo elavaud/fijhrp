@@ -30,9 +30,9 @@
         {if ($status!=PROPOSAL_STATUS_DRAFT && $status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}		
 			{assign var="count" value=$count+1}
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			<tr valign="top">
-				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
 				<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept 25, 2011  --> 
 				<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB -->
@@ -88,9 +88,9 @@
         {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT)}
         	{assign var="count" value=$count+1}		
 			{assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			<tr valign="top">
-				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
 				<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td>  *}--> <!-- Commented out by MSB -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB -->
@@ -141,10 +141,10 @@
         {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_DECLINE)}		
 			
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			{assign var="count" value=$count+1}
 			<tr valign="top">
-				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
 				{* <td>{$submission->getSectionAbbrev()|escape}</td> *}
 				<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB -->
@@ -194,10 +194,10 @@
         {if $status==PROPOSAL_STATUS_EXEMPTED}		
 			
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			{assign var="count" value=$count+1}
 			<tr valign="top">
-				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    				<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>
                 <td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>		

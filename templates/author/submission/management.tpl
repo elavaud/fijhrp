@@ -20,7 +20,7 @@
 	</tr>
         <tr>
 		<td width="20%" class="label">ID</td>
-		<td width="80%" colspan="2" class="data">{$submission->getLocalizedWhoId()|escape}</td>
+		<td width="80%" colspan="2" class="data">{$submission->getLocalizedProposalId()|escape}</td>
 	</tr>
 	<tr>
 		<td width="20%" class="label">{translate key="article.title"}</td>

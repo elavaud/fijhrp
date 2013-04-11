@@ -122,7 +122,6 @@
         <message key="author.submit.form.fundsRequiredRequired">Please enter the funds required for your research.</message>
         <message key="author.submit.form.selectedCurrency">Please select the currency.</message>
         <message key="author.submit.form.proposalCountryRequired">Please select at least one region for this proposal.</message>
-        <message key="author.submit.form.technicalUnitRequired">Please enter the WHO technical unit for this proposal.</message>
         <message key="author.submit.form.withHumanSubjectsRequired">Please indicate if the research involves human subjects.</message>
         <message key="author.submit.form.proposalTypeRequired">Please enter the research proposal type.</message>
         <message key="author.submit.form.otherProposalTypeRequired">Please specify the other proposal type.</message>
@@ -171,25 +170,6 @@
         <message key ="author.proposal.type.QS">Qualitative Study</message>
         <message key ="author.proposal.type.IER">Intervention Evaluation Research</message>
         <message key ="author.proposal.type.OR">Operation Research</message>
-
-        <message key="author.proposal.technicalUnit.EHA">Emergency and Humanitarian Action</message>
-        <message key="author.proposal.technicalUnit.EHH">Environmental Health</message>
-        <message key="author.proposal.technicalUnit.EMT">Essential Medicines and Health Technologies</message>
-        <message key="author.proposal.technicalUnit.EPI">Expanded Programme on Immunization</message>
-        <message key="author.proposal.technicalUnit.ESR">Emerging Disease Surveillance and Response</message>
-        <message key="author.proposal.technicalUnit.FOS">Food Safety</message>
-        <message key="author.proposal.technicalUnit.HCF">Health Care Financing</message>
-        <message key="author.proposal.technicalUnit.HRH">Human Resources for Health</message>
-        <message key="author.proposal.technicalUnit.HSD">Health Services Development</message>
-        <message key="author.proposal.technicalUnit.HSI">HIV/AIDS and STI</message>
-        <message key="author.proposal.technicalUnit.IER">Health Information, Evidence and Research</message>
-        <message key="author.proposal.technicalUnit.MCN">Maternal and Child Health and Nutrition</message>
-        <message key="author.proposal.technicalUnit.MHI">Mental Health and Injury Prevention</message>
-        <message key="author.proposal.technicalUnit.MVP">Malaria, other Vector-borne and Parasitic Diseases</message>
-        <message key="author.proposal.technicalUnit.NHP">Noncommunicable Diseases and Health Promotion</message>
-        <message key="author.proposal.technicalUnit.STB">Stop TB and Leprosy Elimination</message>
-        <message key="author.proposal.technicalUnit.TFI">Tobacco Free Initiative</message>
-
         <message key="author.submit.form.wordCountAlert">You have exceeded the maximum word limit for abstracts.</message>
 
         <message key="author.submit.submissionFile">Submission File</message>
@@ -220,17 +200,17 @@
 	<message key="author.submit.suppFile.sourceText">Source Text</message>
 	
         <!--Start Edited Raf Tan 04/30/2011-->
-        <message key="author.submit.suppFile.who.summary">Summary</message>
-        <message key="author.submit.suppFile.who.proposal">Proposal</message>
-        <message key="author.submit.suppFile.who.informedConsent">Informed Consent</message>
-        <message key="author.submit.suppFile.who.funding">Funding</message>
-        <message key="author.submit.suppFile.who.cv">CV of Principal Investigator</message>
-        <message key="author.submit.suppFile.who.questionnaire">Questionnaires</message>
-        <!-- <message key="author.submit.suppFile.who.local">Local</message> removed SPF 9 Dec 2011-->
-        <message key="author.submit.suppFile.who.ethicalClearance">Local Ethical Clearance</message>
-        <message key="author.submit.suppFile.who.proofOfRegistration">Proof of Registration</message>
-        <message key="author.submit.suppFile.who.otherErcDecision">Other ERC Decision</message>
-        <message key="author.submit.suppFile.who.review">Review</message>
+        <message key="author.submit.suppFile.summary">Summary</message>
+        <message key="author.submit.suppFile.proposal">Proposal</message>
+        <message key="author.submit.suppFile.informedConsent">Informed Consent</message>
+        <message key="author.submit.suppFile.funding">Funding</message>
+        <message key="author.submit.suppFile.cv">CV of Principal Investigator</message>
+        <message key="author.submit.suppFile.questionnaire">Questionnaires</message>
+        <!-- <message key="author.submit.suppFile.local">Local</message> removed SPF 9 Dec 2011-->
+        <message key="author.submit.suppFile.ethicalClearance">Local Ethical Clearance</message>
+        <message key="author.submit.suppFile.proofOfRegistration">Proof of Registration</message>
+        <message key="author.submit.suppFile.otherErcDecision">Other ERC Decision</message>
+        <message key="author.submit.suppFile.review">Review</message>
         <!--End Edited Raf Tan 04/30/2011-->
 
 	<message key="author.submit.suppFile.briefDescription">Brief description</message>

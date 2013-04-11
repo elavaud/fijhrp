@@ -10,8 +10,8 @@
  * $Id$
  *}
 {strip}
-{translate|assign:"pageTitleTranslated" key="submission.eventLog" id=$submission->getWhoId($submission->getLocale())}
-{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+{translate|assign:"pageTitleTranslated" key="submission.eventLog" id=$submission->getProposalId($submission->getLocale())}
+{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 {include file="common/header.tpl"}
 {/strip}
 

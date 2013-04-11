@@ -5,7 +5,7 @@
  * EL
 **/
 
-import('lib.pkp.classes.who.MeetingSubmission');
+import('classes.meeting.MeetingSubmission');
 
 class MeetingSubmissionDAO extends DAO {
 

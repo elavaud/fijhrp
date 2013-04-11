@@ -265,7 +265,6 @@
         <message key="proposal.researchField">Research field(s)</message>
         <message key="proposal.otherResearchField">Other research field(s)</message>
         <message key="proposal.otherProposalType">Other proposal type(s)</message>
-        <message key="proposal.technicalUnit">Technical Unit</message>
         <message key="proposal.conflictOfInterest">Conflict of Interest?</message>
         <message key="proposal.informedConsentIncluded">Informed Consent Included?</message>
         <message key="proposal.dataCollectionQuestionnairesIncluded">Data Collection Questionnaires Included?</message>
@@ -1077,7 +1076,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
 </ul>]]></message>
 	
 	<message key="search.summary">Proposal Summary</message>
-	<message key="search.whoid">Proposal ID</message>
+	<message key="search.proposalid">Proposal ID</message>
     <message key="search.dataCollection">Data Collection</message>
     <message key="search.status">Status</message>
     <message key="search.dateSubmitted">Date submitted to philhrp</message>
@@ -1321,7 +1320,7 @@ Your server currently supports mbstring: <strong>{$supportsMBString}</strong>]]>
 	<message key="log.review.reviewAcceptedByProxy">{$userName} has accepted the round {$round} review for submission {$articleId} on behalf of {$reviewerName}.</message>
 	<message key="log.review.reviewFileByProxy">The Editor, {$userName}, has uploaded a review file for round {$round} of submission {$articleId} on behalf of the reviewer, {$reviewerName}.</message>
 	<message key="log.review.reviewerFile">A reviewer file has been uploaded.</message>
-	<message key="log.editor.decision">A decision ({$decision}) for proposal {$whoId} was recorded by {$editorName}.</message>
+	<message key="log.editor.decision">A decision ({$decision}) for proposal {$proposalId} was recorded by {$editorName}.</message>
 
 
 	<message key="log.copyedit.initiate">Copyediting on submission {$articleId} has been commenced by {$copyeditorName}.</message>

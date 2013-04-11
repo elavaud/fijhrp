@@ -372,8 +372,8 @@ class Section extends DataObject {
 		 * @return string
 		 */
 		function getLocalizedRegionText() {
-			$regionDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-			return $regionDAO->getRegionOfPhilippines($this->getLocalizedRegion());
+			$regionDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+			return $regionDAO->getAreaOfTheCountry($this->getLocalizedRegion());
 		}
 	
 		/**

@@ -330,7 +330,6 @@ class MetadataForm extends Form {
                 'proposalCountry' => $proposalCountry,
                 'researchField' => $researchField,
                 'otherResearchField' => $article->getOtherResearchField(null),
-                'technicalUnit' => $article->getTechnicalUnit(null),
                 'withHumanSubjects' => $article->getWithHumanSubjects(null),
                 'proposalType' => $proposalType,
                 'otherProposalType' => $article->getOtherProposalType(null),
@@ -446,9 +445,9 @@ class MetadataForm extends Form {
         $agencies = $articleDao->getAgencies();
         $templateMgr->assign('agencies', $agencies);
 
-		//Get list of procinces of Philippines
-       	$regionDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $proposalCountries =& $regionDAO->getRegionsOfPhilippines();
+		//Get list of geographical areas of the country
+       	$regionDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $proposalCountries =& $regionDAO->getAreasOfTheCountry();
         $templateMgr->assign_by_ref('proposalCountries', $proposalCountries);
 
 			// EL on March 11th 2013
@@ -490,7 +489,6 @@ class MetadataForm extends Form {
                 'proposalCountry',
                 'researchField',
                 'otherResearchField',
-                'technicalUnit',
                 'withHumanSubjects',
                 'proposalType',
                 'otherProposalType',
@@ -644,7 +642,6 @@ class MetadataForm extends Form {
         $article->setMultiCountry($multiCountry, null);
         
         $article->setDataCollection($this->getData('dataCollection'), null);
-        $article->setTechnicalUnit($this->getData('technicalUnit'), null); // Localized
         $article->setWithHumanSubjects($this->getData('withHumanSubjects'),null); // Localized
 	    $article->setSubmittedAsPi($this->getData('submittedAsPi'), null); // Localized
         $article->setConflictOfInterest($this->getData('conflictOfInterest'), null); // Localized

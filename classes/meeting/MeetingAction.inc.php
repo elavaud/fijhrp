@@ -10,7 +10,7 @@ define ('STATUS_FINAL', 1);
 define ('STATUS_RESCHEDULED', 2);
 define ('STATUS_CANCELLED', 3);
 
-import('lib.pkp.classes.who.MeetingAttendance');
+import('classes.meeting.MeetingAttendance');
 
 class MeetingAction extends Action {
 

@@ -30,12 +30,13 @@
 	<message key="user.biography.description">(E.g., department and rank)</message>
 	<message key="user.changeMyPassword">Change My Password</message>
 	<message key="user.changePassword">Change Password</message>
+	<message key="user.confirmEmail">Confirm Email</message>
 	<message key="user.dateLastLogin">Last login</message>
 	<message key="user.dateRegistered">Date registered</message>
 	<message key="user.editMyProfile">Edit My Profile</message>
 	<message key="user.email">Email</message>
-	<message key="user.confirmEmail">Confirm Email</message>
 	<message key="user.fax">Fax</message>
+	<message key="user.functions">Function(s)</message>
 	<message key="user.feminine">F</message>
 	<message key="user.firstName">First name</message>
 	<message key="user.gender">Gender</message>

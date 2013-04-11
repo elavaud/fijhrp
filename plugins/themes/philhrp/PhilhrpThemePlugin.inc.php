@@ -32,7 +32,7 @@ class PhilhrpThemePlugin extends ThemePlugin {
 	}
 
 	function getDescription() {
-		return 'WHO Western Pacific Region layout';
+		return 'Philippines Health Research Ethics Board layout';
 	}
 
 	function getStylesheetFilename() {

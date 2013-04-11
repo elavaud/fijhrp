@@ -5,7 +5,7 @@
  */
 
 /**
- * @file lib/pkp/classes/who/form/SubmissionReportForm.inc.php
+ * @file /classes/submission/sectionEditor/form/SubmissionReportForm.inc.php
  *
  * Added by MSB. Last Updated: Oct 13, 2011
  * @class SubmissionsReportForm
@@ -29,7 +29,6 @@ class SubmissionsReportForm extends Form {
 		$this->addCheck(new FormValidatorPost($this));
 		//$this->addCheck(new FormValidator($this,'countries', 'required', 'editor.reports.countryRequired'));
 		//$this->addCheck(new FormValidator($this,'decisions', 'required', 'editor.reports.decisionRequired'));
-		//$this->addCheck(new FormValidator($this, 'technicalUnits','required' , 'editor.reports.technicalUnitRequired'));
 	}
 	
 	/**
@@ -39,7 +38,6 @@ class SubmissionsReportForm extends Form {
 		$this->readUserVars(array(
 			'decisions',
 			'countries',
-			'technicalUnits'
 		));
 	}
 
@@ -70,8 +68,8 @@ class SubmissionsReportForm extends Form {
         $proposalTypes = $articleDao->getProposalTypes();
         $templateMgr->assign('proposalTypes', $proposalTypes);
 		
-		$countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $countries =& $countryDAO->getRegionsOfPhilippines();
+		$countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $countries =& $countryDAO->getAreasOfTheCountry();
         $templateMgr->assign_by_ref('countriesOptions', $countries);
                 
                 $fromDate = Request::getUserDateVar('dateFrom', 1, 1);

@@ -102,7 +102,7 @@
 	</tr>
 	<tr>
 		<td width="20%" class="label">Submission ID</td>
-		<td width="80%">{$submission->getLocalizedWhoId()|strip_unsafe_html}</td>
+		<td width="80%">{$submission->getLocalizedProposalId()|strip_unsafe_html}</td>
 	</tr>
 	<tr>
 		<td class="label">Keywords</td>

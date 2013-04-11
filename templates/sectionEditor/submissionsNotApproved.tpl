@@ -27,9 +27,9 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
 
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			<tr valign="top">
-				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    				<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td>
                 <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|escape}</a></td>

@@ -28,10 +28,10 @@
     {if ($status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT || $status==PROPOSAL_STATUS_EXTENSION }
 
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 
             <tr valign="top">
-                <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+                <td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatLong}{else}&mdash;{/if}</td>
                 {if $status==PROPOSAL_STATUS_DRAFT}
                     {assign var="count" value=$count+1}
@@ -126,10 +126,10 @@
             {assign var="count" value=$count+1}
 
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 
             <tr valign="top">
-                <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+                <td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatLong}{else}&mdash;{/if}</td>                
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|escape}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td>
@@ -204,10 +204,10 @@
         {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_DECLINE)}
 
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 
             <tr valign="top">
-                <td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+                <td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
                 <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatLong}{else}&mdash;{/if}</td>                
                 <td><a href="{url op="submission" path=$articleId}" class="action">{if $submission->getLocalizedTitle()}{$submission->getLocalizedTitle()|escape}{else}{translate key="common.untitled"}{/if}</a></td>
                 <td align="right">

@@ -21,7 +21,7 @@
 	<input type="hidden" name="articleId" value="{$submission->getId()}" />
 	<input type="hidden" name="lastDecisionId" value="{$lastDecision.editDecisionId}" />
 	<input type="hidden" name="resubmitCount" value="{$lastDecision.resubmitCount}" />
-<h4>Final Decision for Proposal &nbsp;{$submission->getLocalizedWhoId()}</h4>
+<h4>Final Decision for Proposal &nbsp;{$submission->getLocalizedProposalId()}</h4>
 <br/>	
 	<table class="data" width="100%">
 		<tr>

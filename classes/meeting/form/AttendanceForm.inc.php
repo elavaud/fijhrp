@@ -28,7 +28,7 @@ class AttendanceForm extends Form {
 		$meetingAttendanceDao =& DAORegistry::getDAO('MeetingAttendanceDAO');	
 		$this->meetingAttendances =& $meetingAttendanceDao->getMeetingAttendancesByMeetingId($meetingId);
 		
-		//import('lib.pkp.classes.who.MeetingAttendance');
+		//import('classes.meeting.MeetingAttendance');
 		
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
@@ -186,12 +186,11 @@ class AttendanceForm extends Form {
 		$journalId = $journal->getId();
 		$filename = "attendance.pdf";
 		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/".$filename;
-		
 		import('classes.file.MinutesFileManager');
 		$minutesFileManager = new MinutesFileManager($meeting->getId());
 		if($minutesFileManager->createDirectory()) {
 			$pdf->Output($meetingFilesDir,"F");
-		}		
+		}
 	} 
 	
 	

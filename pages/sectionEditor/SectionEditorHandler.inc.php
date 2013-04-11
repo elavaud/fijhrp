@@ -158,8 +158,8 @@ class SectionEditorHandler extends Handler {
 			SUBMISSION_FIELD_DATE_PROOFREADING_COMPLETE => 'submissions.proofreadingComplete'
 		));
 
-        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $countries =& $countryDAO->getRegionsOfPhilippines();
+        $countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $countries =& $countryDAO->getAreasOfTheCountry();
         $templateMgr->assign_by_ref('countries', $countries);
         
 		import('classes.issue.IssueAction');
@@ -167,10 +167,6 @@ class SectionEditorHandler extends Handler {
 		$templateMgr->register_function('print_issue_id', array($issueAction, 'smartyPrintIssueId'));
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
-		
-		// Added by igm 9/24/11
-			// Removed by EL on February 19th 2013
-			//$templateMgr->assign('technicalUnitField', $technicalUnitField);
 		$templateMgr->assign('countryField', $countryField);
 		
 		$templateMgr->assign('ercId', $user->getSecretaryCommitteeId());

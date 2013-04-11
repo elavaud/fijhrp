@@ -32,21 +32,21 @@ class AuthorSubmitStep4Form extends AuthorSubmitForm {
 		$templateMgr =& TemplateManager::getManager();
                 
                 // Start Edit Raf Tan 04/30/2011
-                // Add Options drop-down list for WHO journals
+                // Add Options drop-down list of supplementary files
                 $typeOptions = array(
-                    "author.submit.suppFile.who.summary" => "author.submit.suppFile.who.summary",
-                    //"author.submit.suppFile.who.proposal" => "author.submit.suppFile.who.proposal",
-                    "author.submit.suppFile.who.informedConsent" => "author.submit.suppFile.who.informedConsent",
-                    //"author.submit.suppFile.who.localEthicalApproval" => "author.submit.suppFile.who.localEthicalApproval",
-                    "author.submit.suppFile.who.funding" => "author.submit.suppFile.who.funding",
-                    "author.submit.suppFile.who.cv" => "author.submit.suppFile.who.cv",
-                    "author.submit.suppFile.who.questionnaire" => "author.submit.suppFile.who.questionnaire",
-                    // Deleted author.submit.suppFile.who.local option as supplementary file - 9Dec2011 - spf
-                    // "author.submit.suppFile.who.local" => "author.submit.suppFile.who.local",
-                    //"author.submit.suppFile.who.ethicalClearance" => "author.submit.suppFile.who.ethicalClearance",
-                    "author.submit.suppFile.who.proofOfRegistration" => "author.submit.suppFile.who.proofOfRegistration",
-                    "author.submit.suppFile.who.otherErcDecision" => "author.submit.suppFile.who.otherErcDecision",
-                    //"author.submit.suppFile.who.review" => "author.submit.suppFile.who.review",
+                    "author.submit.suppFile.summary" => "author.submit.suppFile.summary",
+                    //"author.submit.suppFile.proposal" => "author.submit.suppFile.proposal",
+                    "author.submit.suppFile.informedConsent" => "author.submit.suppFile.informedConsent",
+                    //"author.submit.suppFile.localEthicalApproval" => "author.submit.suppFile.localEthicalApproval",
+                    "author.submit.suppFile.funding" => "author.submit.suppFile.funding",
+                    "author.submit.suppFile.cv" => "author.submit.suppFile.cv",
+                    "author.submit.suppFile.questionnaire" => "author.submit.suppFile.questionnaire",
+                    // Deleted author.submit.suppFile.local option as supplementary file - 9Dec2011 - spf
+                    // "author.submit.suppFile.local" => "author.submit.suppFile.local",
+                    //"author.submit.suppFile.ethicalClearance" => "author.submit.suppFile.ethicalClearance",
+                    "author.submit.suppFile.proofOfRegistration" => "author.submit.suppFile.proofOfRegistration",
+                    "author.submit.suppFile.otherErcDecision" => "author.submit.suppFile.otherErcDecision",
+                    //"author.submit.suppFile.review" => "author.submit.suppFile.review",
                     "common.other" => "common.other"
 		);
 		//$typeOptionsValues = $typeOptionsOutput;

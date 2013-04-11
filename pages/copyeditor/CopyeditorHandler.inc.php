@@ -50,17 +50,9 @@ class CopyeditorHandler extends Handler {
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
 		
-		/*********************************************************************
-		 * Get list of WHO technical units from the XML file and get all countries
-		 * Added by:  Ayvee Mallare
-		 * Last Updated: Sept 24, 2011
-         *********************************************************************/
-		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $countries =& $countryDAO->getRegionsOfPhilippines();
+        $countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $countries =& $countryDAO->getAreasOfTheCountry();
        
-		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
         $templateMgr->assign_by_ref('countries', $countries);
 		
 		$rangeInfo = Handler::getRangeInfo('submissions');
@@ -84,9 +76,8 @@ class CopyeditorHandler extends Handler {
 		 * Added by: Ayvee Mallare
 		 * Last Updated: Sept 24, 2011
 		 */
-		$technicalUnitField = Request::getUserVar('technicalUnitField');
 		$countryField = Request::getUserVar('countryField');
-		$submissions = $copyeditorSubmissionDao->getCopyeditorSubmissionsByCopyeditorId($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $technicalUnitField, $countryField, $active, $rangeInfo, $sort, $sortDirection);
+		$submissions = $copyeditorSubmissionDao->getCopyeditorSubmissionsByCopyeditorId($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField, $active, $rangeInfo, $sort, $sortDirection);
 
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
@@ -123,7 +114,6 @@ class CopyeditorHandler extends Handler {
 		$templateMgr->assign('sort', $sort);
 		$templateMgr->assign('sortDirection', $sortDirection);
 		// Added by igm 9/24/11
-		$templateMgr->assign('technicalUnitField', $technicalUnitField);
 		$templateMgr->assign('countryField', $countryField);
 		
 		$templateMgr->display('copyeditor/index.tpl');

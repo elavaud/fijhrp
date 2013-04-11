@@ -10,26 +10,28 @@
  * Last update on February 2013
  * EL
 **/
+
 define('SECTION_EDITOR_ACCESS_EDIT', 0x00001);
 define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 
 // Filter section
 define('FILTER_SECTION_ALL', 0);
-
+	
 import('classes.submission.sectionEditor.SectionEditorAction');
+	
 import('classes.handler.Handler');
-import('lib.pkp.classes.who.Meeting');
-import('lib.pkp.classes.who.MeetingAction');
-import('lib.pkp.classes.who.MeetingAttendance');
+import('classes.meeting.Meeting');
+import('classes.meeting.MeetingAction');
+import('classes.meeting.MeetingAttendance');
 
 class MeetingsHandler extends Handler {
 	/**
 	* Constructor
 	**/
 	var $meeting;
-		
+	
 	function MeetingsHandler() {
-
+		
 		parent::Handler();
 		
 		$this->addCheck(new HandlerValidatorJournal($this));
@@ -158,7 +160,7 @@ class MeetingsHandler extends Handler {
 	* @param $args (type)
 	*/
 	function setMeeting($args, &$request){
-		import ('lib.pkp.classes.who.form.SetMeetingForm');
+		import ('classes.meeting.form.SetMeetingForm');
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId,false, true);
 		$this->setupTemplate();

@@ -1,5 +1,5 @@
 /**
- * Wpro Theme
+ * philhrp Theme
  * Copyright (c) 2012, MSB
  * 
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
@@ -234,7 +234,7 @@ form{
 
 #footer{
     color: whiteSmoke;
-	background-image: url("images/wpro_footer.png");
+	background-image: url("images/footer.png");
 	background-position: left bottom;
 	background-repeat: no-repeat;
     width: 990px !important;

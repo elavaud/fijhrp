@@ -19,7 +19,7 @@
 
 {literal}
 <script type="text/javascript" src="http://localhost/philhrp/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
-<style type="text/css" src="http://localhost/whorr/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
+<style type="text/css" src="http://localhost/philhrp/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
 
 <script type="text/javascript">
 	$(document).ready(function() {
@@ -29,7 +29,7 @@
 {/literal}
 
 <div id="setDueDate">
-<h3>Due Date for reviewers to review Proposal {$submission->getLocalizedWhoId()}</h3>
+<h3>Due Date for reviewers to review Proposal {$submission->getLocalizedProposalId()}</h3>
 
 <p>{translate key="editor.article.designateDueDateDescription"}</p>
 

@@ -687,7 +687,7 @@ class SectionEditorAction extends Action {
 			$reviewer =& $userDao->getUser($reviewAssignment->getReviewerId());
 			if ($viewable) $message = 'notification.type.reviewerFile';
 			else $message = 'notification.type.reviewerFileDeleted';
-			$param = $article->getLocalizedWhoId().':<br/>'.$reviewer->getUsername();
+			$param = $article->getLocalizedProposalId().':<br/>'.$reviewer->getUsername();
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
 				$notificationManager->createNotification(
@@ -2007,7 +2007,7 @@ class SectionEditorAction extends Action {
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(false, true);
             foreach ($notificationUsers as $userRole) {
-            	$param = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' commented ';
+            	$param = $article->getLocalizedProposalId().':<br/>'.$user->getUsername().' commented ';
             	if ($userRole['role'] == 'sectionEditor') {
             		$param = $param.'the review of '.$reviewer->getUsername();
             		$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
@@ -2069,7 +2069,7 @@ class SectionEditorAction extends Action {
 			import('lib.pkp.classes.notification.NotificationManager');
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(true, false);
-			$param = $article->getLocalizedWhoId().': <br/>'.$user->getFullName().', <i>'.$user->getErcFunction($article->getSectionId()).'</i>,';
+			$param = $article->getLocalizedProposalId().': <br/>'.$user->getFullName().', <i>'.$user->getErcFunction($article->getSectionId()).'</i>,';
 			foreach ($notificationUsers as $userRole) {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'editorDecision');
 				if ($user->getId()!=$userRole['id']) $notificationManager->createNotification(
@@ -2462,8 +2462,8 @@ class SectionEditorAction extends Action {
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
 			$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
 			$notificationManager = new NotificationManager();
-			if ($accept == 1) $message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' confirmed your ability';
-			else $message = $article->getLocalizedWhoId().':<br/>'.$user->getUsername().' confirmed your inability';
+			if ($accept == 1) $message = $article->getLocalizedProposalId().':<br/>'.$user->getUsername().' confirmed your ability';
+			else $message = $article->getLocalizedProposalId().':<br/>'.$user->getUsername().' confirmed your inability';
 			$url = Request::url(null, 'reviewer', 'submission', $reviewAssignment->getId());
             $notificationManager->createNotification(
             		$reviewAssignment->getReviewerId(), 'notification.type.reviewConfirmedBySecretary',
@@ -2559,7 +2559,7 @@ class SectionEditorAction extends Action {
 		if ($articleId) {
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
 			$article =& $articleDao->getArticle($articleId);
-			$proposalId = $article->getLocalizedWhoId();
+			$proposalId = $article->getLocalizedProposalId();
 			$breadcrumb[] = array(Request::url(null, $section, 'submission', $articleId), "$proposalId", true);
 		}
 

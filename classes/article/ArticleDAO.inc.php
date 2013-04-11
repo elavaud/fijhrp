@@ -63,8 +63,7 @@ class ArticleDAO extends DAO {
 		return array(
 			'authorPhoneNumber', 'ethicsCommittee', 'scientificTitle', 'cleanScientificTitle', 'publicTitle', 'cleanPublicTitle', 'studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'secondarySponsors', 'multiCountryResearch', 'multiCountry', 'researchField', 'otherResearchField', 'nationwide', 'withHumanSubjects', 'proposalType', 'otherProposalType', 'proposalCountry', 
-                        'technicalUnit', 'dataCollection', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'whoId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments', 'approvalDate', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant'
+                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'secondarySponsors', 'multiCountryResearch', 'multiCountry', 'researchField', 'otherResearchField', 'nationwide', 'withHumanSubjects', 'proposalType', 'otherProposalType', 'proposalCountry', 'dataCollection', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'proposalId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments', 'approvalDate', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant'
                         );
 	}
 
@@ -196,7 +195,7 @@ class ArticleDAO extends DAO {
 
 		HookRegistry::call('ArticleDAO::_returnArticleFromRow', array(&$article, &$row));
 /*
-		$article->setWhoId($row['whoid']);
+		$article->setProposalId($row['proposalid']);
 		$article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
 		$article->setScientificTitle($row['scientifictitle']);
 		$article->setProposalCountry($row['country']);
@@ -1010,7 +1009,7 @@ class ArticleDAO extends DAO {
 		$result =& $this->retrieve('SELECT * FROM articles
                                             WHERE date_submitted is not NULL and extract(year from date_submitted) = ? and
                                             article_id in (SELECT article_id from article_settings where setting_name = ? and setting_value LIKE ?)',
-		array($year, 'whoId', '%.ICP.%'));
+		array($year, 'proposalId', '%.ICP.%'));
 
 		$count = $result->NumRows();
 
@@ -1328,7 +1327,7 @@ class ArticleDAO extends DAO {
 	function _searchArticleFromRow(&$article, &$row) {
 		if (isset($row['status'])) $article->setStatus($row['status']);
 		if (isset($row['article_id'])) $article->setId($row['article_id']);
-		if (isset($row['whoid'])) $article->setWhoId($row['whoid'], $article->getLocale());
+		if (isset($row['proposalid'])) $article->setProposalId($row['proposalid'], $article->getLocale());
 		if (isset($row['date_submitted'])) $article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
 		if (isset($row['scientifictitle'])) $article->setScientificTitle($row['scientifictitle'], $article->getLocale());
 		if (isset($row['country'])) $article->setProposalCountry($row['country'], $article->getLocale());

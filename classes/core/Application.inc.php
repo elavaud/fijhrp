@@ -76,6 +76,7 @@ class Application extends PKPApplication {
 		return array_merge(parent::getDAOMap(), array(
 			'AnnouncementDAO' => 'classes.announcement.AnnouncementDAO',
 			'AnnouncementTypeDAO' => 'classes.announcement.AnnouncementTypeDAO',
+            'AreasOfTheCountryDAO' => 'classes.article.AreasOfTheCountryDAO',
 			'ArticleEmailLogDAO' => 'classes.article.log.ArticleEmailLogDAO',
 			'ArticleEventLogDAO' => 'classes.article.log.ArticleEventLogDAO',
 			'ArticleCommentDAO' => 'classes.article.ArticleCommentDAO',
@@ -103,7 +104,12 @@ class Application extends PKPApplication {
 			'JournalSettingsDAO' => 'classes.journal.JournalSettingsDAO',
 			'JournalStatisticsDAO' => 'classes.journal.JournalStatisticsDAO',
 			'LayoutEditorSubmissionDAO' => 'classes.submission.layoutEditor.LayoutEditorSubmissionDAO',
-			'MetadataDescriptionDAO' => 'lib.pkp.classes.metadata.MetadataDescriptionDAO',
+			// EL on April 2013
+			'MeetingDAO' => 'classes.meeting.MeetingDAO',
+			'MeetingAttendanceDAO' => 'classes.meeting.MeetingAttendanceDAO',
+			'MeetingSubmissionDAO' => 'classes.meeting.MeetingSubmissionDAO',
+			// End
+			'MetadataDescriptionDAO' => 'classes.metadata.MetadataDescriptionDAO',
 			'NoteDAO' => 'classes.note.NoteDAO',
 			'OAIDAO' => 'classes.oai.ojs.OAIDAO',
 			'OJSCompletedPaymentDAO' => 'classes.payment.ojs.OJSCompletedPaymentDAO',

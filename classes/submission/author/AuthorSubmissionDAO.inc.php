@@ -172,16 +172,13 @@ class AuthorSubmissionDAO extends DAO {
 	 * @param $authorId int
 	 * @return DAOResultFactory continaing AuthorSubmissions
 	 */
-	function &getAuthorSubmissions($authorId, $journalId, $active = true,  $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $technicalUnitField = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getAuthorSubmissions($authorId, $journalId, $active = true,  $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
 				$locale,
 				'cleanScientificTitle',
 				'cleanScientificTitle',
-				$locale,
-				'technicalUnit',
-				'technicalUnit',
 				$locale,
 				'proposalCountry',
 				'proposalCountry',
@@ -243,11 +240,6 @@ class AuthorSubmissionDAO extends DAO {
 				break;
 		}
 
-        $technicalUnitSql = '';
-		if (!empty($technicalUnitField)) {
-			$technicalUnitSql = " AND LOWER(COALESCE(atu.setting_value, atpu.setting_value)) = '" . $technicalUnitField . "'";
-		}
-
        	$countrySql = '';
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) like '%" . $countryField . "%'";
@@ -263,8 +255,6 @@ class AuthorSubmissionDAO extends DAO {
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
 				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
 				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
-				LEFT JOIN article_settings atpu ON (a.article_id = atpu.article_id AND atpu.setting_name = ? AND atpu.locale = a.locale)
-				LEFT JOIN article_settings atu ON (a.article_id = atu.article_id AND atu.setting_name = ? AND atu.locale = ?)
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
 				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)	
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
@@ -278,7 +268,7 @@ class AuthorSubmissionDAO extends DAO {
                         ($active?('a.status NOT IN (' . PROPOSAL_STATUS_ARCHIVED . ', ' . PROPOSAL_STATUS_WITHDRAWN . ', ' . PROPOSAL_STATUS_COMPLETED . ')'):('(a.status IN (' . PROPOSAL_STATUS_ARCHIVED . ', ' . PROPOSAL_STATUS_WITHDRAWN . ', ' . PROPOSAL_STATUS_COMPLETED . ') AND a.submission_progress = 0)'));
 
 			$result =& $this->retrieveRange(
-				$sql . ' ' . $searchSql . $technicalUnitSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+				$sql . ' ' . $searchSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 				count($params)===1?array_shift($params):$params,
 				$rangeInfo
 			);

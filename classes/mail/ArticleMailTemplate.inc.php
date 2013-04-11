@@ -59,7 +59,7 @@ class ArticleMailTemplate extends MailTemplate {
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$section =& $sectionDao->getSection($article->getSectionId());
 		$paramArray['articleTitle'] = strip_tags($article->getLocalizedTitle());
-		$paramArray['articleId'] = $article->getWhoId(Locale::getLocale());
+		$paramArray['articleId'] = $article->getProposalId(Locale::getLocale());
 		$paramArray['journalName'] = strip_tags($journal->getLocalizedTitle());
 		$paramArray['sectionName'] = strip_tags($section->getLocalizedTitle());
 		$paramArray['articleAbstract'] = String::html2text($article->getLocalizedAbstract());

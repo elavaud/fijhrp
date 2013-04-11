@@ -13,7 +13,7 @@
 
 body {
 	background-color: #d6d5bb;
-	background-image: url(images/wpro_body.gif);
+	background-image: url(images/body.gif);
 	background-repeat: repeat-y;
 	font-family: verdana, helvetica, sans-serif;
 	color: black;
@@ -45,7 +45,7 @@ a:hover {
 
 /*HEADER*/
 #header {
-	background-image: url(images/wpro_banner2.png);
+	background-image: url(images/banner2.png);
 	background-repeat: no-repeat;
 	background-color: transparent;
 	width: 950px;
@@ -247,7 +247,7 @@ a:hover {
 #footer {
 	width: 950px;
 	height: 100px; 
-	background-image: url(images/wpro_footer.gif); 
+	background-image: url(images/footer.gif); 
 	background-position: top left;
 	background-repeat: no-repeat;
 	background-color: transparent;

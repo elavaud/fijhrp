@@ -1,25 +1,24 @@
 <?php
 
 /**
- * @file classes/who/RegionsOfPhilippinesDAO.inc.php
+ * @file classes/article/AreasOfTheCountryDAO.inc.php
  *
  *
- * @class RegionsOfPhilippinesDAO
- * @package who
+ * @class AreasOfTheCountryDAO
  *
- * @brief Provides methods for loading localized regions of Philippines name data.
+ * @brief Provides methods for loading localized geographical areas of the country name data.
  *
  */
 
 // $Id$
 
 
-class RegionsOfPhilippinesDAO extends DAO {
+class AreasOfTheCountryDAO extends DAO {
 	var $cache;
 	/**
 	 * Constructor.
 	 */
-	function RegionsOfPhilippinesDAO() {
+	function AreasOfTheCountryDAO() {
 	}
 
 	/**
@@ -28,18 +27,18 @@ class RegionsOfPhilippinesDAO extends DAO {
 	 */
 	function getFilename($locale = null) {
 		if ($locale === null) $locale = Locale::getLocale();
-		return "lib/pkp/locale/$locale/regionsOfPhilippines.xml";
+		return "lib/pkp/locale/$locale/areasOfTheCountry.xml";
 	}
 
 	function &_getCountryCache($locale = null) {
-		$caches =& Registry::get('allRegionsOfPhilippines', true, array());
+		$caches =& Registry::get('allAreasOfTheCountry', true, array());
                 
 		if (!isset($locale)) $locale = Locale::getLocale();
                 
 		if (!isset($caches[$locale])) {
 			$cacheManager =& CacheManager::getManager();
 			$caches[$locale] = $cacheManager->getFileCache(
-				'regionsOfPhilippines', $locale,
+				'areasOfTheCountry', $locale,
 				array(&$this, '_countryCacheMiss')
 			);
 
@@ -53,31 +52,31 @@ class RegionsOfPhilippinesDAO extends DAO {
 	}
 
 	function _countryCacheMiss(&$cache, $id) {
-		$regionsOfPhilippines =& Registry::get('allRegionsOfPhilippinesData', true, array());
+		$areasOfTheCountry =& Registry::get('allAreasOfTheCountryData', true, array());
                 
                 
-		if (!isset($regionsOfPhilippines[$id])) {
+		if (!isset($areasOfTheCountry[$id])) {
 			// Reload country registry file
 			$xmlDao = new XMLDAO();
 			$data = $xmlDao->parseStruct($this->getFilename(), array('countries', 'country'));
 
                         if (isset($data['countries'])) {
 				foreach ($data['country'] as $countryData) {
-					$regionsOfPhilippines[$id][$countryData['attributes']['code']] = $countryData['attributes']['name'];
+					$areasOfTheCountry[$id][$countryData['attributes']['code']] = $countryData['attributes']['name'];
 				}
 			}
-			asort($regionsOfPhilippines[$id]);
-			$cache->setEntireCache($regionsOfPhilippines[$id]);
+			asort($areasOfTheCountry[$id]);
+			$cache->setEntireCache($areasOfTheCountry[$id]);
 		}
 		return null;
 	}
 
 	/**
-	 * Return a list of all regions of Philippines.
+	 * Return a list of all the geographical areas of the country.
 	 * @param $locale string Name of locale (optional)
 	 * @return array
 	 */
-	function &getRegionsOfPhilippines($locale = null) {
+	function &getAreasOfTheCountry($locale = null) {
 		$cache =& $this->_getCountryCache($locale);
 		return $cache->getContents();
 	}
@@ -89,7 +88,7 @@ class RegionsOfPhilippinesDAO extends DAO {
          *
          * Updated 12.22.2011 to handle multiple regions
 	 */
-	function getRegionOfPhilippines($code, $locale = null) {
+	function getAreaOfTheCountry($code, $locale = null) {
 		$cache =& $this->_getCountryCache($locale);
                 $countries = explode(",", $code);
                 $countriesText = "";

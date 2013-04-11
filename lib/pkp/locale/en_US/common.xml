@@ -138,6 +138,7 @@
 	<message key="common.fullscreenOff">Fullscreen Off</message>
 	<message key="common.false">False</message>
 	<message key="common.file">File</message>
+    <message key="common.file.s">File(s)</message>
 	<message key="common.fileName">File name</message>
 	<message key="common.fileSize">File size</message>
 	<message key="common.fileType">File type</message>

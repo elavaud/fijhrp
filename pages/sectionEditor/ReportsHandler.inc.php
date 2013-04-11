@@ -60,7 +60,7 @@ class ReportsHandler extends Handler {
 	* @param $args (type)
 	*/
 	function meetingAttendanceReport($args, &$request){
-		import ('lib.pkp.classes.who.form.MeetingAttendanceReportForm');
+		import ('classes.meeting.form.MeetingAttendanceReportForm');
 		parent::validate();
 		$this->setupTemplate();
 		$meetingAttendanceReportForm= new MeetingAttendanceReportForm($args, $request);
@@ -146,7 +146,7 @@ class ReportsHandler extends Handler {
 	* @param $args (type)
 	*/
 	function submissionsReport($args) {
-		import ('lib.pkp.classes.who.form.SubmissionsReportForm');
+		import ('classes.submission.sectionEditor.form.SubmissionsReportForm');
 		parent::validate();
 		$this->setupTemplate();
 		$submissionsReportForm= new SubmissionsReportForm($args);
@@ -205,8 +205,8 @@ class ReportsHandler extends Handler {
 		$approvedAfter = Request::getUserVar('approvedAfter');
 		
 		if(array_shift(array_values($countryField)) == "0"){
-			$countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        	$countries =& $countryDAO->getRegionsOfPhilippines();
+			$countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        	$countries =& $countryDAO->getAreasOfTheCountry();
         	$countryField = array_keys($countries);
 		}
 $sort = Request::getUserVar('sort');
@@ -251,7 +251,7 @@ $sort = Request::getUserVar('sort');
 		$columns = array();
 		
 		if (Request::getUserVar('checkProposalId')){
-			$columns = $columns + array('whoId' => Locale::translate("editor.reports.whoId"));
+			$columns = $columns + array('proposalId' => Locale::translate("editor.reports.proposalId"));
 		}
 		if (Request::getUserVar('checkErc')){
 			$columns = $columns + array('erc' => Locale::translate("editor.reports.erc"));
@@ -433,14 +433,14 @@ $sort = Request::getUserVar('sort');
 			else array_push($criterias, ('not in the whole country'));
 		}					
 		if (!empty($countryField)){
-			$regionsOfPhilippinesDao =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+			$areasOfTheCountryDao =& DAORegistry::getDAO('AreasOfTheCountryDAO');
 			$countryCriteria = "";
 			$present = false;
 			foreach ($countryField as $country){
 				if(!empty($country)){
 					$present = true;
-					if ($countryCriteria == "" || $countryCriteria == null) $countryCriteria = $regionsOfPhilippinesDao->getRegionOfPhilippines($country).' ';
-					else $countryCriteria .= 'or '.$regionsOfPhilippinesDao->getRegionOfPhilippines($country).' ';
+					if ($countryCriteria == "" || $countryCriteria == null) $countryCriteria = $areasOfTheCountryDao->getAreaOfTheCountry($country).' ';
+					else $countryCriteria .= 'or '.$areasOfTheCountryDao->getAreaOfTheCountry($country).' ';
 				}
 			}
 			if ($present == true) array_push($criterias, ("the list of regions includes ".$countryCriteria));
@@ -465,8 +465,8 @@ $sort = Request::getUserVar('sort');
 		
 		foreach ($submissionsArray as $submission) {
 			foreach ($columns as $index => $junk) {
-				if ($index == 'whoId') {
-					$columns[$index] = $submission->getWhoId($submission->getLocale());
+				if ($index == 'proposalId') {
+					$columns[$index] = $submission->getProposalId($submission->getLocale());
 				} elseif ($index == 'erc') {
 					$columns[$index] = $submission->getSectionAbbrev($submission->getLocale());
 				} elseif ($index == 'decision') {

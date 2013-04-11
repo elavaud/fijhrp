@@ -12,7 +12,7 @@
 		<td colspan="5" class="headseparator">&nbsp;</td>
 	</tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">WHO Proposal ID</td>
+		<td width="10%">{translate key="common.proposalId"}</td>
 		<td width="10%"><span class="disabled">{translate key="submission.date.yyyymmdd"}</span><br/>
 <!-- {sort_search key="submissions.submit" sort="submitDate"}--> </td> 
 		<!-- <td width="5%">{sort_search key="submissions.sec" sort="section"}</td> Commented out by MSB, Sept25,2011-->
@@ -26,9 +26,8 @@
 	
 	{iterate from=submissions item=submission}
 	<tr valign="top" {if $submission->getFastTracked()} class="fastTracked"{/if}>
-<!-- Changed to display WHO Proposal ID instead of article ID -->
-		{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
-		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+		{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
+		<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
 	<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td>  *}--> <!-- Commented out by MSB -->
                 <!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *} Commented out by MSB -->

@@ -57,7 +57,7 @@
 	</tr>
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 {iterate from=submissions item=submission}
-	{assign var="articleId" value=$submission->getLocalizedWhoId()}
+	{assign var="articleId" value=$submission->getLocalizedProposalId()}
 	{assign var="reviewId" value=$submission->getReviewId()}
 	<tr valign="top">
 		<td width="10%">{$articleId|escape}</td>

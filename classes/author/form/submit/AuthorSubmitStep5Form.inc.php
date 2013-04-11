@@ -149,7 +149,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 
         function getLocaleFieldNames() {
                 return array(
-			'whoId'
+			'proposalId'
 		);
 	}
 
@@ -171,7 +171,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
                 /*************************************************************************************
                  * Edited by: Anne Ivy Mirasol
                  * Last Updated: May 4, 2011
-                 * Set WHO proposal ID
+                 * Set proposal ID
                  * yyyy.nn.ccc.nn.uuu
                  *************************************************************************************/
                 
@@ -202,9 +202,8 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
                         $country = $countryArray[0];
                         $countyearcountry = $articleDao->getSubmissionsForYearForCountryCount($year, $country) + 1;
                     }
-                    $unit = $article->getTechnicalUnit($this->getFormLocale());
-
-                    $article->setWhoId($year. '.' . $countyear . '.' . $section . '.' . $countyearsection . '.' .$country , $this->getFormLocale());
+                    
+                    $article->setProposalId($year. '.' . $countyear . '.' . $section . '.' . $countyearsection . '.' .$country , $this->getFormLocale());
                 }
                 if ($this->getData('commentsToEditor') != '') {
 			$article->setCommentsToEditor($this->getData('commentsToEditor'));
@@ -286,7 +285,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 				'secretaryName' => $sectionEditor->getFullName(),
 				'address' => $sectionDao->getSettingValue($article->getSectionId(), 'address'),
 				'bankAccount' => $sectionDao->getSettingValue($article->getSectionId(), 'bankAccount'),
-				'proposalId' => $article->getWhoId(Locale::getLocale()),
+				'proposalId' => $article->getProposalId(Locale::getLocale()),
 				'submissionUrl' => Request::url(null, 'author', 'submission', $article->getId())
 			));
 			$mail->send();

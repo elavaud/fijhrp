@@ -6,7 +6,7 @@
  */
 
 /**
- * @file lib/pkp/classes/who/MeetingAttendanceReportForm.inc.php
+ * @file /classes/meeting/form/MeetingAttendanceReportForm.inc.php
  *
  * Added by igmallare. Last Updated: Oct 11, 2011
  * @class MeetingAttendanceReportForm

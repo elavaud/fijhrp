@@ -87,11 +87,11 @@
 	
 	{assign var="submissionCount" value=0}
 	{foreach from=$submissions item=submission}
-	{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+	{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 	{assign var="key" value=$submission->getId()}
 	{if $isReviewer}
 	<tr valign="top">
-		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+		<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    		<td>{$submission->getFirstAuthor()|escape}</td>	
    		<td><a href="{url op="viewProposalFromMeeting" path=$submission->getArticleId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>
@@ -104,7 +104,7 @@
 	{assign var="submissionCount" value=$submissionCount+1}
 	{elseif $map.$key}
    		<tr valign="top">
-			<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+			<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 			<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    			<td>{$submission->getFirstAuthor()|escape}</td>	
    			<td><a href="{url op="submission" path=$map.$key}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>

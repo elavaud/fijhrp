@@ -5,7 +5,7 @@
  * EL
 **/
 
-import('lib.pkp.classes.who.Meeting');
+import('classes.meeting.Meeting');
 import('lib.pkp.classes.db.DBRowIterator');
 
 class MeetingDAO extends DAO {

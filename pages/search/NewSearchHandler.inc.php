@@ -58,8 +58,8 @@ class NewSearchHandler extends Handler {
 		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
 		
-        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $proposalCountries =& $countryDAO->getRegionsOfPhilippines();
+        $countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $proposalCountries =& $countryDAO->getAreasOfTheCountry();
         $templateMgr->assign_by_ref('proposalCountries', $proposalCountries);	
 		
 		$templateMgr->assign('dateFrom', $fromDate);
@@ -90,7 +90,7 @@ class NewSearchHandler extends Handler {
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		
 		$country = Request::getUserVar('proposalCountry');
-		$countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
+		$countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
 		$status = Request::getUserVar('status');
 		if($status != '1' && $status != '2') $status = false;
 		$results =& $articleDao->searchProposalsPublic($query, $fromDate, $toDate, $country, $status);
@@ -103,7 +103,7 @@ class NewSearchHandler extends Handler {
 		$templateMgr->assign('region', $country);
 		$templateMgr->assign('statusFilter', $status);
 				
-		$templateMgr->assign('country', $countryDAO->getRegionOfPhilippines($country));
+		$templateMgr->assign('country', $countryDAO->getAreaOfTheCountry($country));
 		
 		$templateMgr->assign('dateFrom', $fromDate);
 		$templateMgr->assign('dateTo', $toDate);

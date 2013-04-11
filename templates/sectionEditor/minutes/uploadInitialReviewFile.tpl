@@ -11,7 +11,7 @@
 </script>
 {/literal}
 <div id="submissions">
-<h4>{translate key="editor.minutes.proposal.initialReview"}&nbsp;{$submission->getLocalizedWhoId()}</h4>
+<h4>{$submission->getLocalizedProposalId()}&nbsp;{translate key="editor.minutes.initialReview"}</h4>
 <br/>
 <form method="post" action="{url op="uploadInitialReviewFile" path=$meeting->getId()|to_array:$submission->getId()}" enctype="multipart/form-data">				
 	<table class="data" width="100%">
@@ -20,8 +20,8 @@
 			<td class="value" width="80%">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</td>
 		</tr>
 		<tr>
-			<td class="label" width="20%">{translate key="editor.minutes.whoId"}</td>
-			<td class="value" width="80%">{$submission->getLocalizedWhoId()}</td>
+			<td class="label" width="20%">{translate key="common.proposalId"}</td>
+			<td class="value" width="80%">{$submission->getLocalizedProposalId()}</td>
 		</tr>
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.pi"}</td>
@@ -36,10 +36,10 @@
 		</tr>
 		<tr>
 			<td class="label" width="20%">
-				{fieldLabel name="minutesFileField" required="true" key="editor.minutes.minutesFile"}				
+				{fieldLabel name="minutesFileField" required="true" key="editor.minutes"}				
 			</td>
 			<td class="value">
-				{if $minutesFile!=null} {$minutesFile} <br/>{/if}
+				{if $minutesFile!=null} {$minutesFile}<br/>{/if}
 				<input type="hidden" name="minutesFileField" id="minutesFileField" value="{$minutesFile}"/>
 				<input type="file" class="uploadField" name="minutesFile" id="minutesFile"/>
 				&nbsp;&nbsp;				

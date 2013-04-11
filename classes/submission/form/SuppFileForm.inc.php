@@ -93,16 +93,16 @@ class SuppFileForm extends Form {
 		$templateMgr->assign('suppFileId', $this->suppFileId);
 
                 // Start Edit Jan 31 2012
-                // Add Options drop-down list for WHO journals
+                // Add Options drop-down list
                 $typeOptions = array(
-                    "author.submit.suppFile.who.summary" => "author.submit.suppFile.who.summary",
-                    "author.submit.suppFile.who.informedConsent" => "author.submit.suppFile.who.informedConsent",
-                    "author.submit.suppFile.who.funding" => "author.submit.suppFile.who.funding",
-                    "author.submit.suppFile.who.cv" => "author.submit.suppFile.who.cv",
-                    "author.submit.suppFile.who.questionnaire" => "author.submit.suppFile.who.questionnaire",
-                    "author.submit.suppFile.who.ethicalClearance" => "author.submit.suppFile.who.ethicalClearance",
-                    "author.submit.suppFile.who.proofOfRegistration" => "author.submit.suppFile.who.proofOfRegistration",
-                    "author.submit.suppFile.who.otherErcDecision" => "author.submit.suppFile.who.otherErcDecision",
+                    "author.submit.suppFile.summary" => "author.submit.suppFile.summary",
+                    "author.submit.suppFile.informedConsent" => "author.submit.suppFile.informedConsent",
+                    "author.submit.suppFile.funding" => "author.submit.suppFile.funding",
+                    "author.submit.suppFile.cv" => "author.submit.suppFile.cv",
+                    "author.submit.suppFile.questionnaire" => "author.submit.suppFile.questionnaire",
+                    "author.submit.suppFile.ethicalClearance" => "author.submit.suppFile.ethicalClearance",
+                    "author.submit.suppFile.proofOfRegistration" => "author.submit.suppFile.proofOfRegistration",
+                    "author.submit.suppFile.otherErcDecision" => "author.submit.suppFile.otherErcDecision",
                     "common.other" => "common.other"
 		);
 

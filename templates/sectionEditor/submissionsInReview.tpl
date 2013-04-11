@@ -32,9 +32,9 @@
         <!--{*if ($status!=PROPOSAL_STATUS_DRAFT && $status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT*}-->	
 			
             {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			<tr valign="top">
-				<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
 	   			<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
            		<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>

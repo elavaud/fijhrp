@@ -7,8 +7,8 @@
 **}
 
 {strip}
-{assign var="pageTitle" value="editor.meetings.viewMeeting"}
-{assign var="pageCrumbTitle" value="editor.meetings.viewMeeting"}
+{assign var="pageTitle" value="editor.meeting"}
+{assign var="pageCrumbTitle" value="editor.meeting"}
 {include file="common/header.tpl"}
 {/strip}
 <ul class="menu">
@@ -55,7 +55,7 @@
 <table width="100%" class="listing">
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="10%">Proposal ID</td>
+		<td width="10%">{translate key="common.proposalId"}</td>
 		<td width="5%">{translate key="submissions.submit"}</td>
 		<td width="25%">{translate key="article.authors"}</td>
 		<td width="35%">{translate key="article.title"}</td>
@@ -64,9 +64,9 @@
 	<tr><td colspan="6" class="headseparator">&nbsp;</td></tr>
 	
 	{foreach from=$submissions item=submission}
-	{assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+	{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 	<tr valign="top">
-		<td>{if $whoId}{$whoId|escape}{else}&mdash;{/if}</td>
+		<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    		<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> 
    		<td><a href="{url op="submission" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>
@@ -97,10 +97,10 @@
 	<table class="listing" width="100%">
 		<tr><td colspan="5" class="headseparator" ></td></tr>
 		<tr class="heading" valign="bottom">
-			<td width="20%"> {translate key="editor.meetings.user.name"}</td>
-			<td width="20%"> {translate key="editor.meetings.user.functions"}</td>
-			<td width="30%"> {translate key="editor.meetings.user.reply"} </td>
-			<td width="15%"> {translate key="editor.meetings.user.replyStatus"} </td>
+			<td width="20%"> {translate key="user.name"}</td>
+			<td width="20%"> {translate key="user.functions"}</td>
+			<td width="30%"> {translate key="editor.meeting.guest.remarks"} </td>
+			<td width="15%"> {translate key="editor.meeting.guest.replyStatus"} </td>
 			<td width="15%" align="right"> {translate key="common.action"} </td>
 		</tr>
 		<tr><td colspan="5" class="headseparator" ></td></tr>
@@ -122,8 +122,8 @@
 				{if ($meeting->getStatus() == STATUS_CANCELLED) || ($meeting->getStatus() == STATUS_DONE)}
 					&mdash;
 				{else}
-					<a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():1}">{translate key="editor.meetings.user.available"}</a>
-					<br/><a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():2}">{translate key="editor.meetings.user.unavailable"}</a>
+					<a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():1}">{translate key="editor.meeting.guest.available"}</a>
+					<br/><a href="{url op="replyAttendanceForUser" path=$meeting->getId()|to_array:$user->getUserId():2}">{translate key="editor.meeting.guest.unavailable"}</a>
 				{/if}
 			</td>
 
@@ -141,7 +141,7 @@
 		{/foreach}
 		{if empty($users)}
 		<tr>
-			<td colspan="5" class="nodata">{translate key="editor.meetings.user.noGuests"}</td>
+			<td colspan="5" class="nodata">{translate key="editor.meeting.noGuests"}</td>
 		</tr>
 		{/if}
 		<tr>
@@ -156,19 +156,19 @@
 </div>
 <br>
 <div>
-<h3>{translate key="editor.meetings.tentativeAttendance}</h3>
+<h3>{translate key="editor.meeting.tentativeAttendance}</h3>
 <div class="separator"></div>
 <table width="100%" class="data">
 	<tr valign="top">
-		<td class="label" width="40%">{translate key="editor.meetings.numberOfAttendingGuests"}</td>
+		<td class="label" width="40%">{translate key="editor.meeting.numberOfAttendingGuests"}</td>
 		<td class="value" width="60%">{$attendingGuests}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="40%">{translate key="editor.meetings.numberOfNotAttendingGuests"}</td>
+		<td class="label" width="40%">{translate key="editor.meeting.numberOfNotAttendingGuests"}</td>
 		<td class="value" width="60%">{$notAttendingGuests}</td>
 	</tr>
 	<tr valign="top">
-		<td class="label" width="40%">{translate key="editor.meetings.numberOfUndecidedGuests"}</td>
+		<td class="label" width="40%">{translate key="editor.meeting.numberOfUndecidedGuests"}</td>
 		<td class="value" width="60%">{$undecidedGuests}</td>
 	</tr>
 </table>

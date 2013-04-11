@@ -14,7 +14,7 @@ define('FILTER_SECTION_ALL', 0);
 
 import('classes.submission.sectionEditor.SectionEditorAction');
 import('classes.handler.Handler');
-import('lib.pkp.classes.who.Meeting');
+import('classes.meeting.Meeting');
 
 class MinutesHandler extends Handler {
 	/**
@@ -115,7 +115,7 @@ class MinutesHandler extends Handler {
 		$meetingSubmissionDao =& DAORegistry::getDAO("MeetingSubmissionDAO");
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$minutesStatusMap = $meeting->getStatusMap();
-
+		
 		$remainingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getRemainingSubmissionsForInitialReview($meetingId);
 		$remainingSubmissionsForContinuingReview = $sectionEditorSubmissionDao->getRemainingSubmissionsForContinuingReview($meetingId);
 		$actualMeetingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getMeetingSubmissionsAssignedForInitialReview($meetingId);
@@ -154,7 +154,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 
 		$journal =& Request::getJournal();
-		import('lib.pkp.classes.who.form.AttendanceForm');
+		import('classes.meting.form.AttendanceForm');
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
 		$submitted = Request::getUserVar("submitAttendance") != null ? true : false;
 
@@ -193,7 +193,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 
 		$journal = Request::getJournal();
-		import('lib.pkp.classes.who.form.ProposalsForInitialReviewForm');
+		import('classes.meeting.form.ProposalsForInitialReviewForm');
 		$initialReviewForm = new ProposalsForInitialReviewForm($meetingId, $journal->getId());
 		$submitted = Request::getUserVar("selectProposal") != null ? true : false;
 		$articleId = Request::getUserVar("articleId");
@@ -234,7 +234,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		
-		import('lib.pkp.classes.who.form.InitialReviewDecisionForm');
+		import('classes.meeting.form.InitialReviewDecisionForm');
 		$initialReviewForm = new InitialReviewDecisionForm($meetingId, $articleId);
 		$submitted = Request::getUserVar("submitInitialReview") != null ? true : false;
 
@@ -270,7 +270,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		
-		import('lib.pkp.classes.who.form.UploadInitialReviewFileForm');
+		import('classes.meeting.form.UploadInitialReviewFileForm');
 		$uploadReviewFileForm = new UploadInitialReviewFileForm($meetingId, $articleId);
 		
 		if($request->getUserVar('uploadMinutesFile')) {
@@ -319,7 +319,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 
 		$journal = Request::getJournal();
-		import('lib.pkp.classes.who.form.ProposalsForContinuingReviewForm');
+		import('classes.meeting.form.ProposalsForContinuingReviewForm');
 		$continuingReviewForm = new ProposalsForContinuingReviewForm($meetingId, $journal->getId());
 		$submitted = Request::getUserVar("selectProposal") != null ? true : false;
 		$articleId = Request::getUserVar("articleId");
@@ -359,7 +359,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 
-		import('lib.pkp.classes.who.form.ContinuingReviewDecisionForm');
+		import('classes.meeting.form.ContinuingReviewDecisionForm');
 		$continuingReviewForm = new ContinuingReviewDecisionForm($meetingId, $articleId);
 		$submitted = Request::getUserVar("submitContinuingReview") != null ? true : false;
 
@@ -394,7 +394,7 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		
-		import('lib.pkp.classes.who.form.UploadContinuingReviewFileForm');
+		import('classes.meeting.form.UploadContinuingReviewFileForm');
 		$uploadReviewFileForm = new UploadContinuingReviewFileForm($meetingId, $articleId);
 		
 		if($request->getUserVar('uploadMinutesFile')) {
@@ -470,11 +470,14 @@ class MinutesHandler extends Handler {
 
 			if($meeting == null) $isValid = false;
 			else if($meeting->getUploader() != $user->getSecretaryCommitteeId()) $isValid = false;
+			
 			if($isValid) $this->meeting =& $meeting;
 			$statusMap = $meeting->getStatusMap();
+			/*
 			if($access != null && $statusMap[$access] == 1) {
 				Request::redirect(null, null, 'uploadMinutes', $meetingId);
 			}
+			*/
 		}
 		else {
 			$isValid = false;

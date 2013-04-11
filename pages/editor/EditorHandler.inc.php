@@ -59,18 +59,9 @@ class EditorHandler extends SectionEditorHandler {
 		$templateMgr->assign('fieldOptions', $this->getSearchFieldOptions());
 		$templateMgr->assign('dateFieldOptions', $this->getDateFieldOptions());
 
-		
-		/*********************************************************************
-		 * Get list of WHO technical units from the XML file and get all countries
-		 * Added by:  Ayvee Mallare
-		 * Last Updated: Sept 24, 2011
-         *********************************************************************/
-		$technicalUnitDAO =& DAORegistry::getDAO('TechnicalUnitDAO');
-		$technicalUnits =& $technicalUnitDAO->getTechnicalUnits();
-        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $countries =& $countryDAO->getRegionsOfPhilippines();
+        $countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $countries =& $countryDAO->getAreasOfTheCountry();
        
-		$templateMgr->assign_by_ref('technicalUnits', $technicalUnits);
         $templateMgr->assign_by_ref('countries', $countries);		
 		
 		// Bring in the print_issue_id function (FIXME?)
@@ -88,12 +79,6 @@ class EditorHandler extends SectionEditorHandler {
 			$searchMatch = Request::getUserVar('searchMatch');
 			$search = Request::getUserVar('search');
 			
-			/**
-			 * Get user's search conditions for technical unit and RTO
-			 * Added by: Ayvee Mallare
-			 * Last Updated: Sept 24, 2011
-			 */
-			$technicalUnitField = Request::getUserVar('technicalUnitField');
 			$countryField = Request::getUserVar('countryField');
 			
 			$sort = Request::getUserVar('sort');
@@ -117,7 +102,6 @@ class EditorHandler extends SectionEditorHandler {
 					$dateSearchField,
 					$fromDate,
 					$toDate,
-					$technicalUnitField,
 					$countryField,
 					null,
 					null,
@@ -147,7 +131,6 @@ class EditorHandler extends SectionEditorHandler {
 					$dateSearchField,
 					$fromDate,
 					$toDate,
-					$technicalUnitField,
 					$countryField,
 					null,
 					$rangeInfo,
@@ -168,7 +151,6 @@ class EditorHandler extends SectionEditorHandler {
 			$templateMgr->assign('dateTo', $toDate);
 			
 			// Added by igm 9/24/11
-			$templateMgr->assign('technicalUnitField', $technicalUnitField);
 			$templateMgr->assign('countryField', $countryField);
 			
 			$templateMgr->assign('displayResults', true);
@@ -327,8 +309,8 @@ class EditorHandler extends SectionEditorHandler {
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$researchFields =& $articleDao->getResearchFields();
 		
-        $countryDAO =& DAORegistry::getDAO('RegionsOfPhilippinesDAO');
-        $countries =& $countryDAO->getRegionsOfPhilippines();
+        $countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $countries =& $countryDAO->getAreasOfTheCountry();
        
 		$templateMgr->assign_by_ref('researchFields', $researchFields);
         $templateMgr->assign_by_ref('countries', $countries);

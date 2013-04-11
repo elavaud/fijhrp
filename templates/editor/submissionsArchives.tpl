@@ -24,9 +24,9 @@
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
 	{assign var="articleId" value=$submission->getArticleId()}
-        {assign var="whoId" value=$submission->getWhoId($submission->getLocale())}
+        {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 	<tr valign="top">
-		<td>{$whoId|escape}</td>
+		<td>{$proposalId|escape}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
 	   	<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
       	<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>

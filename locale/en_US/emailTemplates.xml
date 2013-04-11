@@ -12,15 +12,6 @@
   -->
 
 
-<!-- 
-
-  WPRO ERC Edited E-mail Templates
-
-  Pruned to only templates used by WPRO ERC
-
-  spf - 8 March 2012
-
--->
 
 <email_texts locale="en_US">
 	<email_text key="NOTIFICATION">
@@ -106,7 +97,7 @@ Your new password: {$password}
 		<subject>Site Registration</subject>
 		<body>{$userFullName}
 
-You have now been registered as a user with the WPRO ERC system. We have included your username and password in this email, which are needed for all work with our website. At any point, you can ask to be removed from the site's list of users by contacting me.
+You have now been registered as a user with the PHREB system. We have included your username and password in this email, which are needed for all work with our website. At any point, you can ask to be removed from the site's list of users by contacting me.
 
 Username: {$username}
 Password: {$password}
