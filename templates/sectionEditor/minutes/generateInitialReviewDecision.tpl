@@ -30,7 +30,7 @@
 		</tr>
 	</table>	
 	<br/>
-	<form method="post" action="{url op="uploadInitialReviewDecision" path=$meeting->getId()|to_array:$submission->getId()}">
+	<form method="post" action="{url op="generateInitialReviewDecision" path=$meeting->getId()|to_array:$submission->getId()}">
 	<table class="data" width="100%" id="decisionTable">		
 		<tr class="heading">
 			<td colspan="6">{translate key="editor.minutes.decision"}</td>

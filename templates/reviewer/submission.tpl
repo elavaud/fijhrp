@@ -41,7 +41,7 @@ $(document).ready(function() {
 <h3>{translate key="reviewer.article.submissionToBeReviewed"}</h3>
 <table width="100%" class="data">
 <tr valign="top">
-	<td width="20%" class="label">ID</td>
+	<td width="20%" class="label">{translate key="common.proposalId"}</td>
 	<td width="80%" class="value">{$submission->getLocalizedProposalId()|strip_unsafe_html}</td>
 </tr>
 <tr valign="top">
@@ -57,47 +57,13 @@ $(document).ready(function() {
 	<td class="label">{translate key="article.abstract"}</td>
 	<td class="value">{$submission->getLocalizedAbstract()|strip_unsafe_html|nl2br}</td>
 </tr>
-<!--
-Removed by EL on February 17th 2013
-No edit assignments anymore
-{assign var=editAssignments value=$submission->getEditAssignments()}
-{foreach from=$editAssignments item=editAssignment}
-	{if !$notFirstEditAssignment}
-		{assign var=notFirstEditAssignment value=1}
-		<tr valign="top">
-			<td class="label">{translate key="reviewer.article.submissionEditor"}</td>
-			<td class="value">
-	{/if}
-			{assign var=emailString value=$editAssignment->getEditorFullName()|concat:" <":$editAssignment->getEditorEmail():">"}
-			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle()|strip_tags articleId=$articleId}
-			{$editAssignment->getEditorFullName()|escape} {icon name="mail" url=$url}
-			{if !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
-				{if $editAssignment->getCanEdit()}
-					({translate key="submission.editing"})
-				{else}
-					({translate key="submission.review"})
-				{/if}
-			{/if}
-			<br/>
-{/foreach}
-{if $notFirstEditAssignment}
-		</td>
-	</tr>
-{/if}
--->
- <!--
-	<tr valign="top">
-	       <td class="label">{translate key="submission.metadata"}</td>
-	       <td class="value">
-		       <a href="{url op="viewMetadata" path=$reviewId|to_array:$articleId}" class="action" target="_new">{translate key="submission.viewMetadata"}</a>
-	       </td>
-	</tr>-->
+
 </table>
 </div>
 <div class="separator"></div>
 
 <div id="files">
-<h3>Files</h3>
+<h3>{translate key="article.files"}</h3>
 	<table width="100%" class="data">
 	{if ($confirmedStatus and not $declined) or not $journal->getSetting('restrictReviewerFileAccess')}
 		<tr valign="top">
@@ -283,52 +249,7 @@ No edit assignments anymore
 	<td>{$currentStep|escape}.{assign var="currentStep" value=$currentStep+1}</td>
 	<td><span class="instruct">{translate key="reviewer.article.downloadSubmission"}</span></td>
 </tr>
-<!--
-<tr valign="top">
-	<td>&nbsp;</td>
-	<td>
-		<table width="100%" class="data">
-			{if ($confirmedStatus and not $declined) or not $journal->getSetting('restrictReviewerFileAccess')}
-			<tr valign="top">
-				<td width="30%" class="label">
-					{translate key="submission.submissionManuscript"}
-				</td>
-				<td class="value" width="70%">
-					{if $reviewFile}
-					{if $submission->getDateConfirmed() or not $journal->getSetting('restrictReviewerAccessToFile')}
-						<a href="{url op="downloadFile" path=$reviewId|to_array:$articleId:$reviewFile->getFileId():$reviewFile->getRevision()}" class="file">{$reviewFile->getFileName()|escape}</a>
-					{else}{$reviewFile->getFileName()|escape}{/if}
-					&nbsp;&nbsp;{$reviewFile->getDateModified()|date_format:$dateFormatShort}
-					{else}
-					{translate key="common.none"}
-					{/if}
-				</td>
-			</tr>
-			<tr valign="top">
-				<td class="label">
-					{translate key="article.suppFiles"}
-				</td>
-				<td class="value">
-					{assign var=sawSuppFile value=0}
-					{foreach from=$suppFiles item=suppFile}
-						{if $suppFile->getShowReviewers() }
-							{assign var=sawSuppFile value=1}
-							<a href="{url op="downloadFile" path=$reviewId|to_array:$articleId:$suppFile->getFileId()}" class="file">{$suppFile->getFileName()|escape}</a><br />
-						{/if}
-					{/foreach}
 
-					{if !$sawSuppFile}
-						{translate key="common.none"}
-					{/if}
-				</td>
-			</tr>
-			{else}
-			<tr><td class="nodata">{translate key="reviewer.article.restrictedFileAccess"}</td></tr>
-			{/if}
-		</table>
-	</td>
-</tr>
--->
 <tr>
 	<td colspan="2">&nbsp;</td>
 </tr>

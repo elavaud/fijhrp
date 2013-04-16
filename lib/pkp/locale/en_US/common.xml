@@ -142,6 +142,8 @@
 	<message key="common.fileName">File name</message>
 	<message key="common.fileSize">File size</message>
 	<message key="common.fileType">File type</message>
+    <message key="common.fileTooBig1">The file is too big (</message>
+    <message key="common.fileTooBig2"> Kb). It should not exceed </message>
 	<message key="common.height">Height</message>
 	<message key="common.homePageHeaderLogo.altText">Homepage Header Logo</message>
 	<message key="common.hour">Hour</message>

@@ -15,6 +15,10 @@
 					<td colspan="2"><b>{translate key="reviewer.meetings.details"}</b></td>
 				</tr>
 				<tr>
+					<td class="label" width="40%">{translate key="editor.meeting.id"}</td>
+					<td class="value" width="60%">{$meetingAndAttendance.meeting->getPublicId()}</td>
+				</tr>
+				<tr>
 					<td class="label" width="40%">{translate key="editor.meeting.schedule"}</td>
 					<td class="value" width="60%">{$meetingAndAttendance.meeting->getDate()|date_format:$datetimeFormatLong}</td>
 				</tr>

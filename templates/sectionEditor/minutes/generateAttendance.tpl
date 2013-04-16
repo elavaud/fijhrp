@@ -138,10 +138,10 @@
 	 	 	}
 	}
 </script>{/literal}
-<h3>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getId()}</h3>
+<h3>{translate key="editor.minutes.attendanceAnnouncements"}{$meeting->getPublicId()}</h3>
 
 <br/>
-<form method="POST" action="{url op="uploadAttendance" path=$meeting->getId()}">
+<form method="POST" action="{url op="generateAttendance" path=$meeting->getId()}">
 	
 <div id="announcements">
 	<h3 style="text-align:left">{translate key="reviewer.meetings.details}</h3>
@@ -235,7 +235,7 @@
 	
 	<br/><br/>
 	<input type="submit" onclick="return confirm('{translate|escape:"jsparam" key="editor.minutes.confirmAttendance"}')" value="Submit"  class="button defaultButton" name="submitAttendance"/>	 
-	<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId() }'" />
+	<input type="button" value={translate key="common.back"} class="button" onclick="document.location.href='{url op="generateAttendance" path=$meeting->getId() }'" />
 </div>
  </form>
 

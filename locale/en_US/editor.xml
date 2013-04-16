@@ -206,22 +206,7 @@
 	<message key="editor.article.exemption.limitedObservation">The intervention is limited to the observation of public behavior.</message>
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
 	<message key="editor.article.exemption.registered">Proposals registered in the Demo National Health Research Portal when the study has been reviewed and approved by the Ethics Committee of the University of Health Sciences (ECUHS) or the National Ethics Committee for Health Research.</message>
-	<message key="editor.minutes.minutes">Minutes</message>
-	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
-	<message key="editor.minutes.attendance">Attendance</message>
-	<message key="editor.minutes.announcements">Announcements</message>
-	<message key="editor.minutes.initialReview">Initial Review</message>
-	<message key="editor.minutes.initialReviews">Initial Reviews</message>
-	<message key="editor.minutes.continuingReview">Continuing Review</message>
-	<message key="editor.minutes.continuingReviews">Continuing Reviews</message>
-	<message key="editor.minutes.rereview">Continuing Review or Re-review</message>
-	<message key="editor.minutes.rereviews">Continuing Review or Re-reviews</message>
-	<message key="editor.minutes.amendment">Amendment</message>
-	<message key="editor.minutes.amendments">Amendments</message>
-	<message key="editor.minutes.adverseEvent">Adverse Event</message>
-	<message key="editor.minutes.adverseEvents">Adverse Events</message>
-	<message key="editor.minutes.informationItems">Information Items</message>
-	<message key="editor.minutes.announcementsRequired">Please enter announcements.</message>
+
 	<!-- End of 3 May 2011 additions aglet -->
 			
 	<message key="editor.article.selectLayoutEditor">Select Layout Editor</message>
@@ -342,17 +327,32 @@
 	<message key="editor.minutes.addItem">Add Item</message>
 	<message key="editor.minutes.adjourned">Meeting was adjourned at</message>
 	<message key="editor.minutes.adjournedRequired">Please indicate the time when meeting was adjourned</message>
+	<message key="editor.minutes.adverseEvent">Adverse Event</message>
+	<message key="editor.minutes.adverseEvents">Adverse Events</message>
 	<message key="editor.minutes.affiliationOfGuest">Status of guest</message>
+	<message key="editor.minutes.amendment">Amendment</message>
+	<message key="editor.minutes.amendments">Amendments</message>
+	<message key="editor.minutes.announcements">Announcements</message>
+	<message key="editor.minutes.announcementsRequired">Please enter announcements.</message>
+	<message key="editor.minutes.attendance">Attendance</message>
 	<message key="editor.minutes.complete">Complete</message>
 	<message key="editor.minutes.completeInitialReviews">Complete Initial Reviews</message>
 	<message key="editor.minutes.confirmAnnouncements">Are you sure you want to submit these details?</message>
     <message key="editor.minutes.continuingReview">Continuing Review</message>
+	<message key="editor.minutes.continuingReviews">Continuing Reviews</message>
     <message key="editor.minutes.files">Minutes Files</message>
     <message key="editor.minutes.fileRequired">Please upload meeting minutes</message>
 	<message key="editor.minutes.fillupCommitteeAttendance">Indicate attendance of committee members in meeting</message>
 	<message key="editor.minutes.fillupGuests">Indicate guests who attended the meeting</message>
+    <message key="editor.minutes.generateAttendance">Generate Attendance</message>
+	<message key="editor.minutes.generateAttendance.checkReasonOfAbsence">Check Reason for absence</message>
+	<message key="editor.minutes.generateAttendance.requiredAttendance">Please indicate to all guests whether they were present or absent</message>
+	<message key="editor.minutes.generateAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
+    <message key="editor.minutes.generated">Generated</message>
 	<message key="editor.minutes.incomplete">Incomplete</message>
+    <message key="editor.minutes.informationItems">Information Items</message>
     <message key="editor.minutes.initialReview">Initial Review</message>
+	<message key="editor.minutes.initialReviews">Initial Reviews</message>
 	<message key="editor.minutes.initialReview.benefits">Benefit Category</message>
 	<message key="editor.minutes.initialReview.confidentiality">Privacy and Confidentiality</message>
 	<message key="editor.minutes.initialReview.consentDocument">Consent Document</message>
@@ -367,22 +367,26 @@
 	<message key="editor.minutes.manage">Manage Minutes</message>
 	<message key="editor.minutes.minutesOfLastMeeting">Minutes of Last Meeting</message>
 	<message key="editor.minutes.nameOfGuest">Name of guest</message>
+    <message key="editor.minutes.noFileGenerated">No File Generated</message>
+    <message key="editor.minutes.noFileUploaded">No File Uploaded</message>
 	<message key="editor.minutes.pi">Principal Investigator (PI)</message>
 	<message key="editor.minutes.present">Present</message>
 	<message key="editor.minutes.protocolTitle">Protocol Title</message>
 	<message key="editor.minutes.reasonOfAbsence">Reason of Absence</message>
+	<message key="editor.minutes.replaceAttendance">Replace Attendance</message>
+	<message key="editor.minutes.rereview">Continuing Review or Re-review</message>
+	<message key="editor.minutes.rereviews">Continuing Review or Re-reviews</message>
 	<message key="editor.minutes.selectProposal">Select proposal</message>
 	<message key="editor.minutes.selectProposalRequired">Please select a proposal to review.</message>
 	<message key="editor.minutes.specify">(Specify if other)</message>
 	<message key="editor.minutes.status">Minutes Status</message>
 	<message key="editor.minutes.uploadAttendance">Upload Attendance</message>
-	<message key="editor.minutes.uploadAttendance.checkReasonOfAbsence"></message>
-	<message key="editor.minutes.uploadAttendance.requiredAttendance">Please indicate to all guests whether they were present or absent</message>
-	<message key="editor.minutes.uploadAttendance.requiredReasonOfAbsence">Please indicate reason of absence</message>
+    <message key="editor.minutes.uploaded">Uploaded</message>
 	<message key="editor.minutes.uploadInitialReviews">Upload Initial Reviews</message>
+	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
 	<message key="editor.minutes.venue">Venue of Meeting</message>
 	<message key="editor.minutes.venueRequired">Please enter venue of meeting</message>
-        
+            
 	<message key="editor.minutes.responsibleRto">Responsible Staff member</message>
 	<message key="editor.minutes.summary">Protocol Summary</message>
 	<message key="editor.minutes.discussion">(a) DISCUSSION</message>
@@ -413,7 +417,6 @@
 	<message key="editor.minutes.downloadInitialReviews">Download Initial Reviews</message>
 	<message key="editor.minutes.setFinalAndDownload">Download Minutes</message>
 	<message key="editor.minutes.downloadMinutes">Download Minutes</message>
-	<message key="editor.minutes.uploadMinutes">Upload Minutes</message>
 	<message key="editor.minutes.confirmAttendance">This cannot be undone. Are you sure you want to submit this attendance?</message>
 	<message key="editor.minutes.confirmContinuingReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.confirmInitialReview">This cannot be undone. Are you sure you want to submit this review?</message>

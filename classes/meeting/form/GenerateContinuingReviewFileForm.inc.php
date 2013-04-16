@@ -4,19 +4,19 @@
  * @defgroup sectionEditor_form
  */
 
+import('classes.lib.fpdf.pdf');
 import('lib.pkp.classes.form.Form');
 import('classes.submission.sectionEditor.SectionEditorAction');
 
-class UploadInitialReviewFileForm extends Form {
+class GenerateContinuingReviewFileForm extends Form {
 	/** @var int The meeting this form is for */
 	var $meeting;
 	var $submission;
-	var $minutesFile;
 	/**
 	 * Constructor.
 	 */
-	function UploadInitialReviewFileForm($meetingId, $articleId) {
-		parent::Form('sectionEditor/minutes/uploadInitialReviewFile.tpl');
+	function GenerateContinuingReviewFileForm($meetingId, $articleId) {
+		parent::Form('sectionEditor/minutes/generateContinuingReviewFile.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
@@ -24,21 +24,21 @@ class UploadInitialReviewFileForm extends Form {
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$submission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($articleId);
 		$this->submission = $submission;
-
-		$this->addCheck(new FormValidator($this, 'minutesFileField', 'required', 'editor.minutes.fileRequired'));		
+		
+		$this->addCheck(new FormValidator($this, 'minutesFileField', 'required', 'editor.minutes.fileRequired'));
 	}
 
 	/**
 	 * Display the form.
 	 */
-	function display() {
+	function display(&$args, &$request) {
 		$meeting = $this->meeting;
 		$submission =& $this->submission;
-		$minutesFile = $this->minutesFile;
+
 		$templateMgr =& TemplateManager::getManager();
-		$templateMgr->assign("minutesFileField", $this->getData("minutesFileField"));
-		$templateMgr->assign_by_ref('meeting', $meeting);
+		$templateMgr->assign("meeting", $meeting);
 		$templateMgr->assign_by_ref('submission', $submission);
+		$templateMgr->assign('minutesFile', $this->getData('minutesFileField'));
 		parent::display();
 	}
 
@@ -48,7 +48,7 @@ class UploadInitialReviewFileForm extends Form {
 	function readInputData() {
 		$this->readUserVars(array(
 			'minutesFileField'
-		));
+			));
 	}
 
 	function execute() {

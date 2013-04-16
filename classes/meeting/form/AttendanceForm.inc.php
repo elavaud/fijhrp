@@ -4,6 +4,7 @@
  * @defgroup sectionEditor_form
  */
 
+
 import('classes.lib.fpdf.pdf');
 import('lib.pkp.classes.form.Form');
 
@@ -17,7 +18,7 @@ class AttendanceForm extends Form {
 	 * Constructor.
 	 */
 	function AttendanceForm($meetingId, $journalId) {
-		parent::Form('sectionEditor/minutes/uploadAttendance.tpl');
+		parent::Form('sectionEditor/minutes/generateAttendance.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 		
 		$this->journalId =$journalId;
@@ -33,8 +34,8 @@ class AttendanceForm extends Form {
 		$this->addCheck(new FormValidator($this, 'adjourned', 'required', 'editor.minutes.adjournedRequired'));
 		$this->addCheck(new FormValidator($this, 'venue', 'required', 'editor.minutes.venueRequired'));
 		
-		$this->addCheck(new FormValidatorArray($this, 'guest_attendance', 'required', 'editor.minutes.uploadAttendance.requiredAttendance',array('attendance','guestId')));
-		$this->addCheck(new FormValidatorCustom($this, 'guest_attendance', 'required', 'editor.minutes.uploadAttendance.requiredReasonOfAbsence', create_function('$guest_attendance,$form', 
+		$this->addCheck(new FormValidatorArray($this, 'guest_attendance', 'required', 'editor.minutes.generateAttendance.requiredAttendance',array('attendance','guestId')));
+		$this->addCheck(new FormValidatorCustom($this, 'guest_attendance', 'required', 'editor.minutes.generateAttendance.requiredReasonOfAbsence', create_function('$guest_attendance,$form', 
 		'
 		foreach($guest_attendance as $key=>$reviewer){
 			if(isset($reviewer["attendance"]) && ($reviewer["attendance"]=="absent") && !isset($reviewer["reason"])) return false;
@@ -124,8 +125,7 @@ class AttendanceForm extends Form {
 	}
 
 	function savePdf() {
-		
-		$meeting =& $this->meeting;
+		$meeting =& $this->meeting;		
 		$userDao =& DAORegistry::getDAO("UserDAO");
 		$meetingAttendanceDao =& DAORegistry::getDAO("MeetingAttendanceDAO");
 		$meetingAttendances =& $meetingAttendanceDao->getMeetingAttendancesByMeetingId($meeting->getId());
@@ -179,21 +179,17 @@ class AttendanceForm extends Form {
 		$pdf->Ln(10);
 		$pdf->ChapterItemVal($details);
 		if($this->getData("announcements")) $pdf->ChapterItemKeyVal(Locale::translate('editor.meeting.attendanceReport.announcements'), $this->getData("announcements"), "BU");
-			$user =& Request::getUser();
-			$pdf->ChapterItemKeyVal(Locale::translate('editor.meeting.attendanceReport.submittedBy'), $user->getFullName(), "B");
+		
+		$user =& Request::getUser();
+		$pdf->ChapterItemKeyVal(Locale::translate('editor.meeting.attendanceReport.submittedBy'), $user->getFullName(), "B");
 			
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		$filename = "attendance.pdf";
-		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/".$filename;
+		
 		import('classes.file.MinutesFileManager');
 		$minutesFileManager = new MinutesFileManager($meeting->getId());
-		if($minutesFileManager->createDirectory()) {
-			$pdf->Output($meetingFilesDir,"F");
-		}
-	} 
-	
-	
+		$minutesFileManager->handleWrite($pdf, MINUTES_FILE_ATTENDANCE);
+	}
 }
 
 ?>

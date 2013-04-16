@@ -28,7 +28,7 @@ function checkSize(){
 	var check = fileToUpload.files[0].fileSize;
 	var valueInKb = Math.ceil(check/1024);
 	if (check > 5242880){
-		alert ('The file is too big ('+valueInKb+' Kb). It should not exceed 5 Mb.');
+		alert ('{/literal}{translate key="common.fileTooBig1"}{literal}'+valueInKb+'{/literal}{translate key="common.fileTooBig2"}{literal}5 Mb.');
 		return false
 	}
 }
@@ -63,7 +63,6 @@ $(document).ready(function() {
 	<td colspan="5" class="headseparator">&nbsp;</td>
 </tr>
 <tr class="heading" valign="bottom">
-	<!-- {* <td width="5%">{translate key="common.id"}</td> *} -->
 	<td width="40%">{translate key="common.title"}</td>
 	<td width="25%">{translate key="common.originalFileName"}</td>
 	<td width="15%" class="nowrap">{translate key="common.dateUploaded"}</td>
@@ -74,12 +73,10 @@ $(document).ready(function() {
 </tr>
 {foreach from=$suppFiles item=file}
 <tr valign="top">
-	<!-- {* <td>{$file->getSuppFileId()}</td> *} -->
-	<td>{$file->getSuppFileTitle()|escape} <!-- {*({$file->getType()|escape}) *} --></td>
+	<td>{$file->getSuppFileTitle()|escape}</td>
 	<td>{$file->getOriginalFileName()|escape}</td>
 	<td>{$file->getDateSubmitted()|date_format:$dateFormatTrunc}</td>
 	<td align="right">
-            <!-- {*<a href="{url op="submitSuppFile" path=$file->getSuppFileId() articleId=$articleId}" class="action">{translate key="common.edit"}</a>&nbsp;|&nbsp; *} -->
             <a href="{url op="deleteSubmitSuppFile" path=$file->getSuppFileId() articleId=$articleId}" onclick="return confirm('{translate|escape:"jsparam" key="author.submit.confirmDeleteSuppFile"}')" class="action">{translate key="common.delete"}</a></td>
 </tr>
 {foreachelse}
@@ -93,26 +90,21 @@ $(document).ready(function() {
 
 <table class="data" width="100%">
 <tr>
-	<td width="30%" class="label">Select file type(s)<br />(Hold down the CTRL button to select multiple options.)</td>
+	<td width="30%" class="label">{translate key="author.submit.suppFileInstruct"}</td>
 	<td width="35%" class="value">
-<!--Start Edit Jan 30 2012-->
-                <select name="fileType[]" id="fileType" multiple="multiple" size="8" class="selectMenu">
-                    {html_options_translate options=$typeOptions translateValues="true" selected=$fileType}
-                </select>
-                <!-- {*
-                <select name="type" class="selectMenu" id="type" size="1">{html_options_translate output=$typeOptionsOutput values=$typeOptionsValues translateValues="true" selected=$type}</select>
-                *} -->
-        </td>
-        <td style="vertical-align: bottom;">
-                <div id="divOtherFileType" style="display: none;">
-                    <span class="label" style="font-style: italic;">Specify "Other" file type</span> <br />
-                    <input type="text" name="otherFileType" id="otherFileType" size="20" /> <br />
-                </div>
-        </td>
-        <!--End Edit -->
+    	<select name="fileType[]" id="fileType" multiple="multiple" size="8" class="selectMenu">
+        	{html_options_translate options=$typeOptions translateValues="true" selected=$fileType}
+        </select>
+    </td>
+    <td style="vertical-align: bottom;">
+    	<div id="divOtherFileType" style="display: none;">
+        	<span class="label" style="font-style: italic;">{translate key="author.submit.suppFileSpecify"}</span> <br />
+        	<input type="text" name="otherFileType" id="otherFileType" size="20" /> <br />
+    	</div>
+    </td>
 </tr>
 <tr>
-        <td width="30%" class="label">Select file to upload</td>
+        <td width="30%" class="label">{translate key="author.submit.suppFileUploadInstruct"}</td>
         <td width="70%" class="value" colspan="2">
                 <input type="file" name="uploadSuppFile" id="uploadSuppFile"  class="uploadField" />
                 <input name="submitUploadSuppFile" type="submit" class="button" value="{translate key="common.upload"}" /> 

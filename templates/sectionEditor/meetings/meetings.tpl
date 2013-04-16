@@ -86,22 +86,22 @@
 	{iterate from=meetings item=meeting}
 	{assign var="key" value=$meeting->getId()}
 		<tr class="heading" valign="bottom">
-			<td width="5%">{$meeting->getId()}</td>
+			<td width="5%" valign="middle">{$meeting->getPublicId()}</td>
 			<td width="40%">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}">
 				{foreach from=$map.$key item=submission name=submissions}
-					{$submission->getLocalizedTitle()|strip_unsafe_html} <!-- EL on February 25th 2013: no truncate-->
-					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
+					&#9679;&nbsp;{$submission->getLocalizedTitle()|strip_unsafe_html}
+					{if $smarty.foreach.submissions.last}{else}<br/>{/if}
 				{/foreach}
 				{if empty($map.$key)}
 					<i>{translate key="reviewer.meetings.noSubmissions"}</i>
 				{/if}
 				</a>
 			</td>
-			<td width="25%" align="right">
-				{$meeting->getDate()|date_format:"%Y-%m-%d %I:%M %p"}
+			<td width="25%" align="right" valign="middle">
+				{$meeting->getDate()|date_format:$datetimeFormatLong}
 			</td>
-			<td width="30%" align="right">
+			<td width="30%" align="right" valign="middle">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 					{$meeting->getStatusKey()}
 				</a>
@@ -109,8 +109,8 @@
 						<br/><a href="{url op="downloadMinutes" path=$meeting->getId()}" class="action">
 						{translate key="editor.minutes.downloadMinutes"}</a>
 				{elseif $meeting->getStatus() == 1}
-						<br/><a href="{url op="uploadMinutes" path=$meeting->getId()}" class="action">
-						{translate key="editor.minutes.uploadMinutes"}</a>
+						<br/><a href="{url op="manageMinutes" path=$meeting->getId()}" class="action">
+						{translate key="editor.minutes.manageMinutes"}</a>
 				{/if}
 			</td>
 		</tr>	

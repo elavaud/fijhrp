@@ -17,7 +17,7 @@ class InitialReviewDecisionForm extends Form {
 	 * Constructor.
 	 */
 	function InitialReviewDecisionForm($meetingId, $articleId) {
-		parent::Form('sectionEditor/minutes/uploadInitialReviewDecision.tpl');
+		parent::Form('sectionEditor/minutes/generateInitialReviewDecision.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');

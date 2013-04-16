@@ -1,23 +1,19 @@
 {include file="sectionEditor/minutes/menu.tpl"}
 {literal}
-<script type="text/javascript">
+<script type="text/javascript">	
 	$(document).ready(function() {			
-			$("#minutesFile").change(
-				function() {
-					var minutesVal = $("#minutesFile").val();
-					$("#minutesFileField").val(minutesVal);		
-			});
-	});
-	
+		$("#minutesFile").change(
+			function() {
+				var minutesVal = $("#minutesFile").val();
+				$("#minutesFileField").val(minutesVal);		
+		});				
+});	
 </script>
 {/literal}
 <div id="submissions">
-<form method="post" action="{url op="uploadContinuingReviewFile" path=$meeting->getId()|to_array:$submission->getId()}">
-	<input type="hidden" name="articleId" value="{$submission->getId()}" />
-	<input type="hidden" name="lastDecisionId" value="{$lastDecision.editDecisionId}" />
-	<input type="hidden" name="resubmitCount" value="{$lastDecision.resubmitCount}" />
-<h4>{$submission->getLocalizedProposalId()}&nbsp;{translate key="editor.minutes.continuingReview"}</h4>
-<br/>	
+<h4>{$submission->getLocalizedProposalId()}&nbsp;{translate key="editor.minutes.initialReview"}</h4>
+<br/>
+<form method="post" action="{url op="generateInitialReviewFile" path=$meeting->getId()|to_array:$submission->getId()}" enctype="multipart/form-data">				
 	<table class="data" width="100%">
 		<tr>
 			<td class="label" width="20%">{translate key="editor.minutes.protocolTitle"}</td>
@@ -43,17 +39,18 @@
 				{fieldLabel name="minutesFileField" required="true" key="editor.minutes"}				
 			</td>
 			<td class="value">
-				{if $minutesFile!=null} {$minutesFile} <br/>{/if}
+				{if $minutesFile!=null} {$minutesFile}<br/>{/if}
 				<input type="hidden" name="minutesFileField" id="minutesFileField" value="{$minutesFile}"/>
 				<input type="file" class="uploadField" name="minutesFile" id="minutesFile"/>
 				&nbsp;&nbsp;				
 			</td>
-		</tr>
+		</tr>		
 	</table>
 	<br/>
-  	<br/>
- 	<input type="submit" class="button defaultButton" name="uploadMinutesFile" id="uploadMinutesFile" value="Upload"/>
-	<input type="button" class="button" onclick="document.location.href='{url op="selectContinuingReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
-	<input type="button" class="button" onclick="document.location.href='{url op="uploadContinuingReviewDecision" path=$meeting->getId()|to_array:$submission->getId()}'" value="Skip" />
- 	</form>
+	<input type="submit" class="button defaultButton" name="uploadMinutesFile" id="uploadMinutesFile" value="Upload"/>
+	<input type="button" class="button" onclick="document.location.href='{url op="selectInitialReview" path=$meeting->getId()}'" value="{translate key="common.back"}" />
+	<input type="button" class="button" onclick="document.location.href='{url op="generateInitialReviewDecision" path=$meeting->getId()|to_array:$submission->getId()}'" value="Skip" />
+	</form>				 		
+		
 </div>
+{include file="common/footer.tpl"}

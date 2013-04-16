@@ -7,7 +7,7 @@
  * $Id$
  *}
 {strip}
-{assign var="meetingId" value=$meeting->getId()}
+{assign var="meetingId" value=$meeting->getPublicId()}
 {translate|assign:"pageTitleTranslated" key="common.queue.long.viewMeeting" id=$meetingId}
 {assign var="pageCrumbTitle" value="common.queue.long.viewMeeting"}
 {include file="common/header.tpl"}
@@ -46,7 +46,7 @@
 <table width="100%" class="data">
 <tr valign="top">
 	<td class="label" width="20%">{translate key="editor.meeting.id"}</td>
-	<td class="value" width="80%">{$meeting->getId()}</td>
+	<td class="value" width="80%">{$meeting->getPublicId()}</td>
 </tr>
 <tr valign="top">
 	<td class="label" width="20%">{translate key="reviewer.meetings.erc"}</td>

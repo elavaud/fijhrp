@@ -145,6 +145,7 @@
 	<message key="article.journalSection">Ethics Review Committee</message>
 
 	<message key="article.file">File</message>
+    <message key="article.files">Files</message>
 	<message key="article.suppFile">Supplementary File</message>
 	<message key="article.suppFiles">Supplementary File(s)</message>
 	<message key="article.suppFilesAbbrev">Supp. Files</message>

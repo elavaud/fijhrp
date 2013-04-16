@@ -287,6 +287,12 @@ class Meeting extends DataObject {
 		}
 	}
 
+	function getPublicId(){
+		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
+		$ercDao =& DAORegistry::getDAO("SectionDAO");
+		$erc =& $ercDao->getSection($this->getUploader());
+		return $erc->getLocalizedAbbrev().'.'.$meetingDao->countPreviousMeetingsOfERC($this->getUploader(), $this->getId());
+	}
 }
 
 ?>

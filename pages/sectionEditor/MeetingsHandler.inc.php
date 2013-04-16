@@ -66,9 +66,12 @@ class MeetingsHandler extends Handler {
 		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), $roleKey), array(Request::url(null, $roleSymbolic, 'meetings'), 'editor.meetings'))
 		: array(array(Request::url(null, 'user'), $roleKey));
 		
-		if($meetingId!=0)
-			$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'viewMeeting', $meetingId), "#$meetingId", true);
-		
+		if($meetingId!=0) {
+			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+			$meeting =& $meetingDao->getMeetingById($meetingId);
+			$publicId = $meeting->getPublicId();
+			$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'viewMeeting', $meetingId), "#$publicId", true);
+		}
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
 
@@ -93,9 +96,9 @@ class MeetingsHandler extends Handler {
 		$journalId = $journal->getId();
 		$user =& Request::getUser();
 		
-		$meetingDao = DAORegistry::getDAO('MeetingDAO');
-		$meetingSubmissionDao = DAORegistry::getDAO('MeetingSubmissionDAO');
-		$articleDao = DAORegistry::getDAO('ArticleDAO');
+		$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+		$meetingSubmissionDao =& DAORegistry::getDAO('MeetingSubmissionDAO');
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		
 		$sort = Request::getUserVar('sort');
 		$sort = isset($sort) ? $sort : 'id';

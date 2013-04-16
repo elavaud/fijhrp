@@ -32,5 +32,5 @@
 {/if}	
 <br/>
 <input type="submit" class="button" name="selectProposal" value="Select Proposal"/>
-<input type="button" class="button" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
+<input type="button" class="button" onclick="document.location.href='{url op="manageMinutes" path=$meeting->getId()}'" value="{translate key="common.back"}" />
 </form>	

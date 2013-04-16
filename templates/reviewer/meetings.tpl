@@ -91,12 +91,12 @@
 	{iterate from=meetings item=meeting}
 	{assign var="key" value=$meeting->getId()}
 		<tr class="heading" valign="bottom">
-			<td width="5%">{$meeting->getId()}</td>
+			<td width="5%">{$meeting->getPublicId()}</td>
 			<td width="40%">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 				{foreach from=$map.$key item=submission name=submissions}
-					{$submission->getLocalizedTitle()|strip_unsafe_html}
-					{if $smarty.foreach.submissions.last}{else},&nbsp;{/if}
+					&#9679;&nbsp;{$submission->getLocalizedTitle()|strip_unsafe_html}
+					{if $smarty.foreach.submissions.last}{else}<br/>{/if}
 				{/foreach}
 				</a>
 				{if empty($map.$key)}

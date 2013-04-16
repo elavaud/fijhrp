@@ -29,7 +29,7 @@
 <table width="100%" class="data">
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="editor.meeting.id"}</td>
-		<td class="value" width="80%">{$meeting->getId()}</td>
+		<td class="value" width="80%">{$meeting->getPublicId()}</td>
 	</tr>
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="editor.meeting.schedule"}</td>
@@ -174,7 +174,7 @@
 </table>
 </div>
 <p> {if $meeting->getStatus() == 1}
-    <input type="button" value="{translate key="editor.minutes.manage"}" class="button defaultButton" onclick="document.location.href='{url op="uploadMinutes" path=$meeting->getId()}'"/> 
+    <input type="button" value="{translate key="editor.minutes.manage"}" class="button defaultButton" onclick="document.location.href='{url op="manageMinutes" path=$meeting->getId()}'"/> 
 	<input type="button" value="{translate key="editor.meeting.cancel"}" class="button" onclick="ans=confirm('This cannot be undone. Do you want to proceed?'); if(ans) document.location.href='{url op="cancelMeeting" path=$meeting->getId() }'" />
 	{else}
 		{if $meeting->getStatus() == 2 || $meeting->getStatus() == 4 }

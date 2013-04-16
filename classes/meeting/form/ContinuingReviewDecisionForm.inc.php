@@ -16,7 +16,7 @@ class ContinuingReviewDecisionForm extends Form {
 	 * Constructor.
 	 */
 	function ContinuingReviewDecisionForm($meetingId, $articleId) {
-		parent::Form('sectionEditor/minutes/uploadContinuingReviewDecision.tpl');
+		parent::Form('sectionEditor/minutes/generateContinuingReviewDecision.tpl');
 		$this->addCheck(new FormValidatorPost($this));
 
 		$meetingDao =& DAORegistry::getDAO('MeetingDAO');

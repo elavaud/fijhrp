@@ -209,21 +209,23 @@ switch ($op) {
 		break;
 	case 'minutes':
 	case 'createMinutes':
-	case 'uploadMinutes':
+	case 'manageMinutesmanageMinutes':
 	case 'viewMinutes':
 	case 'downloadMinutes':
-	case 'uploadAttendance':	
+	case 'generateAttendance':	
 	case 'downloadAttendance':
 	case 'selectInitialReview':
-	case 'uploadInitialReviewFile':
-	case 'uploadInitialReviewDecision':
+	case 'generateInitialReviewFile':
+	case 'generateInitialReviewDecision':
 	case 'completeInitialReviews':
 	case 'downloadInitialReviews':
 	case 'selectContinuingReview':
-	case 'uploadContinuingReviewFile':
-	case 'uploadContinuingReviewDecision':
+	case 'generateContinuingReviewFile':
+	case 'generateContinuingReviewDecision':
 	case 'completeContinuingReviews':
 	case 'setMinutesFinal':
+	case 'deleteUploadedFile':
+	case 'uploadFile':
 		define('HANDLER_CLASS', 'MinutesHandler');
 		import('pages.sectionEditor.MinutesHandler');
 		break;

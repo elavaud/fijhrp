@@ -190,6 +190,9 @@
 	<message key="author.submit.supplementaryFileData">Supplementary File Metadata</message>
 	<message key="author.submit.supplementaryFileDataDescription">To index this supplementary material, provide the following metadata for the uploaded supplementary file.</message>
 	<message key="author.submit.supplementaryFileUpload">Supplementary File</message>
+    <message key="author.submit.suppFileInstruct">Select file type(s)<![CDATA[<br />]]>(Hold down the CTRL [or CMD on mac] button to select multiple options.)</message>
+    <message key="author.submit.suppFileSpecify">Specify "Other" file type</message>
+    <message key="author.submit.suppFileUploadInstruct">Select file to upload</message>
 	<message key="author.submit.suppFile.createrOrOwner">Creator (or owner) of file</message>
 	<message key="author.submit.suppFile.researchInstrument">Research Instrument</message>
 	<message key="author.submit.suppFile.researchMaterials">Research Materials</message>

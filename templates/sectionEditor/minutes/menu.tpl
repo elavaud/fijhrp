@@ -1,8 +1,9 @@
 {strip}
-{assign var="pageTitle" value="editor.minutes.minutes"}
-{assign var="pageCrumbTitle" value="editor.minutes.minutes"}
+{assign var="pageTitle" value="editor.minutes"}
+{assign var="pageCrumbTitle" value="editor.minutes"}
 {include file="common/header.tpl"}
 {/strip}
+
 <ul class="menu">
 	<li><a class="action" href="{url op="index"}">{translate key="article.articles"}</a></li>
 	<li><a class="action" href="{url op="section" path=$ercId}">{translate key="section.sectionAbbrev"}</a></li>

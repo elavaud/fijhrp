@@ -58,7 +58,7 @@
 <table class="listing" width="100%">
 	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
-		<td width="20%">PROPOSAL ID</td> <!-- Replaced id with ID, SPF, 21 Dec 2011 -->
+		<td width="20%">{translate key="common.proposalId"}</td>
 		<td width="60%">{translate key="article.title" sort='title'}</td>
 		<td width="20%">Investigator</td>
 	</tr>

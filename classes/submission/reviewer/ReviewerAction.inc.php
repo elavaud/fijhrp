@@ -109,21 +109,19 @@ class ReviewerAction extends Action {
 						$email->addRecipient($journal->getSetting('contactEmail'), $journal->getSetting('contactName'));
 						$editorialContactName = $journal->getSetting('contactName');
 					} else {
-						if (!empty($reviewingSectionEditors)) $editorialContact = array_shift($reviewingSectionEditors);
-						//else $editorialContact = array_shift($assignedEditors);
-							// Modified by EL on February 17th 2013
-							// No edit assigment anymore
-						//	$editorialContactName = $editorialContact->getFullName();
-						$journal =& Request::getJournal();
-						$editorialContactName = $journal->getSetting('contactName');
+						$editorialContactName = (string)'';
+						foreach ($reviewingSectionEditors as $reviewingSectionEditor) {
+							if ($editorialContactName == '') $editorialContactName = $reviewingSectionEditor->getFullName();
+							else $editorialContactName .= ', '.$reviewingSectionEditor->getFullName();
+						}
 					}
 					$email->promoteCcsIfNoRecipients();
 
 					// Format the review due date
 					$reviewDueDate = strtotime($reviewAssignment->getDateDue());
-					$dateFormatShort = Config::getVar('general', 'date_format_short');
+					$dateFormatLong = Config::getVar('general', 'date_format_long');
 					if ($reviewDueDate == -1) $reviewDueDate = $dateFormatShort; // Default to something human-readable if no date specified
-					else $reviewDueDate = strftime($dateFormatShort, $reviewDueDate);
+					else $reviewDueDate = strftime($dateFormatLong, $reviewDueDate);
 					
 					$email->assignParams(array(
 						'editorialContactName' => $editorialContactName,

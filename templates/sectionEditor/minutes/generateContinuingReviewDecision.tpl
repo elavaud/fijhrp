@@ -19,7 +19,7 @@
 </script>
 {/literal}
 <div id="submissions">
-<form method="post" action="{url op="uploadContinuingReviewDecision" path=$meeting->getId()|to_array:$submission->getId()}">
+<form method="post" action="{url op="generateContinuingReviewDecision" path=$meeting->getId()|to_array:$submission->getId()}">
 	<input type="hidden" name="articleId" value="{$submission->getId()}" />
 	<input type="hidden" name="lastDecisionId" value="{$lastDecision.editDecisionId}" />
 	<input type="hidden" name="resubmitCount" value="{$lastDecision.resubmitCount}" />

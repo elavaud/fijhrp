@@ -57,8 +57,12 @@ class MinutesHandler extends Handler {
 		$pageHierarchy = $subclass ? array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey), array(Request::url(null, $roleSymbolic, 'meetings'), 'editor.meetings'))
 		: array(array(Request::url(null, 'user'), 'navigation.user'), array(Request::url(null, $roleSymbolic), $roleKey));
 
-		if($meetingId!=0)
-		$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'viewMeeting', $meetingId), "#$meetingId", true);
+		if($meetingId!=0) {
+			$meetingDao =& DAORegistry::getDAO('MeetingDAO');
+			$meeting =& $meetingDao->getMeetingById($meetingId);
+			$publicId = $meeting->getPublicId();
+			$pageHierarchy[] = array(Request::url(null, 'sectionEditor', 'viewMeeting', $meetingId), "#$publicId", true);
+		}
 
 		$templateMgr->assign('pageHierarchy', $pageHierarchy);
 	}
@@ -105,7 +109,7 @@ class MinutesHandler extends Handler {
 	 * @param $args
 	 * @param $request
 	 */
-	function uploadMinutes($args, $request) {
+	function manageMinutes($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId);
 		$this->setupTemplate(true, $meetingId);
@@ -114,6 +118,7 @@ class MinutesHandler extends Handler {
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
 		$meetingSubmissionDao =& DAORegistry::getDAO("MeetingSubmissionDAO");
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
+		$minutesFileDao =& DAORegistry::getDAO('MinutesFileDAO');
 		$minutesStatusMap = $meeting->getStatusMap();
 		
 		$remainingSubmissionsForInitialReview = $sectionEditorSubmissionDao->getRemainingSubmissionsForInitialReview($meetingId);
@@ -134,11 +139,16 @@ class MinutesHandler extends Handler {
 			$meetingDao->updateMinutesStatus($meeting);				
 		}	
 		
+		$generatedAttendanceFile =& $minutesFileDao->getGeneratedMinutesFile($meetingId, 'attendance');
+		$uploadedAttendanceFiles =& $minutesFileDao->getUploadedMinutesFiles($meetingId, 'attendance');
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('meeting', $meeting);
+		$templateMgr->assign_by_ref('generatedAttendanceFile', $generatedAttendanceFile);
+		$templateMgr->assign_by_ref('uploadedAttendanceFiles', $uploadedAttendanceFiles);
 		$templateMgr->assign('allowInitialReview', $hasProposalsForInitialReview);
 		$templateMgr->assign('allowContinuingReview', $hasProposalsForContinuingReview);
-		$templateMgr->display('sectionEditor/minutes/uploadMinutes.tpl');
+		$templateMgr->display('sectionEditor/minutes/manageMinutes.tpl');
 	}
 
 	/**
@@ -147,14 +157,14 @@ class MinutesHandler extends Handler {
 	 * @param $args
 	 * @param $request
 	 */
-	function uploadAttendance($args, $request) {
+	function generateAttendance($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$this->validate($meetingId, MINUTES_STATUS_ATTENDANCE);
 		$this->setupTemplate(true, $meetingId);
 		$meeting =& $this->meeting;
 
 		$journal =& Request::getJournal();
-		import('classes.meting.form.AttendanceForm');
+		import('classes.meeting.form.AttendanceForm');
 		$attendanceForm = new AttendanceForm($meetingId, $journal->getId());
 		$submitted = Request::getUserVar("submitAttendance") != null ? true : false;
 
@@ -163,7 +173,7 @@ class MinutesHandler extends Handler {
 			if($attendanceForm->validate()) {
 				$attendanceForm->execute();
 				$attendanceForm->savePdf();
-				Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				Request::redirect(null, null, 'manageMinutes', $meetingId);
 			}
 			else {
 				if ($attendanceForm->isLocaleResubmit()) {
@@ -201,7 +211,7 @@ class MinutesHandler extends Handler {
 		if($submitted) {
 			$initialReviewForm->readInputData();
 			if($initialReviewForm->validate()) {
-				Request::redirect(null, null, 'uploadInitialReviewFile', array($meetingId, $articleId));
+				Request::redirect(null, null, 'generateInitialReviewFile', array($meetingId, $articleId));
 			}
 			else {
 				if ($initialReviewForm->isLocaleResubmit()) {
@@ -224,7 +234,7 @@ class MinutesHandler extends Handler {
 	 * @param $args
 	 * @param $request
 	 */
-	function uploadInitialReviewDecision($args, $request) {
+	function generateInitialReviewDecision($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = isset($args[1]) ? $args[1]: 0;
 		
@@ -243,7 +253,7 @@ class MinutesHandler extends Handler {
 			if($initialReviewForm->validate()) {
 				$initialReviewForm->execute();
 				$initialReviewForm->savePdf();
-				Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				Request::redirect(null, null, 'manageMinutes', $meetingId);
 			}
 			else {
 				if ($initialReviewForm->isLocaleResubmit()) {
@@ -261,7 +271,7 @@ class MinutesHandler extends Handler {
 	}
 	
 	
-	function uploadInitialReviewFile($args, $request) {
+	function generateInitialReviewFile($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = isset($args[1]) ? $args[1]: 0;
 		$this->validate($meetingId);
@@ -270,27 +280,27 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		
-		import('classes.meeting.form.UploadInitialReviewFileForm');
-		$uploadReviewFileForm = new UploadInitialReviewFileForm($meetingId, $articleId);
+		import('classes.meeting.form.GenerateInitialReviewFileForm');
+		$generateReviewFileForm = new GenerateInitialReviewFileForm($meetingId, $articleId);
 		
 		if($request->getUserVar('uploadMinutesFile')) {
-			$uploadReviewFileForm->readInputData();
-			if($uploadReviewFileForm->validate()) {
-				$uploadReviewFileForm->execute();				
-				Request::redirect(null, null, 'uploadInitialReviewDecision', array($meetingId, $articleId));
+			$generateReviewFileForm->readInputData();
+			if($generateReviewFileForm->validate()) {
+				$generateReviewFileForm->execute();				
+				Request::redirect(null, null, 'generateInitialReviewDecision', array($meetingId, $articleId));
 			}
 			else {
-				if ($uploadReviewFileForm->isLocaleResubmit()) {
-					$uploadReviewFileForm->readInputData();
+				if ($generateReviewFileForm->isLocaleResubmit()) {
+					$generateReviewFileForm->readInputData();
 				}
 				else {
-					$uploadReviewFileForm->initData();
+					$generateReviewFileForm->initData();
 				}
-				$uploadReviewFileForm->display();
+				$generateReviewFileForm->display();
 			}
 		}
 		else {
-			$uploadReviewFileForm->display();
+			$generateReviewFileForm->display();
 		}				
 	}
 	
@@ -303,7 +313,7 @@ class MinutesHandler extends Handler {
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
 		$meeting->updateMinutesStatus(MINUTES_STATUS_INITIAL_REVIEWS);
 		$meetingDao->updateMinutesStatus($meeting);
-		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+		Request::redirect(null, null, 'manageMinutes', $meetingId);
 	}
 	
 	/**
@@ -327,7 +337,7 @@ class MinutesHandler extends Handler {
 		if($submitted) {
 			$continuingReviewForm->readInputData();
 			if($continuingReviewForm->validate()) {
-				Request::redirect(null, null, 'uploadContinuingReviewFile', array($meetingId, $articleId));
+				Request::redirect(null, null, 'generateContinuingReviewFile', array($meetingId, $articleId));
 			}
 			else {
 				if ($continuingReviewForm->isLocaleResubmit()) {
@@ -350,7 +360,7 @@ class MinutesHandler extends Handler {
 	 * @param $args
 	 * @param $request
 	 */
-	function uploadContinuingReviewDecision($args, $request) {
+	function generateContinuingReviewDecision($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = isset($args[1]) ? $args[1]: 0;
 		$this->validate($meetingId);
@@ -368,7 +378,7 @@ class MinutesHandler extends Handler {
 			if($continuingReviewForm->validate()) {
 				$continuingReviewForm->execute();
 				$continuingReviewForm->savePdf();
-				Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				Request::redirect(null, null, 'manageMinutes', $meetingId);
 			}
 			else {
 				if ($continuingReviewForm->isLocaleResubmit()) {
@@ -385,7 +395,7 @@ class MinutesHandler extends Handler {
 		}
 	}
 	
-	function uploadContinuingReviewFile($args, $request) {
+	function generateContinuingReviewFile($args, $request) {
 		$meetingId = isset($args[0]) ? $args[0]: 0;
 		$articleId = isset($args[1]) ? $args[1]: 0;
 		$this->validate($meetingId);
@@ -394,27 +404,27 @@ class MinutesHandler extends Handler {
 		$meeting =& $this->meeting;
 		$submission =& $this->submission;
 		
-		import('classes.meeting.form.UploadContinuingReviewFileForm');
-		$uploadReviewFileForm = new UploadContinuingReviewFileForm($meetingId, $articleId);
+		import('classes.meeting.form.GenerateContinuingReviewFileForm');
+		$generateReviewFileForm = new GenerateContinuingReviewFileForm($meetingId, $articleId);
 		
 		if($request->getUserVar('uploadMinutesFile')) {
-			$uploadReviewFileForm->readInputData();
-			if($uploadReviewFileForm->validate()) {
-				$uploadReviewFileForm->execute();				
-				Request::redirect(null, null, 'uploadContinuingReviewDecision', array($meetingId, $articleId));
+			$generateReviewFileForm->readInputData();
+			if($generateReviewFileForm->validate()) {
+				$generateReviewFileForm->execute();				
+				Request::redirect(null, null, 'generateContinuingReviewDecision', array($meetingId, $articleId));
 			}
 			else {
-				if ($uploadReviewFileForm->isLocaleResubmit()) {
-					$uploadReviewFileForm->readInputData();
+				if ($generateReviewFileForm->isLocaleResubmit()) {
+					$generateReviewFileForm->readInputData();
 				}
 				else {
-					$uploadReviewFileForm->initData();
+					$generateReviewFileForm->initData();
 				}
-				$uploadReviewFileForm->display();
+				$generateReviewFileForm->display();
 			}
 		}
 		else {
-			$uploadReviewFileForm->display();
+			$generateReviewFileForm->display();
 		}				
 	}
 	
@@ -427,7 +437,7 @@ class MinutesHandler extends Handler {
 		$meetingDao =& DAORegistry::getDAO("MeetingDAO");
 		$meeting->updateMinutesStatus(MINUTES_STATUS_CONTINUING_REVIEWS);
 		$meetingDao->updateMinutesStatus($meeting);
-		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+		Request::redirect(null, null, 'manageMinutes', $meetingId);
 	}
 
 	/**
@@ -446,18 +456,16 @@ class MinutesHandler extends Handler {
 		$meeting->setStatus(STATUS_DONE);
 		$meetingDao->updateMinutesStatus($meeting);
 		$meetingDao->updateStatus($meeting->getId(), STATUS_DONE);
-		Request::redirect(null, null, 'uploadMinutes', $meetingId);
+		Request::redirect(null, null, 'manageMinutes', $meetingId);
 	}
 
-	/*Added by MSB, July 20, 2010*/
-
 	function downloadMinutes($args, $request) {
-		
 		$meetingId = isset($args[0]) ? $args[0]: 0;
+		$fileId = isset($args[1]) ? $args[1]: 0;
+		$this->validate($meetingId);
 		import('classes.file.MinutesFileManager');
 		$minutesFileManager = new MinutesFileManager($meetingId);
-		return $minutesFileManager->downloadMinutesArchive();
-		
+		return $minutesFileManager->downloadFile($fileId);
 	}
 	
 	function validate($meetingId = 0, $access = null) {
@@ -475,7 +483,7 @@ class MinutesHandler extends Handler {
 			$statusMap = $meeting->getStatusMap();
 			/*
 			if($access != null && $statusMap[$access] == 1) {
-				Request::redirect(null, null, 'uploadMinutes', $meetingId);
+				Request::redirect(null, null, 'manageMinutes', $meetingId);
 			}
 			*/
 		}
@@ -591,6 +599,35 @@ class MinutesHandler extends Handler {
 		return true;
 	}
 
+	/*
+	 * Delete a specific minutes file.
+	 */
+	function deleteUploadedFile($args) {		
+		$meetingId = isset($args[0]) ? (int) $args[0] : 0;
+		$fileId = isset($args[1]) ? (int) $args[1] : 0;
+		
+		$this->validate($meetingId);
+		
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meetingId);
+		$minutesFileManager->deleteFile($fileId);		
+		Request::redirect(null, null, 'manageMinutes', $meetingId);
+	}
+
+	/*
+	 * Upload a minutes file.
+	 */
+	function uploadFile($args) {		
+		$meetingId = isset($args[0]) ? (int) $args[0] : 0;
+		$type = isset($args[1]) ? (string) $args[1] : '';
+		
+		$this->validate($meetingId);
+		
+		import('classes.file.MinutesFileManager');
+		$minutesFileManager = new MinutesFileManager($meetingId);
+		$minutesFileManager->handleUpload('uploadMinutesFile', $type);		
+		Request::redirect(null, null, 'manageMinutes', $meetingId);
+	}
 }
 
 ?>

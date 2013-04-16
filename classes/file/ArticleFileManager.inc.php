@@ -565,7 +565,8 @@ class ArticleFileManager extends FileManager {
 	 * @return int the file ID (false if upload failed)
 	 */
 	function handleUpload($fileName, $type, $fileId = null, $overwrite = false) {
-                if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$overwrite, &$result))) return $result;
+        
+        if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$overwrite, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 

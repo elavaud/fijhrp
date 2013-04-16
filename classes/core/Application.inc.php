@@ -104,12 +104,11 @@ class Application extends PKPApplication {
 			'JournalSettingsDAO' => 'classes.journal.JournalSettingsDAO',
 			'JournalStatisticsDAO' => 'classes.journal.JournalStatisticsDAO',
 			'LayoutEditorSubmissionDAO' => 'classes.submission.layoutEditor.LayoutEditorSubmissionDAO',
-			// EL on April 2013
 			'MeetingDAO' => 'classes.meeting.MeetingDAO',
 			'MeetingAttendanceDAO' => 'classes.meeting.MeetingAttendanceDAO',
 			'MeetingSubmissionDAO' => 'classes.meeting.MeetingSubmissionDAO',
-			// End
 			'MetadataDescriptionDAO' => 'classes.metadata.MetadataDescriptionDAO',
+			'MinutesFileDAO' => 'classes.meeting.MinutesFileDAO',
 			'NoteDAO' => 'classes.note.NoteDAO',
 			'OAIDAO' => 'classes.oai.ojs.OAIDAO',
 			'OJSCompletedPaymentDAO' => 'classes.payment.ojs.OJSCompletedPaymentDAO',

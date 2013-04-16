@@ -61,7 +61,7 @@ class ArticleDAO extends DAO {
                  *                May 4, 2011 -- added fields
 		 ************************************************/
 		return array(
-			'authorPhoneNumber', 'ethicsCommittee', 'scientificTitle', 'cleanScientificTitle', 'publicTitle', 'cleanPublicTitle', 'studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
+			'authorPhoneNumber', 'scientificTitle', 'cleanScientificTitle', 'publicTitle', 'cleanPublicTitle', 'studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
 			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
                         'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'secondarySponsors', 'multiCountryResearch', 'multiCountry', 'researchField', 'otherResearchField', 'nationwide', 'withHumanSubjects', 'proposalType', 'otherProposalType', 'proposalCountry', 'dataCollection', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'proposalId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments', 'approvalDate', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant'
                         );

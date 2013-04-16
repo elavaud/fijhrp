@@ -36,7 +36,7 @@ class ArticleFile extends SubmissionFile {
 		$article =& $articleDao->getArticle($this->getArticleId());
 		$journalId = $article->getJournalId();
 
-		return Config::getVar('files', 'files_dir') . '/journals/' . $journalId .
+		return Config::getVar('files', 'files_dir') .
 		'/articles/' . $this->getArticleId() . '/' . $this->getType() . '/' . $this->getFileName();
 	}
 

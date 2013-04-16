@@ -199,7 +199,7 @@ class ArticleMailTemplate extends MailTemplate {
 			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
 			foreach ($sectionEditors as $sectionEditor){
 				$this->addRecipient($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$returner[] =& $sectionEditor;			
+				$returner[] = $sectionEditor;			
 			}
 		return $returner;
 	}

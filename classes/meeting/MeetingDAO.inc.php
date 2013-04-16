@@ -311,7 +311,24 @@ class MeetingDAO extends DAO {
 							
 		return $meetings;
 	}
-			
+	
+	/**
+	 * Count the number of previous meetings for the specific section
+	 * Used for the generation of the meeting public id
+	 * @param $ercId int
+	 * @param $meetingId int
+	 * Added by EL on April 2013
+	 */
+	 function countPreviousMeetingsOfERC($ercId, $meetingId) {
+		$result =& $this->retrieve(
+			'SELECT COUNT(*) FROM meetings WHERE section_id = ? AND meeting_id < ?', array($ercId, $meetingId)
+		);
+		$returner = isset($result->fields[0])? $result->fields[0] + 1 : 0;
+
+		$result->Close();
+		unset($result);
+		return $returner;
+	 }		
 }
 
 ?>
