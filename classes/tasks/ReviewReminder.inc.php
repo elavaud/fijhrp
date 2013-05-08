@@ -82,7 +82,6 @@ class ReviewReminder extends ScheduledTask {
 		$reviewAssignment->setDateReminded(Core::getCurrentDate());
 		$reviewAssignment->setReminderWasAutomatic(1);
 		$reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
-
 	}
 
 	function execute() {
@@ -91,14 +90,16 @@ class ReviewReminder extends ScheduledTask {
 
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 		$journalDao =& DAORegistry::getDAO('JournalDAO');
 
 		$incompleteAssignments =& $reviewAssignmentDao->getIncompleteReviewAssignments();
 		foreach ($incompleteAssignments as $reviewAssignment) {
 			// Fetch the Article and the Journal if necessary.
-			if ($article == null || $article->getId() != $reviewAssignment->getSubmissionId()) {
+			$sectionDecision =& $sectionDecisionDao->getSectionDecision($reviewAssignment->getDecisionId());
+			if ($article == null || $article->getId() != $sectionDecision->getArticleId()) {
 				unset($article);
-				$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+				$article =& $articleDao->getArticle($sectionDecision->getArticleId());
 				if ($journal == null || $journal->getId() != $article->getJournalId()) {
 					unset($journal);
 					$journal =& $journalDao->getJournal($article->getJournalId());

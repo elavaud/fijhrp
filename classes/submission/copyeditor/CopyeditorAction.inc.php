@@ -48,12 +48,10 @@ class CopyeditorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($copyeditorSubmission, 'COPYEDIT_COMPLETE');
 
-		$editAssignments = $copyeditorSubmission->getEditAssignments();
-
 		$author = $copyeditorSubmission->getUser();
 
 		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
-			HookRegistry::call('CopyeditorAction::completeCopyedit', array(&$copyeditorSubmission, &$editAssignments, &$author, &$email));
+			HookRegistry::call('CopyeditorAction::completeCopyedit', array(&$copyeditorSubmission, &$author, &$email));
 			if ($email->isEnabled()) {
 				$email->setAssoc(ARTICLE_EMAIL_COPYEDIT_NOTIFY_COMPLETE, ARTICLE_EMAIL_TYPE_COPYEDIT, $copyeditorSubmission->getArticleId());
 				$email->send();
@@ -71,7 +69,7 @@ class CopyeditorAction extends Action {
 			// Add log entry
 			import('classes.article.log.ArticleLog');
 			import('classes.article.log.ArticleEventLogEntry');
-			ArticleLog::logEvent($copyeditorSubmission->getArticleId(), ARTICLE_LOG_COPYEDIT_INITIAL, ARTICLE_LOG_TYPE_COPYEDIT, $user->getId(), 'log.copyedit.initialEditComplete', Array('copyeditorName' => $user->getFullName(), 'articleId' => $copyeditorSubmission->getArticleId()));
+			ArticleLog::logEvent($copyeditorSubmission->getArticleId(), ARTICLE_LOG_COPYEDIT_INITIAL, ARTICLE_LOG_TYPE_COPYEDIT, $user->getId(), 'log.copyedit.initialEditComplete', Array('copyeditorName' => $user->getFullName(), 'articleId' => $copyeditorSubmission->getLocalizedProposalId()));
 
 			return true;
 
@@ -114,10 +112,8 @@ class CopyeditorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($copyeditorSubmission, 'COPYEDIT_FINAL_COMPLETE');
 
-		$editAssignments = $copyeditorSubmission->getEditAssignments();
-
 		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
-			HookRegistry::call('CopyeditorAction::completeFinalCopyedit', array(&$copyeditorSubmission, &$editAssignments, &$email));
+			HookRegistry::call('CopyeditorAction::completeFinalCopyedit', array(&$copyeditorSubmission, &$email));
 			if ($email->isEnabled()) {
 				$email->setAssoc(ARTICLE_EMAIL_COPYEDIT_NOTIFY_FINAL_COMPLETE, ARTICLE_EMAIL_TYPE_COPYEDIT, $copyeditorSubmission->getArticleId());
 				$email->send();
@@ -133,7 +129,7 @@ class CopyeditorAction extends Action {
 				if (!$layoutSignoff->getFileId()) {
 					import('classes.file.ArticleFileManager');
 					$articleFileManager = new ArticleFileManager($copyeditorSubmission->getArticleId());
-					if ($layoutFileId = $articleFileManager->copyToLayoutFile($copyEdFile->getFileId(), $copyEdFile->getRevision())) {
+					if ($layoutFileId = $articleFileManager->copyToLayoutFile($copyEdFile->getFileId())) {
 						$layoutSignoff->setFileId($layoutFileId);
 						$signoffDao->updateObject($layoutSignoff);
 					}
@@ -245,7 +241,8 @@ class CopyeditorAction extends Action {
 
 		if (isset($fileId) && $fileId != 0) {
 			$signoff->setFileId($fileId);
-			$signoff->setFileRevision($articleFileDao->getRevisionNumber($fileId));
+			// No revision anymore
+			//$signoff->setFileRevision($articleFileDao->getRevisionNumber($fileId));
 			$signoffDao->updateObject($signoff);
 
 			// Add log
@@ -383,9 +380,8 @@ class CopyeditorAction extends Action {
 	 * Download a file a copyeditor has access to.
 	 * @param $submission object
 	 * @param $fileId int
-	 * @param $revision int
 	 */
-	function downloadCopyeditorFile($copyeditorSubmission, $fileId, $revision = null) {
+	function downloadCopyeditorFile($copyeditorSubmission, $fileId) {
 		$copyeditorSubmissionDao =& DAORegistry::getDAO('CopyeditorSubmissionDAO');
 
 		$canDownload = false;
@@ -399,16 +395,19 @@ class CopyeditorAction extends Action {
 		if ($copyeditorSubmission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == $fileId) {
 			$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 			$signoffDao =& DAORegistry::getDAO('SignoffDAO');
-			$currentRevision =& $articleFileDao->getRevisionNumber($fileId);
-
+			// No revision anymore
+			//$currentRevision =& $articleFileDao->getRevisionNumber($fileId);
+			/*
 			if ($revision == null) {
 				$revision = $currentRevision;
 			}
-
+			*/
+			
 			$initialSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $copyeditorSubmission->getArticleId());
 			$authorSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_AUTHOR', ASSOC_TYPE_ARTICLE, $copyeditorSubmission->getArticleId());
 			$finalSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_FINAL', ASSOC_TYPE_ARTICLE, $copyeditorSubmission->getArticleId());
-
+			
+			/*
 			if ($revision == 1) {
 				$canDownload = true;
 			} else if ($initialSignoff->getFileRevision() == $revision) {
@@ -416,6 +415,9 @@ class CopyeditorAction extends Action {
 			} else if ($finalSignoff->getFileRevision() == $revision) {
 				$canDownload = true;
 			}
+			*/
+			$canDownload = true;
+			
 		} else if ($copyeditorSubmission->getFileBySignoffType('SIGNOFF_COPYEDITING_AUTHOR', true) == $fileId) {
 			$signoffDao =& DAORegistry::getDAO('SignoffDAO');
 			$authorSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_AUTHOR', ASSOC_TYPE_ARTICLE, $copyeditorSubmission->getArticleId());
@@ -441,9 +443,9 @@ class CopyeditorAction extends Action {
 		}
 
 		$result = false;
-		if (!HookRegistry::call('CopyeditorAction::downloadCopyeditorFile', array(&$copyeditorSubmission, &$fileId, &$revision, &$result))) {
+		if (!HookRegistry::call('CopyeditorAction::downloadCopyeditorFile', array(&$copyeditorSubmission, &$fileId, &$result))) {
 			if ($canDownload) {
-				return Action::downloadFile($copyeditorSubmission->getArticleId(), $fileId, $revision);
+				return Action::downloadFile($copyeditorSubmission->getArticleId(), $fileId);
 			} else {
 				return false;
 			}

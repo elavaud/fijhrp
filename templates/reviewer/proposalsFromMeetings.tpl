@@ -65,9 +65,10 @@
 	<tr><td colspan="3" class="headseparator">&nbsp;</td></tr>
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
 		<tr valign="top">
 			<td>{$submission->getLocalizedProposalId()|escape}</td>
-			<td><a href="{url op="viewProposalFromMeeting" path=$articleId}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
+			<td><a href="{url op="viewProposalFromMeeting" path=$articleId}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
 			<td>{$submission->getFirstAuthor()|escape}</td>
 		</tr>
 				

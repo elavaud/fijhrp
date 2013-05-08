@@ -51,7 +51,7 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		} else {
 			$confirmedStatus = 1;
 		}
-		$this->setupTemplate(false, 0, $reviewAssignment->getSubmissionId(), $reviewId);
+		$this->setupTemplate(false, 0, $submission->getArticleId(), $reviewId);
 		$templateMgr =& TemplateManager::getManager();
 
 		$templateMgr->assign_by_ref('user', $user);
@@ -64,12 +64,11 @@ class SubmissionReviewHandler extends ReviewerHandler {
 		$templateMgr->assign_by_ref('reviewerFile', $submission->getReviewerFile());
 		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
 			
-			// EL on March 5th 2013
-			$articleFileDao =& DAORegistry::getDao('ArticleFileDAO');
-			$templateMgr->assign_by_ref('previousFiles', $articleFileDao->getPreviousFilesByArticleId($submission->getId()));
+		$articleFileDao =& DAORegistry::getDao('ArticleFileDAO');
+		$templateMgr->assign_by_ref('previousFiles', $articleFileDao->getPreviousFilesByArticleId($submission->getId()));
 
-			// EL on March 11th 2013
-            $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        $templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
             			
 		$templateMgr->assign_by_ref('journal', $journal);
 		$templateMgr->assign_by_ref('reviewGuidelines', $journal->getLocalizedSetting('reviewGuidelines'));
@@ -200,12 +199,12 @@ class SubmissionReviewHandler extends ReviewerHandler {
 	function deleteReviewerVersion($args) {		
 		$reviewId = isset($args[0]) ? (int) $args[0] : 0;
 		$fileId = isset($args[1]) ? (int) $args[1] : 0;
-		$revision = isset($args[2]) ? (int) $args[2] : null;
+		$articleId = isset($args[2]) ? (int) $args[2] : 0;
 
 		$this->validate($reviewId);
 		$reviewerSubmission =& $this->submission;
 
-		if (!$reviewerSubmission->getCancelled()) ReviewerAction::deleteReviewerVersion($reviewId, $fileId, $revision);
+		if (!$reviewerSubmission->getCancelled()) ReviewerAction::deleteReviewerVersion($reviewId, $fileId, $articleId);
 		Request::redirect(null, null, 'submission', $reviewId);
 	}
 
@@ -215,18 +214,18 @@ class SubmissionReviewHandler extends ReviewerHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadFile($args) {
 		$reviewId = isset($args[0]) ? $args[0] : 0;
 		$articleId = isset($args[1]) ? $args[1] : 0;
 		$fileId = isset($args[2]) ? $args[2] : 0;
-		$revision = isset($args[3]) ? $args[3] : null;
 
 		$this->validate($reviewId);
+
 		$reviewerSubmission =& $this->submission;
 
-		if (!ReviewerAction::downloadReviewerFile($reviewId, $reviewerSubmission, $fileId, $revision)) {
+		if (!ReviewerAction::downloadReviewerFile($reviewId, $reviewerSubmission, $fileId)) {
 			Request::redirect(null, null, 'submission', $reviewId);
 		}
 	}

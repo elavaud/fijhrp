@@ -109,11 +109,8 @@ class ProofreaderAction extends Action {
 				$setDateField = 'setDateCompleted';
 				$getDateField = 'getDateCompleted';
 
-					// Removed by EL on February 17th 2013
-					// No edit assignments anymore
-					//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-					$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-					$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
 				
 				$nextSignoff = $signoffDao->build('SIGNOFF_PROOFREADING_PROOFREADER', ASSOC_TYPE_ARTICLE, $articleId);
 
@@ -125,32 +122,22 @@ class ProofreaderAction extends Action {
 					$receiverAddress = $proofreader->getEmail();
 
 					$editorAdded = false;
-						//foreach ($editAssignments as $editAssignment) {
-						foreach ($sectionEditors as $sectionEditor){
-			//			if ($editAssignment->getIsEditor() || $editAssignment->getCanEdit()) {
-								//$ccs[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-								$ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
-							$editorAdded = true;
-			//			}
+					foreach ($sectionEditors as $sectionEditor){
+						$ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
+						$editorAdded = true;
 					}
 					if (!$editorAdded) $ccs[$journal->getSetting('contactEmail')] = $journal->getSetting('contactName');
 				} else {
 					$editorAdded = false;
 					$assignmentIndex = 0;
-						//foreach ($editAssignments as $editAssignment) {
-						foreach ($sectionEditors as $sectionEditor){
-						//if ($editAssignment->getIsEditor() || $editAssignment->getCanEdit()) {
-							if ($assignmentIndex++ == 0) {
-									//$receiverName = $editAssignment->getEditorFullName();
-									//$receiverAddress = $editAssignment->getEditorEmail();
-									$receiverName = $sectionEditor->getFullName();
-									$receiverAddress = $sectionEditor->getEmail();
-							} else {
-									//$ccs[$sectionEditor->getEditorEmail()] = $editAssignment->getEditorFullName();
-									$ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
-							}
-							$editorAdded = true;
-						//}
+					foreach ($sectionEditors as $sectionEditor){
+						if ($assignmentIndex++ == 0) {
+							$receiverName = $sectionEditor->getFullName();
+							$receiverAddress = $sectionEditor->getEmail();
+						} else {
+							$ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
+						}
+						$editorAdded = true;
 					}
 					if (!$editorAdded) {
 						$receiverAddress = $journal->getSetting('contactEmail');
@@ -214,26 +201,15 @@ class ProofreaderAction extends Action {
 				$setNextDateField = 'setDateNotified';
 				$nextSignoff = $signoffDao->build('SIGNOFF_PROOFREADING_LAYOUT', ASSOC_TYPE_ARTICLE, $articleId);
 
-					// Removed by EL on February 17th 2013
-					// No edit assignments anymore
-					//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-					$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-					$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
 				$receiver = null;
 
 				$editorAdded = false;
-					//foreach ($editAssignments as $editAssignment) {
-					foreach ($sectionEditors as $sectionEditor){
-					//if ($editAssignment->getIsEditor() || $editAssignment->getCanEdit()) {
-						if ($receiver === null) {
-								//$receiver =& $userDao->getUser($editAssignment->getEditorId());
-								$receiver = $sectionEditor;
-						} else {
-								//$ccs[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-								$ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
-						}
-						$editorAdded = true;
-					//}
+				foreach ($sectionEditors as $sectionEditor){
+					if ($receiver === null) $receiver = $sectionEditor;
+					else $ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
+					$editorAdded = true;
 				}
 				if (isset($receiver)) {
 					$receiverName = $receiver->getFullName();
@@ -306,29 +282,18 @@ class ProofreaderAction extends Action {
 				$signoffType = 'SIGNOFF_PROOFREADING_LAYOUT';
 				$setDateField = 'setDateCompleted';
 				$getDateField = 'getDateCompleted';
-				
-					// Removed by EL on February 17th 2013
-					// No edit assignments anymore
-					//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-					$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-					$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
+
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
 					
 				$assignmentIndex = 0;
 				$editorAdded = false;
-					//foreach ($editAssignments as $editAssignment) {
-					foreach ($sectionEditors as $sectionEditor){
-					//if ($editAssignment->getIsEditor() || $editAssignment->getCanEdit()) {
-						if ($assignmentIndex++ == 0) {
-								//$receiverName = $editAssignment->getEditorFullName();
-								//$receiverAddress = $editAssignment->getEditorEmail();
-								$receiverName = $sectionEditor->getFullName();
-								$receiverAddress = $sectionEditor->getEmail();
-						} else {
-								//$ccs[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-								$ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
-						}
-						$editorAdded = true;
-					//}
+				foreach ($sectionEditors as $sectionEditor){
+					if ($assignmentIndex++ == 0) {
+						$receiverName = $sectionEditor->getFullName();
+						$receiverAddress = $sectionEditor->getEmail();
+					} else $ccs[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
+					$editorAdded = true;
 				}
 				if (!$editorAdded) {
 					$receiverAddress = $journal->getSetting('contactEmail');
@@ -417,9 +382,8 @@ class ProofreaderAction extends Action {
 	 * Download a file a proofreader has access to.
 	 * @param $submission object
 	 * @param $fileId int
-	 * @param $revision int
 	 */
-	function downloadProofreaderFile($submission, $fileId, $revision = null) {
+	function downloadProofreaderFile($submission, $fileId) {
 		$canDownload = false;
 
 		// Proofreaders have access to:
@@ -441,9 +405,9 @@ class ProofreaderAction extends Action {
 		}
 
 		$result = false;
-		if (!HookRegistry::call('ProofreaderAction::downloadProofreaderFile', array(&$submission, &$fileId, &$revision, &$canDownload, &$result))) {
+		if (!HookRegistry::call('ProofreaderAction::downloadProofreaderFile', array(&$submission, &$fileId, &$canDownload, &$result))) {
 			if ($canDownload) {
-				return Action::downloadFile($submission->getArticleId(), $fileId, $revision);
+				return Action::downloadFile($submission->getArticleId(), $fileId);
 			} else {
 				return false;
 			}

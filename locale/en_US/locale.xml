@@ -88,10 +88,16 @@
 	<!-- Article Queues -->
 	<message key="common.queue.long.submissionsUnassigned">Unassigned Proposals</message>
 	<message key="common.queue.short.submissionsUnassigned">Unassigned</message>
+    <message key="common.queue.long.proposalsToSubmit">Proposals to submit</message>
+	<message key="common.queue.short.proposalsToSubmit">To submit</message>
+    <message key="common.queue.long.ongoingResearches">Ongoing researches</message>
+	<message key="common.queue.short.ongoingResearches">Ongoing</message>
 	<message key="common.queue.long.submissionsInEditing">Proposals in Editing</message>
 	<message key="common.queue.short.submissionsInEditing">In Editing</message>
 	<message key="common.queue.long.submissionsInReview">Proposals under Review</message>
 	<message key="common.queue.short.submissionsInReview">In Review</message>
+    <message key="common.queue.long.proposalsInReview">Proposals under Review</message>
+	<message key="common.queue.short.proposalsInReview">In Review</message>
     <message key="common.queue.short.submissionsApproved">Approved</message>
     <message key="common.queue.short.submissionsNotApproved">Not Approved</message>
     <message key="common.queue.long.submissionsNotApproved">Not Approved Proposals</message>
@@ -102,14 +108,12 @@
 	<message key="common.queue.long.completed">Archived Proposals</message>
     <message key="common.queue.long.submissionsApproved">Approved Proposals</message>
 	<message key="common.queue.short.completed">Archive</message>
-    
-        <!-- For reviewer meeting page, EL on March 4th 2013 -->
-        <message key="common.queue.short.meetingProposals">Proposals</message>
-        <message key="common.queue.short.reviewAssignments">Review Assignments</message>
-        <message key="common.queue.long.meetingProposals">Proposals from meetings</message>
-        <message key="common.queue.short.meetingList">Meetings</message>
-        <message key="common.queue.long.meetingList">List of meetings</message>
-        <message key="common.queue.long.viewMeeting">View Meeting</message>
+    <message key="common.queue.short.meetingProposals">Proposals</message>
+    <message key="common.queue.short.reviewAssignments">Review Assignments</message>
+    <message key="common.queue.long.meetingProposals">Proposals from meetings</message>
+    <message key="common.queue.short.meetingList">Meetings</message>
+    <message key="common.queue.long.meetingList">List of meetings</message>
+    <message key="common.queue.long.viewMeeting">View Meeting</message>
 
 	
 	<!--
@@ -134,6 +138,7 @@
 	<message key="article.articles">Proposals</message>
         <!-- Added by EL on March 19th 2013 -->
         <message key="article.article.s">Proposal(s)</message>
+    <message key="article.authorInstruct">Main investigator if the research</message>
 	<message key="article.submissionId">Proposal ID</message>
 	<message key="article.title">Title</message>
     <message key="article.scientificTitle">Scientific title</message>
@@ -149,6 +154,7 @@
 	<message key="article.suppFile">Supplementary File</message>
 	<message key="article.suppFiles">Supplementary File(s)</message>
 	<message key="article.suppFilesAbbrev">Supp. Files</message>
+    <message key="article.suppFilesAbbrevInstruct">Supplementary files submitted by the Investigator. Please click on a title (blue link) for downloading the concerned proposal.</message>
 	<message key="article.discipline">Academic discipline and sub-disciplines</message>
 	<message key="article.subjectClassification">Subject classification</message>
 	<message key="article.subject">Keywords</message>
@@ -162,7 +168,8 @@
         <!-- Changed "Secreatary" by "Secretary Administrative Assistant. EL April 4 2012-->
         <message key="article.sectionEditor">Secretary Administrative Assistant</message> /*replace section editor with Secretary */
         
-	<message key="article.commentsToEditor">Investigator comments</message> /*replace Author to Investigator */
+	<message key="article.commentsToEditor">Investigator comments</message>
+    <message key="article.commentsToEditorInstruct">Here is a comment of the submitter about this research proposal.</message>
 	<message key="article.submission">Proposal</message>
 	<message key="article.submissions">Proposals</message>
 	<message key="article.details">Details</message>
@@ -182,67 +189,55 @@
 	<message key="article.fontSize.medium.altText">Medium</message>
 	<message key="article.fontSize.large.altText">Large</message>
 
-        <!-- Proposal Metadata
-             Added by: aim
-             Last Edited: April 24, 2011
-        -->
-        <message key="proposal.title">Title</message>
-        <message key="proposal.scientificTitle">Scientific title</message>
-            
-            <!-- EL on April 3rd 2013 -->
-            <message key="proposal.scientificTitleInstruct">Scientific title of the study as it appears in the protocol submitted for funding and ethical review. This title should contain information on population, intervention, comparator and outcome(s).</message>
-        <message key="proposal.publicTitle">Public title</message>
-        
-            <!-- EL on April 3rd 2013 -->
-            <message key="proposal.publicTitleInstruct">Title intended for the lay public in easily understood language.</message>
-        <message key="proposal.abstract">Abstract</message>
-                <!-- Comment out by EL on APril 13, 2012 -->
-                <!-- Return "Objectives" key by SPF on April 16, 2012 -->
-        <message key="proposal.objectives">Objectives</message>
-        <message key="proposal.keywords">Keywords</message>
-        
-            <!-- EL on April 3rd 2013 -->
-            <message key="proposal.objectivesInstruct">Key research questions, hypothesis, objectives in bullet points if feasible.</message>
-            <message key="proposal.background">Background</message>
-            <message key="proposal.backgroundInstruct">Key issues under investigation, importance, what is known already, and why this study.</message>
-            <message key="proposal.studyMatters">Study Methods</message>
-            <message key="proposal.studyMattersInstruct">Relevant features of study design (qualitative/quantitative, cross-sectional survey/case-control...), estimated sample size, manner of data collection, etc. [e.g. study involves key informant interviews with policy-makers in Cambodia, involving 6-8 people at national or provincial level...]</message>
-            <message key="proposal.expectedOutcomes">Expected outcomes and use of results</message>
-            <message key="proposal.expectedOutcomesInstruct">Potential outcomes of study such as measurement of prevalence, other indicators being measured, how the results will be used to inform particular policy or program...</message>
-            <message key="proposal.keywordsInstruct">Significant or descriptive words.</message>
-            <message key="proposal.startDateInstruct">Start date of the research.</message>
-            <message key="proposal.endDateInstruct">End date of the research.</message>
-            <message key="proposal.fundsRequiredInstruct">Please enter a whole number without any comma or other separator.</message>
-            <message key="proposal.primarySponsorInstruct">The individual, organization, group or other legal entity which takes responsibility for initiating, managing and/or financing a study. The Primary Sponsor is responsible for ensuring that the research is properly registered. The Primary Sponsor may or may not be the main funder.</message>
-            <message key="proposal.otherPrimarySponsorInstruct">If your primary sponsor is not included in the above list, please specify it here.</message>
-            <message key="proposal.secondarySponsorsInstruct">Additional individuals, organizations or other legal persons, if any, that have agreed with the primary sponsor to take on responsibilities of sponsorship. A secondary sponsor may have agreed: 
+    <message key="proposal.title">Title</message>
+    <message key="proposal.scientificTitle">Scientific title</message>
+    <message key="proposal.scientificTitleInstruct">Scientific title of the study as it appears in the protocol submitted for funding and ethical review. This title should contain information on population, intervention, comparator and outcome(s).</message>
+    <message key="proposal.publicTitle">Public title</message>
+    <message key="proposal.publicTitleInstruct">Title intended for the lay public in easily understood language.</message>
+    <message key="proposal.abstract">Abstract</message>
+    <message key="proposal.objectives">Objectives</message>
+    <message key="proposal.keywords">Keywords</message>
+    <message key="proposal.objectivesInstruct">Key research questions, hypothesis, objectives in bullet points if feasible.</message>
+    <message key="proposal.background">Background</message>
+    <message key="proposal.backgroundInstruct">Key issues under investigation, importance, what is known already, and why this study.</message>
+    <message key="proposal.studyMethods">Study Methods</message>
+    <message key="proposal.studyMethodsInstruct">Relevant features of study design (qualitative/quantitative, cross-sectional survey/case-control...), estimated sample size, manner of data collection, etc. [e.g. study involves key informant interviews with policy-makers in Fiji, involving 6-8 people at national or provincial level...]</message>
+    <message key="proposal.expectedOutcomes">Expected outcomes and use of results</message>
+    <message key="proposal.expectedOutcomesInstruct">Potential outcomes of study such as measurement of prevalence, other indicators being measured, how the results will be used to inform particular policy or program...</message>
+    <message key="proposal.keywordsInstruct">Significant or descriptive words.</message>
+    <message key="proposal.startDateInstruct">Start date of the research.</message>
+    <message key="proposal.endDateInstruct">End date of the research.</message>
+    <message key="proposal.fundsRequiredInstruct">Please enter a whole number without any comma or other separator.</message>
+    <message key="proposal.primarySponsorInstruct">The individual, organization, group or other legal entity which takes responsibility for initiating, managing and/or financing a study. The Primary Sponsor is responsible for ensuring that the research is properly registered. The Primary Sponsor may or may not be the main funder.</message>
+    <message key="proposal.otherPrimarySponsorInstruct">If your primary sponsor is not included in the above list, please specify it here.</message>
+    <message key="proposal.secondarySponsorsInstruct">Additional individuals, organizations or other legal persons, if any, that have agreed with the primary sponsor to take on responsibilities of sponsorship. A secondary sponsor may have agreed: 
 •	to take on all the responsibilities of sponsorship jointly with the primary sponsor; or 
 •	to form a group with the primary sponsor in which the responsibilities of sponsorship are allocated among the members of the group; or 
 •	to act as the sponsor’s legal representative in relation to some or all of the trial sites; or 
 •	to take responsibility for the accuracy of trial registration information submitted.</message>
-            <message key="proposal.multiCountryResearchInstruct">Is the research involving patients from different countries?</message>
-            <message key="proposal.studentInitiatedResearchInstruct">Is the research undertaken as part of academic degree requirements?</message>
-            <message key="proposal.studentInstitutionInstruct">Institution where the student is enrolled.</message>
-            <message key="proposal.academicDegreeInstruct">Academic degree in which the student is enrolled.</message>
-            <message key="proposal.undergraduate">Undergraduate</message>
-            <message key="proposal.master">Master</message>
-            <message key="proposal.postDoc">Post-Doc</message>
-            <message key="proposal.phd">Ph.D.</message>
-            <message key="proposal.proposalCountryInstruct">Geographical area(s) of Philippines where the research take place.</message>
-            <message key="proposal.otherSecondarySponsorInstruct">If one or more of your secondary sponsor(s) is/are not included in the above list, please sepcify it/them here.</message>
-            <message key="proposal.abstractInstruct">Short description of the primary purpose of the protocol, including a brief statement of the study hypothesis. Include publication/s details (link/reference), if any.</message>
-            <message key="proposal.addAnotherSecondarySponsor">Add another secondary sponsor</message>
-            <message key="proposal.addAnotherCountry">Add another country</message>
-            <message key="proposal.addAnotherArea">Add another area</message>
-            <message key="proposal.addAnotherFieldOfResearch">Add another field of research</message>
-            <message key="proposal.addAnotherProposalType">Add another proposal type</message>
-            <message key="proposal.addAnotherAgency">Add another agency</message>
-            <message key="proposal.randomlySelectedProvince">Yes, with randomly selected geographical areas</message>
-            <message key="proposal.primaryDataCollection">Primary</message>
-            <message key="proposal.secondaryDataCollection">Secondary</message>
-            <message key="proposal.bothDataCollection">Both</message>
-            <message key="proposal.otherErcDecisionUnderReview">Under Review</message>
-            <message key="proposal.otherErcDecisionFinalAvailable">Final decision available</message>
+    <message key="proposal.multiCountryResearchInstruct">Is the research involving patients from different countries?</message>
+    <message key="proposal.studentInitiatedResearchInstruct">Is the research undertaken as part of academic degree requirements?</message>
+    <message key="proposal.studentInstitutionInstruct">Institution where the student is enrolled.</message>
+    <message key="proposal.academicDegreeInstruct">Academic degree in which the student is enrolled.</message>
+    <message key="proposal.undergraduate">Undergraduate</message>
+    <message key="proposal.master">Master</message>
+    <message key="proposal.postDoc">Post-Doc</message>
+    <message key="proposal.phd">Ph.D.</message>
+    <message key="proposal.proposalCountryInstruct">Geographical area(s) of Fiji where the research take place.</message>
+    <message key="proposal.otherSecondarySponsorInstruct">If one or more of your secondary sponsor(s) is/are not included in the above list, please sepcify it/them here.</message>
+    <message key="proposal.abstractInstruct">Short description of the primary purpose of the protocol, including a brief statement of the study hypothesis. Include publication/s details (link/reference), if any.</message>
+    <message key="proposal.addAnotherSecondarySponsor">Add another secondary sponsor</message>
+    <message key="proposal.addAnotherCountry">Add another country</message>
+    <message key="proposal.addAnotherArea">Add another area</message>
+    <message key="proposal.addAnotherFieldOfResearch">Add another field of research</message>
+    <message key="proposal.addAnotherProposalType">Add another proposal type</message>
+    <message key="proposal.addAnotherAgency">Add another agency</message>
+    <message key="proposal.randomlySelectedProvince">Yes, with randomly selected geographical areas</message>
+    <message key="proposal.primaryDataCollection">Primary</message>
+    <message key="proposal.secondaryDataCollection">Secondary</message>
+    <message key="proposal.bothDataCollection">Both</message>
+    <message key="proposal.otherErcDecisionUnderReview">Under Review</message>
+    <message key="proposal.otherErcDecisionFinalAvailable">Final decision available</message>
                 
         <message key="proposal.startDate">Start Date</message>
         <message key="proposal.endDate">End Date</message>
@@ -445,7 +440,7 @@
         <message key="user.ercrole.chair">Chair</message>
         <message key="user.ercrole.viceChair">Vice-Chair</message>
         <message key="user.ercrole.secretariat">Secretariat</message>
-        <message key="user.ercrole.ercMembers">Members</message>
+        <message key="user.ercrole.ercMembers">Committee Members</message>
         <message key="user.ercrole.extReviewer">External Reviewer</message>
         <message key="user.ercrole.extReviewers">External Reviewers</message>
         <message key="user.ercrole.extMembers">External Members (non-affiliated members)</message>
@@ -533,7 +528,7 @@
 
 	<message key="submission.event.general.authorRevision">Investigator revision file updated</message>
 	
-	<message key="submission.event.editor.editorAssigned">Secretary assigned to submission</message>
+	<message key="submission.event.editor.editorAssigned">Secretary assigned to proposal</message>
 	<message key="submission.event.editor.editorUnassigned">Secretary unassigned from submission</message>
 	<message key="submission.event.editor.editorDecision">Secretary decision submitted</message>
 	<message key="submission.event.editor.editorFile">ERC file updated</message>
@@ -542,7 +537,7 @@
 
 	
 	
-	<message key="submission.event.copyedit.copyeditorAssigned">Copyeditor assigned to submission</message>
+	<message key="submission.event.copyedit.copyeditorAssigned">Copyeditor assigned to proposal</message>
 	<message key="submission.event.copyedit.copyeditorUnassigned">Copyeditor unassigned from submission</message>
 	<message key="submission.event.copyedit.copyeditInitiated">Copyedit assignment initiated</message>
 	<message key="submission.event.copyedit.copyeditRevision">Copyeditor revisions file updated</message>
@@ -550,14 +545,14 @@
 	<message key="submission.event.copyedit.copyeditFinalCompleted">Final copyedit completed</message>
 	<message key="submission.event.copyedit.copyeditSetFile">Copyedit file updated</message>
 	
-	<message key="submission.event.proofread.proofreaderAssigned">Proofreader assigned to submission</message>
-	<message key="submission.event.proofread.proofreaderUnassigned">Proofreader unassigned from submission</message>
+	<message key="submission.event.proofread.proofreaderAssigned">Proofreader assigned to proposal</message>
+	<message key="submission.event.proofread.proofreaderUnassigned">Proofreader unassigned from proposal</message>
 	<message key="submission.event.proofread.proofreadInitiated">Proofread assignment initiated</message>
 	<message key="submission.event.proofread.proofreadRevision">Proofreader revisions file updated</message>
 	<message key="submission.event.proofread.proofreadCompleted">Proofread assignment completed</message>
 	
-	<message key="submission.event.layout.layoutEditorAssigned">Layout editor assigned to submission</message>
-	<message key="submission.event.layout.layoutEditorUnassigned">Layout editor unassigned from submission</message>
+	<message key="submission.event.layout.layoutEditorAssigned">Layout editor assigned to proposal</message>
+	<message key="submission.event.layout.layoutEditorUnassigned">Layout editor unassigned from proposal</message>
 	<message key="submission.event.layout.layoutInitiated">Layout assignment initiated</message>
 	<message key="submission.event.layout.layoutGalleyCreated">Layout galley updated</message>
 	<message key="submission.event.layout.layoutComplete">Layout assignment completed</message>
@@ -770,7 +765,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<!-- Section Editor -->
 	<message key="sectionEditor.activeEditorialAssignments">Active Editorial Assignments</message>
 	<message key="sectionEditor.completedEditorialAssignments">Completed Editorial Assignments</message>
-	<message key="sectionEditor.noneAssigned">No submissions assigned.</message>
+	<message key="sectionEditor.noneAssigned">No proposals assigned.</message>
 	<message key="sectionEditor.copyedit.confirmRenotify">Notifying this copy editor again will restart their assignment. Are you sure you wish to do this?</message>
 	<message key="sectionEditor.author.confirmRenotify">Notifying this author again will restart their assignment. Are you sure you wish to do this?</message>
 	<message key="sectionEditor.layout.confirmRenotify">Notifying this layout editor again will restart their assignment. Are you sure you wish to do this?</message>
@@ -842,7 +837,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.article.recommendation">Recommendation</message>
 	<message key="reviewer.article.submitReview">Submit Review</message>
 	<message key="reviewer.article.reviewerComments">Comments</message>
-	<message key="reviewer.article.uploadedFile">Uploaded files</message>	
+	<message key="reviewer.article.uploadedFile">Uploaded file</message>	
 	<message key="reviewer.article.reviewersAnnotatedVersion">Version uploaded by reviewer</message>
 	<message key="reviewer.article.reviewersAnnotatedVersionDescription">(If you want to annotate the file, for the editor, save on your hard drive and use Browse/Upload.)</message>
         <message key="reviewer.article.schedule.request">Secretary's Request</message>
@@ -884,15 +879,15 @@ Active is how many reviews are currently being considered or underway.]]></messa
         <message key="reviewer.article.reviewSchedule">Review Schedule</message>
         <message key="reviewer.article.reviewSteps">Review Steps</message>
         <message key="reviewer.article.reviewerGuidelines">Reviewer Guidelines</message>
-	<message key="reviewer.article.reviewGuidelinesDescription"><![CDATA[The Review Guidelines will provide reviewers with criteria for judging a submission's suitability for publication in the journal, and can include any special instructions for preparing an effective and helpful review. In conducting the review, reviewers are presented with with two open text boxes, the first "for author and editor," and the second "for editor." Alternatively, the Journal Manager can create a peer review form under Review Forms. In all cases, editors will have the option of including the reviews in corresponding with the author.]]></message>
+	<message key="reviewer.article.reviewGuidelinesDescription"><![CDATA[The Review Guidelines will provide reviewers with criteria for judging a proposal's suitability for publication in the journal, and can include any special instructions for preparing an effective and helpful review. In conducting the review, reviewers are presented with with two open text boxes, the first "for author and editor," and the second "for editor." Alternatively, the Journal Manager can create a peer review form under Review Forms. In all cases, editors will have the option of including the reviews in corresponding with the author.]]></message>
         <message key="reviewer.article.notifyEditorA">Notify the secretary(ies)</message>
         <message key="reviewer.article.notifyEditorB">as to whether you will undertake the review.</message>
         <message key="reviewer.article.consultGuidelines">If you are going to do the review, consult Reviewer Guidelines below.</message>
-        <message key="reviewer.article.downloadSubmission">Click on file names to download and review (on screen or by printing) the files associated with this submission.</message>
+        <message key="reviewer.article.downloadSubmission">Click on file names to download and review (on screen or by printing) the files associated with this proposal.</message>
         <message key="reviewer.article.enterCompetingInterests"><![CDATA[Declare whether or not you have competing interests with regard to this research (see <a target="_new" class="action" href="{$competingInterestGuidelinesUrl}">CI&nbsp;Policy</a>).]]></message>
 	<message key="reviewer.competingInterests">Competing Interests</message>
-        <message key="reviewer.article.enterReviewA">Click on icon to enter (or paste) your review of this submission.</message>
-        <message key="reviewer.article.uploadFile">In addition, you can upload files for the ERC Secretary and/or Investigator to consult.</message>
+        <message key="reviewer.article.enterReviewA">For more information, please click on the bubble icon to open a chat room between you and the secretary of your committee.</message>
+        <message key="reviewer.article.uploadFile">Please upload the reivew of the proposal here.</message>
         <message key="reviewer.article.selectRecommendation">Select a recommendation and submit the review to complete the process. You must enter a review or upload a file before selecting a recommendation.</message>
 	<message key="reviewer.article.mustSelectDecision">No recommendation was selected. You must choose a recommendation to submit.</message>
 	<message key="reviewer.article.confirmDecision">Once you have recorded a decision you will no longer be able to make changes to this review. Are you sure you wish to continue?</message>
@@ -923,7 +918,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 <li>Locate the file you wish to submit and highlight it.</li>
 <li>Click Open on the Choose File window, which places the name of the file on this page.</li>
 <li>Click Upload on this page, which uploads the file from the computer to the web site and renames it following the Demo Nationaln Health Research Portal naming conventions.</li>
-<li>Once the submission is uploaded, click Save and Continue at the bottom of this page.</li>
+<li>Once the proposal is uploaded, click Save and Continue at the bottom of this page.</li>
 </ol>]]></message>
 
 	<!-- Article Submission Step 4 -->
@@ -1011,8 +1006,8 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="user.register.readerDescription">Notified by email on publication of an issue of the journal.</message>
 	<message key="user.register.openAccessNotificationDescription">Notified by email when an issue of the journal is made open access.</message>
 	<message key="user.register.authorDescription">Able to submit items to the journal.</message>
-	<message key="user.register.reviewerDescriptionNoInterests">Willing to conduct peer review of submissions to the journal.</message>
-	<message key="user.register.reviewerDescription">Willing to conduct peer review of submissions to the press.</message>
+	<message key="user.register.reviewerDescriptionNoInterests">Willing to conduct peer review of proposals to the journal.</message>
+	<message key="user.register.reviewerDescription">Willing to conduct peer review of proposals to the press.</message>
 	<message key="user.register.reviewerInterests">Identify reviewing interests (substantive areas and research methods):</message>
 	
 	<!-- Subscriptions -->
@@ -1080,7 +1075,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="search.proposalid">Proposal ID</message>
     <message key="search.dataCollection">Data Collection</message>
     <message key="search.status">Status</message>
-    <message key="search.dateSubmitted">Date submitted to philhrp</message>
+    <message key="search.dateSubmitted">Date submitted</message>
 	<message key="search.responsibleOfficer">Responsible Officer</message>
 	<message key="search.primaryInvestigator">Primary Investigator</message>
     <message key="search.primarySponsor">Primary Sponsor</message>
@@ -1143,10 +1138,10 @@ current password.<br /><br />Enter your email address below to reset your passwo
         <message key="about.onlineSubmissions.needAccount">Need a username and a password?</message>
 	
     <message key="about.onlineSubmissions.registration">Go to Registration</message>
-	<message key="about.onlineSubmissions.registrationRequired">Registration and login are required to submit items online and to check the status of current submissions.</message>
+	<message key="about.onlineSubmissions.registrationRequired">Registration and login are required to submit items online and to check the status of current proposals.</message>
 	<message key="about.authorGuidelines">Author Guidelines</message>
 	<message key="about.submissionPreparationChecklist">Submission Preparation Checklist</message>
-	<message key="about.submissionPreparationChecklist.description">As part of the submission process, authors are required to check off their submission's compliance with all of the following items, and submissions may be returned to authors that do not adhere to these guidelines.</message>
+	<message key="about.submissionPreparationChecklist.description">As part of the proposal process, authors are required to check off their proposal's compliance with all of the following items, and proposals may be returned to authors that do not adhere to these guidelines.</message>
 	<message key="about.copyrightNotice">Copyright Notice</message>
 	<message key="about.privacyStatement">Privacy Statement</message>
 	<message key="about.authorFees">Author Fees</message>
@@ -1195,7 +1190,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="payment.payNow">Pay Now</message>
 	<message key="payment.waive">Waive</message>
 	<message key="payment.alreadyPaid">Already Paid</message>
-	<message key="payment.alreadyPaidMessage">Select this box if you've already sent your payment to the journal in order to finish the submission process.  The submission will not be reviewed until the payment arrives.  Click PAY NOW above to see the payment instructions.</message>
+	<message key="payment.alreadyPaidMessage">Select this box if you've already sent your payment to the journal in order to finish the submission process.  The proposal will not be reviewed until the payment arrives.  Click PAY NOW above to see the payment instructions.</message>
 	<message key="payment.paymentReceived">Payment Received</message>
 	<message key="payment.paymentSent">Payment has already been sent</message>
 	<message key="payment.authorFees">Author Fees</message>
@@ -1302,48 +1297,48 @@ Your server currently supports mbstring: <strong>{$supportsMBString}</strong>]]>
 
 
 	<!-- Article Logs -->
-	<message key="log.author.submitted">{$authorName} has entered a new submission, ID {$submissionId}.</message>
+	<message key="log.author.submitted">{$authorName} has entered a new proposal, ID {$submissionId}.</message>
 	<message key="log.author.documentRevised">{$authorName} has revised article {$articleId}. The new file ID is {$fileId}.</message>
-	<message key="log.review.reviewerAssigned">{$reviewerName} has been assigned to review submission {$articleId} for review round {$round}.</message>
-	<message key="log.review.reviewerUnassigned">{$reviewerName} has been unassigned from reviewing submission {$articleId} for review round {$round}.</message>
-	<message key="log.review.reviewInitiated">The round {$round} review by {$reviewerName} for submission {$articleId} has been initiated.</message>
-	<message key="log.review.reviewReinitiated">The round {$round} review by {$reviewerName} for submission {$articleId} has been reinitiated.</message>
-	<message key="log.review.reviewCancelled">The round {$round} review by {$reviewerName} for submission {$articleId} has been cancelled.</message>
-	<message key="log.review.reviewCleared">The round {$round} review by {$reviewerName} for submission {$articleId} has been cleared.</message>
-	<message key="log.review.reviewerRated">{$reviewerName} has been rated for the round {$round} review of submission {$articleId}.</message>
-	<message key="log.review.reviewDueDateSet">The due date for the round {$round} review of submission {$articleId} by {$reviewerName} has been set to {$dueDate}.</message>
-	<message key="log.review.reviewRecommendationSet">The recommendation for the round {$round} review of submission {$articleId} by {$reviewerName} has been set.</message>
-	<message key="log.review.reviewRecommendationSetByProxy">The recommendation for the round {$round} review of submission {$articleId} has been set by the editor, {$editorName}, on behalf of the reviewer, {$reviewerName}.</message>
-	<message key="log.review.resubmit">The submission {$articleId} has been resubmitted for review.</message>
-	<message key="log.review.reviewDeclined">{$reviewerName} has declined the round {$round} review for submission {$articleId}.</message>
-	<message key="log.review.reviewAccepted">{$reviewerName} has accepted the round {$round} review for submission {$articleId}.</message>
-	<message key="log.review.reviewDeclinedByProxy">{$userName} has declined the round {$round} review for submission {$articleId} on behalf of {$reviewerName}.</message>
-	<message key="log.review.reviewAcceptedByProxy">{$userName} has accepted the round {$round} review for submission {$articleId} on behalf of {$reviewerName}.</message>
-	<message key="log.review.reviewFileByProxy">The Editor, {$userName}, has uploaded a review file for round {$round} of submission {$articleId} on behalf of the reviewer, {$reviewerName}.</message>
+	<message key="log.review.reviewerAssigned">{$reviewerName} has been assigned to review proposal {$articleId}.</message>
+	<message key="log.review.reviewerUnassigned">{$reviewerName} has been unassigned from reviewing proposal {$articleId} for review round {$round}.</message>
+	<message key="log.review.reviewInitiated">The round {$round} review by {$reviewerName} for proposal {$articleId} has been initiated.</message>
+	<message key="log.review.reviewReinitiated">The round {$round} review by {$reviewerName} for proposal {$articleId} has been reinitiated.</message>
+	<message key="log.review.reviewCancelled">The review by {$reviewerName} for proposal {$articleId} has been cancelled.</message>
+	<message key="log.review.reviewCleared">The review by {$reviewerName} for proposal {$articleId} has been cleared.</message>
+	<message key="log.review.reviewerRated">{$reviewerName} has been rated for the review of proposal {$articleId}.</message>
+	<message key="log.review.reviewDueDateSet">The due date for the review of proposal {$articleId} by {$reviewerName} has been set to {$dueDate}.</message>
+	<message key="log.review.reviewRecommendationSet">The recommendation for the review of proposal {$articleId} by {$reviewerName} has been set.</message>
+	<message key="log.review.reviewRecommendationSetByProxy">The recommendation for the review of proposal {$articleId} has been set by the editor, {$editorName}, on behalf of the reviewer, {$reviewerName}.</message>
+	<message key="log.review.resubmit">The proposal {$articleId} has been resubmitted for review.</message>
+	<message key="log.review.reviewDeclined">{$reviewerName} has declined the round {$round} review for proposal {$articleId}.</message>
+	<message key="log.review.reviewAccepted">{$reviewerName} has accepted the review for proposal {$articleId}.</message>
+	<message key="log.review.reviewDeclinedByProxy">{$userName} has declined the review for proposal {$articleId} on behalf of {$reviewerName}.</message>
+	<message key="log.review.reviewAcceptedByProxy">{$userName} has accepted the review for proposal {$articleId} on behalf of {$reviewerName}.</message>
+	<message key="log.review.reviewFileByProxy">The Editor, {$userName}, has uploaded a review file for the proposal {$articleId} on behalf of the reviewer, {$reviewerName}.</message>
 	<message key="log.review.reviewerFile">A reviewer file has been uploaded.</message>
 	<message key="log.editor.decision">A decision ({$decision}) for proposal {$proposalId} was recorded by {$editorName}.</message>
 
 
-	<message key="log.copyedit.initiate">Copyediting on submission {$articleId} has been commenced by {$copyeditorName}.</message>
+	<message key="log.copyedit.initiate">Copyediting on proposal {$articleId} has been commenced by {$copyeditorName}.</message>
 	<message key="log.copyedit.copyeditFileSet">The default copyedit file has been chosen.</message>
-	<message key="log.copyedit.initialEditComplete">{$copyeditorName} has completed the initial copy edit of submission {$articleId}.</message>
-	<message key="log.copyedit.finalEditComplete">{$copyeditorName} has completed the final copy edit of submission {$articleId}.</message>
-	<message key="log.copyedit.copyeditorAssigned">{$copyeditorName} has been assigned to copyedit submission {$articleId}.</message>
-	<message key="log.copyedit.copyeditorFile">A copyeditor version of the submission file has been uploaded.</message>
-	<message key="log.copyedit.authorFile">A version of the submission file copyedited by the author has been uploaded.</message>
+	<message key="log.copyedit.initialEditComplete">{$copyeditorName} has completed the initial copy edit of proposal {$articleId}.</message>
+	<message key="log.copyedit.finalEditComplete">{$copyeditorName} has completed the final copy edit of proposal {$articleId}.</message>
+	<message key="log.copyedit.copyeditorAssigned">{$copyeditorName} has been assigned to copyedit proposal {$articleId}.</message>
+	<message key="log.copyedit.copyeditorFile">A copyeditor version of the proposal file has been uploaded.</message>
+	<message key="log.copyedit.authorFile">A version of the proposal file copyedited by the author has been uploaded.</message>
 
-	<message key="log.layout.layoutEditorAssigned">{$editorName} has been assigned as layout editor for submission {$articleId}.</message>
-	<message key="log.layout.layoutEditorUnassigned">{$editorName} has been unassigned as layout editor for submission {$articleId}.</message>
-	<message key="log.layout.layoutEditComplete">{$editorName} has completed layout editing for submission {$articleId}.</message>
+	<message key="log.layout.layoutEditorAssigned">{$editorName} has been assigned as layout editor for proposal {$articleId}.</message>
+	<message key="log.layout.layoutEditorUnassigned">{$editorName} has been unassigned as layout editor for proposal {$articleId}.</message>
+	<message key="log.layout.layoutEditComplete">{$editorName} has completed layout editing for proposal {$articleId}.</message>
 
 	<message key="log.editor.metadataModified">The metadata for this article was modified by {$editorName}.</message>
-	<message key="log.editor.editorFile">An editor version of the submission file has been uploaded.</message>
-	<message key="log.editor.archived">The submission {$articleId} has been archived.</message>
-	<message key="log.editor.restored">The submission {$articleId} has been restored to the queue.</message>
-	<message key="log.editor.editorAssigned">{$editorName} has been assigned as editor to submission {$articleId}.</message>
+	<message key="log.editor.editorFile">An editor version of the proposal file has been uploaded.</message>
+	<message key="log.editor.archived">The proposal {$articleId} has been archived.</message>
+	<message key="log.editor.restored">The proposal {$articleId} has been restored to the queue.</message>
+	<message key="log.editor.editorAssigned">{$editorName} has been assigned as editor to proposal {$articleId}.</message>
 	<message key="log.editor.submissionExpedited">{$editorName} has expedited the editing process for article {$articleId}.</message>
 
-	<message key="log.proofread.assign">{$assignerName} has assigned {$proofreaderName} to proofread submission {$articleId}.</message>
+	<message key="log.proofread.assign">{$assignerName} has assigned {$proofreaderName} to proofread proposal {$articleId}.</message>
 	<message key="log.proofread.complete">{$proofreaderName} has submitted {$articleId} for scheduling.</message>
 
 	<message key="log.imported">{$userName} has imported article {$articleId}.</message>
@@ -1457,8 +1452,8 @@ Validation may fail on search URLs that require posted form data.]]></message>
 	<message key="user.authorization.copyeditorAssignmentMissing">Access denied! You have not been assigned as a copyeditor to this article.</message>
 	<message key="user.authorization.noJournal">No journal in context!</message>
 	<message key="user.authorization.sectionAssignment">You are trying to access an article that is not part of your section.</message>
-	<message key="user.authorization.invalidCopyditorSubmission">Invalid copyeditor submission or no copyeditor submission requested!</message>
-	<message key="user.authorization.invalidSectionEditorSubmission">Invalid section editor submission or no section editor submission requested!</message>
+	<message key="user.authorization.invalidCopyditorSubmission">Invalid copyeditor proposal or no copyeditor proposal requested!</message>
+	<message key="user.authorization.invalidSectionEditorSubmission">Invalid section editor proposal or no section editor proposal requested!</message>
 	
 	<!-- Icons: Default "alt" text -->
 	

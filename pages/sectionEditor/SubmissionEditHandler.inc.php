@@ -98,12 +98,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr->assign('canEditMetadata', true);
 
-			// EL on March 11th 2013
-            $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        $templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
+        $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
             
 		$templateMgr->display('sectionEditor/submission.tpl');
 	}
-
+	
+	/*
+	Not currently used
 	function submissionRegrets($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$this->validate($articleId);
@@ -113,10 +115,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$cancelsAndRegrets = $reviewAssignmentDao->getCancelsAndRegrets($articleId);
-		$reviewFilesByRound = $reviewAssignmentDao->getReviewFilesByRound($articleId);
+		$reviewFilesByDecision = $reviewAssignmentDao->getReviewFilesByDecision($articleId);
 
 		$reviewAssignments =& $submission->getReviewAssignments();
-		$editorDecisions = $submission->getDecisions();
+		$sectionDecisions = $submission->getDecisions();
 		$numRounds = $submission->getCurrentRound();
 
 		$reviewFormResponseDao =& DAORegistry::getDAO('ReviewFormResponseDAO');
@@ -133,12 +135,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign_by_ref('reviewAssignments', $reviewAssignments);
 		$templateMgr->assign('reviewFormResponses', $reviewFormResponses);
 		$templateMgr->assign_by_ref('cancelsAndRegrets', $cancelsAndRegrets);
-		$templateMgr->assign_by_ref('reviewFilesByRound', $reviewFilesByRound);
-		$templateMgr->assign_by_ref('editorDecisions', $editorDecisions);
+		$templateMgr->assign_by_ref('reviewFilesByDecision', $reviewFilesByDecision);
+		$templateMgr->assign_by_ref('sectionDecisions', $sectionDecisions);
 		$templateMgr->assign('numRounds', $numRounds);
 		$templateMgr->assign('rateReviewerOnQuality', $journal->getSetting('rateReviewerOnQuality'));
 
-		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
+		$templateMgr->assign_by_ref('sectionDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
 
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRatingOptions', ReviewAssignment::getReviewerRatingOptions());
@@ -146,7 +148,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$templateMgr->display('sectionEditor/submissionRegrets.tpl');
 	}
-
+	*/
+	
 	function submissionReview($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
@@ -160,44 +163,21 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewFormDao =& DAORegistry::getDAO('ReviewFormDAO');
 		$userDao =& DAORegistry::getDAO('UserDAO');
-		
-		// Setting the round.
-		$round = isset($args[1]) ? $args[1] : $submission->getCurrentRound();
 
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$sections =& $sectionDao->getJournalSections($journal->getId());
 
-		$showPeerReviewOptions = $round == $submission->getCurrentRound() && $submission->getReviewFile() != null ? true : false;
-
-		/******************************************************
-		 * 
-		 * Get last decision details
-		 * Get reviewAssignments
-		 * Indicate if article is more recent
-		 * Get (localized) array mapping of reasons for exemption 
-		 * Added by aglet
-		 * Last Update: /5/8/2011
-		 *
-		*******************************************************/
-		$lastDecision = $articleDao->getLastEditorDecision($articleId, $round);
-		$reviewAssignments =& $submission->getReviewAssignments($round);
-		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision['dateDecided']) ? true : false;
-		
+		$sectionDecisionDao =& DAORegistry::getDAO("SectionDecisionDAO");
+		$lastDecision = $sectionDecisionDao->getLastSectionDecision($articleId);
+		$reviewAssignments =& $lastDecision->getReviewAssignments();
+		$articleMoreRecent = strtotime($submission->getLastModified())>strtotime($lastDecision->getDateDecided()) ? true : false;
+				
 		$reasons = $submission->getProposalReasonsForExemption();
 		$reasonsMap =& $submission->getReasonsForExemptionMap();
-		
-		$editAssignments =& $submission->getEditAssignments();
-
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null && !empty($editAssignments);
-			$allowRecommendation = $submission->getCurrentRound() == $round && $submission->getReviewFileId() != null;
-		$allowResubmit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && $sectionEditorSubmissionDao->getMaxReviewRound($articleId) == $round ? true : false;
-		$allowCopyedit = $lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT && $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == null ? true : false;
 
 		// Prepare an array to store the 'Notify Reviewer' email logs
 		$notifyReviewerLogs = array();
-		foreach ($submission->getReviewAssignments($round) as $reviewAssignment) {
+		foreach ($reviewAssignments as $reviewAssignment) {
 			$notifyReviewerLogs[$reviewAssignment->getId()] = array();
 		}
 
@@ -229,23 +209,16 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			unset($reviewForm);
 			$reviewFormResponses[$reviewAssignment->getId()] = $reviewFormResponseDao->reviewFormResponseExists($reviewAssignment->getId());
 		}			
-		
-		
-			// Changed by EL on February 15th 2013
-			// Management of multiple committees		
-			$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
-			$ercReviewers =& $ercReviewersDao->getReviewersBySectionId($journal->getId(), $submission->getSectionId());
-			// $extReviewers =& $ercReviewersDao->getExternalReviewers($journal->getId());
-
-		$reviewAssignments = $submission->getReviewAssignments($round);
+				
+		$ercReviewersDao =& DAORegistry::getDAO('ErcReviewersDAO');
+		$ercReviewers =& $ercReviewersDao->getReviewersBySectionId($journal->getId(), $lastDecision->getSectionId());
 			
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('reviewers', $ercReviewers);
 		//$templateMgr->assign_by_ref('extReviewers', $extReviewers);
 		$templateMgr->assign_by_ref('reviewAssignmentCount', count($reviewAssignments));
 		$templateMgr->assign_by_ref('submission', $submission);
-		$templateMgr->assign_by_ref('reviewIndexes', $reviewAssignmentDao->getReviewIndexesForRound($articleId, $round));
-		$templateMgr->assign('round', $round);
+		$templateMgr->assign_by_ref('reviewIndexes', $reviewAssignmentDao->getReviewIndexesForDecision($lastDecision->getId()));
 		$templateMgr->assign_by_ref('reviewAssignments', $reviewAssignments);
 		$templateMgr->assign('reviewFormResponses', $reviewFormResponses);
 		$templateMgr->assign('reviewFormTitles', $reviewFormTitles);
@@ -259,7 +232,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 			if ($suppFile->getType() == 'Final Decision') $finalDecisionFileUploaded = true;
 		}
 		$templateMgr->assign('finalDecisionFileUploaded', $finalDecisionFileUploaded);
-	
+
+        $templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
+
 		$templateMgr->assign_by_ref('suppFiles', $suppFiles);
 		$templateMgr->assign_by_ref('reviewFile', $submission->getReviewFile());
 		$templateMgr->assign_by_ref('previousFiles', $submission->getPreviousFiles());
@@ -267,25 +242,25 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign_by_ref('revisedFile', $submission->getRevisedFile());
 		$templateMgr->assign_by_ref('editorFile', $submission->getEditorFile());
 		$templateMgr->assign('rateReviewerOnQuality', $journal->getSetting('rateReviewerOnQuality'));
-		$templateMgr->assign('showPeerReviewOptions', $showPeerReviewOptions);
 		$templateMgr->assign_by_ref('sections', $sections->toArray());
-		$templateMgr->assign('editorDecisionOptions',SectionEditorSubmission::getEditorDecisionOptions());
+		$templateMgr->assign('sectionDecisionOptions',SectionEditorSubmission::getEditorDecisionOptions());
 		
 		$templateMgr->assign('initialReviewOptions',SectionEditorSubmission::getInitialReviewOptions());
 		$templateMgr->assign('exemptionOptions',SectionEditorSubmission::getExemptionOptions());
 		$templateMgr->assign('continuingReviewOptions',SectionEditorSubmission::getContinuingReviewOptions());
 		$templateMgr->assign('articleMoreRecent', $articleMoreRecent);
-		$templateMgr->assign('lastDecisionArray', $lastDecision);
+		$templateMgr->assign('lastDecision', $lastDecision);
 		$templateMgr->assign('reasonsForExemption', $reasons);
 		$templateMgr->assign_by_ref('reasonsMap', $reasonsMap);
 		
 		import('classes.submission.reviewAssignment.ReviewAssignment');
 		$templateMgr->assign_by_ref('reviewerRecommendationOptions', ReviewAssignment::getReviewerRecommendationOptions());
 		$templateMgr->assign_by_ref('reviewerRatingOptions', ReviewAssignment::getReviewerRatingOptions());
-
-		$templateMgr->assign('allowRecommendation', $allowRecommendation);
-		$templateMgr->assign('allowResubmit', $allowResubmit);
-		$templateMgr->assign('allowCopyedit', $allowCopyedit);
+		
+		// Not currently used
+		//$templateMgr->assign('allowRecommendation', $allowRecommendation);
+		//$templateMgr->assign('allowResubmit', $allowResubmit);
+		//$templateMgr->assign('allowCopyedit', $allowCopyedit);
 
 		$templateMgr->assign('articleId', $submission->getId());
 		
@@ -332,10 +307,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$useProofreaders = $journal->getSetting('useProofreaders');
 
 		// check if submission is accepted
-		$round = isset($args[1]) ? $args[1] : $submission->getCurrentRound();
-		$editorDecisions = $submission->getDecisions($round);
-		$lastDecision = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1]['decision'] : null;
-		$submissionAccepted = ($lastDecision == SUBMISSION_EDITOR_DECISION_ACCEPT) ? true : false;
+		$sectionDecisions = $submission->getDecisions();
+		$lastDecision = count($sectionDecisions) >= 1 ? $sectionDecisions[count($sectionDecisions) - 1]['decision'] : null;
+		$submissionAccepted = ($lastDecision == SUBMISSION_SECTION_DECISION_APPROVED) ? true : false;
 
 		$templateMgr =& TemplateManager::getManager();
 
@@ -457,48 +431,75 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$approvalDate = Request::getUserVar('approvalDate'); 
 		
 		$fileName = "finalDecisionFile";
-		if(($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED || $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED) && isset($_FILES[$fileName])) {			
+		if(($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED || $submission->getSubmissionStatus() == PROPOSAL_STATUS_FULL_REVIEW) && isset($_FILES[$fileName])) {			
 			if (SectionEditorAction::uploadDecisionFile($articleId, $fileName) == '0') Request::redirect(null, null, 'submissionReview', $articleId);
 		}
 		
 		$decision = Request::getUserVar('decision');
-		$assignedReviewer = Request::getUserVar('assignedReviewer');
-		$articleDao =& DAORegistry::getDAO("ArticleDAO");
-		$previousDecision =& $articleDao->getLastEditorDecision($articleId);
-		$resubmitCount = $previousDecision['resubmitCount'];
-		//pass lastDecisionId of this article to update existing row in edit_decisions
-		$lastDecisionId = $previousDecision['editDecisionId'];
+		$sectionDecisionDao =& DAORegistry::getDAO("SectionDecisionDAO");
+		$previousDecision =& $sectionDecisionDao->getLastSectionDecision($articleId);
 		
-		switch ($decision) {
-			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
-			case SUBMISSION_EDITOR_DECISION_DECLINE:
-			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
-			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
-			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
-			case SUBMISSION_EDITOR_DECISION_COMPLETE:
-			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-			case SUBMISSION_EDITOR_DECISION_DONE:
-				SectionEditorAction::recordDecision($submission, $decision, $lastDecisionId, $resubmitCount, $approvalDate, $assignedReviewer);
+		//pass lastDecisionId of this article to update existing row in section_decisions
+		if (isset($previousDecision)) {
+			if ($previousDecision->getDecision() == SUBMISSION_SECTION_DECISION_APPROVED
+				|| $previousDecision->getDecision() == SUBMISSION_SECTION_DECISION_RESUBMIT
+				|| $previousDecision->getDecision() == SUBMISSION_SECTION_DECISION_DECLINED
+				|| $previousDecision->getDecision() == SUBMISSION_SECTION_DECISION_EXEMPTED
+				|| $previousDecision->getDecision() == SUBMISSION_SECTION_DECISION_DONE)
+			$lastDecisionId = null;
+			else $lastDecisionId = $previousDecision->getId();
+		} else $lastDecisionId = null;
+		
+		switch ($submission->getStatus()) {
+			case STATUS_QUEUED:
+				$reviewType = REVIEW_TYPE_INITIAL;
+				break;
+			case STATUS_QUEUED_CR:
+				$reviewType = REVIEW_TYPE_CONTINUING;
+				break;
+			case STATUS_QUEUED_PA:
+				$reviewType = REVIEW_TYPE_AMENDMENT;
+				break;
+			case STATUS_QUEUED_SAE:
+				$reviewType = REVIEW_TYPE_SAE;
+				break;
+			case STATUS_QUEUED_EOS:
+				$reviewType = REVIEW_TYPE_EOS;
 				break;
 		}
-
+		
+		$round = $sectionDecisionDao->getRound($articleId, $reviewType);
+		
+		switch ($decision) {
+			case SUBMISSION_SECTION_DECISION_APPROVED:
+			case SUBMISSION_SECTION_DECISION_RESUBMIT:
+			case SUBMISSION_SECTION_DECISION_DECLINED:
+			case SUBMISSION_SECTION_DECISION_EXEMPTED:
+			case SUBMISSION_SECTION_DECISION_FULL_REVIEW:
+			case SUBMISSION_SECTION_DECISION_EXPEDITED:
+			case SUBMISSION_SECTION_DECISION_COMPLETE:
+			case SUBMISSION_SECTION_DECISION_INCOMPLETE:
+			case SUBMISSION_SECTION_DECISION_DONE:
+				if ($reviewType) SectionEditorAction::recordDecision($submission, $decision, $reviewType, $round, $approvalDate, $lastDecisionId);
+				break;
+		}
 		
 		/*Do not start new round of review
-		if($decision == SUBMISSION_EDITOR_DECISION_RESUBMIT) {
+		if($decision == SUBMISSION_SECTION_DECISION_RESUBMIT) {
 			SectionEditorAction::initiateNewReviewRound($submission);
 		}
 		*/
 		switch ($decision) {
-			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_DECLINE:
-			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
+			case SUBMISSION_SECTION_DECISION_APPROVED:
+			case SUBMISSION_SECTION_DECISION_DECLINED:
+			case SUBMISSION_SECTION_DECISION_INCOMPLETE:
+			case SUBMISSION_SECTION_DECISION_EXEMPTED:
 				SubmissionCommentsHandler::emailEditorDecisionComment($articleId);
-				break;			
+				break;
+			default:
+				Request::redirect(null, null, 'submissionReview', $articleId);
+			break;
 		}
-		
-		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
 	
 	/**
@@ -506,7 +507,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	 */
 	function recordReasonsForExemption($args, $request) {
 		$decision = Request::getUserVar('decision');
-		if($decision == SUBMISSION_EDITOR_DECISION_EXEMPTED) {
+		if($decision == SUBMISSION_SECTION_DECISION_EXEMPTED) {
 			$articleId = Request::getUserVar('articleId');			
 			$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 			$submission =& $this->submission;
@@ -531,9 +532,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$journal =& Request::getJournal();
 		$sectionEditorSubmission =& $this->submission;		
 		$selectedReviewers = Request::getUserVar('selectedReviewers');
+		
 		foreach($selectedReviewers as $reviewerId) {
-			SectionEditorAction::addReviewer($sectionEditorSubmission, $reviewerId, $round = null);
+			SectionEditorAction::addReviewer($sectionEditorSubmission->getLastSectionDecisionId(), $reviewerId);
+
 		}
+		
 		Request::redirect(null, null, 'notifyReviewers', $articleId);
 	}
 	
@@ -561,10 +565,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		if ($reviewerId > 0) {
 			// Assign reviewer to article
-			SectionEditorAction::addReviewer($submission, $reviewerId);
+			SectionEditorAction::addReviewer($submission->getLastSectionDecisionId(), $reviewerId);
 			
 			//Notify reviewer and send email by default
-			$reviewId = $sectionEditorSubmissionDao->getReviewAssignmentIdByArticleAndReviewer($submission->getId(), $reviewerId);
+			$reviewId = $sectionEditorSubmissionDao->getReviewAssignmentIdByDecisionAndReviewer($submission->getLastSectionDecisionId(), $reviewerId);
 			SectionEditorAction::notifyReviewer($submission, $reviewId, true);
 			Request::redirect(null, null, 'submissionReview', $articleId);
 
@@ -594,9 +598,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$searchType = USER_FIELD_INITIAL;
 				$search = $searchInitial;
 			}
-
+			$lastDecision =& $submission->getLastSectionDecision();
 			$rangeInfo =& Handler::getRangeInfo('reviewers');
-			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $articleId, $submission->getSectionId(), $submission->getCurrentRound(), $extReviewers, $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
+			$reviewers = $sectionEditorSubmissionDao->getReviewersForArticle($journal->getId(), $lastDecision->getId(), $lastDecision->getSectionId(), $extReviewers, $searchType, $search, $searchMatch, $rangeInfo, $sort, $sortDirection);
 						
 			$journal = Request::getJournal();
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
@@ -615,7 +619,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		
 			$templateMgr->assign_by_ref('reviewers', $reviewers);
 			$templateMgr->assign('articleId', $articleId);
-			$templateMgr->assign('reviewerStatistics', $sectionEditorSubmissionDao->getReviewerStatistics($journal->getId()));
+			$templateMgr->assign('reviewerStatistics', $sectionEditorSubmissionDao->getReviewerStatistics());
 			$templateMgr->assign('fieldOptions', Array(
 				USER_FIELD_INTERESTS => 'user.interests',
 				USER_FIELD_FIRSTNAME => 'user.firstName',
@@ -653,8 +657,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
-		
-		$reviewAssignments = $submission->getReviewAssignments($submission->getCurrentRound());
+		$lastDecision =& $submission->getLastSectionDecision();
+		$reviewAssignments = $lastDecision->getReviewAssignments();
 		
 		//send emails by default
 		foreach($reviewAssignments as $reviewAssignment) {			
@@ -682,7 +686,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$reviewId = $args[1];
 
-		SectionEditorAction::clearReview($submission, $reviewId);
+		SectionEditorAction::clearReview($submission->getLastSectionDecision(), $reviewId);
 
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
@@ -773,10 +777,9 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$reviewId = Request::getUserVar('reviewId');
 		$fileId = Request::getUserVar('fileId');
-		$revision = Request::getUserVar('revision');
 		$viewable = Request::getUserVar('viewable');
 
-		SectionEditorAction::makeReviewerFileViewable($articleId, $reviewId, $fileId, $revision, $viewable);
+		SectionEditorAction::makeReviewerFileViewable($articleId, $reviewId, $fileId, $viewable);
 
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
@@ -788,13 +791,12 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		$dueDate = Request::getUserVar('dueDate');
 		$numWeeks = null;
+		$lastDecision =& $submission->getLastSectionDecision();
 		if ($dueDate != null) {
-			foreach ($submission->getReviewAssignments() as $roundReviewAssignments) {
-				foreach ($roundReviewAssignments as $reviewAssignment) {					
-					if ( ($reviewId = $reviewAssignment->getId()) > 0) {
-						SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks);		
-					}			
-				}
+			foreach ($lastDecision->getReviewAssignments() as $reviewAssignment) {
+				if ( ($reviewId = $reviewAssignment->getId()) > 0) {
+					SectionEditorAction::setDueDate($articleId, $reviewId, $dueDate, $numWeeks);		
+				}			
 			}
 			Request::redirect(null, null, 'submissionReview', $articleId);
 		} else {
@@ -997,13 +999,15 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$reviewFormElements =& $reviewFormElementDao->getReviewFormElements($reviewFormId);
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewAssignment =& $reviewAssignmentDao->getById($reviewId);
-
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$sectionDecision =& $sectionDecisionDao->getSectionDecision($reviewAssignment->getDecisionId());
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageTitle', 'manager.reviewForms.preview');
 		$templateMgr->assign_by_ref('reviewForm', $reviewForm);
 		$templateMgr->assign('reviewFormElements', $reviewFormElements);
 		$templateMgr->assign('reviewId', $reviewId);
-		$templateMgr->assign('articleId', $reviewAssignment->getSubmissionId());
+		$templateMgr->assign('articleId', $sectionDecision->getArticleId());
 		//$templateMgr->assign('helpTopicId','journal.managementPages.reviewForms');
 		$templateMgr->display('sectionEditor/previewReviewForm.tpl');
 	}
@@ -1076,7 +1080,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	//
 	// Editor Review
 	//
-
+	/* Not currently used
 	function editorReview() {
 		$articleId = Request::getUserVar('articleId');
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
@@ -1094,7 +1098,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		if (Request::getUserVar('setCopyeditFile')) {
 			// If the Send To Copyedit button was pressed
-			$file = explode(',', Request::getUserVar('editorDecisionFile'));
+			$file = explode(',', Request::getUserVar('sectionDecisionFile'));
 			if (isset($file[0]) && isset($file[1])) {
 				$round = $submission->getCurrentRound();
 				if ($submission->getMostRecentEditorDecisionComment()) {
@@ -1112,7 +1116,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		} else if (Request::getUserVar('resubmit')) {
 			// If the Resubmit button was pressed
-			$file = explode(',', Request::getUserVar('editorDecisionFile'));
+			$file = explode(',', Request::getUserVar('sectionDecisionFile'));
 			if (isset($file[0]) && isset($file[1])) {
 				SectionEditorAction::resubmitFile($submission, $file[0], $file[1]);
 
@@ -1125,7 +1129,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 		Request::redirect(null, null, $redirectTarget, $articleId);
 	}
-
+	*/
+	
 	//
 	// Copyedit
 	//
@@ -1419,7 +1424,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$url = $request->url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'layout');
 				$notificationManager->createNotification(
 					$userRole['id'], 'notification.type.suppFileModified',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_SUPP_FILE_MODIFIED
+					$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_SUPP_FILE_MODIFIED
 				);
 			}
 
@@ -1436,11 +1441,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	function deleteArticleFile($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$fileId = isset($args[1]) ? (int) $args[1] : 0;
-		$revisionId = isset($args[2]) ? (int) $args[2] : 0;
 
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_REVIEW);
 		$submission =& $this->submission;
-		SectionEditorAction::deleteArticleFile($submission, $fileId, $revisionId);
+		SectionEditorAction::deleteArticleFile($submission, $fileId);
 
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
@@ -1561,11 +1565,10 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$galleyId = isset($args[1]) ? (int) $args[1] : 0;
 		$fileId = isset($args[2]) ? (int) $args[2] : 0;
-		$revisionId = isset($args[3]) ? (int) $args[3] : 0;
 
 		$this->validate($articleId, SECTION_EDITOR_ACCESS_EDIT);
 		$submission =& $this->submission;
-		SectionEditorAction::deleteArticleImage($submission, $fileId, $revisionId);
+		SectionEditorAction::deleteArticleImage($submission, $fileId);
 
 		Request::redirect(null, null, 'editGalley', array($articleId, $galleyId));
 	}
@@ -1740,7 +1743,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'layout');
 				$notificationManager->createNotification(
 					$userRole['id'], 'notification.type.galleyModified',
-					$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_GALLEY_MODIFIED
+					$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_GALLEY_MODIFIED
 				);
 			}
 
@@ -1984,6 +1987,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('isEditor', Validation::isEditor());
 		$templateMgr->assign_by_ref('submission', $submission);
 
+		$templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
+
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		import('classes.file.ArticleFileManager');
 		$templateMgr->assign('attachments', $articleFileDao->getArticleFilesByAssocId($logId, ARTICLE_FILE_ATTACHMENT));
@@ -2147,15 +2152,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
-		if (!SectionEditorAction::downloadFile($articleId, $fileId, $revision)) {
+		if (!SectionEditorAction::downloadFile($articleId, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}
@@ -2166,7 +2170,7 @@ class SubmissionEditHandler extends SectionEditorHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function uploadDecisionFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
@@ -2187,15 +2191,14 @@ class SubmissionEditHandler extends SectionEditorHandler {
 	
 	/**
 	 * View a file (inlines file).
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function viewFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
-		if (!SectionEditorAction::viewFile($articleId, $fileId, $revision)) {
+		if (!SectionEditorAction::viewFile($articleId, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}
@@ -2648,35 +2651,24 @@ class SubmissionEditHandler extends SectionEditorHandler {
 				$templateMgr->assign('canEdit', true);
 			} else {
 				// If this user isn't the submission's editor, they don't have access.
-					// Modified by EL on February 17th 2013
-					// No edit assignments anymore
-					//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-					$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-					$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());
 				$wasFound = false;
-					//foreach ($editAssignments as $editAssignment) {
-					foreach ($sectionEditors as $sectionEditor){
+				foreach ($sectionEditors as $sectionEditor){
 					if ($sectionEditor->getId() == $user->getId()) {
-							//$templateMgr->assign('canReview', $editAssignment->getCanReview());
-							//$templateMgr->assign('canEdit', $editAssignment->getCanEdit());
-							$templateMgr->assign('canReview', true);
-							$templateMgr->assign('canEdit', true);
+						$templateMgr->assign('canReview', true);
+						$templateMgr->assign('canEdit', true);
 						switch ($access) {
 							case SECTION_EDITOR_ACCESS_EDIT:
-									//if ($editAssignment->getCanEdit()) {
-									$wasFound = true;
-									//}
+								$wasFound = true;
 								break;
 							case SECTION_EDITOR_ACCESS_REVIEW:
-									//if ($editAssignment->getCanReview()) {
-									$wasFound = true;
-									//}
+								$wasFound = true;
 								break;
-
 							default:
 								$wasFound = true;
+								break;
 						}
-						break;
 					}
 				}
 
@@ -2687,18 +2679,6 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		if (!$isValid) {
 			Request::redirect(null, Request::getRequestedPage());
 		}
-
-		// If necessary, note the current date and time as the "underway" date/time
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-			//foreach ($editAssignments as $editAssignment) {
-				//if ($editAssignment->getEditorId() == $user->getId() && $editAssignment->getDateUnderway() === null) {
-					//$editAssignment->setDateUnderway(Core::getCurrentDate());
-					//$edit Assignment Dao->updateEditAssignment($editAssignment);
-				//}
-			//}
 
 		$this->submission =& $sectionEditorSubmission;
 		return true;

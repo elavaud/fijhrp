@@ -341,11 +341,11 @@ class SubmissionLayoutHandler extends LayoutEditorHandler {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$galleyId = isset($args[1]) ? (int) $args[1] : 0;
 		$fileId = isset($args[2]) ? (int) $args[2] : 0;
-		$revisionId = isset($args[3]) ? (int) $args[3] : 0;
+
 		$submissionLayoutHandler = new SubmissionLayoutHandler();
 		$submissionLayoutHandler->validate($articleId);
 		$submission =& $submissionLayoutHandler->submission;		
-		LayoutEditorAction::deleteArticleImage($submission, $fileId, $revisionId);
+		LayoutEditorAction::deleteArticleImage($submission, $fileId);
 
 		Request::redirect(null, null, 'editGalley', array($articleId, $galleyId));
 	}
@@ -477,36 +477,34 @@ class SubmissionLayoutHandler extends LayoutEditorHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		if($this->validate($articleId)) {
 			$journal =& $this->journal;
 			$submission =& $this->submission;
 		}
-		if (!LayoutEditorAction::downloadFile($submission, $fileId, $revision)) {
+		if (!LayoutEditorAction::downloadFile($submission, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}
 
 	/**
 	 * View a file (inlines file).
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function viewFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		if($this->validate($articleId)) {
 			$journal =& $this->journal;
 			$submission =& $this->submission;
 		}
-		if (!LayoutEditorAction::viewFile($articleId, $fileId, $revision)) {
+		if (!LayoutEditorAction::viewFile($articleId, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}

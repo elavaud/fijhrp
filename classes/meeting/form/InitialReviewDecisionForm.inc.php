@@ -88,16 +88,15 @@ class InitialReviewDecisionForm extends Form {
 		$submission =& $this->submission;
 		$decision = $this->getData('decision');
 		$approvaDate = $this->getData('approvalDate');
-		$articleDao =& DAORegistry::getDAO("ArticleDAO");
-		$previousDecision =& $articleDao->getLastEditorDecision($submission->getId());
+		$sectionDecisionDao =& DAORegistry::getDAO("SectionDecisionDAO");
+		$previousDecision =& $sectionDecisionDao->getLastSectionDecision($submission->getId());
 
 		$dateDecided = $meeting->getDate() ;
 		switch ($decision) {
-			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
-			case SUBMISSION_EDITOR_DECISION_DECLINE:
-				SectionEditorAction::recordDecision($submission, $decision, $previousDecision['editDecisionId'], $previousDecision['resubmitCount'], $dateDecided);
-				break;
+			case SUBMISSION_SECTION_DECISION_APPROVED:
+			case SUBMISSION_SECTION_DECISION_RESUBMIT:
+			case SUBMISSION_SECTION_DECISION_DECLINED:
+				SectionEditorAction::recordDecision($submission, $decision, REVIEW_TYPE_INITIAL, $previousDecision->getRound(), $dateDecided,  $previousDecision->getId());
 		}
 	}
 
@@ -110,37 +109,39 @@ class InitialReviewDecisionForm extends Form {
 		$votes= $this->getData("votes");
 		$minorityReason = $this->getData("minorityReason");
 		$chairReview = $this->getData('chairReview');
-			
+		
+		$abstract = $submission->getLocalizedAbstract();
+		
 		$pdf = new PDF();
 		$pdf->AddPage();
-		$pdf->ChapterTitle('INITIAL REVIEW of ' . $submission->getLocalizedTitle());
-		$pdf->ChapterItemKeyVal('Protocol Title', $submission->getLocalizedTitle(), "BU");
+		$pdf->ChapterTitle('INITIAL REVIEW of ' . $submission->getLocalizedProposalId());
+		$pdf->ChapterItemKeyVal('Protocol Title', $abstract->getScientificTitle(), "BU");
 		$pdf->ChapterItemKeyVal('Principal Investigator (PI)', $submission->getAuthorString(), "BU");
 		$pdf->ChapterItemKeyVal('Unique project identification # assigned', $submission->getLocalizedProposalId() , "BU");
 		$pdf->ChapterItemKeyVal('Responsible Staff Member', $submission->getUser()->getFullName(), "BU");
 
 		if($isUnanimous) {
 			switch($decision) {
-				case SUBMISSION_EDITOR_DECISION_ACCEPT:
+				case SUBMISSION_SECTION_DECISION_APPROVED:
 					$decisionStr = "The proposal was accepted in principal unanimously by all the members of the ERC present in the meeting, and was approved with clarifications mentioned above.";
 					break;
-				case SUBMISSION_EDITOR_DECISION_RESUBMIT:
+				case SUBMISSION_SECTION_DECISION_RESUBMIT:
 					$decisionStr = "The proposal was assigned for revision and resubmission in principal unanimously by all the members of the ERC present in the meeting provided with the considerations and conditions mentioned above.";
 					break;
-				case SUBMISSION_EDITOR_DECISION_DECLINE:
+				case SUBMISSION_SECTION_DECISION_DECLINED:
 					$decisionStr = "The proposal was not accepted in principal unanimously by all the members of the ERC present in the meeting due to concerns stated above.";
 					break;
 			}
 		}
 		else {
 			switch($decision) {
-				case SUBMISSION_EDITOR_DECISION_ACCEPT:
+				case SUBMISSION_SECTION_DECISION_APPROVED:
 					$decisionStr = "The proposal was accepted in principal by the majority of the ERC members present in the meeting and was approved with clarifications mentioned above.";
 					break;
-				case SUBMISSION_EDITOR_DECISION_RESUBMIT:
+				case SUBMISSION_SECTION_DECISION_RESUBMIT:
 					$decisionStr = "The proposal was assigned for revision and resubmission in principal by the majority of the ERC members present in the meeting provided with the considerations and conditions mentioned above.";
 					break;
-				case SUBMISSION_EDITOR_DECISION_DECLINE:
+				case SUBMISSION_SECTION_DECISION_DECLINED:
 					$decisionStr = "The proposal was not accepted in principal unanimously by the majority of the ERC members present in the meeting due to concerns stated above.";
 					break;
 			}
@@ -159,7 +160,7 @@ class InitialReviewDecisionForm extends Form {
 		
 		$journal =& Request::getJournal();
 		$journalId = $journal->getId();
-		$filename = $submission->getLocalizedTitle().".pdf";
+		$filename = $abstract->getScientificTitle().".pdf";
 		$meetingFilesDir = Config::getVar('files', 'files_dir').'/journals/'.$journalId.'/meetings/'.$meeting->getId()."/initialReviews/".$filename;
 
 		import('classes.file.MinutesFileManager');

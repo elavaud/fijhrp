@@ -200,7 +200,6 @@ switch ($op) {
 	case 'index':
 	case 'submissions':
 	case 'setEditorFlags':
-	case 'deleteEditAssignment':
 	case 'assignEditor':
 	case 'deleteSubmission':
 	case 'instructions':

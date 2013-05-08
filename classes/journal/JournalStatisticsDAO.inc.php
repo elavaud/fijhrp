@@ -53,7 +53,7 @@ class JournalStatisticsDAO extends DAO {
 				a.status
 			FROM	articles a
 				LEFT JOIN published_articles pa ON (a.article_id = pa.article_id)
-				LEFT JOIN edit_decisions d ON (d.article_id = a.article_id)
+				LEFT JOIN section_decisions d ON (d.article_id = a.article_id)
 			WHERE	a.journal_id = ?' .
 			($dateStart !== null ? ' AND a.date_submitted >= ' . $this->datetimeToDB($dateStart) : '') .
 			($dateEnd !== null ? ' AND a.date_submitted <= ' . $this->datetimeToDB($dateEnd) : '') .
@@ -107,15 +107,15 @@ class JournalStatisticsDAO extends DAO {
 
 				import('classes.submission.common.Action');
 				switch ($row['decision']) {
-					case SUBMISSION_EDITOR_DECISION_ACCEPT:
+					case SUBMISSION_SECTION_DECISION_APPROVED:
 						$returner['submissionsAccept']++;
 						$returner['numReviewedSubmissions']++;
 						break;
-					case SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS:
-					case SUBMISSION_EDITOR_DECISION_RESUBMIT:
+					case SUBMISSION_SECTION_DECISION_PENDING_REVISIONS:
+					case SUBMISSION_SECTION_DECISION_RESUBMIT:
 						$returner['submissionsRevise']++;
 						break;
-					case SUBMISSION_EDITOR_DECISION_DECLINE:
+					case SUBMISSION_SECTION_DECISION_DECLINED:
 						$returner['submissionsDecline']++;
 						$returner['numReviewedSubmissions']++;
 						break;
@@ -306,8 +306,7 @@ class JournalStatisticsDAO extends DAO {
 			WHERE	a.journal_id = ?
 				AND r.submission_id = a.article_id
 				AND af.article_id = a.article_id
-				AND af.file_id = a.review_file_id
-				AND af.revision = 1' .
+				AND af.file_id = a.review_file_id' .
 			($dateStart !== null ? ' AND a.date_submitted >= ' . $this->datetimeToDB($dateStart) : '') .
 			($dateEnd !== null ? ' AND a.date_submitted <= ' . $this->datetimeToDB($dateEnd) : '') .
 			$sectionSql;

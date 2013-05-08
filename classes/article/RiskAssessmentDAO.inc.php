@@ -23,7 +23,7 @@ class RiskAssessmentDAO extends DAO{
 	function &getRiskAssessmentByArticleId($submissionId) {
 
 		$result =& $this->retrieve(
-			'SELECT * FROM risk_assessments WHERE article_id = ?',
+			'SELECT * FROM article_risk_assessments WHERE article_id = ? LIMIT 1',
 			(int) $submissionId
 		);
 
@@ -37,11 +37,11 @@ class RiskAssessmentDAO extends DAO{
 
 	/**
 	 * Insert a new risk Assessment.
-	 * @param $author Author
+	 * @param $riskAssessment Risk Assessment
 	 */
 	function insertRiskAssessment(&$riskAssessment) {
 		$this->update(
-			'INSERT INTO risk_assessments
+			'INSERT INTO article_risk_assessments
 				(article_id, identity_revealed, unable_to_consent, under_18, dependent_relationship, ethnic_minority, mental_impairment, pregnant, new_treatment, biological_samples, ionizing_radiation, distress, inducements, sensitive_information, deception, repro_technology, genetic, stem_cell, biosafety, level_of_risk, risks_list, risks_management, risks_to_team, risks_to_subjects, risks_to_community, benefits_to_participants, knowledge_on_condition, knowledge_on_disease, multi_institution, conflict_of_interest)
 				VALUES			(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			array(
@@ -82,12 +82,12 @@ class RiskAssessmentDAO extends DAO{
 	}
 
 	/**
-	 * Update an existing Author.
-	 * @param $author Author
+	 * Update an existing risk assessment.
+	 * @param $riskAssessment Risk Assessment
 	 */
 	function updateRiskAssessment(&$riskAssessment) {
 		$returner = $this->update(
-			'UPDATE risk_assessments
+			'UPDATE article_risk_assessments
 			SET	
 				identity_revealed = ?,
 				unable_to_consent = ?,
@@ -161,7 +161,7 @@ class RiskAssessmentDAO extends DAO{
 	 */
 	function deleteRiskAssessment($submissionId) {
 		$returner = $this->update(
-			'DELETE FROM risk_assessments WHERE article_id = ?',
+			'DELETE FROM article_risk_assessments WHERE article_id = ?',
 			$submissionId
 		);
 		return $returner;
@@ -173,7 +173,7 @@ class RiskAssessmentDAO extends DAO{
 	 * @return boolean
 	 */
 	function riskAssessmentExists($submissionId) {
-		$result =& $this->retrieve('SELECT count(*) FROM risk_assessments WHERE article_id = ?', (int) $submissionId);
+		$result =& $this->retrieve('SELECT count(*) FROM article_risk_assessments WHERE article_id = ?', (int) $submissionId);
 		$returner = $result->fields[0]?true:false;
 		$result->Close();
 		return $returner;

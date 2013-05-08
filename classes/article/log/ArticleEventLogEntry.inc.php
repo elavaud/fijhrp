@@ -49,7 +49,7 @@ define('ARTICLE_LOG_AUTHOR_REVISION', 		0x20000001);
 // Editor events 				0x30000000
 define('ARTICLE_LOG_EDITOR_ASSIGN', 		0x30000001);
 define('ARTICLE_LOG_EDITOR_UNASSIGN',	 	0x30000002);
-define('ARTICLE_LOG_EDITOR_DECISION', 		0x30000003);
+define('ARTICLE_LOG_SECTION_DECISION', 		0x30000003);
 define('ARTICLE_LOG_EDITOR_FILE', 		0x30000004);
 define('ARTICLE_LOG_EDITOR_ARCHIVE', 		0x30000005);
 define('ARTICLE_LOG_EDITOR_RESTORE', 		0x30000006);
@@ -332,7 +332,7 @@ class ArticleEventLogEntry extends DataObject {
 				return 'submission.event.editor.editorAssigned';
 			case ARTICLE_LOG_EDITOR_UNASSIGN:
 				return 'submission.event.editor.editorUnassigned';
-			case ARTICLE_LOG_EDITOR_DECISION:
+			case ARTICLE_LOG_SECTION_DECISION:
 				return 'submission.event.editor.editorDecision';
 			case ARTICLE_LOG_EDITOR_FILE:
 				return 'submission.event.editor.editorFile';

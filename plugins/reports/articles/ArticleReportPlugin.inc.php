@@ -74,10 +74,10 @@ class ArticleReportPlugin extends ReportPlugin {
 
 		import('classes.article.Article');
 		$decisionMessages = array(
-			SUBMISSION_EDITOR_DECISION_ACCEPT => Locale::translate('editor.article.decision.accept'),
-			SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS => Locale::translate('editor.article.decision.pendingRevisions'),
-			SUBMISSION_EDITOR_DECISION_RESUBMIT => Locale::translate('editor.article.decision.resubmit'),
-			SUBMISSION_EDITOR_DECISION_DECLINE => Locale::translate('editor.article.decision.decline'),
+			SUBMISSION_SECTION_DECISION_APPROVED => Locale::translate('editor.article.decision.approved'),
+			SUBMISSION_SECTION_DECISION_PENDING_REVISIONS => Locale::translate('editor.article.decision.pendingRevisions'),
+			SUBMISSION_SECTION_DECISION_RESUBMIT => Locale::translate('editor.article.decision.resubmit'),
+			SUBMISSION_SECTION_DECISION_DECLINED => Locale::translate('editor.article.decision.declined'),
 			null => Locale::translate('plugins.reports.articles.nodecision')
 		);
 

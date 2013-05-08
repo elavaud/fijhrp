@@ -76,20 +76,10 @@ class CopyeditCommentForm extends CommentForm {
 
 		// Copyedit comments are to be sent to the editor, author, and copyeditor,
 		// excluding whomever posted the comment.
-
-		// Get editors
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->get Edit AssignmentsByArticleId($article->getId());
-			//$editAssignments =& $editAssignments->toArray();
 		$editorAddresses = array();
-			//foreach ($editAssignments as $editAssignment) {
-				//if ($editAssignment->getCanEdit()) $editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-			//}
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();			
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+		foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();			
 			
 
 		// If no editors are currently assigned, send this message to

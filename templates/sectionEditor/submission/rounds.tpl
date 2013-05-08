@@ -57,7 +57,7 @@
 {assign var=round value=$smarty.section.round.index}
 {assign var=roundPlusOne value=$round+1}
 {assign var=roundAssignments value=$reviewAssignments[$roundPlusOne]}
-{assign var=roundDecisions value=$editorDecisions[$roundPlusOne]}
+{assign var=roundDecisions value=$sectionDecisions[$roundPlusOne]}
 <div id="reviewRound">
 <h3>{translate key="sectionEditor.regrets.reviewRound" round=$roundPlusOne}</h3>
 
@@ -65,7 +65,7 @@
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="submission.reviewVersion"}</td>
 		<td class="value" width="80%">
-			{assign var="reviewFile" value=$reviewFilesByRound[$roundPlusOne]}
+			{assign var="reviewFile" value=$reviewFilesByDecision[$roundPlusOne]}
 			{if $reviewFile}
 				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$reviewFile->getFileId():$reviewFile->getRevision()}" class="file">{$reviewFile->getFileName()|escape}</a>&nbsp;&nbsp;{$reviewFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
@@ -196,10 +196,10 @@ name="viewable" value="1"{if $reviewerFile->getViewable()} checked="checked"{/if
 	<tr valign="top">
 		<td class="label" width="20%">{translate key="editor.article.decision"}</td>
 		<td class="value" width="80%">
-			{foreach from=$roundDecisions item=editorDecision key=decisionKey}
+			{foreach from=$roundDecisions item=sectionDecision key=decisionKey}
 				{if $decisionKey neq 0} | {/if}
-				{assign var="decision" value=$editorDecision.decision}
-				{translate key=$editorDecisionOptions.$decision} {$editorDecision.dateDecided|date_format:$dateFormatShort}
+				{assign var="decision" value=$sectionDecision.decision}
+				{translate key=$sectionDecisionOptions.$decision} {$sectionDecision.dateDecided|date_format:$dateFormatShort}
 			{foreachelse}
 				{translate key="common.none"}
 			{/foreach}

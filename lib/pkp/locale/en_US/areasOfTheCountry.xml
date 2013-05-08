@@ -9,20 +9,28 @@
 -->
 
 <countries>
-    <country code="R01" name="Region I, Ilocos"/>
-    <country code="R02" name="Region II, Cagayan Valley"/>
-    <country code="R03" name="Region III, Central Luzon"/>
-    <country code="R04A" name="Region IV-A, Calabarzon"/>
-    <country code="R04B" name="Region IV-B, Mimaropa"/>
-    <country code="R05" name="Region V, Bicol"/>
-    <country code="R06" name="Region VI, Western Visayas"/>
-    <country code="R07" name="Region VII, Central Visayas"/>
-    <country code="R08" name="Region VIII, Eastern Visayas"/>
-    <country code="R09" name="Region IX, Zamboanga Peninsula"/>
-    <country code="R10" name="Region X, Northern Mindanao"/>
-    <country code="R11" name="Region XI, Davao Region"/>
-    <country code="R12" name="Region XII, Soccsksargen"/>
-    <country code="ARMM" name="ARMM, Autonomous Region in Muslim Mindanao"/>
-    <country code="CAR" name="CAR, Cordillera Administrative Region"/>
-    <country code="NCR" name="NCR, National Capital Region"/>
+    <country code="CD" name="CENTRAL DIVISION"/>
+    <country code="TA" name="C.D. Tailevu"/>
+    <country code="RE" name="C.D. Rewa"/>
+    <country code="SN" name="C.D. Serua/Namosi"/>
+    <country code="NT" name="C.D. Naitasiri"/>
+    <country code="SU" name="C.D. Suva"/>
+    <country code="ED" name="EASTERN DIVISION"/>
+    <country code="LK" name="E.D. Lakeba"/>
+    <country code="RO" name="E.D. Rotuma"/>
+    <country code="LL" name="E.D. Lomaloma"/>
+    <country code="LO" name="E.D. Lomaviti"/>
+    <country code="KA" name="E.D. Kadavu"/>
+    <country code="WD" name="WESTERN DIVISION"/>
+    <country code="BA" name="W.D. Ba"/>
+    <country code="TV" name="W.D. Tavua"/>
+    <country code="RA" name="W.D. Ra"/>
+    <country code="NA" name="W.D. Nadi"/>
+    <country code="NN" name="W.D. Nadroga-Navosa"/>
+    <country code="LA" name="W.D. Lautoka"/>
+    <country code="ND" name="NORTHERN DIVISION"/>
+    <country code="CA" name="N.D. Cakaudrove"/>
+    <country code="BU" name="N.D. Bua"/>
+    <country code="TN" name="N.D. Taveuni"/>
+    <country code="MA" name="N.D. Macuata"/>
 </countries>

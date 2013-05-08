@@ -223,6 +223,7 @@ class NewSearchHandler extends Handler {
 		
 		
 		foreach ($results as $result) {
+			$abstract = $result->getLocalizedAbstract();
 			foreach ($columns as $index => $junk) {
 				if ($index == 'investigator') {
 					$columns[$index] = $result->getPrimaryAuthor();
@@ -231,7 +232,7 @@ class NewSearchHandler extends Handler {
 				} elseif ($index == 'investigator_email') {
 					$columns[$index] = $result->getAuthorEmail();
 				} elseif ($index == 'title') {
-					$columns[$index] = $result->getLocalizedTitle();
+					$columns[$index] = $abstract->getScientificTitle();
 				} elseif ($index == 'research_field') {
 					$columns[$index] = $result->getLocalizedResearchFieldText();
 				} elseif ($index == 'proposal_type') {
@@ -282,7 +283,8 @@ class NewSearchHandler extends Handler {
 			//$templateMgr->assign('dateFrom', $fromDate);
 			//$templateMgr->assign('dateTo', $toDate);
 		$templateMgr->assign_by_ref('submission', $submission);
-		
+		$templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
+
 		$templateMgr->display('search/viewProposal.tpl');
 	}
 	/**
@@ -299,7 +301,7 @@ class NewSearchHandler extends Handler {
 		);
 		} else {
 			$templateMgr->assign('pageHierarchy',
-			$subclass ? array(array(Request::url(null, 'search'), 'navigation.search'), array(Request::url('philhrp', 'search','advancedResults'), 'search.searchResults'))
+			$subclass ? array(array(Request::url(null, 'search'), 'navigation.search'), array(Request::url('hrp', 'search','advancedResults'), 'search.searchResults'))
 				: array()
 			);
 		}
@@ -313,7 +315,7 @@ class NewSearchHandler extends Handler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;

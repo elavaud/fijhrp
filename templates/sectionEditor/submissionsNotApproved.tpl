@@ -25,14 +25,14 @@
 <p></p>
 {iterate from=submissions item=submission}	
 	{assign var="status" value=$submission->getSubmissionStatus()}
-
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
             {assign var="articleId" value=$submission->getArticleId()}
             {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 			<tr valign="top">
 				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    				<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td>
-                <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|escape}</a></td>
+                <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$abstract->getScientificTitle()|strip_unsafe_html|escape}</a></td>
 				<td align="right">
 					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 					{if $status == PROPOSAL_STATUS_EXEMPTED}

@@ -107,10 +107,6 @@ class LayoutEditorSubmissionDAO extends DAO {
 		$submission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
 
 		$submission->setGalleys($this->galleyDao->getGalleysByArticle($row['article_id']));
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
-			//$submission->setEditAssignments($editAssignments->toArray());
 
 		HookRegistry::call('LayoutEditorSubmissionDAO::_returnLayoutEditorSubmissionFromRow', array(&$submission, &$row)); 
 

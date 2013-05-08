@@ -82,7 +82,9 @@ class UserHandler extends Handler {
 			$setupIncomplete[$journalId] = $this->checkIncompleteSetup($journal);
 
 			$userJournals = array($journal);
+
 			$this->getRoleDataForJournal($userId, $journalId, $submissionsCount, $isValid, $user->getSecretaryCommitteeId());
+
 			$subscriptionTypeDAO =& DAORegistry::getDAO('SubscriptionTypeDAO');
 			$subscriptionsEnabled = $journal->getSetting('publishingMode') ==  PUBLISHING_MODE_SUBSCRIPTION
 				&& ($subscriptionTypeDAO->subscriptionTypesExistByInstitutional($journalId, false)

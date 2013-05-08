@@ -23,13 +23,10 @@ class ReviewerSubmissionDAO extends DAO {
 	var $authorDao;
 	var $userDao;
 	var $reviewAssignmentDao;
-
-		// Removed by EL on February 17th 2013
-		// No edit assignments anymore
-		//var $edit Assignment Dao;
 	var $articleFileDao;
 	var $suppFileDao;
 	var $articleCommentDao;
+	var $sectionDecisionDao;
 
 	/**
 	 * Constructor.
@@ -40,13 +37,10 @@ class ReviewerSubmissionDAO extends DAO {
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
 		$this->reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
+		$this->sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 	}
 
 	/**
@@ -61,15 +55,14 @@ class ReviewerSubmissionDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	a.*,
 				r.*,
-				r2.review_revision,
 				u.first_name, u.last_name,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
 				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
-				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
+				LEFT JOIN section_decisions sd ON (a.article_id = sd.article_id)
+				LEFT JOIN review_assignments r ON (sd.section_decision_id = r.decision_id)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
@@ -152,28 +145,18 @@ class ReviewerSubmissionDAO extends DAO {
 	function &_returnReviewerSubmissionFromRow(&$row) {
 		$reviewerSubmission = new ReviewerSubmission();
 
-		// Editor Assignment
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
-			//$reviewerSubmission->setEditAssignments($editAssignments->toArray());
-
-		// Files
 		$reviewerSubmission->setSubmissionFile($this->articleFileDao->getArticleFile($row['submission_file_id']));
 		$reviewerSubmission->setRevisedFile($this->articleFileDao->getArticleFile($row['revised_file_id']));
 		$reviewerSubmission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
 		$reviewerSubmission->setReviewFile($this->articleFileDao->getArticleFile($row['review_file_id']));
 		if (isset($row['reviewer_file_id'])) $reviewerSubmission->setReviewerFile($this->articleFileDao->getArticleFile($row['reviewer_file_id']));
-		if (isset($row['reviewer_file_id'])) $reviewerSubmission->setReviewerFileRevisions($this->articleFileDao->getArticleFileRevisions($row['reviewer_file_id']));
 
 		// Comments
 		if (isset($row['review_id'])) $reviewerSubmission->setMostRecentPeerReviewComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_PEER_REVIEW, $row['review_id']));
 
 		// Editor Decisions
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$reviewerSubmission->setDecisions($this->getEditorDecisions($row['article_id'], $i), $i);
-		}
-
+		$reviewerSubmission->setDecisions($this->sectionDecisionDao->getSectionDecisionsByArticleId($row['article_id']));
+		
 		// Review Assignment 
 		if (isset($row['review_id'])) $reviewerSubmission->setReviewId($row['review_id']);
 		if (isset($row['reviewer_id'])) $reviewerSubmission->setReviewerId($row['reviewer_id']);
@@ -191,9 +174,7 @@ class ReviewerSubmissionDAO extends DAO {
 		if (isset($row['cancelled'])) $reviewerSubmission->setCancelled($row['cancelled']==1?1:0);
 		if (isset($row['reviewer_file_id'])) $reviewerSubmission->setReviewerFileId($row['reviewer_file_id']);
 		if (isset($row['quality'])) $reviewerSubmission->setQuality($row['quality']);
-		if (isset($row['round'])) $reviewerSubmission->setRound($row['round']);
 		if (isset($row['review_file_id'])) $reviewerSubmission->setReviewFileId($row['review_file_id']);
-		if (isset($row['review_revision'])) $reviewerSubmission->setReviewRevision($row['review_revision']);
 
 		// Article attributes
 		$this->articleDao->_articleFromRow($reviewerSubmission, $row);
@@ -212,9 +193,8 @@ class ReviewerSubmissionDAO extends DAO {
 	function updateReviewerSubmission(&$reviewerSubmission) {
 		return $this->update(
 			sprintf('UPDATE review_assignments
-				SET	submission_id = ?,
+				SET	decision_id = ?,
 					reviewer_id = ?,
-					round = ?,
 					competing_interests = ?,
 					recommendation = ?,
 					declined = ?,
@@ -231,9 +211,8 @@ class ReviewerSubmissionDAO extends DAO {
 				WHERE	review_id = ?',
 				$this->datetimeToDB($reviewerSubmission->getDateAssigned()), $this->datetimeToDB($reviewerSubmission->getDateNotified()), $this->datetimeToDB($reviewerSubmission->getDateConfirmed()), $this->datetimeToDB($reviewerSubmission->getDateCompleted()), $this->datetimeToDB($reviewerSubmission->getDateAcknowledged()), $this->datetimeToDB($reviewerSubmission->getDateDue())),
 			array(
-				$reviewerSubmission->getArticleId(),
+				$reviewerSubmission->getLastSectionDecisionId(),
 				$reviewerSubmission->getReviewerId(),
-				$reviewerSubmission->getRound(),
 				$reviewerSubmission->getCompetingInterests(),
 				$reviewerSubmission->getRecommendation(),
 				$reviewerSubmission->getDeclined(),
@@ -246,30 +225,29 @@ class ReviewerSubmissionDAO extends DAO {
 		);
 	}
 
-	function &getReviewerSubmissionByReviewerAndSubmissionId($reviewerId, $submissionId, $journalId, $active = true) {
+	function &getReviewerSubmissionByReviewerAndSubmissionId($reviewerId, $decisionId, $journalId, $active = true) {
 	$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$sql = 'SELECT	a.*,
 				r.*,
-				r2.review_revision,
 				u.first_name, u.last_name,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+				COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS submission_title,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
 				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
-				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN section_decisions sd ON (a.article_id = sd.article_id)
+				LEFT JOIN review_assignments r ON (sd.section_decision_id = r.decision_id)
+				LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+				LEFT JOIN article_abstract abl ON (abl.article_id = a.article_id AND abl.locale = ?)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
-				r.submission_id = ? AND
+				r.decision_id = ? AND
 				r.date_notified IS NOT NULL';
 
 		if ($active) {
@@ -280,8 +258,6 @@ class ReviewerSubmissionDAO extends DAO {
 		$result =& $this->retrieve(
 			$sql,
 			array(
-				'cleanScientificTitle', // Article title
-				'cleanScientificTitle',
 				$locale,
 				'title', // Section title
 				$primaryLocale,
@@ -293,7 +269,7 @@ class ReviewerSubmissionDAO extends DAO {
 				$locale,
 				$journalId,
 				$reviewerId,
-				$submissionId
+				$decisionId
 			)
 		);
 		$review = null;
@@ -318,8 +294,6 @@ class ReviewerSubmissionDAO extends DAO {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-				'cleanScientificTitle', // Article title
-				'cleanScientificTitle',
 				$locale,
 				'proposalCountry',
 				'proposalCountry',
@@ -331,12 +305,12 @@ class ReviewerSubmissionDAO extends DAO {
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) = LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) = LOWER(?)';
 				} elseif ($searchMatch === 'contains') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
 					$search = '%' . $search . '%';
 				} else { // $searchMatch === 'startsWith'
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
 					$search = $search . '%';
 				}
 				$params[] = $search;
@@ -345,7 +319,7 @@ class ReviewerSubmissionDAO extends DAO {
 				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'aa.', $params);
 				break;
 			case SUBMISSION_FIELD_EDITOR:
-				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'ed.', $params);
+				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 'sd.', $params);
 				break;
 			case SUBMISSION_FIELD_REVIEWER:
 				$searchSql = $this->_generateUserNameSearchSQL($search, $searchMatch, 're.', $params);
@@ -370,29 +344,29 @@ class ReviewerSubmissionDAO extends DAO {
 				}
 				break;
 		}
-		
-		$sql = 'SELECT	a.*,
+				
+		$sql = 'SELECT	DISTINCT a.*,
 				r.*,
 				u.first_name, u.last_name,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title
+				COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS submission_title
 			FROM	articles a
+				LEFT JOIN section_decisions sd ON (a.article_id = sd.article_id)
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
-				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN review_assignments r ON (sd.section_decision_id = r.decision_id)
+				LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+				LEFT JOIN article_abstract abl ON (abl.article_id = a.article_id AND abl.locale = ?)
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
 				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN edit_decisions ed ON (ed.article_id = a.article_id)
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
 				r.date_notified IS NOT NULL AND
 				r.date_due IS NOT NULL';	
 				
 		if ($active) {
-			$sql .=  ' AND r.date_completed IS NULL AND r.declined <> 1 AND (r.cancelled = 0 OR r.cancelled IS NULL) AND (ed.decision = '.SUBMISSION_EDITOR_DECISION_ASSIGNED.' OR ed.decision = '.SUBMISSION_EDITOR_DECISION_EXPEDITED.')';
+			$sql .=  ' AND r.date_completed IS NULL AND r.declined <> 1 AND (r.cancelled = 0 OR r.cancelled IS NULL) AND (sd.decision = '.SUBMISSION_SECTION_DECISION_FULL_REVIEW.' OR sd.decision = '.SUBMISSION_SECTION_DECISION_EXPEDITED.')';
 		} else {
-			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1 OR ed.decision = '.SUBMISSION_EDITOR_DECISION_ACCEPT.' OR ed.decision = '.SUBMISSION_EDITOR_DECISION_RESUBMIT.' OR ed.decision = '.SUBMISSION_EDITOR_DECISION_DECLINE.' OR ed.decision = '.SUBMISSION_EDITOR_DECISION_DONE.')';
+			$sql .= ' AND (r.date_completed IS NOT NULL OR r.cancelled = 1 OR r.declined = 1 OR sd.decision = '.SUBMISSION_SECTION_DECISION_APPROVED.' OR sd.decision = '.SUBMISSION_SECTION_DECISION_RESUBMIT.' OR sd.decision = '.SUBMISSION_SECTION_DECISION_DECLINED.' OR sd.decision = '.SUBMISSION_SECTION_DECISION_DONE.')';
 		}
 		
 		$result =& $this->retrieveRange(
@@ -418,8 +392,6 @@ class ReviewerSubmissionDAO extends DAO {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-				'cleanScientificTitle', // Article title
-				'cleanScientificTitle',
 				$locale,
 				$journalId,
 				$reviewerId);
@@ -428,12 +400,12 @@ class ReviewerSubmissionDAO extends DAO {
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) = LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) = LOWER(?)';
 				} elseif ($searchMatch === 'contains') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
 					$search = '%' . $search . '%';
 				} else { // $searchMatch === 'startsWith'
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
 					$search = $search . '%';
 				}
 				$params[] = $search;
@@ -444,11 +416,11 @@ class ReviewerSubmissionDAO extends DAO {
 		}
 		
 		$sql = 'SELECT	DISTINCT a.*,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title
+				COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS submission_title
 			FROM	articles a
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+				LEFT JOIN article_abstract abl ON (abl.article_id = a.article_id AND abl.locale = ?)
 				LEFT JOIN meeting_submissions ms ON (a.article_id = ms.submission_id)
 				LEFT JOIN meeting_attendance ma ON (ms.meeting_id = ma.meeting_id)
 			WHERE	a.journal_id = ? AND
@@ -498,10 +470,10 @@ class ReviewerSubmissionDAO extends DAO {
 
 		$sql = 'SELECT	r.date_completed, r.declined, r.cancelled
 			FROM	articles a
-				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
+				LEFT JOIN section_decisions sd ON (a.article_id = sd.article_id)
+				LEFT JOIN review_assignments r ON (sd.section_decision_id = r.decision_id)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)				
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
 				r.date_notified IS NOT NULL';
@@ -533,12 +505,12 @@ class ReviewerSubmissionDAO extends DAO {
 		$submissionsCount[0] = 0;
 		$submissionsCount[1] = 0;
 
-		$sql = 'SELECT	r.date_completed, r.declined, r.cancelled, ed.decision
+		$sql = 'SELECT	r.date_completed, r.declined, r.cancelled, sd.decision
 			FROM	articles a
-				LEFT JOIN review_assignments r ON (a.article_id = r.submission_id)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
+				LEFT JOIN section_decisions sd ON (sd.article_id = a.article_id)
+				LEFT JOIN review_assignments r ON (sd.section_decision_id = r.decision_id)
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN edit_decisions ed ON (ed.article_id = a.article_id)
 			WHERE	a.journal_id = ? AND
 				r.reviewer_id = ? AND
 				r.date_notified IS NOT NULL AND
@@ -560,41 +532,6 @@ class ReviewerSubmissionDAO extends DAO {
 		
 		return $submissionsCount;
 	}
-
-	/**
-	 * Get the editor decisions for a review round of an article.
-	 * @param $articleId int
-	 * @param $round int
-	 */
-	function getEditorDecisions($articleId, $round = null) {
-		$decisions = array();
-
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY date_decided ASC', $articleId
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY date_decided ASC',
-				array($articleId, $round)
-			);
-		}
-
-		while (!$result->EOF) {
-			$decisions[] = array(
-				'editDecisionId' => $result->fields['edit_decision_id'],
-				'editorId' => $result->fields['editor_id'],
-				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
-			);
-			$result->moveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $decisions;
-	}
 	
 	/**
 	 * Map a column heading value to a database value for sorting
@@ -608,7 +545,6 @@ class ReviewerSubmissionDAO extends DAO {
 			case 'dueDate': return 'r.date_due';
 			case 'section': return 'section_abbrev';
 			case 'title': return 'submission_title';
-			case 'round': return 'r.round';
 			case 'review': return 'r.recommendation';
 			default: return null;
 		}

@@ -41,7 +41,7 @@ Content-Transfer-Encoding: quoted-printable
 		{/foreach}
 
 	{*MSB added custom stylesheet for pop-up windows, Oct19, 2011 *}
-	<link rel="stylesheet" href="{$baseUrl}/plugins/themes/philhrp/popup.css" type="text/css" />
+	<link rel="stylesheet" href="{$baseUrl}/plugins/themes/hrp/popup.css" type="text/css" />
 	{*End of custom code*}
 
 	</head>

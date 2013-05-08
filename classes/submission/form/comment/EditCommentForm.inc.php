@@ -122,20 +122,10 @@ class EditCommentForm extends Form {
 		$journal =& Request::getJournal();
 
 		$recipients = array();
-
-		// Get editors for article
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->getEditAssignmentsByArticleId($this->article->getArticleId());
-			//$editAssignments =& $editAssignments->toArray();
 		$editorAddresses = array();
-			//foreach ($editAssignments as $editAssignment) {
-				//$editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-			//}
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();			
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->article->getSectionId());
+		foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();			
 			
 		// If no editors are currently assigned, send this message to
 		// all of the journal's editors.
@@ -193,7 +183,7 @@ class EditCommentForm extends Form {
 			}
 			break;
 
-		case COMMENT_TYPE_EDITOR_DECISION:
+		case COMMENT_TYPE_SECTION_DECISION:
 			if ($this->roleId == ROLE_ID_EDITOR || $this->roleId == ROLE_ID_SECTION_EDITOR) {
 				// Then add author
 				if (isset($author)) $recipients = array_merge($recipients, array($author->getEmail() => $author->getFullName()));

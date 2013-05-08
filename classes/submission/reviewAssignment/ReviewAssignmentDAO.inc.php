@@ -39,10 +39,13 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 	 * @param $submissionId int
 	 * @return int
 	 */
-	function _getSubmissionReviewFileId($submissionId) {
+	function _getSubmissionReviewFileId($decisionId) {
 		$result =& $this->retrieve(
-			'SELECT review_file_id FROM articles WHERE article_id = ?',
-			(int) $submissionId
+			'SELECT a.review_file_id 
+			FROM articles a 
+				LEFT JOIN section_decisions sd ON (a.article_id = sd.article_id) 
+			WHERE sd.section_decision_id = ?',
+			(int) $decisionId
 		);
 		$returner = isset($result->fields[0]) ? $result->fields[0] : null;
 		$result->Close();
@@ -62,13 +65,13 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 	}
 
 	/**
-	 * Get all review assignments for an article.
-	 * @param $articleId int
+	 * Get all review assignments for a decision.
+	 * @param $decisionId int
 	 * @return array ReviewAssignments
 	 */
-	function &getReviewAssignmentsByArticleId($articleId, $round = null) {
+	function &getReviewAssignmentsByDecisionId($decisionId) {
 		if (Config::getVar('debug', 'deprecation_warnings')) trigger_error('Deprecated function.');
-		$returner =& $this->getBySubmissionId($articleId, $round);
+		$returner =& $this->getByDecisionId($decisionId);
 		return $returner;
 	}
 
@@ -95,29 +98,28 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 	}
 
 	/**
-	 * Get a review file for an article for each round.
+	 * Get a review file for an article for each decision.
 	 * @param $articleId int
 	 * @return array ArticleFiles
 	 */
-	function &getReviewFilesByRound($articleId) {
+	function &getReviewFilesByDecision($articleId) {
 		$returner = array();
 
 		$result =& $this->retrieve(
-			'SELECT	f.*, r.round as round
-			FROM	review_rounds r,
+			'SELECT	f.*, sd.section_decision_id as decision
+			FROM	section_decisions sd,
 				article_files f,
 				articles a
-			WHERE	a.article_id = r.submission_id AND
-				r.submission_id = ? AND
-				r.submission_id = f.article_id AND
-				f.file_id = a.review_file_id AND
-				f.revision = r.review_revision',
+			WHERE	a.article_id = sd.article_id AND
+				sd.article_id = ? AND
+				sd.article_id = f.article_id AND
+				f.file_id = a.review_file_id',
 			(int) $articleId
 		);
 
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
-			$returner[$row['round']] =& $this->articleFileDao->_returnArticleFileFromRow($row);
+			$returner[$row['decision']] =& $this->articleFileDao->_returnArticleFileFromRow($row);
 			$result->MoveNext();
 		}
 
@@ -128,28 +130,28 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 	}
 
 	/**
-	 * Get all author-viewable reviewer files for an article for each round.
+	 * Get all author-viewable reviewer files for an article for each decision.
 	 * @param $articleId int
-	 * @return array returned[round][reviewer_index] = array of ArticleFiles
+	 * @return array returned[decision][reviewer_index] = array of ArticleFiles
 	 */
-	function &getAuthorViewableFilesByRound($articleId) {
+	function &getAuthorViewableFilesByDecision($articleId) {
 		$files = array();
 
 		$result =& $this->retrieve(
-			'SELECT	f.*, r.reviewer_id, r.review_id
-			FROM	review_assignments r,
-				article_files f
-			WHERE	reviewer_file_id = file_id AND
-				viewable = 1 AND
-				r.submission_id = ?
-			ORDER BY r.round, r.reviewer_id, r.review_id',
+			'SELECT	f.*, r.reviewer_id, r.review_id, r.decision_id
+			FROM	review_assignments r
+				LEFT JOIN article_files f ON (r.reviewer_file_id = f.file_id)
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
+			WHERE viewable = 1 AND
+				sd.article_id = ?
+			ORDER BY r.decision_id, r.reviewer_id, r.review_id',
 			array((int) $articleId)
 		);
 
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
-			if (!isset($files[$row['round']]) || !is_array($files[$row['round']])) {
-				$files[$row['round']] = array();
+			if (!isset($files[$row['decision_id']]) || !is_array($files[$row['decision_id']])) {
+				$files[$row['decision_id']] = array();
 				$thisReviewerId = $row['reviewer_id'];
 				$reviewerIndex = 0;
 			} else if ($thisReviewerId != $row['reviewer_id']) {
@@ -158,7 +160,7 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 			}
 
 			$thisArticleFile =& $this->articleFileDao->_returnArticleFileFromRow($row);
-			$files[$row['round']][$reviewerIndex][$row['review_id']][] = $thisArticleFile;
+			$files[$row['decision_id']][$reviewerIndex][$row['review_id']][] = $thisArticleFile;
 			$result->MoveNext();
 		}
 
@@ -168,14 +170,15 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 		return $files;
 	}
 
+
 	/**
-	 * Delete review assignments by article.
-	 * @param $articleId int
+	 * Delete review assignments by decision.
+	 * @param $decisionId int
 	 * @return boolean
 	 */
-	function deleteReviewAssignmentsByArticle($articleId) {
+	function deleteReviewAssignmentsByDecisionId($decisionId) {
 		if (Config::getVar('debug', 'deprecation_warnings')) trigger_error('Deprecated function.');
-		return $this->deleteBySubmissionId($articleId);
+		return $this->deleteByDecisionId($decisionId);
 	}
 
 	/**
@@ -186,8 +189,11 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 		$averageQualityRatings = Array();
 		$result =& $this->retrieve(
 			'SELECT	r.reviewer_id, AVG(r.quality) AS average, COUNT(r.quality) AS count
-			FROM	review_assignments r, articles a
-			WHERE	r.submission_id = a.article_id AND
+			FROM	review_assignments r, 
+					section_decisions sd,
+					articles a
+			WHERE	r.decision_id = sd.section_decision_id AND 
+				sd.article_id = a.article_id AND
 				a.journal_id = ?
 			GROUP BY r.reviewer_id',
 			(int) $journalId
@@ -214,8 +220,10 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 		$result =& $this->retrieve(
 			'SELECT	r.reviewer_id, COUNT(r.review_id) AS count
 			FROM	review_assignments r,
+				section_decisions sd,
 				articles a
-			WHERE	r.submission_id = a.article_id AND
+			WHERE	r.decision_id = sd.section_decision_id AND 
+				sd.article_id = a.article_id AND
 				a.journal_id = ? AND
 				r.date_completed IS NOT NULL AND
 				r.cancelled = 0
@@ -244,9 +252,11 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 		$result =& $this->retrieve(
 			'SELECT	r.review_form_id, COUNT(r.review_id) AS count
 			FROM	review_assignments r,
+				section_decisions sd,
 				articles a,
 				review_forms rf
-			WHERE	r.submission_id = a.article_id AND
+			WHERE	r.decision_id = sd.section_decision_id AND 
+				sd.article_id = a.article_id AND
 				a.journal_id = ? AND
 				r.review_form_id = rf.review_form_id AND
 				rf.published = 1 AND
@@ -276,9 +286,11 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 		$result =& $this->retrieve(
 			'SELECT	r.review_form_id, COUNT(r.review_id) AS count
 			FROM	review_assignments r,
+				section_decisions sd,
 				articles a,
 				review_forms rf
-			WHERE	r.submission_id = a.article_id AND
+			WHERE	r.decision_id = sd.section_decision_id AND 
+				sd.article_id = a.article_id AND
 				a.journal_id = ? AND
 				r.review_form_id = rf.review_form_id AND
 				rf.published = 1 AND
@@ -309,10 +321,10 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 	}
 
 	/*
-	 * Return a review id by article id and user id
+	 * Return a review id by decision id and user id
 	 */
-	function &getReviewIdByArticleIdAndUserId($articleId, $userId){
-		$result =& $this->retrieve('SELECT review_id FROM review_assignments WHERE submission_id = '. $articleId . ' AND reviewer_id = '. $userId);
+	function &getReviewIdByDecisionIdAndUserId($decisionId, $userId){
+		$result =& $this->retrieve('SELECT review_id FROM review_assignments WHERE decision_id = '. $decisionId . ' AND reviewer_id = '. $userId);
 		$row = $result->GetRowAssoc(false);
 		return $row['review_id'];
 	}
@@ -323,23 +335,26 @@ class ReviewAssignmentDAO extends PKPReviewAssignmentDAO {
 	 * @param $row array
 	 * @return ReviewAssignment
 	 */
+	 
 	function &_fromRow(&$row) {
+		
 		$reviewAssignment =& parent::_fromRow($row);
-		$reviewFileId = $this->_getSubmissionReviewFileId($reviewAssignment->getSubmissionId());
+		
+		$reviewFileId = $this->_getSubmissionReviewFileId($row['decision_id']);
 		$reviewAssignment->setReviewFileId($reviewFileId);
 
 		// Files
-		$reviewAssignment->setReviewFile($this->articleFileDao->getArticleFile($reviewFileId, $row['review_revision']));
+		$reviewAssignment->setReviewFile($this->articleFileDao->getArticleFile($reviewFileId));
 		$reviewAssignment->setReviewerFile($this->articleFileDao->getArticleFile($row['reviewer_file_id']));
-		$reviewAssignment->setReviewerFileRevisions($this->articleFileDao->getArticleFileRevisions($row['reviewer_file_id']));
-		$reviewAssignment->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['submission_id']));
+		$reviewAssignment->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
 
 		// Comments
-		$reviewAssignment->setMostRecentPeerReviewComment($this->articleCommentDao->getMostRecentArticleComment($row['submission_id'], COMMENT_TYPE_PEER_REVIEW, $row['review_id']));
-
+		$reviewAssignment->setMostRecentPeerReviewComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_PEER_REVIEW, $row['review_id']));
+		
 		HookRegistry::call('ReviewAssignmentDAO::_fromRow', array(&$reviewAssignment, &$row));
 		return $reviewAssignment;
 	}
+	
 }
 
 ?>

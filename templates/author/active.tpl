@@ -4,9 +4,6 @@
  *
  * $Id$
  *}
-<head>
-{popup_init src="lib/pkp/js/overlib.js"}
-</head>
 
 <div id="submissions">
 <table class="listing" width="100%">
@@ -25,7 +22,7 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
     {assign var="decision" value=$submission->getMostRecentDecision() }
         
-    {if ($status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT || $status==PROPOSAL_STATUS_EXTENSION }
+    {if ($status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_SECTION_DECISION_RESUBMIT || $status==PROPOSAL_STATUS_EXTENSION }
 
             {assign var="articleId" value=$submission->getArticleId()}
             {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
@@ -58,7 +55,7 @@
                             {translate key="submission.status.expeditedReview"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
 
-                        {elseif $status==PROPOSAL_STATUS_ASSIGNED}
+                        {elseif $status==PROPOSAL_STATUS_FULL_REVIEW}
                             {assign var="count" value=$count+1}
                             {translate key="submission.status.fullReview"}<br />
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
@@ -70,7 +67,7 @@
                             <a href="{url op="withdrawSubmission" path=$articleId}" class="action" >{translate key="common.withdraw"}</a>
                             
                         {elseif $status==PROPOSAL_STATUS_REVIEWED}
-                            {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}
+                            {if $decision==SUBMISSION_SECTION_DECISION_RESUBMIT}
                                 {assign var="count" value=$count+1}
                                 {translate key="submission.status.reviseAndResubmit"}<br />
                                 <a href="{url op="resubmit" path=$articleId}" class="action">Resubmit</a><br />
@@ -122,7 +119,7 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision()}
 
-        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_ACCEPT) ||  ($status==PROPOSAL_STATUS_EXEMPTED)}
+        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_SECTION_DECISION_APPROVED) ||  ($status==PROPOSAL_STATUS_EXEMPTED)}
             {assign var="count" value=$count+1}
 
             {assign var="articleId" value=$submission->getArticleId()}
@@ -143,12 +140,12 @@
                     {/if}
                     <br />
                     {if $submission->isSubmissionDue()}
-						<a href="{url op="addExtensionRequest" path=$articleId}" {popup text="RTO seeking an extension of time for their research must submit a request letter via this option." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Submit Extension Request</a><br />
+						<a href="{url op="addExtensionRequest" path=$articleId}" title="{translate key="author.submit.submitExtensionRequestInstruct"}" class="action">&#187; {translate key="author.submit.submitExtensionRequest"}</a><br />
                     {/if}
-                    <a href="{url op="addProgressReport" path=$articleId}" class="action")>&#187; Submit Interim Progress Report</a><br />
-                    <a href="{url op="addCompletionReport" path=$articleId}" class="action">&#187; Submit Final Report</a><br />
-                    <a href="{url op="addRawDataFile" path=$articleId}" {popup text="The final data set use for final analysis (Excel, SAS, SPSS or Stata)." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Upload Raw Data</a><br />
-                    <a href="{url op="addOtherSuppResearchOutput" path=$articleId}"  {popup text="Journal publications, news, items or any others publications related to research." fgcolor=#F5F5F5 bgcolor=#D86422 textcolor=#196AAA} class="action">&#187; Upload Other Supplementary Research Output</a><br />
+                    <a href="{url op="addProgressReport" path=$articleId}" class="action")>&#187; {translate key="author.submit.submitInterimProgressReport"}</a><br />
+                    <a href="{url op="addCompletionReport" path=$articleId}" class="action">&#187; {translate key="author.submit.submitFinalReport"}</a><br />
+                    <a href="{url op="addRawDataFile" path=$articleId}" title="{translate key="author.submit.uploadRawDataInstruct"}" class="action">&#187; {translate key="author.submit.uploadRawData"}</a><br />
+                    <a href="{url op="addOtherSuppResearchOutput" path=$articleId}" title="{translate key="author.submit.submitOtherOutputsInstruct"}" class="action">&#187; {translate key="author.submit.submitOtherOutputs"}</a><br />
 
                     <a href="{url op="withdrawSubmission" path=$articleId}" class="action">&#187; {translate key="common.withdraw"}</a><br />            
                 </td>
@@ -201,7 +198,7 @@
 	{assign var="status" value=$submission->getSubmissionStatus()}
         {assign var="decision" value=$submission->getMostRecentDecision()}
 
-        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_EDITOR_DECISION_DECLINE)}
+        {if ($status==PROPOSAL_STATUS_REVIEWED && $decision==SUBMISSION_SECTION_DECISION_DECLINED)}
 
             {assign var="articleId" value=$submission->getArticleId()}
             {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}

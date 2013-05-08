@@ -17,16 +17,23 @@
  */
 
 /* These constants correspond to editing decision "decision codes". */
-define('SUBMISSION_EDITOR_DECISION_ACCEPT', 1);		//APPROVED
-define('SUBMISSION_EDITOR_DECISION_RESUBMIT', 2);	//REVISE AND RESUBMIT
-define('SUBMISSION_EDITOR_DECISION_DECLINE', 3);	//NOT APPROVED
+define('SUBMISSION_SECTION_DECISION_APPROVED', 1);		//APPROVED
+define('SUBMISSION_SECTION_DECISION_RESUBMIT', 2);	//REVISE AND RESUBMIT
+define('SUBMISSION_SECTION_DECISION_DECLINED', 3);	//NOT APPROVED
 
-define('SUBMISSION_EDITOR_DECISION_COMPLETE', 4);	//INITIAL REVIEW: COMPLETE
-define('SUBMISSION_EDITOR_DECISION_INCOMPLETE', 5);	//INCOMPLETE
-define('SUBMISSION_EDITOR_DECISION_EXEMPTED', 6);	//EXEMPTED
-define('SUBMISSION_EDITOR_DECISION_ASSIGNED', 7);	//ASSIGN FOR NORMAL REVIEW
-define('SUBMISSION_EDITOR_DECISION_EXPEDITED', 8);	//ASSIGN FOR EXPEDITED REVIEW
-define('SUBMISSION_EDITOR_DECISION_DONE', 9); //RESEARCH COMPLETED
+define('SUBMISSION_SECTION_DECISION_COMPLETE', 4);	//INITIAL REVIEW: COMPLETE
+define('SUBMISSION_SECTION_DECISION_INCOMPLETE', 5);	//INCOMPLETE
+define('SUBMISSION_SECTION_DECISION_EXEMPTED', 6);	//EXEMPTED
+define('SUBMISSION_SECTION_DECISION_FULL_REVIEW', 7);	//ASSIGN FOR A FULL REVIEW
+define('SUBMISSION_SECTION_DECISION_EXPEDITED', 8);	//ASSIGN FOR EXPEDITED REVIEW
+define('SUBMISSION_SECTION_DECISION_DONE', 9); //RESEARCH COMPLETED
+
+/* These constants correspond to the type of review */
+define('INITIAL_REVIEW', 1);
+define('CONTINUING_REVIEW', 2);
+define('PRTOCOL_AMENDMENT', 3);
+define('SERIOUS_ADVERSE_EVENT', 4);
+define('END_OF_STUDY', 5);
 
 /* These constants are used as search fields for the various submission lists */
 define('SUBMISSION_FIELD_AUTHOR', 1);
@@ -162,28 +169,28 @@ class Action extends PKPAction {
 				foreach ($notificationUsers as $userRole) {
 					$url = $router->url($request, null, $userRole['role'], 'submission', $article->getId(), null, 'metadata');
 					$notificationManager->createNotification($userRole['id'], 'notification.type.metadataModified',
-						$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_METADATA_MODIFIED
+						$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_METADATA_MODIFIED
 					);
 				}
 
-                                //Added by AIM, Jan 20, 2012
-                                $notificationUsers = array();
-                                $roleDao =& DAORegistry::getDAO('RoleDAO');
-                                $editors = $roleDao->getUsersByRoleId(ROLE_ID_EDITOR);
+                //Added by AIM, Jan 20, 2012
+                $notificationUsers = array();
+                $roleDao =& DAORegistry::getDAO('RoleDAO');
+                $editors = $roleDao->getUsersByRoleId(ROLE_ID_EDITOR);
 
-                                while (!$editors->eof()) {
-                                        $editor =& $editors->next();
-                                        $notificationUsers[] = array('id' => $editor->getId(), 'role' => $roleDao->getRolePath(ROLE_ID_EDITOR));
-                                        unset($editor);
-                                }
-                                //print_r($notificationUsers); die();
-                                foreach ($notificationUsers as $userRole) {
-                                        $url = $router->url($request, null, $userRole['role'], 'submission', $article->getId(), null, 'metadata');
-                                        $notificationManager->createNotification(
-                                                $userRole['id'], 'notification.type.metadataModified',
-                                                $article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_METADATA_MODIFIED
-                                        );
-                                }
+                while (!$editors->eof()) {
+                        $editor =& $editors->next();
+                        $notificationUsers[] = array('id' => $editor->getId(), 'role' => $roleDao->getRolePath(ROLE_ID_EDITOR));
+                        unset($editor);
+                }
+                //print_r($notificationUsers); die();
+                foreach ($notificationUsers as $userRole) {
+                        $url = $router->url($request, null, $userRole['role'], 'submission', $article->getId(), null, 'metadata');
+                        $notificationManager->createNotification(
+                                $userRole['id'], 'notification.type.metadataModified',
+                                $article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_METADATA_MODIFIED
+                        );
+                }
 
 				// Add log entry
 				$user =& $request->getUser();
@@ -200,24 +207,22 @@ class Action extends PKPAction {
 	 * Download file.
 	 * @param $articleId int
 	 * @param $fileId int
-	 * @param $revision int
 	 */
-	function downloadFile($articleId, $fileId, $revision = null) {
+	function downloadFile($articleId, $fileId) {
 		import('classes.file.ArticleFileManager');
 		$articleFileManager = new ArticleFileManager($articleId);
-		return $articleFileManager->downloadFile($fileId, $revision);
+		return $articleFileManager->downloadFile($fileId);
 	}
 
 	/**
 	 * View file.
 	 * @param $articleId int
 	 * @param $fileId int
-	 * @param $revision int
 	 */
-	function viewFile($articleId, $fileId, $revision = null) {
+	function viewFile($articleId, $fileId) {
 		import('classes.file.ArticleFileManager');
 		$articleFileManager = new ArticleFileManager($articleId);
-		return $articleFileManager->viewFile($fileId, $revision);
+		return $articleFileManager->viewFile($fileId);
 	}
 
 	/**
@@ -299,7 +304,7 @@ class Action extends PKPAction {
 					$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'editorDecision');
 					$notificationManager->createNotification(
 						$userRole['id'], 'notification.type.submissionComment',
-						$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_SUBMISSION_COMMENT
+						$article->getProposalId(), $url, 1, NOTIFICATION_TYPE_SUBMISSION_COMMENT
 					);
 				}
 

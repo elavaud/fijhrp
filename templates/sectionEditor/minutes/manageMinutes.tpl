@@ -74,7 +74,7 @@ function checkSize(){
 					{/if}
 					</td>
 					<td width="30%" align="right">
-						<a href="{url op="uploadAttendance" path=$meeting->getId()}">{if $generatedAttendanceFile}{translate key="editor.minutes.replaceAttendance"}{else}{translate key="editor.minutes.generateAttendance"}{/if}</a>
+						<a href="{url op="generateAttendance" path=$meeting->getId()}">{if $generatedAttendanceFile}{translate key="editor.minutes.replaceAttendance"}{else}{translate key="editor.minutes.generateAttendance"}{/if}</a>
 					</td>
 				</tr>
 			</table>
@@ -118,7 +118,7 @@ function checkSize(){
 	</tr>
 	<tr><td colspan="2" class="endseparator">&nbsp;</td></tr>	
 </table>
-<p><strong><br/>{translate key="editor.minutes.attendance"}</strong></p>
+<p><strong><br/>Reviews</strong></p>
 <table class="listing" width="100%">
 	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
 	<tr class="heading" valign="bottom">
@@ -128,19 +128,6 @@ function checkSize(){
 		<td width="30%" align="right">{translate key="common.action"}</td>	
 	</tr>
 	<tr><td colspan="4" class="headseparator">&nbsp;</td></tr>
-	<tr valign="bottom">
-			<td width="20%">{translate key="editor.minutes.attendance"}</td>
-			<td width="20%">&mdash;</td>
-			<td width="30%">
-				{if $generatedAttendanceFile}
-					<a href="{url op="downloadMinutes" path=$meeting->getId()|to_array:$generatedAttendanceFile->getFileId()}">{$generatedAttendanceFile->getFileName()}</a>
-				{else}
-					no file generated
-				{/if}
-			</td>
-			<td width="30%" align="right"><a href="{url op="generateAttendance" path=$meeting->getId()}">{translate key="editor.minutes.uploadAttendance"}</a></td>
-	</tr>
-	<tr><td colspan="4" class="separator">&nbsp;</td></tr>
 	<tr valign="bottom">
 		<td width="10%">(2)</td>
 			 <td width="40%">			

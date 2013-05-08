@@ -66,7 +66,7 @@ class PKPLoginHandler extends Handler {
 		if ($wayf_url == "")
 			die("Error in implicit authentication. WAYF URL not set in config file.");
 
-		$url = $wayf_url . "?target=https://" . Request::getServerHost() . Request::getBasePath() . '/index.php/philhrp/login/implicitAuthReturn';
+		$url = $wayf_url . "?target=https://" . Request::getServerHost() . Request::getBasePath() . '/index.php/hrp/login/implicitAuthReturn';
 
 		PKPRequest::redirectUrl($url);
 	}

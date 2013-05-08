@@ -68,20 +68,6 @@ class PKPAuthorDAO extends DAO {
 	}
 
 	/**
-	 * Update the localized data for this object
-	 * @param $author object
-	 */
-	function updateLocaleFields(&$author) {
-		$this->updateDataObjectSettings(
-			'author_settings',
-			$author,
-			array(
-				'author_id' => $author->getId()
-			)
-		);
-	}
-
-	/**
 	 * Internal function to return an Author object from a row.
 	 * @param $row array
 	 * @return Author
@@ -93,14 +79,12 @@ class PKPAuthorDAO extends DAO {
 		$author->setFirstName($row['first_name']);
 		$author->setMiddleName($row['middle_name']);
 		$author->setLastName($row['last_name']);
-		$author->setCountry($row['country']);
+		$author->setAffiliation($row['affiliation']);
 		$author->setEmail($row['email']);
-		$author->setUrl($row['url']);
+		$author->setPhoneNumber($row['phone']);
 		$author->setUserGroupId($row['user_group_id']);
 		$author->setPrimaryContact($row['primary_contact']);
 		$author->setSequence($row['seq']);
-
-		$this->getDataObjectSettings('author_settings', 'author_id', $row['author_id'], $author);
 
 		HookRegistry::call('AuthorDAO::_returnAuthorFromRow', array(&$author, &$row));
 		return $author;
@@ -119,15 +103,13 @@ class PKPAuthorDAO extends DAO {
 		$author->setFirstName($row['first_name']);
 		$author->setMiddleName($row['middle_name']);
 		$author->setLastName($row['last_name']);
-		$author->setCountry($row['country']);
+		$author->setAffiliation($row['affiliation']);
 		$author->setEmail($row['email']);
-		$author->setUrl($row['url']);
+		$author->setPhoneNumber($row['phone']);
 		$author->setUserGroupId($row['user_group_id']);
 		$author->setPrimaryContact($row['primary_contact']);
 		$author->setSequence($row['seq']);
-
-		$author->setAffiliation($row['affiliation_l'], $row['locale']);
-		$author->setAffiliation($row['affiliation_pl'], $row['primary_locale']);
+		$author->setAffiliation($row['affiliation']);
 
 		HookRegistry::call('AuthorDAO::_returnSimpleAuthorFromRow', array(&$author, &$row));
 		return $author;
@@ -139,14 +121,6 @@ class PKPAuthorDAO extends DAO {
 	 */
 	function newDataObject() {
 		assert(false); // Should be overridden by child classes
-	}
-
-	/**
-	 * Get field names for which data is localized.
-	 * @return array
-	 */
-	function getLocaleFieldNames() {
-		return array('biography', 'competingInterests', 'affiliation');
 	}
 
 	/**
@@ -170,8 +144,6 @@ class PKPAuthorDAO extends DAO {
 			($submissionId?' AND submission_id = ?':''),
 			$params
 		);
-		if ($returner) $this->update('DELETE FROM author_settings WHERE author_id = ?', array($authorId));
-
 		return $returner;
 	}
 

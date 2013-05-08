@@ -30,26 +30,23 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Retrieve a review assignment by reviewer and submission.
-	 * @param $submissionId int
+	 * Retrieve a review assignment by reviewer and decision.
+	 * @param $decisionId int
 	 * @param $reviewerId int
-	 * @param $round int
 	 * @param $reviewType int
 	 * @return ReviewAssignment
 	 */
-	function &getReviewAssignment($submissionId, $reviewerId, $round, $reviewType = 0) {
+	function &getReviewAssignment($decisionId, $reviewerId) {
 
 		$result =& $this->retrieve(
-			'SELECT r.*, r2.review_revision, u.first_name, u.last_name
+			'SELECT r.*, u.first_name, u.last_name, sd.article_id
 			FROM    review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
-			WHERE   r.submission_id = ? AND
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
+			WHERE   r.decision_id = ? AND
 				r.reviewer_id = ? AND
-				r.cancelled <> 1 AND
-				r.review_type = ? AND
-				r.round = ?',
-			array((int) $submissionId, (int) $reviewerId, (int) $reviewType, (int) $round)
+				r.cancelled <> 1',
+			array((int) $decisionId, (int) $reviewerId)
 		);
 
 		$returner = null;
@@ -70,10 +67,10 @@ class PKPReviewAssignmentDAO extends DAO {
 	 */
 	function &getById($reviewId) {
 		$result =& $this->retrieve(
-			'SELECT	r.*, r2.review_revision, u.first_name, u.last_name
+			'SELECT	r.*, u.first_name, u.last_name, sd.article_id
 			FROM    review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
 			WHERE   r.review_id = ?',
 			(int) $reviewId
 		);
@@ -98,15 +95,15 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignments = array();
 
 		$result =& $this->retrieve(
-			'SELECT	r.*, r2.review_revision, u.first_name, u.last_name
+			'SELECT	r.*, u.first_name, u.last_name, sd.article_id
 			FROM	review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
 			WHERE	(r.cancelled IS NULL OR r.cancelled = 0) AND
 				r.date_notified IS NOT NULL AND
 				r.date_completed IS NULL AND
 				r.declined <> 1
-			ORDER BY r.submission_id'
+			ORDER BY r.decision_id'
 		);
 
 		while (!$result->EOF) {
@@ -121,37 +118,22 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Get all review assignments for a submission.
-	 * @param $submissionId int optional
-	 * @param $reviewType int optional
+	 * Get all review assignments for a decision.
+	 * @param $decisionId int optional
 	 * @return array ReviewAssignments
 	 */
-	function &getBySubmissionId($submissionId, $round = null, $reviewType = null) {
+	function &getByDecisionId($decisionId) {
 		$reviewAssignments = array();
 
-		$query = 'SELECT r.*, r2.review_revision, u.first_name, u.last_name
+		$query = 'SELECT r.*, u.first_name, u.last_name, sd.article_id
 			FROM	review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round AND r.review_type = r2.review_type)
-			WHERE	r.submission_id = ?';
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
+			WHERE	r.decision_id = ?';
 
 		$orderBy = ' ORDER BY review_id';
 
-		$queryParams[] = (int) $submissionId;
-
-		if ($round != null) {
-			$query .= ' AND r.round = ?';
-			$queryParams[] = (int) $round;
-		} else {
-			$orderBy .= ', r.round';
-		}
-
-		if ($reviewType != null) {
-			$query .= ' AND r.review_type = ?';
-			$queryParams[] = (int) $reviewType;
-		} else {
-			$orderBy .= ', r.review_type';
-		}
+		$queryParams[] = (int) $decisionId;
 
 		$query .= $orderBy;
 
@@ -177,12 +159,12 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignments = array();
 
 		$result =& $this->retrieve(
-			'SELECT	r.*, r2.review_revision, u.first_name, u.last_name
+			'SELECT	r.*, u.first_name, u.last_name, sd.article_id
 			FROM	review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
 			WHERE	r.reviewer_id = ?
-			ORDER BY round, review_id',
+			ORDER BY r.decision_id, review_id',
 			(int) $userId
 		);
 
@@ -206,12 +188,12 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignments = array();
 
 		$result =& $this->retrieve(
-			'SELECT	r.*, r2.review_revision, u.first_name, u.last_name
+			'SELECT	r.*, u.first_name, u.last_name, sd.article_id
 			FROM	review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id)
 			WHERE	r.review_form_id = ?
-			ORDER BY round, review_id',
+			ORDER BY r.decision_id, review_id',
 			(int) $reviewFormId
 		);
 
@@ -227,22 +209,21 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Get all cancelled/declined review assignments for a submission.
-	 * @param $submissionId int
+	 * Get all cancelled/declined review assignments for a decision.
+	 * @param $decisionId int
 	 * @return array ReviewAssignments
 	 */
-	function &getCancelsAndRegrets($submissionId) {
+	function &getCancelsAndRegrets($decisionId) {
 		$reviewAssignments = array();
 
 		$result =& $this->retrieve(
-			'SELECT	r.*, r2.review_revision, u.first_name, u.last_name
+			'SELECT	r.*, u.first_name, u.last_name, sd.article_id
 			FROM	review_assignments r
 				LEFT JOIN users u ON (r.reviewer_id = u.user_id)
-				LEFT JOIN review_rounds r2 ON (r.submission_id = r2.submission_id AND r.round = r2.round)
-			WHERE	r.submission_id = ? AND
-				(r.cancelled = 1 OR r.declined = 1)
-			ORDER BY round, review_id',
-			(int) $submissionId
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.section_decision_id AND sd.section_decision_id = ?)
+			WHERE r.cancelled = 1 OR r.declined = 1
+			ORDER BY review_id',
+			(int) $decisionId
 		);
 
 		while (!$result->EOF) {
@@ -257,22 +238,19 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Determine the order of active reviews for the given round of the given submission
+	 * Determine the order of active reviews for the given decision
 	 * @param $submissionId int
-	 * @param $round int
 	 * @return array associating review ID with number; ie if review ID 26 is first, returned['26']=0
 	 */
-	function &getReviewIndexesForRound($submissionId, $round) {
+	function &getReviewIndexesForDecision($decisionId) {
 		$returner = array();
 		$index = 0;
 		$result =& $this->retrieve(
 			'SELECT	review_id
 			FROM	review_assignments
-			WHERE	submission_id = ? AND
-				round = ? AND
-				(cancelled = 0 OR cancelled IS NULL)
+			WHERE	decision_id = ? AND (cancelled = 0 OR cancelled IS NULL)
 			ORDER BY review_id',
-			array((int) $submissionId, (int) $round)
+			array((int) $decisionId)
 		);
 
 		while (!$result->EOF) {
@@ -288,25 +266,24 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Get the most recent last modified date for all review assignments for each round of a submission.
+	 * Get the most recent last modified date for all review assignments for each decision of a submission.
 	 * @param $submissionId int
-	 * @param $round int
-	 * @return array associating round with most recent last modified date
+	 * @return array associating decision with most recent last modified date
 	 */
-	function &getLastModifiedByRound($submissionId) {
+	function &getLastModifiedByDecision($submissionId) {
 		$returner = array();
 
 		$result =& $this->retrieve(
-			'SELECT	round, MAX(last_modified) as last_modified
-			FROM	review_assignments
-			WHERE	submission_id = ?
-			GROUP BY round',
+			'SELECT	r.decision_id, MAX(r.last_modified) as last_modified
+			FROM	review_assignments r
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.decision_id AND sd.article_id = ?)
+			GROUP BY r.decision_id',
 			(int) $submissionId
 		);
 
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
-			$returner[$row['round']] = $this->datetimeFromDB($row['last_modified']);
+			$returner[$row['decision_id']] = $this->datetimeFromDB($row['last_modified']);
 			$result->MoveNext();
 		}
 
@@ -317,25 +294,24 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Get the first notified date from all review assignments for a round of a submission.
+	 * Get the first notified date from all review assignments for a decision of a submission.
 	 * @param $submissionId int
-	 * @param $round int
-	 * @return array Associative array of ($round_num => $earliest_date_of_notification)*
+	 * @return array Associative array of ($decision_num => $earliest_date_of_notification)*
 	 */
-	function &getEarliestNotificationByRound($submissionId) {
+	function &getEarliestNotificationByDecsion($submissionId) {
 		$returner = array();
 
 		$result =& $this->retrieve(
-			'SELECT	round, MIN(date_notified) as earliest_date
-			FROM	review_assignments
-			WHERE	submission_id = ?
-			GROUP BY round',
+			'SELECT	r.decision_id, MIN(r.date_notified) as earliest_date
+			FROM	review_assignments r
+				LEFT JOIN section_decisions sd ON (r.decision_id = sd.decision_id AND sd.article_id = ?)
+			GROUP BY r.decision_id',
 			(int) $submissionId
 		);
 
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
-			$returner[$row['round']] = $this->datetimeFromDB($row['earliest_date']);
+			$returner[$row['decision_id']] = $this->datetimeFromDB($row['earliest_date']);
 			$result->MoveNext();
 		}
 
@@ -357,12 +333,10 @@ class PKPReviewAssignmentDAO extends DAO {
 	function insertObject(&$reviewAssignment) {
 		$this->update(
 			sprintf('INSERT INTO review_assignments (
-				submission_id,
+				decision_id,
 				reviewer_id,
-				review_type,
 				review_method,
 				regret_message,
-				round,
 				competing_interests,
 				recommendation,
 				declined, replaced, cancelled,
@@ -374,16 +348,14 @@ class PKPReviewAssignmentDAO extends DAO {
 				date_reminded, reminder_was_automatic,
 				review_form_id
 				) VALUES (
-				?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, %s, %s, %s, %s, %s, %s, %s, ?, ?, %s, %s, %s, ?, ?
+				?, ?, ?, ?, ?, ?, ?, ?, ?, %s, %s, %s, %s, %s, %s, %s, ?, ?, %s, %s, %s, ?, ?
 				)',
 				$this->datetimeToDB($reviewAssignment->getDateAssigned()), $this->datetimeToDB($reviewAssignment->getDateNotified()), $this->datetimeToDB($reviewAssignment->getDateConfirmed()), $this->datetimeToDB($reviewAssignment->getDateCompleted()), $this->datetimeToDB($reviewAssignment->getDateAcknowledged()), $this->datetimeToDB($reviewAssignment->getDateDue()), $this->datetimeToDB($reviewAssignment->getDateResponseDue()), $this->datetimeToDB($reviewAssignment->getDateRated()), $this->datetimeToDB($reviewAssignment->getLastModified()), $this->datetimeToDB($reviewAssignment->getDateReminded())),
 			array(
-				(int) $reviewAssignment->getSubmissionId(),
+				(int) $reviewAssignment->getDecisionId(),
 				(int) $reviewAssignment->getReviewerId(),
-				(int) $reviewAssignment->getReviewType(),
 				(int) $reviewAssignment->getReviewMethod(),
 				$reviewAssignment->getRegretMessage(),
-				max((int) $reviewAssignment->getRound(), 1),
 				$reviewAssignment->getCompetingInterests(),
 				$reviewAssignment->getRecommendation(),
 				(int) $reviewAssignment->getDeclined(),
@@ -407,12 +379,10 @@ class PKPReviewAssignmentDAO extends DAO {
 	function updateReviewAssignment(&$reviewAssignment) {
 		return $this->update(
 			sprintf('UPDATE review_assignments
-				SET	submission_id = ?,
+				SET	decision_id = ?,
 					reviewer_id = ?,
-					review_type = ?,
 					review_method = ?,
 					regret_message = ?,
-					round = ?,
 					competing_interests = ?,
 					recommendation = ?,
 					declined = ?,
@@ -435,12 +405,10 @@ class PKPReviewAssignmentDAO extends DAO {
 				WHERE review_id = ?',
 				$this->datetimeToDB($reviewAssignment->getDateAssigned()), $this->datetimeToDB($reviewAssignment->getDateNotified()), $this->datetimeToDB($reviewAssignment->getDateConfirmed()), $this->datetimeToDB($reviewAssignment->getDateCompleted()), $this->datetimeToDB($reviewAssignment->getDateAcknowledged()), $this->datetimeToDB($reviewAssignment->getDateDue()), $this->datetimeToDB($reviewAssignment->getDateResponseDue()), $this->datetimeToDB($reviewAssignment->getDateRated()), $this->datetimeToDB($reviewAssignment->getLastModified()), $this->datetimeToDB($reviewAssignment->getDateReminded())),
 			array(
-				(int) $reviewAssignment->getSubmissionId(),
+				(int) $reviewAssignment->getDecisionId(),
 				(int) $reviewAssignment->getReviewerId(),
-				(int) $reviewAssignment->getReviewType(),
 				(int) $reviewAssignment->getReviewMethod(),
 				$reviewAssignment->getRegretMessage(),
-				(int) $reviewAssignment->getRound(),
 				$reviewAssignment->getCompetingInterests(),
 				$reviewAssignment->getRecommendation(),
 				(int) $reviewAssignment->getDeclined(),
@@ -465,7 +433,7 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignment = $this->newDataObject();
 
 		$reviewAssignment->setReviewId($row['review_id']);
-		$reviewAssignment->setSubmissionId($row['submission_id']);
+		$reviewAssignment->setDecisionId($row['decision_id']);
 		$reviewAssignment->setReviewerId($row['reviewer_id']);
 		$reviewAssignment->setReviewerFullName($row['first_name'].' '.$row['last_name']);
 		$reviewAssignment->setCompetingInterests($row['competing_interests']);
@@ -487,10 +455,7 @@ class PKPReviewAssignmentDAO extends DAO {
 		$reviewAssignment->setDateRated($this->datetimeFromDB($row['date_rated']));
 		$reviewAssignment->setDateReminded($this->datetimeFromDB($row['date_reminded']));
 		$reviewAssignment->setReminderWasAutomatic($row['reminder_was_automatic']);
-		$reviewAssignment->setRound($row['round']);
-		$reviewAssignment->setReviewRevision($row['review_revision']);
 		$reviewAssignment->setReviewFormId($row['review_form_id']);
-		$reviewAssignment->setReviewType($row['review_type']);
 		return $reviewAssignment;
 	}
 
@@ -522,15 +487,44 @@ class PKPReviewAssignmentDAO extends DAO {
 	}
 
 	/**
-	 * Delete review assignments by submission ID.
+	 * Delete review assignments by decision ID.
 	 * @param $submissionId int
 	 * @return boolean
 	 */
-	function deleteBySubmissionId($submissionId) {
+	function deleteByDecisionId($decisionId) {
 		$returner = false;
 		$result =& $this->retrieve(
-			'SELECT review_id FROM review_assignments WHERE submission_id = ?',
-			array((int) $submissionId)
+			'SELECT review_id FROM review_assignments WHERE decision_id = ?',
+			array((int) $decisionId)
+		);
+
+		while (!$result->EOF) {
+			$row = $result->GetRowAssoc(false);
+			$reviewId = $row['review_id'];
+
+			$this->update('DELETE FROM review_form_responses WHERE review_id = ?', $reviewId);
+			$this->update('DELETE FROM review_assignments WHERE review_id = ?', $reviewId);
+
+			$result->MoveNext();
+			$returner = true;
+		}
+		$result->Close();
+		return $returner;
+	}
+
+	/**
+	 * Delete review assignments by article ID.
+	 * @param $submissionId int
+	 * @return boolean
+	 */
+	function deleteBySubmissionId($articleId) {
+		$returner = false;
+		$result =& $this->retrieve(
+			'SELECT ra.review_id 
+			FROM review_assignments ra
+				LEFT JOIN section_decisions sd ON (ra.decision_id = sd.section_decision_id)
+			WHERE sd.article_id = ?',
+			array((int) $articleId)
 		);
 
 		while (!$result->EOF) {

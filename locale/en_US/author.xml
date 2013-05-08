@@ -81,6 +81,8 @@
     <message key="author.submit.form.researchField">Please select at least one research field</message>
     <message key="author.submit.form.otherResearchField">Please specify the research field</message>
 	<message key="author.submit.privacyStatement">Privacy Statement</message>
+        <message key="author.submit.reasonsForWithdrawal">Reason for Withdrawal</message>
+        <message key="author.submit.otherReasonForWithdrawal">Please specify the other reason</message>
 	<message key="author.submit.reorderInstructions">Reorder principal investigators to appear in the order they will be listed on site.</message>
 	<message key="author.submit.reorder">Reorder principal investigator's name</message>
 	<message key="author.submit.selectPrincipalContact">Principal contact for ERC correspondence.</message>
@@ -94,7 +96,8 @@
 	<message key="author.submit.languageInstructions"><![CDATA[English=en; French=fr; Spanish=es. <a href="http://www.loc.gov/standards/iso639-2/php/code_list.php" target="_blank">Additional codes</a>.]]></message>
     
 	<message key="author.submit.form.authorRequired">At least one investigator is required.</message>
-	<message key="author.submit.form.authorRequiredFields">The first name, last name, and email address of each investigator is required.</message>
+	<message key="author.submit.form.authorRequiredFields">The first name, last name, affiliation, phone number, and email address of each investigator is required.</message>
+    <message key="author.submit.uploadWithdrawReport">Upload withdraw report</message>
 	
 	<!-- Added Jan 19, 2011 -->	
 	<message key="author.article.decision">ERC Decision</message>
@@ -112,9 +115,10 @@
         <message key="author.submit.form.ethicsCommittee">Please select an Ethics Committee.</message>
         <message key="author.submit.form.dataCollection">Please select the Data Collection.</message>
 	    <message key="author.submit.form.abstractRequired">Please enter the abstract of your research proposal.</message>
-            <!-- Comment out by EL on APril 13, 2012 -->
-            <!-- Returned by SPF on April 17, 2012 -->
-            <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal.</message> 
+        <message key="author.submit.form.backgroundRequired">Please enter the background of your research proposal. Background: Key issues under investigation, importance, what is known already, and why this study.</message>
+        <message key="author.submit.form.objectivesRequired">Please enter the objectives of your research proposal. Objectives: Key research questions, hypothesis, objectives in bullet points if feasible.</message>
+        <message key="author.submit.form.studyMethodsRequired">Please enter the study methods of your research proposal. Study Methods: Relevant features of study design (qualitative/quantitative, cross-sectional survey/case-control...), estimated sample size, manner of data collection, etc. [e.g. study involves key informant interviews with policy-makers in Philippines, involving 6-8 people at national or provincial level...]</message>
+        <message key="author.submit.form.expectedOutcomesRequired">Please enter the expected outcomes and use of results of your research proposal. Expected outcomes and use of results: Potential outcomes of study such as measurement of prevalence, other indicators being measured, how the results will be used to inform particular policy or program...</message>
         <message key="author.submit.form.keywordsRequired">Please enter keywords for your research proposal.</message>
         <message key="author.submit.form.startDateRequired">Please enter the start date of your research proposal.</message>
         <message key="author.submit.form.otherPrimarySponsor">Please specify the primary sponsor.</message>
@@ -126,7 +130,6 @@
         <message key="author.submit.form.proposalTypeRequired">Please enter the research proposal type.</message>
         <message key="author.submit.form.otherProposalTypeRequired">Please specify the other proposal type.</message>
         <message key="author.submit.form.submittedAsPiRequired">Please select Yes or No (Submitting as Primary Investigator?).</message>
-        <message key="author.submit.form.conflictOfInterestRequired">Please select Yes or No (Conflict Of Interest?).</message>
         <message key="author.submit.form.reviewedByOtherErcRequired">Please select Yes or No (Reviewed By Other ERC?).</message>
         <message key="author.submit.form.industryGrant">Please select Yes or No (Industry Grant?).</message>
         <message key="author.submit.form.nameOfIndustry">Please specify the industry (industry grant).</message>
@@ -146,6 +149,29 @@
             <!-- Risk Assessment -->
             <!-- EL on March 9th 2013 -->
             <message key="author.submit.form.completeRiskAssessmentFormNeeded">Please verify that the risk assessment section is complete</message>
+            <message key="author.submit.form.identityRevealedRequired">Please indicate if the identity of the research subject(s) may be revealed during the research process.</message>
+            <message key="author.submit.form.unableToConsentRequired">Please indicate if the research subject(s) are (or may be) unable to consent.</message>
+            <message key="author.submit.form.under18Required">Please indicate if the research subject(s) are (or may be) under 18 years old.</message>
+            <message key="author.submit.form.dependentRelationshipRequired">Please indicate if the research subject(s) are (or may be) in a dependent relationship with any of the research team members.</message>
+            <message key="author.submit.form.ethnicMinorityRequired">Please indicate if the research subject(s) are (or may be) from an ethnic minority group.</message>
+            <message key="author.submit.form.impairmentRequired">Please indicate if the research subject(s) are (or may be) with intellectual or mental impairment.</message>
+            <message key="author.submit.form.pregnantRequired">Please indicate if the research subject(s) are (or may be) pregnant.</message>
+            <message key="author.submit.form.newTreatmentRequired">Please indicate if the research includes new treatment(s), medical procedure(s) or test(s).</message>
+            <message key="author.submit.form.bioSamplesRequired">Please indicate if the research includes collection(s) of biological sample(s) including tissue extraction.</message>
+            <message key="author.submit.form.radiationRequired">Please indicate if the research includes the use of ionizing radiation.</message>
+            <message key="author.submit.form.distressRequired">Please indicate if the research includes pain or psychological distress.</message>
+            <message key="author.submit.form.inducementsRequired">Please indicate if the research includes inducements.</message>
+            <message key="author.submit.form.sensitiveInfoRequired">Please indicate if the research includes collection of sensitive informations.</message>
+            <message key="author.submit.form.deceptionRequired">Please indicate if the research includes deception.</message>
+            <message key="author.submit.form.reproTechnologyRequired">Please indicate if the research includes assisted reproductive technology.</message>
+            <message key="author.submit.form.geneticsRequired">Please indicate if the research includes human genetic or genomic studies.</message>
+            <message key="author.submit.form.stemCellRequired">Please indicate if the research includes stem cell.</message>
+            <message key="author.submit.form.biosafetyRequired">Please indicate if the research includes biosafety issue(s).</message>
+            <message key="author.submit.form.riskLevelRequired">Please indicate the level of risk of the research.</message>
+            <message key="author.submit.form.listRisksRequired">Please briefly lists the risks.</message>
+            <message key="author.submit.form.howRisksMinimizedRequired">Please indicate how are the risks minimized/managed.</message>
+            <message key="author.submit.form.multiInstitutionsRequired">Please indicate if the research involves multiple institutions.</message>
+            <message key="author.submit.form.conflictOfInterestRequired">Please specify if a set of circumstances that creates a risk that professional judgment or actions regarding this research will be unduly influenced by a secondary interest.</message>
             <!-- End of Risk Assessment -->
                     
         <message key="author.submit.form.withdrawReasonRequired">Withdraw reason required</message>
@@ -174,7 +200,20 @@
 
         <message key="author.submit.submissionFile">Submission File</message>
         <message key="author.submit.previousSubmissionFile">Previous Submission File</message>
+        <message key="author.submit.submitInterimProgressReport.short">Progress report</message>
+        <message key="author.submit.submitInterimProgressReport">Submit interim progress report</message>
+        <message key="author.submit.submitFinalReport">Submit final report</message>
+        <message key="author.submit.submitFinalReport.short">Final report</message>
+        <message key="author.submit.submitExtensionRequest">Submit extension request</message>
+        <message key="author.submit.submitExtensionRequest.short">Extension request</message>
+        <message key="author.submit.submitExtensionRequestInstruct">RTO seeking an extension of time for their research must submit a request letter via this option.</message>
+        <message key="author.submit.submitOtherOutputs">Upload Other Supplementary Research Output</message>
+        <message key="author.submit.submitOtherOutputs.short">Other Research Output</message>
+        <message key="author.submit.submitOtherOutputsInstruct">Journal publications, news, items or any others publications related to research.</message>
 	    <message key="author.submit.uploadSubmissionFile">Upload file</message>
+        <message key="author.submit.uploadRawData">Upload Raw Data</message>
+        <message key="author.submit.uploadRawData.short">Raw Data</message>
+        <message key="author.submit.uploadRawDataInstruct">The final data set use for final analysis (Excel, SAS, SPSS or Stata).</message>
 	<message key="author.submit.replaceSubmissionFile">Replace submission file</message>
 	<message key="author.submit.noSubmissionFile">No file uploaded. You need to upload your main proposal for going to step 4</message>
 	<message key="author.submit.noSubmissionConfirm">Are you sure you wish to continue without uploading a file?</message>

@@ -95,7 +95,8 @@
 			<td width="40%">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}" class="action">
 				{foreach from=$map.$key item=submission name=submissions}
-					&#9679;&nbsp;{$submission->getLocalizedTitle()|strip_unsafe_html}
+					{assign var="abstract" value=$submission->getLocalizedAbstract()}
+					&#9679;&nbsp;{$abstract->getScientificTitle()|strip_unsafe_html}
 					{if $smarty.foreach.submissions.last}{else}<br/>{/if}
 				{/foreach}
 				</a>

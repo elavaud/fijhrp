@@ -13,7 +13,7 @@
 {literal}
 <script>
     function showOrHideOtherReasonField(value) {
-        if (value == "Others") {
+        if (value == "2") {
 			document.getElementById('otherReasonField').style.display = '';
 			$('#otherReason').val("");
         } else {
@@ -54,28 +54,28 @@
 <br />
 <table id="showReviewers" width="70%" class="data">
 	<tr valign="top">
-		<td class="label">Upload Report</td>
+		<td class="label">{translate key="author.submit.uploadWithdrawReport"}</td>
 		<td class="value"><input type="file" name="uploadSuppFile" id="uploadSuppFile" class="uploadField" /></td>
 	</tr>
     <tr valign="top">
-		<td class="label">Reason for Withdrawal</td>
+		<td class="label">{translate key="author.submit.reasonsForWithdrawal"}</td>
 		<td class="value">
         	<select name="withdrawReason[{$formLocale|escape}]" id="withdrawReason" class="selectMenu" onchange="showOrHideOtherReasonField(this.value);">
-            	<option value="">-Select One-</option>
-                <option value="Lack of Funding">Lack of Funding</option>
-                <option value="Adverse Event">Adverse Event</option>
-                <option value="Others">Others</option>
+            	<option value="">{translate key="common.chooseOne"}</option>
+                <option value="0">{translate key="submission.withdrawLack"}</option>
+                <option value="1">{translate key="submission.withdrawAdverse"}</option>
+                <option value="2">{translate key="common.other"}</option>
             </select>
         </td>
 	</tr>
 	<tr valign="top" id="otherReasonField" style="display: none;">
 		<td class="label">&nbsp;</td>
-		<td class="value">Please specify:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<td class="value">{translate key="author.submit.otherReasonForWithdrawal"}:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type="text" class="textField" name="otherReason[{$formLocale|escape}]" id="otherReason" value="NA" size="20" maxlength="40" />
 		</td>
 	</tr>
     <tr valign="top">
-		<td class="label">Comments</td>
+		<td class="label">{translate key="common.comments"}</td>
 		<td class="value">
         	<textarea name="withdrawComments[{$formLocale|escape}]" id="withdrawComments" class="textArea" rows="5" cols="30"></textarea>
         </td>

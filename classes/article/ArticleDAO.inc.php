@@ -13,15 +13,15 @@
  * @brief Operations for retrieving and modifying Article objects.
  */
 
-
 import('classes.article.Article');
 import('classes.submission.common.Action');
 
 class ArticleDAO extends DAO {
 	var $authorDao;
 
-		// EL on March 10th 2013
-		var $riskAssessmentDao;
+	var $riskAssessmentDao;
+	
+	var $proposalAbstractDao;
 		
 	var $cache;
 
@@ -45,8 +45,8 @@ class ArticleDAO extends DAO {
 	function ArticleDAO() {
 		parent::DAO();
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
-			// EL on March 10th 2013
-			$this->riskAssessmentDao =& DAORegistry::getDAO('RiskAssessmentDAO');
+		$this->riskAssessmentDao =& DAORegistry::getDAO('RiskAssessmentDAO');
+		$this->proposalAbstractDao =& DAORegistry::getDAO('ProposalAbstractDAO');
 	}
 
 	/**
@@ -54,16 +54,8 @@ class ArticleDAO extends DAO {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
-		/************************************************
-		 * Edited by:  Anne Ivy Mirasol -- added fields
-		 * Last Updated: 
-                 *                Apr 17, 2012 -- returned objectives (spf)
-                 *                May 4, 2011 -- added fields
-		 ************************************************/
-		return array(
-			'authorPhoneNumber', 'scientificTitle', 'cleanScientificTitle', 'publicTitle', 'cleanPublicTitle', 'studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'abstract', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height',
-			'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor',
-                        'objectives', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'secondarySponsors', 'multiCountryResearch', 'multiCountry', 'researchField', 'otherResearchField', 'nationwide', 'withHumanSubjects', 'proposalType', 'otherProposalType', 'proposalCountry', 'dataCollection', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'proposalId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments', 'approvalDate', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant'
+
+		return array('studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'coverPageAltText', 'showCoverPage', 'hideCoverPageToc', 'hideCoverPageAbstract', 'originalFileName', 'fileName', 'width', 'height', 'discipline', 'subjectClass', 'subject', 'coverageGeo', 'coverageChron', 'coverageSample', 'type', 'sponsor', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'secondarySponsors', 'multiCountryResearch', 'multiCountry', 'researchField', 'otherResearchField', 'nationwide', 'withHumanSubjects', 'proposalType', 'otherProposalType', 'proposalCountry', 'dataCollection', 'submittedAsPi', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'proposalId', 'reasonsForExemption', 'withdrawReason', 'withdrawComments', 'approvalDate', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant'
                         );
 	}
 
@@ -95,9 +87,9 @@ class ArticleDAO extends DAO {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-			'scientificTitle',
+			'title',
 		$primaryLocale,
-			'scientificTitle',
+			'title',
 		$locale,
 			'abbrev',
 		$primaryLocale,
@@ -166,13 +158,7 @@ class ArticleDAO extends DAO {
 		if (isset($row['date_status_modified'])) $article->setDateStatusModified($this->datetimeFromDB($row['date_status_modified']));
 		if (isset($row['last_modified'])) $article->setLastModified($this->datetimeFromDB($row['last_modified']));
 		if (isset($row['status'])) $article->setStatus($row['status']);
-
-		//Added by Anne Ivy Mirasol, May 18, 2011
-		$articleDao =& DAORegistry::getDAO('ArticleDAO');
-		$article->setProposalStatus($articleDao->getProposalStatus($article->getId()));
-
 		if (isset($row['submission_progress'])) $article->setSubmissionProgress($row['submission_progress']);
-		if (isset($row['current_round'])) $article->setCurrentRound($row['current_round']);
 		if (isset($row['submission_file_id'])) $article->setSubmissionFileId($row['submission_file_id']);
 		if (isset($row['revised_file_id'])) $article->setRevisedFileId($row['revised_file_id']);
 		if (isset($row['review_file_id'])) $article->setReviewFileId($row['review_file_id']);
@@ -183,44 +169,20 @@ class ArticleDAO extends DAO {
 		if (isset($row['comments_status'])) $article->setCommentsStatus($row['comments_status']);
 		if (isset($row['afname']) or isset($row['alname'])) $article->setPrimaryAuthor($row['afname']." ".$row['alname']);
 		if (isset($row['investigatoraffiliation'])) $article->setInvestigatorAffiliation($row['investigatoraffiliation']);
-		if (isset($row['email'])) $article->setAuthorEmail($row['email']);
-
+		
 		$article->setAuthors($this->authorDao->getAuthorsByArticle($row['article_id']));
 
-			// EL on March 11th 2013
-			// Risk Assessment
-			$article->setRiskAssessment($this->riskAssessmentDao->getRiskAssessmentByArticleId($row['article_id']));
-			
-		$this->getDataObjectSettings('article_settings', 'article_id', $row['article_id'], $article);
+		$article->setRiskAssessment($this->riskAssessmentDao->getRiskAssessmentByArticleId($row['article_id']));
+		
+		$article->setAbstract($this->proposalAbstractDao->getAbstractByArticleId($row['article_id'], Locale::getLocale()), Locale::getLocale());
+		
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$article->setProposalStatus($sectionDecisionDao->getProposalStatus($article->getId()));
 
+		$this->getDataObjectSettings('article_settings', 'article_id', $row['article_id'], $article);
+		
 		HookRegistry::call('ArticleDAO::_returnArticleFromRow', array(&$article, &$row));
-/*
-		$article->setProposalId($row['proposalid']);
-		$article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
-		$article->setScientificTitle($row['scientifictitle']);
-		$article->setProposalCountry($row['country']);
-		$article->setPrimaryEditor($row['efname']." ".$row['elname']);
-		$article->setPrimaryAuthor($row['afname']." ".$row['alname']);
-		$article->setStartDate($this->datetimeFromDB($row['start_date']));
-		$article->setEndDate($this->datetimeFromDB($row['end_date']));
-		$article->setProposalStatus($row['decision']);
-		$article->setDateStatusModified($this->datetimeFromDB($row['date_decided']));
-		$article->setAuthorEmail($row['email']);
-		$article->setMultiCountryResearch($row['multicountryresearch']);
-		$article->setNationwide($row['nationwide']);
-		$article->setPrimarySponsor($row['primarysponsor']);
-		$article->setOtherPrimarySponsor($row['otherprimarysponsor']);
-		$article->setResearchField($row['researchfield']);
-		$article->setInvestigatorAffiliation($row['investigatoraffiliation']);
-		$article->setProposalType($row['proposaltype']);
-		$article->setDataCollection($row['datacollection']);
-		$article->setStudentInstitution($row['studentinstitution']);
-		$article->setAcademicDegree($row['academicdegree']);
-		$article->setPrimarySponsor($row['primarysponsor']);
-		$article->setOtherPrimarySponsor($row['otherprimarysponsor']);
-		$article->setFundsRequired($row['funds']);
-		$article->setSelectedCurrency($row['currency']);
-*/
+
 	}
 
 	/**
@@ -231,30 +193,29 @@ class ArticleDAO extends DAO {
 		$article->stampModified();
 		$this->update(
 		sprintf('INSERT INTO articles
-				(locale, user_id, journal_id, section_id, language, comments_to_ed, citations, date_submitted, date_status_modified, last_modified, status, submission_progress, current_round, submission_file_id, revised_file_id, review_file_id, editor_file_id, pages, fast_tracked, hide_author, comments_status, doi)
+				(locale, user_id, journal_id, section_id, language, comments_to_ed, citations, date_submitted, date_status_modified, last_modified, status, submission_progress, submission_file_id, revised_file_id, review_file_id, editor_file_id, pages, fast_tracked, hide_author, comments_status, doi)
 				VALUES
-				(?, ?, ?, ?, ?, ?, ?, %s, %s, %s, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+				(?, ?, ?, ?, ?, ?, ?, %s, %s, %s, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
 		$this->datetimeToDB($article->getDateSubmitted()), $this->datetimeToDB($article->getDateStatusModified()), $this->datetimeToDB($article->getLastModified())),
 		array(
-		$article->getLocale(),
-		$article->getUserId(),
-		$article->getJournalId(),
-		$article->getSectionId(),
-		$article->getLanguage(),
-		$article->getCommentsToEditor(),
-		$article->getCitations(),
-		$article->getStatus() === null ? STATUS_QUEUED : $article->getStatus(),
-		$article->getSubmissionProgress() === null ? 1 : $article->getSubmissionProgress(),
-		$article->getCurrentRound() === null ? 1 : $article->getCurrentRound(),
-		$article->getSubmissionFileId(),
-		$article->getRevisedFileId(),
-		$article->getReviewFileId(),
-		$article->getEditorFileId(),
-		$article->getPages(),
-		$article->getFastTracked()?1:0,
-		$article->getHideAuthor() === null ? 0 : $article->getHideAuthor(),
-		$article->getCommentsStatus() === null ? 0 : $article->getCommentsStatus(),
-		$article->getStoredDOI()
+			$article->getLocale(),
+			$article->getUserId(),
+			$article->getJournalId(),
+			$article->getSectionId(),
+			$article->getLanguage(),
+			$article->getCommentsToEditor(),
+			$article->getCitations(),
+			$article->getStatus() === null ? STATUS_QUEUED : $article->getStatus(),
+			$article->getSubmissionProgress() === null ? 1 : $article->getSubmissionProgress(),
+			$article->getSubmissionFileId(),
+			$article->getRevisedFileId(),
+			$article->getReviewFileId(),
+			$article->getEditorFileId(),
+			$article->getPages(),
+			$article->getFastTracked()?1:0,
+			$article->getHideAuthor() === null ? 0 : $article->getHideAuthor(),
+			$article->getCommentsStatus() === null ? 0 : $article->getCommentsStatus(),
+			$article->getStoredDOI()
 		)
 		);
 
@@ -290,7 +251,6 @@ class ArticleDAO extends DAO {
 					last_modified = %s,
 					status = ?,
 					submission_progress = ?,
-					current_round = ?,
 					submission_file_id = ?,
 					revised_file_id = ?,
 					review_file_id = ?,
@@ -303,25 +263,24 @@ class ArticleDAO extends DAO {
 				WHERE article_id = ?',
 		$this->datetimeToDB($article->getDateSubmitted()), $this->datetimeToDB($article->getDateStatusModified()), $this->datetimeToDB($article->getLastModified())),
 		array(
-		$article->getLocale(),
-		$article->getUserId(),
-		$article->getSectionId(),
-		$article->getLanguage(),
-		$article->getCommentsToEditor(),
-		$article->getCitations(),
-		$article->getStatus(),
-		$article->getSubmissionProgress(),
-		$article->getCurrentRound(),
-		$article->getSubmissionFileId(),
-		$article->getRevisedFileId(),
-		$article->getReviewFileId(),
-		$article->getEditorFileId(),
-		$article->getPages(),
-		$article->getFastTracked(),
-		$article->getHideAuthor(),
-		$article->getCommentsStatus(),
-		$article->getStoredDOI(),
-		$article->getId()
+			$article->getLocale(),
+			$article->getUserId(),
+			$article->getSectionId(),
+			$article->getLanguage(),
+			$article->getCommentsToEditor(),
+			$article->getCitations(),
+			$article->getStatus(),
+			$article->getSubmissionProgress(),
+			$article->getSubmissionFileId(),
+			$article->getRevisedFileId(),
+			$article->getReviewFileId(),
+			$article->getEditorFileId(),
+			$article->getPages(),
+			$article->getFastTracked(),
+			$article->getHideAuthor(),
+			$article->getCommentsStatus(),
+			$article->getStoredDOI(),
+			$article->getId()
 		)
 		);
 
@@ -337,14 +296,21 @@ class ArticleDAO extends DAO {
 			}
 		}
 
-			// EL on March 10th 2013
-			// update risk assessment for this article
-			$riskAssessment =& $article->getRiskAssessment();
-			if ($this->riskAssessmentDao->riskAssessmentExists($article->getId())) {
-				$this->riskAssessmentDao->updateRiskAssessment($riskAssessment);
-			} elseif ($riskAssessment->getArticleId() != null) {
-				$this->riskAssessmentDao->insertRiskAssessment($riskAssessment);
-			}
+		// update abstract for this article
+		$abstract =& $article->getAbstract(Locale::getLocale());
+		if ($this->proposalAbstractDao->abstractExists($article->getId(), Locale::getLocale())) {
+			$this->proposalAbstractDao->updateAbstract($abstract);
+		} elseif ($abstract->getArticleId() != null) {
+			$this->proposalAbstractDao->insertAbstract($abstract);
+		}
+		
+		// update risk assessment for this article
+		$riskAssessment =& $article->getRiskAssessment();
+		if ($this->riskAssessmentDao->riskAssessmentExists($article->getId())) {
+			$this->riskAssessmentDao->updateRiskAssessment($riskAssessment);
+		} elseif ($riskAssessment->getArticleId() != null) {
+			$this->riskAssessmentDao->insertRiskAssessment($riskAssessment);
+		}
 			
 		// Remove deleted authors
 		$removedAuthors = $article->getRemovedAuthors();
@@ -384,15 +350,6 @@ class ArticleDAO extends DAO {
 
 		$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
 		$sectionEditorSubmissionDao->deleteDecisionsByArticle($articleId);
-		$sectionEditorSubmissionDao->deleteReviewRoundsByArticle($articleId);
-
-		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-		$reviewAssignmentDao->deleteReviewAssignmentsByArticle($articleId);
-			
-			// Removed by EL on February 17th 2013
-			// No edit assignment anymore
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$edit Assignment Dao->deleteEditAssignmentsByArticle($articleId);
 
 		// Delete copyedit, layout, and proofread signoffs
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
@@ -430,10 +387,13 @@ class ArticleDAO extends DAO {
 		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$suppFileDao->deleteSuppFilesByArticle($articleId);
 
-			// EL on March 11th 2013
-			$riskAssessmentDao =& DAORegistry::getDAO('RiskAssessmentDAO');
-			$riskAssessmentDao->deleteRiskAssessment($articleId);
-			
+		$this->proposalAbstractDao->deleteAbstract($articleId);
+
+		$this->riskAssessmentDao->deleteRiskAssessment($articleId);
+
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$sectionDecisionDao->deleteSectionDecisionsByArticleId($articleId);
+						
 		// Delete article files -- first from the filesystem, then from the database
 		import('classes.file.ArticleFileManager');
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
@@ -468,9 +428,9 @@ class ArticleDAO extends DAO {
 		$articles = array();
 
 		$params = array(
-			'scientificTitle',
+			'title',
 		$primaryLocale,
-			'scientificTitle',
+			'title',
 		$locale,
 			'abbrev',
 		$primaryLocale,
@@ -520,9 +480,9 @@ class ArticleDAO extends DAO {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
 		$params = array(
-			'scientificTitle',
+			'title',
 		$primaryLocale,
-			'scientificTitle',
+			'title',
 		$locale,
 			'abbrev',
 		$primaryLocale,
@@ -869,80 +829,6 @@ class ArticleDAO extends DAO {
             }
             return $code;
         }
-        
-             
-	/**********************************************************************
-	 *
-	 * Get proposal status based on last decision on article
-	 * Added by Gay Figueroa
-	 * Last Update: 5/18/2011
-	 *
-	 ***********************************************************************/
-
-	function getProposalStatus($articleId, $round = null) {
-		$decision = $this->getLastEditorDecision($articleId, $round);
-		switch ($decision['decision']) {
-			case SUBMISSION_EDITOR_DECISION_EXEMPTED:
-				$proposalStatus = PROPOSAL_STATUS_EXEMPTED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_COMPLETE:
-				$proposalStatus = PROPOSAL_STATUS_CHECKED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_ASSIGNED:
-				$proposalStatus = PROPOSAL_STATUS_ASSIGNED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_EXPEDITED:
-				$proposalStatus = PROPOSAL_STATUS_EXPEDITED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_ACCEPT:
-			case SUBMISSION_EDITOR_DECISION_RESUBMIT:
-			case SUBMISSION_EDITOR_DECISION_DECLINE:
-				$proposalStatus = PROPOSAL_STATUS_REVIEWED;
-				break;
-			case SUBMISSION_EDITOR_DECISION_INCOMPLETE:
-				$proposalStatus = PROPOSAL_STATUS_RETURNED;
-				break;
-			default:
-				$proposalStatus=PROPOSAL_STATUS_SUBMITTED;
-				break;
-		}
-		return $proposalStatus;
-	}
-
-	/**********************************************************************
-	 *
-	 * Get last decision on article
-	 * Added by Gay Figueroa
-	 * Last Update: 5/18/2011
-	 *
-	 * Updated: 5/24/2011 - After adding GROUP BY, it always returns first decision instead of last;
-	 *                      Removed MAX and GROUP BY since it will always take the last row anyway
-	 ***********************************************************************/
-
-	function getLastEditorDecision($articleId, $round = null) {
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
-			);
-
-		} else {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
-			array($articleId, $round)
-			);
-		}
-
-		$resultArray = $result->GetArray();
-		$last = count($resultArray) - 1;
-
-		$result->Close();
-		unset($result);
-
-                if($last == -1) return null; //AIM, 12.12.2011
-
-		$decision = array("editDecisionId" => $resultArray[$last]['edit_decision_id'], "editorId" => $resultArray[$last]['editor_id'], "decision" => $resultArray[$last]['decision'], "dateDecided" => $resultArray[$last]['date_decided'], "resubmitCount" => $resultArray[$last]['resubmit_count']);
-		return 	$decision;
-	}
 
 	/*******************************************************************************************/
 	/*
@@ -1045,8 +931,8 @@ class ArticleDAO extends DAO {
 		$date_submitted = $row['date_submitted'];
 
 
-		$result =& $this->retrieve('SELECT date_decided FROM edit_decisions WHERE edit_decision_id =
-                                             (SELECT MAX(edit_decision_id) FROM edit_decisions WHERE article_id = ? GROUP BY article_id)', $articleId);
+		$result =& $this->retrieve('SELECT date_decided FROM section_decisions WHERE section_decision_id =
+                                             (SELECT MAX(section_decision_id) FROM section_decisions WHERE article_id = ? GROUP BY article_id)', $articleId);
 		$row = $result->FetchRow();
 		$date_decided = $row['date_decided'];
 
@@ -1115,50 +1001,23 @@ class ArticleDAO extends DAO {
 
             $this->flushCache();
         }
-        
-	/**
-	 * Insert approvalDate in article_settings
-	 * @return articleId int
-	 * Added by aglet
-	 * Last Update: 7/21/2011
-	 */
-	function insertApprovalDate($article, $approvalDate) {
-		$result =& $this->retrieve('SELECT setting_value FROM article_settings WHERE article_id = ? and setting_name = ? and locale = ? LIMIT 1', array($article->getId(), 'approvalDate', $article->getLocale()));
-		$row = $result->FetchRow();
-		$existing = ($row['setting_value'] != null ? true : false);
-		if(!$existing) {
-			$this->update(sprintf('INSERT INTO article_settings 
-			(article_id, locale, setting_name, setting_value, setting_type) 
-			values (?, ?, ?, %s, ?)',$this->datetimeToDB($approvalDate)), array($article->getId(), $article->getLocale(), 'approvalDate', 'string')
-			);
-		}
-		else {
-			$this->update(sprintf('UPDATE article_settings SET setting_value = %s WHERE 
-			article_id = ? and locale = ? and setting_name = ?',
-			$this->datetimeToDB($approvalDate)), array($article->getId(), $article->getLocale(), 'approvalDate')
-			);
-		}
-		$this->flushCache();
-		return $article->getId();
-	}
+ 
 	
 	function searchProposalsPublic($query, $dateFrom, $dateTo, $country, $status = null) {
 		$searchSql = "select distinct 
 				a.article_id, a.status,
-				a.date_submitted as date_submitted, 
-				scientifictitle.setting_value as scientifictitle,
-				publictitle.setting_value as publictitle, 
+				a.date_submitted as date_submitted,
+				ab.scientific_title as scientifictitle,
+				ab.keywords as keywords,
 				country.setting_value as country, 
 				startdate.setting_value as start_date, 
 				enddate.setting_value as end_date, 
 				primarysponsor.setting_value as primarysponsor, 
 				otherprimarysponsor.setting_value as otherprimarysponsor,
 				multicountryresearch.setting_value as multicountryresearch,
-				researchfield.setting_value as researchfield,
-				keywords.setting_value as keywords
-				  FROM articles a
-				left join article_settings scientifictitle on (scientifictitle.article_id = a.article_id and scientifictitle.setting_name = 'scientificTitle')
-				left join article_settings publictitle on (publictitle.article_id = a.article_id and publictitle.setting_name = 'publicTitle')
+				researchfield.setting_value as researchfield
+			FROM articles a
+				left join article_abstract ab on (ab.article_id = a.article_id)
 				left join article_settings country on (country.article_id = a.article_id and country.setting_name = 'proposalCountry')
 				left join article_settings startdate on (startdate.article_id = a.article_id and startdate.setting_name = 'startDate')
 				left join article_settings enddate on (enddate.article_id = a.article_id and enddate.setting_name = 'endDate')
@@ -1166,12 +1025,11 @@ class ArticleDAO extends DAO {
 				left join article_settings otherprimarysponsor on (otherprimarysponsor.article_id = a.article_id and otherprimarysponsor.setting_name = 'otherPrimarySponsor')
 				left join article_settings multicountryresearch on (multicountryresearch.article_id = a.article_id and multicountryresearch.setting_name = 'multiCountryResearch')
 				left join article_settings researchfield on (researchfield.article_id = a.article_id and researchfield.setting_name = 'researchField')
-				left join article_settings keywords on (keywords.article_id = a.article_id and keywords.setting_name = 'keywords')
-				inner join edit_decisions as ed on (ed.article_id = a.article_id)
-				where (ed.decision = '1' || ed.decision = '6' || ed.decision = '9')";
+				inner join section_decisions as sd on (sd.article_id = a.article_id)
+				where (sd.decision = '1' || sd.decision = '6' || sd.decision = '9')";
 		
 		if (!empty($query)) {
-			$searchSql .= " AND (keywords.setting_value LIKE '"."%".$query."%"."' or scientifictitle.setting_value LIKE '"."%".$query."%"."' or publictitle.setting_value LIKE '"."%".$query."%"."')";
+			$searchSql .= " AND (ab.keywords LIKE '"."%".$query."%"."' or ab.scientific_title LIKE '"."%".$query."%"."' or ab.public_title LIKE '"."%".$query."%"."')";
 		}
 		
 		
@@ -1213,26 +1071,20 @@ class ArticleDAO extends DAO {
 	function searchCustomizedProposalsPublic($query, $region, $statusFilter, $fromDate, $toDate, $investigatorName, $investigatorAffiliation, $investigatorEmail, $researchField, $proposalType, $duration, $area, $dataCollection, $status, $studentResearch, $primarySponsor, $fundsRequired, $dateSubmitted) {
 		
 		$searchSqlBeg = "select distinct a.article_id, 
-						keywords.setting_value as keywords, 
-						scientifictitle.setting_value as scientifictitle, 
-						publictitle.setting_value as publictitle, 
+						ab.keywords as keywords, 
+						ab.scientific_title as scientifictitle, 
 						startdate.setting_value as start_date";
 		$searchSqlMid = " FROM articles a 
-						inner join edit_decisions ed on (ed.article_id = a.article_id) 
-						left join article_settings keywords on (keywords.article_id = a.article_id and keywords.setting_name = 'keywords')  
-						left join article_settings scientifictitle on (scientifictitle.article_id = a.article_id and scientifictitle.setting_name = 'scientificTitle')
-						left join article_settings publictitle on (publictitle.article_id = a.article_id and publictitle.setting_name = 'publicTitle')
+						inner join section_decisions sd on (sd.article_id = a.article_id)
+						left join article_abstract ab on (ab.article_id = a.article_id)
 						left join article_settings region on (region.article_id = a.article_id and region.setting_name = 'proposalCountry')
 						left join article_settings startdate on (startdate.article_id = a.article_id and startdate.setting_name = 'startDate')";
-		$searchSqlEnd = " WHERE (ed.decision = '1' || ed.decision = '6' || ed.decision = '9')";
+		$searchSqlEnd = " WHERE (sd.decision = '1' || sd.decision = '6' || sd.decision = '9')";
 
 		if ($investigatorName == true || $investigatorAffiliation == true || $investigatorEmail == true){
 			$searchSqlMid .= " left join authors investigator on (investigator.submission_id = a.article_id and investigator.primary_contact = '1')";
 			if ($investigatorName == true) $searchSqlBeg .= ", investigator.first_name as afname, investigator.last_name as alname";
-			if ($investigatorAffiliation == true) {
-				$searchSqlBeg .= ", investigatoraffiliation.setting_value as investigatoraffiliation";
-				$searchSqlMid .= " left join author_settings investigatoraffiliation on (investigatoraffiliation.author_id = investigator.author_id and investigatoraffiliation.setting_name = 'affiliation')";
-			}
+			if ($investigatorAffiliation == true) $searchSqlBeg .= ", investigator.affiliation as investigatoraffiliation";	
 			if ($investigatorEmail == true) $searchSqlBeg .= ", investigator.email as email";
 		}
 		
@@ -1286,7 +1138,7 @@ class ArticleDAO extends DAO {
 		
 		
 		if (!empty($query)) {
-			$searchSqlEnd .= " AND (keywords.setting_value LIKE '"."%".$query."%"."' or scientifictitle.setting_value LIKE '"."%".$query."%"."' or publictitle.setting_value LIKE '"."%".$query."%"."')";
+			$searchSqlEnd .= " AND (ab.keywords LIKE '"."%".$query."%"."' or ab.scientific_title LIKE '"."%".$query."%"."' or ab.public_title LIKE '"."%".$query."%"."')";
 		}
 		
 		
@@ -1329,7 +1181,6 @@ class ArticleDAO extends DAO {
 		if (isset($row['article_id'])) $article->setId($row['article_id']);
 		if (isset($row['proposalid'])) $article->setProposalId($row['proposalid'], $article->getLocale());
 		if (isset($row['date_submitted'])) $article->setDateSubmitted($this->datetimeFromDB($row['date_submitted']));
-		if (isset($row['scientifictitle'])) $article->setScientificTitle($row['scientifictitle'], $article->getLocale());
 		if (isset($row['country'])) $article->setProposalCountry($row['country'], $article->getLocale());
 		if (isset($row['efname']) or isset($row['elname'])) $article->setPrimaryEditor($row['efname']." ".$row['elname']);
 		if (isset($row['afname']) or isset($row['alname'])) $article->setPrimaryAuthor($row['afname']." ".$row['alname']);
@@ -1351,6 +1202,14 @@ class ArticleDAO extends DAO {
 		if (isset($row['funds'])) $article->setFundsRequired($row['funds'], $article->getLocale());
 		if (isset($row['currency'])) $article->setSelectedCurrency($row['currency'], $article->getLocale());
 		
+		import('classes.article.ProposalAbstract');
+		$abstract = new ProposalAbstract();
+		
+		if (isset($row['scientifictitle'])) $abstract->setScientificTitle($row['scientifictitle']);
+		if (isset($row['keywords'])) $abstract->setKeywords($row['keywords']);
+		
+		$article->setAbstract($abstract, $article->getLocale());
+				
 		HookRegistry::call('ArticleDAO::_returnSearchArticleFromRow', array(&$article, &$row));
 
 	}

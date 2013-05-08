@@ -20,14 +20,11 @@ import('classes.article.Article');
 
 class ReviewerSubmission extends Article {
 
-	/** @var array ArticleFiles reviewer file revisions of this article */
-	var $reviewerFileRevisions;
-
 	/** @var array ArticleComments peer review comments of this article */
 	var $peerReviewComments;
 
 	/** @var array the editor decisions of this article */
-	var $editorDecisions;
+	var $sectionDecisions;
 
 	/**
 	 * Constructor.
@@ -39,23 +36,6 @@ class ReviewerSubmission extends Article {
 	/**
 	 * Get/Set Methods.
 	 */
-
-	/**
-	 * Get edit assignments for this article.
-	 * @return array
-	 */
-	function &getEditAssignments() {
-		$editAssignments =& $this->getData('editAssignments');
-		return $editAssignments;
-	}
-
-	/**
-	 * Set edit assignments for this article.
-	 * @param $editAssignments array
-	 */
-	function setEditAssignments($editAssignments) {
-		return $this->setData('editAssignments', $editAssignments);
-	}
 
 	/**
 	 * Get the competing interests for this article.
@@ -125,37 +105,35 @@ class ReviewerSubmission extends Article {
 	 * Get editor decisions.
 	 * @return array
 	 */
-	function getDecisions($round = null) {
-		if ($round == null) {
-			return $this->editorDecisions;
-		} else {
-			if (isset($this->editorDecisions[$round])) return $this->editorDecisions[$round];
-			else return null;
-		}
+	function getDecisions() {
+		$sectionDecisions =& $this->sectionDecisions;
+		usort($sectionDecisions, function ($a, $b){
+    			return $a->getDateDecided() == $b->getDateDecided() ? 0 : ( $a->getDateDecided() > $b->getDateDecided() ) ? 1 : -1;
+			}
+		);
+		if ($sectionDecisions) return $sectionDecisions;
+		else return null;
 	}
 
 	/**
 	 * Set editor decisions.
-	 * @param $editorDecisions array
-	 * @param $round int
+	 * @param $sectionDecisions array
 	 */
-	function setDecisions($editorDecisions, $round) {
-		return $this->editorDecisions[$round] = $editorDecisions;
+	function setDecisions($sectionDecisions) {
+		return $this->sectionDecisions = $sectionDecisions;
 	}
 
+
 	/**
-	 * Get the most recent decision.
-	 * @return int SUBMISSION_EDITOR_DECISION_...
+	 * Get the last section decision id for this article.
+	 * @return Section Decision object
 	 */
-	function getMostRecentDecision() {
-		$decisions = $this->getDecisions();
-		$decision = array_pop($decisions);
-		if (!empty($decision)) {
-			$latestDecision = array_pop($decision);
-			if (isset($latestDecision['decision'])) return $latestDecision['decision'];
-		}
-		return null;
-	}
+	function getLastSectionDecisionId() {
+		$sectionDecisions =& $this->getDecisions();
+		$sDecision =& $sectionDecisions[(count($sectionDecisions)-1)];
+		if ($sDecision) return $sDecision->getId();
+		else return null;
+	}	
 
 	/**
 	 * Get reviewer recommendation.
@@ -351,22 +329,6 @@ class ReviewerSubmission extends Article {
 
 
 	/**
-	 * Get round.
-	 * @return int
-	 */
-	function getRound() {
-		return $this->getData('round');
-	}
-
-	/**
-	 * Set round.
-	 * @param $round int
-	 */
-	function setRound($round) {
-		return $this->setData('round', $round);
-	}
-
-	/**
 	 * Get review file id.
 	 * @return int
 	 */
@@ -380,22 +342,6 @@ class ReviewerSubmission extends Article {
 	 */
 	function setReviewFileId($reviewFileId) {
 		return $this->setData('reviewFileId', $reviewFileId);
-	}
-
-	/**
-	 * Get review revision.
-	 * @return int
-	 */
-	function getReviewRevision() {
-		return $this->getData('reviewRevision');
-	}
-
-	/**
-	 * Set review revision.
-	 * @param $reviewRevision int
-	 */
-	function setReviewRevision($reviewRevision) {
-		return $this->setData('reviewRevision', $reviewRevision);
 	}
 
 	//
@@ -487,22 +433,6 @@ class ReviewerSubmission extends Article {
 		return $this->setData('reviewerFile', $reviewerFile);
 	}
 
-	/**
-	 * Get all reviewer file revisions.
-	 * @return array ArticleFiles
-	 */
-	function getReviewerFileRevisions() {
-		return $this->reviewerFileRevisions;
-	}
-
-	/**
-	 * Set all reviewer file revisions.
-	 * @param $reviewerFileRevisions array ArticleFiles
-	 */
-	function setReviewerFileRevisions($reviewerFileRevisions) {
-		return $this->reviewerFileRevisions = $reviewerFileRevisions;
-	}
-
 	//
 	// Comments
 	//
@@ -551,46 +481,35 @@ class ReviewerSubmission extends Article {
 	 */
 	function getSubmissionStatus() {
 				
-                /**
-                 * Added by: AIM
-                 * Last Updated: June 1, 2011
-                 * Return status of proposal
-                 **/
-                if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
-
-                //Withdrawn status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
-
-                if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
-                
-                //Archived status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
-
-                $status = $this->getProposalStatus();
-                
-                if($status == PROPOSAL_STATUS_RETURNED) {
-                    $articleDao = DAORegistry::getDAO('ArticleDAO');
-                    $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
-
-                    if($isResubmitted) return PROPOSAL_STATUS_RESUBMITTED;
-                }
-
-                //For all other statuses
-                return $status;
-	}
+	    if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
 	
-	/**
-	 * Check if submission is due for continuing review (1-year since it was approved)
-	 * @return boolean
-	 */
-	function isSubmissionDue() {         
-        $today = time();
-        $startdate = strtotime($this->getStartDate($this->getLocale()));
-        $dueDate = strtotime ('+1 year', $startdate) ;
-    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
-        $approvalDue = strtotime ('+1 year', $approvalDate) ;
-    	return ($today >= $dueDate && $today >= $approvalDue);
-    }
+	    //Withdrawn status is reflected in table articles field status
+	    if($this->getStatus() == STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+	
+	    if($this->getStatus() == STATUS_REVIEWED) return PROPOSAL_STATUS_REVIEWED;
+	    
+	    //Archived status is reflected in table articles field status
+	    if($this->getStatus() == STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
+
+	    if($this->getStatus() != STATUS_ARCHIVED && $this->getStatus() != STATUS_REVIEWED && $this->getStatus() != STATUS_WITHDRAWN) {
+	    	if ($this->getLastModified() > $this->getLastSectionDecisionDate()) {
+	    		if ($this->getResubmitCount() > 0) return PROPOSAL_STATUS_RESUBMITTED;
+	    		else return PROPOSAL_STATUS_SUBMITTED;
+	    	}
+	    }
+	    	
+	    $status = $this->getProposalStatus();
+	    
+	    if($status == PROPOSAL_STATUS_RETURNED) {
+	        $articleDao = DAORegistry::getDAO('ArticleDAO');
+	        $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+	
+	        if($isResubmitted) return PROPOSAL_STATUS_RESUBMITTED;
+	    }
+	
+	    //For all other statuses
+	    return $status;
+	}
 }
 
 ?>

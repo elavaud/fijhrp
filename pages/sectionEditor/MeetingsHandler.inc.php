@@ -18,7 +18,7 @@ define('SECTION_EDITOR_ACCESS_REVIEW', 0x00002);
 define('FILTER_SECTION_ALL', 0);
 	
 import('classes.submission.sectionEditor.SectionEditorAction');
-	
+
 import('classes.handler.Handler');
 import('classes.meeting.Meeting');
 import('classes.meeting.MeetingAction');

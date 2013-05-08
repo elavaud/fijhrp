@@ -69,26 +69,6 @@ class LayoutEditorSubmission extends Article {
 		return $this->setData('suppFiles', $suppFiles);
 	}
 
-
-	// FIXME These should probably be in an abstract "Submission" base class
-
-	/**
-	 * Get edit assignments for this article.
-	 * @return array
-	 */
-	function &getEditAssignments() {
-		$editAssignments =& $this->getData('editAssignments');
-		return $editAssignments;
-	}
-
-	/**
-	 * Set edit assignments for this article.
-	 * @param $editAssignments array
-	 */
-	function setEditAssignments($editAssignments) {
-		return $this->setData('editAssignments', $editAssignments);
-	}
-
 	//
 	// Comments
 	//

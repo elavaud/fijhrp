@@ -44,10 +44,7 @@
 		<td>{if $copyeditorFinalSignoff->getDateCompleted()}{$copyeditorFinalSignoff->getDateCompleted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
 		<td>{if $layoutSignoff->getDateCompleted()}{$layoutSignoff->getDateCompleted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
 		<td>{if $layoutEditorProofSignoff->getDateCompleted()}{$layoutEditorProofSignoff->getDateCompleted()|date_format:$dateFormatTrunc}{else}&mdash;{/if}</td>
-		<td>
-			{assign var="editAssignments" value=$submission->getEditAssignments()}
-			{foreach from=$editAssignments item=editAssignment}{$editAssignment->getEditorInitials()|escape} {/foreach}
-		</td>
+		<td>&nbsp;</td>
 	</tr>
 	<tr>
 		<td colspan="9" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>

@@ -70,7 +70,7 @@ class ReviewerAction extends Action {
 				//Send a notification to section editors
 				import('lib.pkp.classes.notification.NotificationManager');
 				$articleDao =& DAORegistry::getDAO('ArticleDAO');
-				$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+				$article =& $articleDao->getArticle($reviewerSubmission->getArticleId());
 				$user =& Request::getUser();
 				$notificationManager = new NotificationManager();
 				$notificationUsers = $article->getAssociatedUserIds(false, false);
@@ -89,15 +89,15 @@ class ReviewerAction extends Action {
 				import('classes.article.log.ArticleEventLogEntry');
 
 				$entry = new ArticleEventLogEntry();
-				$entry->setArticleId($reviewAssignment->getSubmissionId());
+				$entry->setArticleId($reviewerSubmission->getArticleId());
 				$entry->setUserId($reviewer->getId());
 				$entry->setDateLogged(Core::getCurrentDate());
 				$entry->setEventType($decline?ARTICLE_LOG_REVIEW_DECLINE:ARTICLE_LOG_REVIEW_ACCEPT);
-				$entry->setLogMessage($decline?'log.review.reviewDeclined':'log.review.reviewAccepted', array('reviewerName' => $reviewer->getFullName(), 'articleId' => $reviewAssignment->getSubmissionId(), 'round' => $reviewAssignment->getRound()));
+				$entry->setLogMessage($decline?'log.review.reviewDeclined':'log.review.reviewAccepted', array('reviewerName' => $reviewer->getFullName(), 'articleId' => $reviewerSubmission->getLocalizedProposalId()));
 				$entry->setAssocType(ARTICLE_LOG_TYPE_REVIEW);
 				$entry->setAssocId($reviewAssignment->getId());
 
-				ArticleLog::logEventEntry($reviewAssignment->getSubmissionId(), $entry);
+				ArticleLog::logEventEntry($reviewerSubmission->getArticleId(), $entry);
 
 				return true;
 			} else {
@@ -182,15 +182,15 @@ class ReviewerAction extends Action {
 				import('classes.article.log.ArticleEventLogEntry');
 
 				$entry = new ArticleEventLogEntry();
-				$entry->setArticleId($reviewAssignment->getSubmissionId());
+				$entry->setArticleId($reviewerSubmission->getArticleId());
 				$entry->setUserId($reviewer->getId());
 				$entry->setDateLogged(Core::getCurrentDate());
 				$entry->setEventType(ARTICLE_LOG_REVIEW_RECOMMENDATION);
-				$entry->setLogMessage('log.review.reviewRecommendationSet', array('reviewerName' => $reviewer->getFullName(), 'articleId' => $reviewAssignment->getSubmissionId(), 'round' => $reviewAssignment->getRound()));
+				$entry->setLogMessage('log.review.reviewRecommendationSet', array('reviewerName' => $reviewer->getFullName(), 'articleId' => $reviewerSubmission->getLocalizedProposalId()));
 				$entry->setAssocType(ARTICLE_LOG_TYPE_REVIEW);
 				$entry->setAssocId($reviewAssignment->getId());
 
-				ArticleLog::logEventEntry($reviewAssignment->getSubmissionId(), $entry);
+				ArticleLog::logEventEntry($reviewerSubmission->getArticleId(), $entry);
 			} else {
 				if (!Request::getUserVar('continued')) {
 					$assignedEditors = $email->ccAssignedEditors($reviewerSubmission->getArticleId());
@@ -208,11 +208,11 @@ class ReviewerAction extends Action {
 					}
 
 					$reviewerRecommendationOptions =& ReviewAssignment::getReviewerRecommendationOptions();
-
+					$abstract = $reviewerSubmission->getLocalizedAbstract();
 					$email->assignParams(array(
 						'editorialContactName' => $editorialContactName,
 						'reviewerName' => $reviewer->getFullName(),
-						'articleTitle' => strip_tags($reviewerSubmission->getLocalizedTitle()),
+						'articleTitle' => strip_tags($abstract->getScientificTitle()),
 						'recommendation' => Locale::translate($reviewerRecommendationOptions[$recommendation])
 					));
 				}
@@ -232,21 +232,29 @@ class ReviewerAction extends Action {
 	 */
 	function uploadReviewerVersion($reviewId) {
 		import('classes.file.ArticleFileManager');
-		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');		
+		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');		
 		$reviewAssignment =& $reviewAssignmentDao->getById($reviewId);
 
-		$articleFileManager = new ArticleFileManager($reviewAssignment->getSubmissionId());
+		$sectionDecision =& $sectionDecisionDao->getSectionDecision($reviewAssignment->getDecisionId());
+		$articleFileManager = new ArticleFileManager($sectionDecision->getArticleId());
 
 		// Only upload the file if the reviewer has yet to submit a recommendation
 		// and if review forms are not used
 		if (($reviewAssignment->getRecommendation() === null || $reviewAssignment->getRecommendation() === '') && !$reviewAssignment->getCancelled()) {
 			$fileName = 'upload';
 			if ($articleFileManager->uploadedFileExists($fileName)) {
+					
+				// Check if file already uploaded
+				$reviewFile =& $reviewAssignment->getReviewerFile();
+				if ($reviewFile != null) {					$articleFileManager->deleteFile($reviewFile->getFileId());
+				}
+				
 				HookRegistry::call('ReviewerAction::uploadReviewFile', array(&$reviewAssignment));
 				if ($reviewAssignment->getReviewerFileId() != null) {
-					$fileId = $articleFileManager->uploadReviewFile($fileName, $reviewAssignment->getReviewerFileId());
+					$fileId = $articleFileManager->uploadReviewFile($fileName, $reviewAssignment->getDecisionId(), $reviewAssignment->getReviewerFileId());
 				} else {
-					$fileId = $articleFileManager->uploadReviewFile($fileName);
+					$fileId = $articleFileManager->uploadReviewFile($fileName, $reviewAssignment->getDecisionId());
 				}
 			}
 		}
@@ -264,7 +272,7 @@ class ReviewerAction extends Action {
 			$reviewer =& $userDao->getUser($reviewAssignment->getReviewerId());
 
 			$entry = new ArticleEventLogEntry();
-			$entry->setArticleId($reviewAssignment->getSubmissionId());
+			$entry->setArticleId($sectionDecision->getArticleId());
 			$entry->setUserId($reviewer->getId());
 			$entry->setDateLogged(Core::getCurrentDate());
 			$entry->setEventType(ARTICLE_LOG_REVIEW_FILE);
@@ -272,12 +280,12 @@ class ReviewerAction extends Action {
 			$entry->setAssocType(ARTICLE_LOG_TYPE_REVIEW);
 			$entry->setAssocId($reviewAssignment->getId());
 
-			ArticleLog::logEventEntry($reviewAssignment->getSubmissionId(), $entry);
+			ArticleLog::logEventEntry($sectionDecision->getArticleId(), $entry);
 			
 			//Send a notification to section editors
 			import('lib.pkp.classes.notification.NotificationManager');
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+			$article =& $articleDao->getArticle($sectionDecision->getArticleId());
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(false, false);
 			$user =& Request::getUser();
@@ -296,23 +304,21 @@ class ReviewerAction extends Action {
 	 * Delete an annotated version of an article.
 	 * @param $reviewId int
 	 * @param $fileId int
-	 * @param $revision int If null, then all revisions are deleted.
 	 */
-	function deleteReviewerVersion($reviewId, $fileId, $revision = null) {
+	function deleteReviewerVersion($reviewId, $fileId, $articleId) {
 		import('classes.file.ArticleFileManager');
 
-		$articleId = Request::getUserVar('articleId');
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewAssignment =& $reviewAssignmentDao->getById($reviewId);
 
-		if (!HookRegistry::call('ReviewerAction::deleteReviewerVersion', array(&$reviewAssignment, &$fileId, &$revision))) {
-			$articleFileManager = new ArticleFileManager($reviewAssignment->getSubmissionId());
-			$articleFileManager->deleteFile($fileId, $revision);
+		if (!HookRegistry::call('ReviewerAction::deleteReviewerVersion', array(&$reviewAssignment, &$fileId))) {
+			$articleFileManager = new ArticleFileManager($articleId);
+			$articleFileManager->deleteFile($fileId);
 			
 			//Send a notification to section editors
 			import('lib.pkp.classes.notification.NotificationManager');
 			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($reviewAssignment->getSubmissionId());
+			$article =& $articleDao->getArticle($articleId);
 			$notificationManager = new NotificationManager();
 			$notificationUsers = $article->getAssociatedUserIds(false, false);
 			$user =& Request::getUser();
@@ -421,8 +427,11 @@ class ReviewerAction extends Action {
 				import('lib.pkp.classes.notification.NotificationManager');
 				$notificationManager = new NotificationManager();
 				$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
+				$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 				$reviewAssignment = $reviewAssignmentDao->getById($reviewId);
-				$articleId = $reviewAssignment->getSubmissionId();
+				$sectionDecision =& $sectionDecisionDao->getSectionDecision($reviewAssignment->getDecisionId());
+				$abstract = $article->getLocalizedAbstract();
+				$articleId = $sectionDecision->getArticleId();
 				$articleDao =& DAORegistry::getDAO('ArticleDAO'); 
 				$article =& $articleDao->getArticle($articleId);
 				$notificationUsers = $article->getAssociatedUserIds();
@@ -430,7 +439,7 @@ class ReviewerAction extends Action {
 					$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
 					$notificationManager->createNotification(
 						$userRole['id'], 'notification.type.reviewerFormComment',
-						$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_FORM_COMMENT
+						$abstract->getScientificTitle(), $url, 1, NOTIFICATION_TYPE_REVIEWER_FORM_COMMENT
 					);
 				}
 				
@@ -451,10 +460,10 @@ class ReviewerAction extends Action {
 	 * @param $reviewId int
 	 * @param $article object
 	 * @param $fileId int
-	 * @param $revision int
 	 */
-	function downloadReviewerFile($reviewId, $article, $fileId, $revision = null) {
+	function downloadReviewerFile($reviewId, $article, $fileId) {
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');		
+		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');		
 		$reviewAssignment =& $reviewAssignmentDao->getById($reviewId);
 		$journal =& Request::getJournal();
 
@@ -466,12 +475,9 @@ class ReviewerAction extends Action {
 		// 1) The current revision of the file to be reviewed.
 		// 2) Any file that he uploads.
 		// 3) Any supplementary file that is visible to reviewers.
-		if ((!$reviewAssignment->getDateConfirmed() || $reviewAssignment->getDeclined()) && $journal->getSetting('restrictReviewerFileAccess')) {
-			// Restrict files until review is accepted
-		} else if ($reviewAssignment->getReviewFileId() == $fileId) {
-			if ($revision != null) {
-				$canDownload = ($reviewAssignment->getReviewRevision() == $revision);
-			}
+		// 4) Any of the previous main proposal files
+		if ($reviewAssignment->getReviewFileId() == $fileId) {
+			$canDownload = true;
 		} else if ($reviewAssignment->getReviewerFileId() == $fileId) {
 			$canDownload = true;
 		} else if ($submissionFile->getFileId() == $fileId) {
@@ -482,12 +488,20 @@ class ReviewerAction extends Action {
 					$canDownload = true;
 				}
 			}
-		}
+			if (!$canDownload) {
+				$previousFiles =& $articleFileDao->getPreviousFilesByArticleId($article->getId());
+				foreach ($previousFiles as $previousFile) {
+					if ($previousFile->getFileId() == $fileId) {
+						$canDownload = true;
+					}
+				}
+			}
+		} 
 
 		$result = false;
-		if (!HookRegistry::call('ReviewerAction::downloadReviewerFile', array(&$article, &$fileId, &$revision, &$canDownload, &$result))) {
+		if (!HookRegistry::call('ReviewerAction::downloadReviewerFile', array(&$article, &$fileId, &$canDownload, &$result))) {
 			if ($canDownload) {
-				return Action::downloadFile($article->getId(), $fileId, $revision);
+				return Action::downloadFile($article->getId(), $fileId);
 			} else {
 				return false;
 			}

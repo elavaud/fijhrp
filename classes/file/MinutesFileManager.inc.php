@@ -198,12 +198,11 @@ class MinutesFileManager extends FileManager {
 	 * @param $fileName string index into the $_FILES array
 	 * @param $type string identifying type
 	 * @param $fileId int ID of an existing file to update
-	 * @param $overwrite boolean overwrite all previous revisions of the file (revision number is still incremented)
 	 * @return int the file ID (false if upload failed)
 	 */
-	function handleUpload($fileName, $type, $fileId = null, $overwrite = false) {
+	function handleUpload($fileName, $type, $fileId = null) {
         
-        if (HookRegistry::call('MinutesFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$overwrite, &$result))) return $result;
+        if (HookRegistry::call('MinutesFileManager::handleUpload', array(&$fileName, &$type, &$fileId, &$result))) return $result;
 
 		$minutesFileDao =& DAORegistry::getDAO('MinutesFileDAO');
 
@@ -249,11 +248,10 @@ class MinutesFileManager extends FileManager {
 	 * @param $mimeType string the mime type of the file
 	 * @param $type string identifying type
 	 * @param $fileId int ID of an existing file to update
-	 * @param $overwrite boolean overwrite all previous revisions of the file (revision number is still incremented)
 	 * @return int the file ID (false if upload failed)
 	 */
 	function handleWrite(&$pdf, $type, $fileId = null) {
-		if (HookRegistry::call('MinutesFileManager::handleWrite', array(&$contents, &$fileId, &$overwrite, &$result))) return $result;
+		if (HookRegistry::call('MinutesFileManager::handleWrite', array(&$contents, &$fileId, &$result))) return $result;
 		
 
 		$minutesFileDao =& DAORegistry::getDAO('MinutesFileDAO');

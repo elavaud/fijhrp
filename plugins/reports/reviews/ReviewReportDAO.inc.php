@@ -43,8 +43,7 @@ class ReviewReportDAO extends DAO {
 		$commentsReturner = new DBRowIterator($result);
 
 		$result =& $this->retrieve(
-			'SELECT r.round AS round,
-				COALESCE(asl.setting_value, aspl.setting_value) AS article,
+			'SELECT COALESCE(asl.setting_value, aspl.setting_value) AS article,
 				a.article_id AS articleId,
 				u.user_id AS reviewerId,
 				u.username AS reviewer,

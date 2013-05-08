@@ -54,21 +54,19 @@ class AuthorDAO extends PKPAuthorDAO {
 
 	/**
 	 * Retrieve all published submissions associated with authors with
-	 * the given first name, middle name, last name, affiliation, and country.
+	 * the given first name, middle name, last name, affiliation.
 	 * @param $journalId int (null if no restriction desired)
 	 * @param $firstName string
 	 * @param $middleName string
 	 * @param $lastName string
 	 * @param $affiliation string
-	 * @param $country string
 	 */
-	function &getPublishedArticlesForAuthor($journalId, $firstName, $middleName, $lastName, $affiliation, $country) {
+	function &getPublishedArticlesForAuthor($journalId, $firstName, $middleName, $lastName, $affiliation) {
 		$publishedArticles = array();
 		$publishedArticleDao =& DAORegistry::getDAO('PublishedArticleDAO');
 		$params = array(
-			'affiliation',
 			$firstName, $middleName, $lastName,
-			$affiliation, $country
+			$affiliation
 		);
 		if ($journalId !== null) $params[] = (int) $journalId;
 
@@ -77,13 +75,11 @@ class AuthorDAO extends PKPAuthorDAO {
 				aa.submission_id
 			FROM	authors aa
 				LEFT JOIN articles a ON (aa.submission_id = a.article_id)
-				LEFT JOIN author_settings asl ON (asl.author_id = aa.author_id AND asl.setting_name = ?)
 			WHERE	aa.first_name = ?
 				AND a.status = ' . STATUS_PUBLISHED . '
 				AND (aa.middle_name = ?' . (empty($middleName)?' OR aa.middle_name IS NULL':'') . ')
 				AND aa.last_name = ?
-				AND (asl.setting_value = ?' . (empty($affiliation)?' OR asl.setting_value IS NULL':'') . ')
-				AND (aa.country = ?' . (empty($country)?' OR aa.country IS NULL':'') . ') ' .
+				AND (aa.affiliation = ?' . (empty($affiliation)?' OR aa.affiliation IS NULL':'') . ') ' .
 				($journalId!==null?(' AND a.journal_id = ?'):''),
 			$params
 		);
@@ -118,10 +114,7 @@ class AuthorDAO extends PKPAuthorDAO {
 	 */
 	function &getAuthorsAlphabetizedByJournal($journalId = null, $initial = null, $rangeInfo = null, $includeEmail = false) {
 		$authors = array();
-		$params = array(
-			'affiliation', Locale::getPrimaryLocale(),
-			'affiliation', Locale::getLocale()
-		);
+		$params = array();
 
 		if (isset($journalId)) $params[] = $journalId;
 		if (isset($initial)) {
@@ -133,7 +126,6 @@ class AuthorDAO extends PKPAuthorDAO {
 
 		$result =& $this->retrieveRange(
 			'SELECT DISTINCT
-				CAST(\'\' AS CHAR) AS url,
 				0 AS author_id,
 				0 AS submission_id,
 				' . ($includeEmail?'aa.email AS email,':'CAST(\'\' AS CHAR) AS email,') . '
@@ -142,14 +134,9 @@ class AuthorDAO extends PKPAuthorDAO {
 				aa.first_name,
 				aa.middle_name,
 				aa.last_name,
-				asl.setting_value AS affiliation_l,
-				asl.locale,
-				aspl.setting_value AS affiliation_pl,
-				aspl.locale AS primary_locale,
-				aa.country
+				aa.affiliation,
+				aa.phone
 			FROM	authors aa
-				LEFT JOIN author_settings aspl ON (aa.author_id = aspl.author_id AND aspl.setting_name = ? AND aspl.locale = ?)
-				LEFT JOIN author_settings asl ON (aa.author_id = asl.author_id AND asl.setting_name = ? AND asl.locale = ?)
 				LEFT JOIN articles a ON (a.article_id = aa.submission_id)
 				LEFT JOIN published_articles pa ON (pa.article_id = a.article_id)
 				LEFT JOIN issues i ON (pa.issue_id = i.issue_id)
@@ -184,7 +171,7 @@ class AuthorDAO extends PKPAuthorDAO {
 	function insertAuthor(&$author) {
 		$this->update(
 			'INSERT INTO authors
-				(submission_id, first_name, middle_name, last_name, country, email, url, primary_contact, seq)
+				(submission_id, first_name, middle_name, last_name, affiliation, email, phone, primary_contact, seq)
 				VALUES
 				(?, ?, ?, ?, ?, ?, ?, ?, ?)',
 			array(
@@ -192,17 +179,15 @@ class AuthorDAO extends PKPAuthorDAO {
 				$author->getFirstName(),
 				$author->getMiddleName() . '', // make non-null
 				$author->getLastName(),
-				$author->getCountry(),
+				$author->getAffiliation(),
 				$author->getEmail(),
-				$author->getUrl(),
+				$author->getPhoneNumber(),
 				(int) $author->getPrimaryContact(),
 				(float) $author->getSequence()
 			)
 		);
 
 		$author->setId($this->getInsertAuthorId());
-		$this->updateLocaleFields($author);
-
 		return $author->getId();
 	}
 
@@ -216,9 +201,9 @@ class AuthorDAO extends PKPAuthorDAO {
 			SET	first_name = ?,
 				middle_name = ?,
 				last_name = ?,
-				country = ?,
+				affiliation = ?,
 				email = ?,
-				url = ?,
+				phone = ?,
 				primary_contact = ?,
 				seq = ?
 			WHERE	author_id = ?',
@@ -226,15 +211,14 @@ class AuthorDAO extends PKPAuthorDAO {
 				$author->getFirstName(),
 				$author->getMiddleName() . '', // make non-null
 				$author->getLastName(),
-				$author->getCountry(),
+				$author->getAffiliation(),
 				$author->getEmail(),
-				$author->getUrl(),
+				$author->getPhoneNumber(),
 				(int) $author->getPrimaryContact(),
 				(float) $author->getSequence(),
 				(int) $author->getId()
 			)
 		);
-		$this->updateLocaleFields($author);
 		return $returner;
 	}
 

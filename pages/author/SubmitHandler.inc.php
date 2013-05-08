@@ -27,45 +27,35 @@ class SubmitHandler extends AuthorHandler {
 		parent::AuthorHandler();
 	}
 
-        /************************************
-         *  Added by:  Anne Ivy Mirasol
-         *  Last Updated: May 25, 2011
-         *  Resubmit a proposal
-         ************************************/
-        function resubmit($args, $request) {
-            $articleDAO = DAORegistry::getDAO('ArticleDAO');
-            $articleId = isset($args[0]) ? (int) $args[0] : 0;
 
-            $lastDecision = $articleDAO->getLastEditorDecision($articleId);
-
-            $authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
-            $authorSubmission = $authorSubmissionDao->getAuthorSubmission($articleId);
-
-            if($articleDAO->getProposalStatus($articleId) == PROPOSAL_STATUS_RETURNED ||
-                    ($lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_RESUBMIT && !($articleDAO->isProposalResubmitted($articleId))) ||
-                    ($lastDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT && $authorSubmission->isSubmissionDue())
-              )
-                    
-            {
-                $step = 2;
-                $articleDAO->changeArticleProgress($articleId, $step);
-
-                //Delete previous version in submission/review folder (Step 5 copies submission/original into submission/review)
-                $submissionFile =& $authorSubmission->getSubmissionFile();
-                if(!empty($submissionFile)) {
-                    $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
-                    //$articleFileDao->deleteArticleFileBySourceFileId($submissionFile->getFileId());
-                }
-
-                
-                
-                Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
-            }
-            else
-            {
-                Request::redirect(null, 'author', '');
-            }
-        }
+	   function resubmit($args, $request, $reviewType = STATUS_QUEUED) {
+	       $articleDAO = DAORegistry::getDAO('ArticleDAO');
+	       $articleId = isset($args[0]) ? (int) $args[0] : 0;
+	
+	       $sectionDecisionDao = DAORegistry::getDAO('SectionDecisionDAO');
+	       $lastDecision = $sectionDecisionDao->getLastSectionDecision($articleId);
+	
+	       $authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
+	       $authorSubmission = $authorSubmissionDao->getAuthorSubmission($articleId);
+	
+	       if (
+	       	$sectionDecisionDao->getProposalStatus($articleId) == PROPOSAL_STATUS_RETURNED 
+	       	|| ($lastDecision->getDecision() == SUBMISSION_SECTION_DECISION_RESUBMIT 
+	       		&& !($articleDAO->isProposalResubmitted($articleId))) 
+	       	|| ($lastDecision->getDecision() == SUBMISSION_SECTION_DECISION_APPROVED 
+	       		&& $authorSubmission->isSubmissionDue())
+	         ) {
+	           $step = 2;
+	           $articleDAO->changeArticleStatus($reviewType, $step);
+	           $articleDAO->changeArticleProgress($articleId, $step);
+	           
+	           Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
+	       }
+	       else
+	       {
+	           Request::redirect(null, 'author', '');
+	       }
+	   }
         
      /**
       * Added by MSB, Sept 29, 2011
@@ -87,7 +77,7 @@ class SubmitHandler extends AuthorHandler {
     	 
     	/*Rename each uploaded file*/
     	foreach  ($articleFiles as $file){
-    		$suppFileCounter = $articleFileManager->renameFile($file->getFileId(),$file->getRevision(),$file->getType(),$suppFileCounter);
+    		$suppFileCounter = $articleFileManager->renameFile($file->getFileId(),$file->getType(),$suppFileCounter);
     	}
     }
 
@@ -238,15 +228,17 @@ class SubmitHandler extends AuthorHandler {
 					$templateMgr->assign('articleId', $articleId);
 					$templateMgr->assign('helpTopicId','submission.index');
 
-                                        //Last updated, AIM, 1.20.2012
-                                        $templateMgr->assign_by_ref('article', $this->article);
+                    //Last updated, AIM, 1.20.2012
+                    $templateMgr->assign_by_ref('article', $this->article);
 
-                                        $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
-                                        $articleFiles =& $articleFileDao->getArticleFilesByArticle($articleId);
-                                        $templateMgr->assign_by_ref('files', $articleFiles);
+                    $articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
+                    $articleFiles =& $articleFileDao->getArticleFilesByArticle($articleId);
+                    $templateMgr->assign_by_ref('files', $articleFiles);
 
-                                        // EL on March 11th 2013
-                						$templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+                    // EL on March 11th 2013
+					$templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+
+					$templateMgr->assign_by_ref('abstract', $this->article->getLocalizedAbstract());
                 											
 					$templateMgr->display('author/submit/complete.tpl');
 					

@@ -102,13 +102,6 @@ class ProofreaderSubmissionDAO extends DAO {
 		$this->articleDao->_articleFromRow($submission, $row);
 		$submission->setMostRecentProofreadComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_PROOFREAD, $row['article_id']));
 
-		// Editor Assignment
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
-			//$submission->setEditAssignments($editAssignments->toArray());
-
-		// Layout reference information
 		$submission->setGalleys($this->galleyDao->getGalleysByArticle($row['article_id']));
 
 		$submission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
@@ -138,9 +131,9 @@ class ProofreaderSubmissionDAO extends DAO {
 		$locale = Locale::getLocale();
 
 		$params = array(
-			'scientificTitle', // Section title
+			'title', // Section title
 			$primaryLocale,
-			'scientificTitle',
+			'title',
 			$locale,
 			'abbrev', // Section abbrev.
 			$primaryLocale,
@@ -254,6 +247,8 @@ class ProofreaderSubmissionDAO extends DAO {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
 		}
 
+// EL on April 2013: no edit assignments anymore
+/*
 		$sql = 'SELECT DISTINCT
 				a.*,
 				spr.date_notified AS date_assigned,
@@ -284,6 +279,38 @@ class ProofreaderSubmissionDAO extends DAO {
 				spr.user_id = ? AND
 				' . (isset($journalId)?'a.journal_id = ? AND':'') . '
 				spr.date_notified IS NOT NULL';
+*/
+		$sql = 'SELECT DISTINCT
+				a.*,
+				spr.date_notified AS date_assigned,
+				spr.date_completed AS date_completed,
+				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+				aap.last_name AS author_name,
+				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+			FROM	articles a
+				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
+				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
+				LEFT JOIN sections s ON s.section_id = a.section_id
+				LEFT JOIN section_editors se ON (se.section_id = a.section_id)
+				LEFT JOIN users ed ON (se.editor_id = ed.user_id)
+				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
+				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
+				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
+				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
+				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? and atl.locale = ?)
+				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
+				LEFT JOIN signoffs scpf ON (a.article_id = scpf.assoc_id AND scpf.assoc_type = ? AND scpf.symbolic = ?)
+				LEFT JOIN signoffs sle ON (a.article_id = sle.assoc_id AND sle.assoc_type = ? AND sle.symbolic = ?)
+				LEFT JOIN signoffs spr ON (a.article_id = spr.assoc_id AND spr.assoc_type = ? AND spr.symbolic = ?)
+				LEFT JOIN signoffs scpi ON (a.article_id = scpi.assoc_id AND scpi.assoc_type = ? AND scpi.symbolic = ?)
+			WHERE
+				spr.user_id = ? AND
+				' . (isset($journalId)?'a.journal_id = ? AND':'') . '
+				spr.date_notified IS NOT NULL';
+				
 
 		if ($active) {
 			$sql .= ' AND spr.date_completed IS NULL';

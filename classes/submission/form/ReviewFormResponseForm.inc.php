@@ -56,11 +56,12 @@ class ReviewFormResponseForm extends Form {
 		$reviewFormResponses =& $reviewFormResponseDao->getReviewReviewFormResponseValues($this->reviewId);
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$reviewAssignment = $reviewAssignmentDao->getById($this->reviewId);
-
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$sectionDecision =& $sectionDecisionDao->getSectionDecision($reviewAssignment->getDecisionId());
 		$editorPreview = Request::getRequestedPage() != 'reviewer';
 
 		if (!$editorPreview) {
-			ReviewerHandler::setupTemplate(true, $reviewAssignment->getSubmissionId(), $this->reviewId);
+			ReviewerHandler::setupTemplate(true, $sectionDecision->getArticleId(), $this->reviewId);
 		}
 
 		$templateMgr =& TemplateManager::getManager();
@@ -69,7 +70,7 @@ class ReviewFormResponseForm extends Form {
 		$templateMgr->assign('reviewFormElements', $reviewFormElements);
 		$templateMgr->assign('reviewFormResponses', $reviewFormResponses);
 		$templateMgr->assign('reviewId', $this->reviewId);
-		$templateMgr->assign('articleId', $reviewAssignment->getSubmissionId());
+		$templateMgr->assign('articleId', $sectionDecision->getArticleId());
 		$templateMgr->assign('isLocked', isset($reviewAssignment) && $reviewAssignment->getDateCompleted() != null);
 		$templateMgr->assign('editorPreview', $editorPreview);
 

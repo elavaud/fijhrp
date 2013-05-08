@@ -50,7 +50,7 @@
 		<td colspan="4">
 			{translate key="common.file"}:
 			{if $initialCopyeditSignoff->getDateNotified() && $initialCopyeditFile}
-				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$initialCopyeditSignoff->getFileId():$initialCopyeditSignoff->getFileRevision()}" class="file">{$initialCopyeditFile->getFileName()|escape}</a> {$initialCopyeditFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$initialCopyeditSignoff->getFileId()}" class="file">{$initialCopyeditFile->getFileName()|escape}</a> {$initialCopyeditFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 			{/if}
@@ -79,7 +79,7 @@
 		<td colspan="4">
 			{translate key="common.file"}:
 			{if $authorCopyeditSignoff->getDateCompleted() && $editorAuthorCopyeditFile}
-				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$authorCopyeditSignoff->getFileId():$authorCopyeditSignoff->getFileRevision()}" class="file">{$editorAuthorCopyeditFile->getFileName()|escape}</a> {$editorAuthorCopyeditFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$authorCopyeditSignoff->getFileId()}" class="file">{$editorAuthorCopyeditFile->getFileName()|escape}</a> {$editorAuthorCopyeditFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 			{/if}
@@ -110,7 +110,7 @@
 		<td colspan="4">
 			{translate key="common.file"}:
 			{if $finalCopyeditSignoff->getDateNotified() && $finalCopyeditFile}
-				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$finalCopyeditSignoff->getFileId():$finalCopyeditSignoff->getFileRevision()}" class="file">{$finalCopyeditFile->getFileName()|escape}</a> {$finalCopyeditFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getId()|to_array:$finalCopyeditSignoff->getFileId()}" class="file">{$finalCopyeditFile->getFileName()|escape}</a> {$finalCopyeditFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 			{/if}

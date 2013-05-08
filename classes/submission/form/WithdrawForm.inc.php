@@ -159,7 +159,7 @@ class WithdrawForm extends Form {
                 $article =& $this->article;
 								
                 $article->setWithdrawReason($this->getData('withdrawReason'), null);
-                if ($article->getWithdrawReason('en_US') == "Others") $article->setWithdrawReason($this->getData('otherReason'), null);
+                if ($article->getWithdrawReason('en_US') == "2") $article->setWithdrawReason($this->getData('otherReason'), null);
                 $article->setWithdrawComments($this->getData('withdrawComments'), null);
 
                 // Save the article

@@ -196,7 +196,6 @@ class QuickSubmitForm extends Form {
 		$article->setStatus(STATUS_PUBLISHED);
 		$article->setSubmissionProgress(0);
 		$article->stampStatusModified();
-		$article->setCurrentRound(1);
 		$article->setFastTracked(1);
 		$article->setHideAuthor(0);
 		$article->setCommentsStatus(0);
@@ -306,7 +305,7 @@ class QuickSubmitForm extends Form {
 		$articleFileManager = new ArticleFileManager($articleId);
 		$sectionEditorSubmission->setReviewFile($articleFileManager->getFile($article->getSubmissionFileId()));
 		import('classes.submission.sectionEditor.SectionEditorAction');
-		SectionEditorAction::recordDecision($sectionEditorSubmission, SUBMISSION_EDITOR_DECISION_ACCEPT);
+		SectionEditorAction::recordDecision($sectionEditorSubmission, SUBMISSION_SECTION_DECISION_APPROVED);
 
 		// Create signoff infrastructure
 		$copyeditInitialSignoff = $signoffDao->build('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $articleId);

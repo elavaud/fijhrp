@@ -19,8 +19,8 @@
 {/literal}
 <div id="submissions">
 	<input type="hidden" name="articleId" value="{$submission->getId()}" />
-	<input type="hidden" name="lastDecisionId" value="{$lastDecision.editDecisionId}" />
-	<input type="hidden" name="resubmitCount" value="{$lastDecision.resubmitCount}" />
+	<input type="hidden" name="lastDecisionId" value="{$lastDecision.sectionDecisionId}" />
+	<input type="hidden" name="resubmitCount" value="{$submission->getResubmitCount()}" />
 <h4>Final Decision for Proposal &nbsp;{$submission->getLocalizedProposalId()}</h4>
 <br/>	
 	<table class="data" width="100%">

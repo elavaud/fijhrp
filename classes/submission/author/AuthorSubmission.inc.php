@@ -20,20 +20,8 @@ import('classes.article.Article');
 
 class AuthorSubmission extends Article {
 
-	/** @var array ReviewAssignments of this article */
-	var $reviewAssignments;
-
 	/** @var array the editor decisions of this article */
-	var $editorDecisions;
-
-	/** @var array the revisions of the author file */
-	var $authorFileRevisions;
-
-	/** @var array the revisions of the editor file */
-	var $editorFileRevisions;
-
-	/** @var array the revisions of the author copyedit file */
-	var $copyeditFileRevisions;
+	var $sectionDecisions;
 
 	/**
 	 * Constructor.
@@ -43,110 +31,38 @@ class AuthorSubmission extends Article {
 		$this->reviewAssignments = array();
 	}
 
-	/**
-	 * Get/Set Methods.
-	 */
-
-	/**
-	 * Get edit assignments for this article.
-	 * @return array
-	 */
-	function &getEditAssignments() {
-		$editAssignments =& $this->getData('editAssignments');
-		return $editAssignments;
-	}
-
-	/**
-	 * Set edit assignments for this article.
-	 * @param $editAssignments array
-	 */
-	function setEditAssignments($editAssignments) {
-		return $this->setData('editAssignments', $editAssignments);
-	}
-
-	/**
-	 * Add a review assignment for this article.
-	 * @param $reviewAssignment ReviewAssignment
-	 */
-	function addReviewAssignment($reviewAssignment) {
-		if ($reviewAssignment->getSubmissionId() == null) {
-			$reviewAssignment->setSubmissionId($this->getArticleId());
-		}
-
-		array_push($this->reviewAssignments, $reviewAssignment);
-	}
-
-	/**
-	 * Remove a review assignment.
-	 * @param $reviewId ID of the review assignment to remove
-	 * @return boolean review assignment was removed
-	 */
-	function removeReviewAssignment($reviewId) {
-		$reviewAssignments = array();
-		$found = false;
-		for ($i=0, $count=count($this->reviewAssignments); $i < $count; $i++) {
-			if ($this->reviewAssignments[$i]->getReviewId() == $reviewId) {
-				$found = true;
-			} else {
-				array_push($reviewAssignments, $this->reviewAssignments[$i]);
-			}
-		}
-		$this->reviewAssignments = $reviewAssignments;
-
-		return $found;
-	}
-
-	//
-	// Review Assignments
-	//
-
-	/**
-	 * Get review assignments for this article.
-	 * @return array ReviewAssignments
-	 */
-	function &getReviewAssignments($round = null) {
-		if ($round == null) {
-			// Return an array of arrays of review assignments
-			return $this->reviewAssignments;
-		} else {
-			// Return an array of review assignments for the specified round
-			return $this->reviewAssignments[$round];
-		}
-	}
-
-	/**
-	 * Set review assignments for this article.
-	 * @param $reviewAssignments array ReviewAssignments
-	 */
-	function setReviewAssignments($reviewAssignments, $round) {
-		return $this->reviewAssignments[$round] = $reviewAssignments;
-	}
 
 	//
 	// Editor Decisions
 	//
 
 	/**
-	 * Get editor decisions.
-	 * @return array
+	 * Set editor decisions.
+	 * @param $sectionDecisions array
 	 */
-	function getDecisions($round = null) {
-		if ($round == null) {
-			return $this->editorDecisions;
-		} else {
-			return $this->editorDecisions[$round];
-		}
+	function setDecisions($sectionDecisions) {
+		return $this->sectionDecisions = $sectionDecisions;
 	}
 
 	/**
-	 * Set editor decisions.
-	 * @param $editorDecisions array
-	 * @param $round int
+	 * Get editor decisions.
+	 * @param $sectionDecisions array
 	 */
-	function setDecisions($editorDecisions, $round) {
-		return $this->editorDecisions[$round] = $editorDecisions;
+	function getDecisions() {
+		return $this->sectionDecisions;
 	}
 
+	/**
+	 * Get the last section decision id for this article.
+	 * @return Section Decision object
+	 */
+	function getLastSectionDecisionId() {
+		$sectionDecisions =& $this->getDecisions();
+		$sDecision =& $sectionDecisions[(count($sectionDecisions)-1)];
+		if ($sDecision) return $sDecision->getId();
+		else return null;
+	}	
+		
 	/**
 	 * Get the submission status. Returns one of the defined constants
          * PROPOSAL_STATUS_DRAFT, PROPOSAL_STATUS_WITHDRAWN, PROPOSAL_STATUS_SUBMITTED,
@@ -154,49 +70,46 @@ class AuthorSubmission extends Article {
 	 */
 	function getSubmissionStatus() {
 
-                /**
-                 * Added by: AIM
-                 * Last Updated: June 22, 2011
-                 * Return status of proposal
-                 **/
-                if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
+	    if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
+	
+	    //"Withdrawn", "Reviewed" and "Archived" statuses are reflected in table articles field status
+	    if($this->getStatus() == STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+	
+	    if($this->getStatus() == STATUS_REVIEWED) return PROPOSAL_STATUS_REVIEWED;
+	    
+	    if($this->getStatus() == STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;  
+		
+	    if($this->getStatus() != STATUS_ARCHIVED && $this->getStatus() != STATUS_REVIEWED && $this->getStatus() != STATUS_WITHDRAWN) {
+	    	if ($this->getLastModified() > $this->getLastSectionDecisionDate()) {
+	    		if ($this->getResubmitCount() > 0) return PROPOSAL_STATUS_RESUBMITTED;
+	    		else return PROPOSAL_STATUS_SUBMITTED;
+	    	}
+	    }
 
-                //Withdrawn status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
-
-                //Completed status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
-
-                //Archived status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;
-
-                //Extension Requested status is reflected in table articles field status
-                //if($this->getStatus() == PROPOSAL_STATUS_EXTENSION) return PROPOSAL_STATUS_EXTENSION;
-
-                $status = $this->getProposalStatus();
-                if($status == PROPOSAL_STATUS_RETURNED) {
-                    $articleDao = DAORegistry::getDAO('ArticleDAO');
-                    $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
-
-                    if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
-                    else return PROPOSAL_STATUS_RETURNED;
-                }
-
-                if ($status==PROPOSAL_STATUS_REVIEWED) {
-                    $decision = $this->getMostRecentDecision();
-                    if ($decision==SUBMISSION_EDITOR_DECISION_RESUBMIT || $decision==SUBMISSION_EDITOR_DECISION_ACCEPT) {
-
-                        $articleDao = DAORegistry::getDAO('ArticleDAO');
-                        $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
-
-                        if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
-                        else return PROPOSAL_STATUS_REVIEWED;
-                    }
-                }
-
-                //For all other statuses
-                
-                return $status;
+	    $status = $this->getProposalStatus();
+	    if($status == PROPOSAL_STATUS_RETURNED) {
+	        $articleDao = DAORegistry::getDAO('ArticleDAO');
+	        $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+	
+	        if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
+	        else return PROPOSAL_STATUS_RETURNED;
+	    }
+	
+	    if ($status==PROPOSAL_STATUS_REVIEWED) {
+	        $decision = $this->getMostRecentDecision();
+	        if ($decision==SUBMISSION_SECTION_DECISION_RESUBMIT || $decision==SUBMISSION_SECTION_DECISION_APPROVED) {
+	
+	            $articleDao = DAORegistry::getDAO('ArticleDAO');
+	            $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+	
+	            if($isResubmitted) return PROPOSAL_STATUS_SUBMITTED;
+	            else return PROPOSAL_STATUS_REVIEWED;
+	        }
+	    }
+	
+	    //For all other statuses
+	    
+	    return $status;
 	}	
 
 	//
@@ -252,46 +165,6 @@ class AuthorSubmission extends Article {
 	 */
 	function setSuppFiles($suppFiles) {
 		return $this->setData('suppFiles', $suppFiles);
-	}
-
-	/**
-	 * Get all author file revisions.
-	 * @return array ArticleFiles
-	 */
-	function getAuthorFileRevisions($round = null) {
-		if ($round == null) {
-			return $this->authorFileRevisions;
-		} else {
-			return $this->authorFileRevisions[$round];
-		}
-	}
-
-	/**
-	 * Set all author file revisions.
-	 * @param $authorFileRevisions array ArticleFiles
-	 */
-	function setAuthorFileRevisions($authorFileRevisions, $round) {
-		return $this->authorFileRevisions[$round] = $authorFileRevisions;
-	}
-
-	/**
-	 * Get all editor file revisions.
-	 * @return array ArticleFiles
-	 */
-	function getEditorFileRevisions($round = null) {
-		if ($round == null) {
-			return $this->editorFileRevisions;
-		} else {
-			return $this->editorFileRevisions[$round];
-		}
-	}
-
-	/**
-	 * Set all editor file revisions.
-	 * @param $editorFileRevisions array ArticleFiles
-	 */
-	function setEditorFileRevisions($editorFileRevisions, $round) {
-		return $this->editorFileRevisions[$round] = $editorFileRevisions;
 	}
 
 	/**

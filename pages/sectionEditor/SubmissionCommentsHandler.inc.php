@@ -269,7 +269,7 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$submissionEditHandler->validate($articleId);
 		$submission =& $submissionEditHandler->submission;
 
-		if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			// Cannot edit an editor decision comment.
 			Request::redirect(null, Request::getRequestedPage());
 		}
@@ -297,7 +297,7 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		$submissionEditHandler->validate($articleId);
 		$submission =& $submissionEditHandler->submission;
 
-		if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			// Cannot edit an editor decision comment.
 			Request::redirect(null, Request::getRequestedPage());
 		}
@@ -311,7 +311,7 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		// Redirect back to initial comments page
 		if ($comment->getCommentType() == COMMENT_TYPE_PEER_REVIEW) {
 			Request::redirect(null, null, 'viewPeerReviewComments', array($articleId, $comment->getAssocId()));
-		} else if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		} else if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			Request::redirect(null, null, 'viewEditorDecisionComments', $articleId);
 		} else if ($comment->getCommentType() == COMMENT_TYPE_COPYEDIT) {
 			Request::redirect(null, null, 'viewCopyeditComments', $articleId);
@@ -344,7 +344,7 @@ class SubmissionCommentsHandler extends SectionEditorHandler {
 		// Redirect back to initial comments page
 		if ($comment->getCommentType() == COMMENT_TYPE_PEER_REVIEW) {
 			Request::redirect(null, null, 'viewPeerReviewComments', array($articleId, $comment->getAssocId()));
-		} else if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		} else if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			Request::redirect(null, null, 'viewEditorDecisionComments', $articleId);
 		} else if ($comment->getCommentType() == COMMENT_TYPE_COPYEDIT) {
 			Request::redirect(null, null, 'viewCopyeditComments', $articleId);

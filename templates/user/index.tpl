@@ -57,7 +57,7 @@
 				{assign var="editorSubmissionsCount" value=$submissionsCount.Editor.$journalId}
 				<td>&#187; <a href="{url journal=$journalPath page="editor"}">{translate key="user.role.coordinator"}</a></td>
 				<td></td>
-				<td align="center"><a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInReview"}">Proposals</a>
+				<td align="left"><a href="{url journal=$journalPath page="editor" op="submissions" path="submissionsInReview"}">Proposals</a>
 				</td>
 				<td align="left"><a href="{url journal=$journalPath page="editor" op="submissionsReport"}">Report Generator</a></td>
 			</tr>
@@ -141,35 +141,54 @@
 			<tr>
 				<td>&#187; <a href="{url journal=$journalPath page="author"}">{translate key="user.role.author"}</a></td>
 				<td></td>
-				<td align="center">
+				<td align="left">
 					{if $authorSubmissionsCount[0]}
-						<a href="{url journal=$journalPath page="author"}">{translate key="common.queue.short.active"} ({$authorSubmissionsCount[0]})</a> {* EL on August 18, 2012 *}
+						<a href="{url journal=$journalPath page="author" path="proposalsToSubmit"}">{translate key="common.queue.short.proposalsToSubmit"} ({$authorSubmissionsCount[0]})</a> 
 					{else}
-						<span class="disabled">{translate key="common.queue.short.active"} (0)</span>
+						<span class="disabled">{translate key="common.queue.short.proposalsToSubmit"} (0)</span>
 					{/if}
 				</td>
 				<td align="left">{* EL on August 18, 2012 *}
 					{if $authorSubmissionsCount[1]}
-						<a href="{url journal=$journalPath page="author" path="completed"}">{translate key="common.queue.short.completed"} ({$authorSubmissionsCount[1]})</a> 
+						<a href="{url journal=$journalPath page="author" path="proposalsInReview"}">{translate key="common.queue.short.proposalsInReview"} ({$authorSubmissionsCount[1]})</a> 
 					{else}
-						<span class="disabled">{translate key="common.queue.short.completed"} (0)</span>
+						<span class="disabled">{translate key="common.queue.short.proposalsInReview"} (0)</span>
 					{/if}
 				</td>
 				<td align="right">[<a href="{url journal=$journalPath page="author" op="submit"}">{translate key="author.submit"}</a>]</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td></td>
+				<td align="left">
+					{if $authorSubmissionsCount[2]}
+						<a href="{url journal=$journalPath page="author" path="ongoingResearches"}">{translate key="common.queue.short.ongoingResearches"} ({$authorSubmissionsCount[2]})</a> {* EL on August 18, 2012 *}
+					{else}
+						<span class="disabled">{translate key="common.queue.short.ongoingResearches"} (0)</span>
+					{/if}
+				</td>
+				<td align="left">{* EL on August 18, 2012 *}
+					{if $authorSubmissionsCount[3]}
+						<a href="{url journal=$journalPath page="author" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"} ({$authorSubmissionsCount[3]})</a> 
+					{else}
+						<span class="disabled">{translate key="common.queue.short.submissionsArchives"} (0)</span>
+					{/if}
+				</td>
+				<td align="right">&nbsp;</td>
 			</tr>
 		{/if}
 		{if $isValid.Reviewer.$journalId}
 			{assign var="reviewerSubmissionsCount" value=$submissionsCount.Reviewer.$journalId}
 			<tr>
 				<td colspan="2">&#187; <a href="{url journal=$journalPath page="reviewer"}">{$user->getErcAbbrevsOfReviewer()}</a></td>
-				<td align="right">
+				<td align="left">
 					{if $reviewerSubmissionsCount[0]}
 						<a href="{url journal=$journalPath page="reviewer"}">{translate key="common.queue.short.active"} ({$reviewerSubmissionsCount[0]})</a>
 					{else}
 						<span class="disabled">{translate key="common.queue.short.active"} (0)</span>
 					{/if}
 				</td>
-				<td align="center">
+				<td align="left">
 					{if $reviewerSubmissionsCount[1]}
 					<a href="{url journal=$journalPath page="reviewer" path="completed"}">{translate key="common.queue.short.completed"} ({$reviewerSubmissionsCount[1]})</a>
 					{else}
@@ -179,6 +198,7 @@
 				<td align="right">
 					<a href="{url journal=$journalPath page="reviewer" op="meetings}">{translate key="reviewer.meetings"}</a>
 				</td>
+				<td align="right"></td>
 			</tr>
 		{/if}
 		{if $isValid.Author.$journalId || $isValid.Reviewer.$journalId}
@@ -217,7 +237,7 @@
 			<li>
 				&#187;
 				{if $allowRegReviewer}
-					{url|assign:"userHomeUrl" page="user" op="philhrp"}
+					{url|assign:"userHomeUrl" page="user" op="hrp"}
 					<a href="{url op="become" path="reviewer" source=$userHomeUrl}">{translate key="user.noRoles.regReviewer"}</a>
 				{else}{* $allowRegReviewer *}
 					{translate key="user.noRoles.regReviewerClosed"}

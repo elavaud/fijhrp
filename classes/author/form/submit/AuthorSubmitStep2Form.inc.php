@@ -9,7 +9,6 @@
  * @brief Form for Step 2 of author article submission.
  */
 
-
 import('classes.author.form.submit.AuthorSubmitForm');
 
 class AuthorSubmitStep2Form extends AuthorSubmitForm {
@@ -19,27 +18,35 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 	 */
 	function AuthorSubmitStep2Form(&$article, &$journal) {
 		parent::AuthorSubmitForm($article, 2, $journal);
-		
 		// Validation checks for this form
 		$this->addCheck(new FormValidatorCustom($this, 'authors', 'required', 'author.submit.form.authorRequired', create_function('$authors', 'return count($authors) > 0;')));
-		$this->addCheck(new FormValidatorArray($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', array('firstName', 'lastName')));
+		$this->addCheck(new FormValidatorArray($this, 'authors', 'required', 'author.submit.form.authorRequiredFields', array('firstName', 'lastName', 'affiliation', 'phone')));
 		$this->addCheck(new FormValidatorArrayCustom($this, 'authors', 'required', 'user.profile.form.urlInvalid', create_function('$url, $regExp', 'return empty($url) ? true : String::regexp_match($regExp, $url);'), array(ValidatorUrl::getRegexp()), false, array('url')));
-		$this->addCheck(new FormValidatorLocale($this, 'authorPhoneNumber', 'required', 'author.submit.form.authorPhoneNumber', $this->getRequiredLocale()));
-		$this->addCheck(new FormValidatorLocale($this, 'scientificTitle', 'required', 'author.submit.form.scientificTitleRequired', $this->getRequiredLocale()));
-		$this->addCheck(new FormValidatorLocale($this, 'publicTitle', 'required', 'author.submit.form.publicTitleRequired', $this->getRequiredLocale()));
+		
+		// Abstract
+		$this->addCheck(new FormValidator($this, 'scientificTitle', 'required', 'author.submit.form.scientificTitleRequired'));
+		$this->addCheck(new FormValidator($this, 'publicTitle', 'required', 'author.submit.form.publicTitleRequired'));
+		$this->addCheck(new FormValidator($this, 'background', 'required', 'author.submit.form.backgroundRequired'));
+		$this->addCheck(new FormValidator($this, 'objectives', 'required', 'author.submit.form.objectivesRequired'));
+		$this->addCheck(new FormValidator($this, 'studyMethods', 'required', 'author.submit.form.studyMethodsRequired'));
+		$this->addCheck(new FormValidator($this, 'expectedOutcomes', 'required', 'author.submit.form.expectedOutcomesRequired'));
+		$this->addCheck(new FormValidator($this, 'keywords', 'required', 'author.submit.form.keywordsRequired'));
+		
 		$this->addCheck(new FormValidatorLocale($this, 'studentInitiatedResearch', 'required', 'author.submit.form.studentInitiatedResearch', $this->getRequiredLocale()));
 		$this->addCheck(new FormValidatorLocale($this, 'studentInstitution', 'required', 'author.submit.form.studentInstitution', $this->getRequiredLocale()));		
 		$this->addCheck(new FormValidatorLocale($this, 'academicDegree', 'required', 'author.submit.form.academicDegree', $this->getRequiredLocale()));
 		
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$section = $sectionDao->getSection($article->getSectionId());
+		
+		/*
 		$abstractWordCount = $section->getAbstractWordCount();
 		
 		if (isset($abstractWordCount) && $abstractWordCount > 0) {
 			$this->addCheck(new FormValidatorCustom($this, 'abstract', 'required', 'author.submit.form.wordCountAlert', create_function('$abstract, $wordCount', 'foreach ($abstract as $localizedAbstract) {return count(explode(" ",$localizedAbstract)) < $wordCount; }'), array($abstractWordCount)));
 		}
+		*/
 			
-        $this->addCheck(new FormValidatorLocale($this, 'keywords', 'required', 'author.submit.form.keywordsRequired', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'startDate', 'required', 'author.submit.form.startDateRequired', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'endDate', 'required', 'author.submit.form.endDateRequired', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'fundsRequired', 'required', 'author.submit.form.fundsRequiredRequired', $this->getRequiredLocale()));
@@ -72,12 +79,31 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
         $this->addCheck(new FormValidatorLocale($this, 'selfFunding', 'required', 'author.submit.form.selfFunding', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'otherGrant', 'required', 'author.submit.form.otherGrant', $this->getRequiredLocale()));
         $this->addCheck(new FormValidatorLocale($this, 'specifyOtherGrant', 'required', 'author.submit.form.specifyOtherGrantField', $this->getRequiredLocale()));
- 
-				/*
-				 * Risk Assessment
-				 * Added by EL on March 9th 2013
-				 */
-				$this->addCheck(new FormValidatorArray($this, 'riskAssessment', 'required', 'author.submit.form.completeRiskAssessmentFormNeeded'));
+ 		
+ 		// Risk Assessment
+		$this->addCheck(new FormValidator($this, 'identityRevealed', 'required', 'author.submit.form.identityRevealedRequired'));
+		$this->addCheck(new FormValidator($this, 'unableToConsent', 'required', 'author.submit.form.unableToConsentRequired'));
+		$this->addCheck(new FormValidator($this, 'under18', 'required', 'author.submit.form.under18Required'));
+		$this->addCheck(new FormValidator($this, 'dependentRelationship', 'required', 'author.submit.form.dependentRelationshipRequired'));
+		$this->addCheck(new FormValidator($this, 'ethnicMinority', 'required', 'author.submit.form.ethnicMinorityRequired'));
+		$this->addCheck(new FormValidator($this, 'impairment', 'required', 'author.submit.form.impairmentRequired'));
+		$this->addCheck(new FormValidator($this, 'pregnant', 'required', 'author.submit.form.pregnantRequired'));
+		$this->addCheck(new FormValidator($this, 'newTreatment', 'required', 'author.submit.form.newTreatmentRequired'));
+		$this->addCheck(new FormValidator($this, 'bioSamples', 'required', 'author.submit.form.bioSamplesRequired'));
+		$this->addCheck(new FormValidator($this, 'radiation', 'required', 'author.submit.form.radiationRequired'));
+		$this->addCheck(new FormValidator($this, 'distress', 'required', 'author.submit.form.distressRequired'));
+		$this->addCheck(new FormValidator($this, 'inducements', 'required', 'author.submit.form.inducementsRequired'));
+		$this->addCheck(new FormValidator($this, 'sensitiveInfo', 'required', 'author.submit.form.sensitiveInfoRequired'));
+		$this->addCheck(new FormValidator($this, 'deception', 'required', 'author.submit.form.deceptionRequired'));
+		$this->addCheck(new FormValidator($this, 'reproTechnology', 'required', 'author.submit.form.reproTechnologyRequired'));
+		$this->addCheck(new FormValidator($this, 'genetic', 'required', 'author.submit.form.geneticsRequired'));
+		$this->addCheck(new FormValidator($this, 'stemCell', 'required', 'author.submit.form.stemCellRequired'));
+		$this->addCheck(new FormValidator($this, 'biosafety', 'required', 'author.submit.form.biosafetyRequired'));
+		$this->addCheck(new FormValidator($this, 'riskLevel', 'required', 'author.submit.form.riskLevelRequired'));
+		$this->addCheck(new FormValidator($this, 'listRisks', 'required', 'author.submit.form.listRisksRequired'));
+		$this->addCheck(new FormValidator($this, 'howRisksMinimized', 'required', 'author.submit.form.howRisksMinimizedRequired'));
+		$this->addCheck(new FormValidator($this, 'multiInstitutions', 'required', 'author.submit.form.multiInstitutionsRequired'));
+		$this->addCheck(new FormValidator($this, 'conflictOfInterest', 'required', 'author.submit.form.conflictOfInterestRequired'));
 	}
 
 	/**
@@ -179,56 +205,63 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 $j++;
                 unset ($sponsor);
             }
-  					// New fields for Risk Assessments
-		            // Added by EL on March 11th 2013			
-					$riskAssessment =& $article->getRiskAssessment();
-					$riskAssessmentArray = array(	
-		                	'identityRevealed' => $riskAssessment->getIdentityRevealed(),
-							'unableToConsent' => $riskAssessment->getUnableToConsent(),
-		                	'under18' => $riskAssessment->getUnder18(),
-		                	'dependentRelationship' => $riskAssessment->getDependentRelationship(),
-		                	'ethnicMinority' => $riskAssessment->getEthnicMinority(),
-		                	'impairment' => $riskAssessment->getImpairment(),
-		                	'pregnant' => $riskAssessment->getPregnant(),
-		                	'newTreatment' => $riskAssessment->getNewTreatment(),
-		                	'bioSamples' => $riskAssessment->getBioSamples(),
-		                	'radiation' => $riskAssessment->getRadiation(),
-		                	'distress' => $riskAssessment->getDistress(),
-		                	'inducements' => $riskAssessment->getInducements(),
-		                	'sensitiveInfo' => $riskAssessment->getSensitiveInfo(),
-		                	'deception' => $riskAssessment->getDeception(),
-		                	'reproTechnology' => $riskAssessment->getReproTechnology(),
-		                	'genetic' => $riskAssessment->getGenetic(),
-		                	'stemCell' => $riskAssessment->getStemCell(),
-		                	'biosafety' => $riskAssessment->getBiosafety(),
-		                	'riskLevel' => $riskAssessment->getRiskLevel(),
-		                	'listRisks' => $riskAssessment->getListRisks(),
-		                	'howRisksMinimized' => $riskAssessment->getHowRisksMinimized(),
-		                	'risksToTeam' => $riskAssessment->getRisksToTeam(),
-		                	'risksToSubjects' => $riskAssessment->getRisksToSubjects(),
-		                	'risksToCommunity' => $riskAssessment->getRisksToCommunity(),
-		                	'benefitsToParticipants' => $riskAssessment->getBenefitsToParticipants(),
-		                	'knowledgeOnCondition' => $riskAssessment->getKnowledgeOnCondition(),
-			               	'knowledgeOnDisease' => $riskAssessment->getKnowledgeOnDisease(),
-			               	'conflictOfInterest' => $riskAssessment->getConflictOfInterest(),
-			               	'multiInstitutions' => $riskAssessment->getMultiInstitutions()			
-						);
+			// New fields for Risk Assessments
+            // Added by EL on March 11th 2013			
+			$riskAssessment =& $article->getRiskAssessment();
+			$riskAssessmentArray = array(	
+	            'identityRevealed' => $riskAssessment->getIdentityRevealed(),
+				'unableToConsent' => $riskAssessment->getUnableToConsent(),
+	           	'under18' => $riskAssessment->getUnder18(),
+	           	'dependentRelationship' => $riskAssessment->getDependentRelationship(),
+	           	'ethnicMinority' => $riskAssessment->getEthnicMinority(),
+	           	'impairment' => $riskAssessment->getImpairment(),
+	           	'pregnant' => $riskAssessment->getPregnant(),
+	           	'newTreatment' => $riskAssessment->getNewTreatment(),
+	           	'bioSamples' => $riskAssessment->getBioSamples(),
+	           	'radiation' => $riskAssessment->getRadiation(),
+	           	'distress' => $riskAssessment->getDistress(),
+	           	'inducements' => $riskAssessment->getInducements(),
+	           	'sensitiveInfo' => $riskAssessment->getSensitiveInfo(),
+	           	'deception' => $riskAssessment->getDeception(),
+	           	'reproTechnology' => $riskAssessment->getReproTechnology(),
+	           	'genetic' => $riskAssessment->getGenetic(),
+	           	'stemCell' => $riskAssessment->getStemCell(),
+	           	'biosafety' => $riskAssessment->getBiosafety(),
+	           	'riskLevel' => $riskAssessment->getRiskLevel(),
+	           	'listRisks' => $riskAssessment->getListRisks(),
+	           	'howRisksMinimized' => $riskAssessment->getHowRisksMinimized(),
+	           	'risksToTeam' => $riskAssessment->getRisksToTeam(),
+	           	'risksToSubjects' => $riskAssessment->getRisksToSubjects(),
+	           	'risksToCommunity' => $riskAssessment->getRisksToCommunity(),
+	           	'benefitsToParticipants' => $riskAssessment->getBenefitsToParticipants(),
+	           	'knowledgeOnCondition' => $riskAssessment->getKnowledgeOnCondition(),
+	           	'knowledgeOnDisease' => $riskAssessment->getKnowledgeOnDisease(),
+	           	'conflictOfInterest' => $riskAssessment->getConflictOfInterest(),
+	           	'multiInstitutions' => $riskAssessment->getMultiInstitutions()			
+			);
 						                                  
             $articleDao =& DAORegistry::getDAO('ArticleDAO');
-
+			
+			$abstract =& $article->getAbstract(Locale::getLocale());
+			
 			$this->_data = array(
 				'authors' => array(),
-					// EL on March 11th 2013
-					'riskAssessment' => $riskAssessmentArray,
-				'authorPhoneNumber' => $article->getAuthorPhoneNumber(null),
-				'scientificTitle' => $article->getScientificTitle(null), // Localized
-				'publicTitle' => $article->getPublicTitle(null), // Localized
+
+				'riskAssessment' => $riskAssessmentArray,
+
+				// Abstract
+				'scientificTitle' => $abstract->getScientificTitle(),
+				'publicTitle' => $abstract->getPublicTitle(),
+				'background' => $abstract->getBackground(),
+				'objectives' => $abstract->getObjectives(),
+				'studyMethods' => $abstract->getStudyMethods(),
+				'expectedOutcomes' => $abstract->getExpectedOutcomes(),
+                'keywords' => $abstract->getKeywords(),
+
 				'studentInitiatedResearch' => $article->getStudentInitiatedResearch(null),
 				'studentInstitution' => $article->getStudentInstitution(null), 
 				'academicDegree' => $article->getAcademicDegree(null),
-				'abstract' => $article->getAbstract(null), // Localized
 				'section' => $sectionDao->getSection($article->getSectionId()),                                 
-                'keywords' => $article->getKeywords(null),
                 'startDate' => $article->getStartDate(null),
                 'endDate' => $article->getEndDate(null),
                 'fundsRequired' => $article->getFundsRequired(null),
@@ -276,12 +309,9 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 						'firstName' => $authors[$i]->getFirstName(),
 						'middleName' => $authors[$i]->getMiddleName(),
 						'lastName' => $authors[$i]->getLastName(),
-						'affiliation' => $authors[$i]->getAffiliation(null),
-						'country' => $authors[$i]->getCountry(),
-						'email' => $authors[$i]->getEmail(),
-						'url' => $authors[$i]->getUrl(),
-						'competingInterests' => $authors[$i]->getCompetingInterests(null),
-						'biography' => $authors[$i]->getBiography(null)
+						'affiliation' => $authors[$i]->getAffiliation(),
+						'phone' => $authors[$i]->getPhoneNumber(),
+						'email' => $authors[$i]->getEmail()
 					)
 				);
 				if ($authors[$i]->getPrimaryContact()) {
@@ -298,22 +328,27 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 	function readInputData() {
 		$this->readUserVars(
 			array(
+				// Authors
 				'authors',
 				'deletedAuthors',
 				'primaryContact',
-				'authorPhoneNumber',
+				
+				// Abstract
 				'scientificTitle',
 				'publicTitle',
+				'background',
+				'objectives',
+				'studyMethods',
+				'expectedOutcomes',
+                'keywords',
+                
+                // Proposal Details
 				'studentInitiatedResearch',
 				'studentInstitution',
 				'academicDegree',
-				'abstract',
 				'language',
-                'keywords',
                 'startDate',
                 'endDate',
-                'fundsRequired',
-                'selectedCurrency',
                 'primarySponsor',
                 'otherPrimarySponsor',
                 'secondarySponsors',
@@ -329,10 +364,13 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 'otherProposalType',
                 'dataCollection',
                 'submittedAsPi',
-                'conflictOfInterest',
                 'reviewedByOtherErc',
                 'otherErcDecision',
                 'rtoOffice',
+				
+				// Source of Monetary and Material Support
+                'fundsRequired',
+                'selectedCurrency',
                 'industryGrant',
                 'nameOfIndustry',
                 'internationalGrant',
@@ -345,10 +383,37 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
                 'selfFunding',
                 'otherGrant',
                 'specifyOtherGrant',
-                                 
-                	// EL on March 10th 2013
-                    // Risk Assessment
-                    'riskAssessment'
+                
+                // Risk Assessment
+				'identityRevealed',
+				'unableToConsent',
+				'under18',
+				'dependentRelationship',
+				'ethnicMinority',
+				'impairment',
+				'pregnant',
+				'newTreatment',
+				'bioSamples',
+				'radiation',
+				'distress',
+				'inducements',
+				'sensitiveInfo',
+				'deception',
+				'reproTechnology',
+				'genetic',
+				'stemCell',
+				'biosafety',
+				'riskLevel',
+				'listRisks',
+				'howRisksMinimized',
+				'risksToTeam',
+				'risksToSubjects',
+				'risksToCommunity',
+				'benefitsToParticipants',
+				'knowledgeOnCondition',
+				'knowledgeOnDisease',
+				'multiInstitutions',
+				'conflictOfInterest'
 			)
 		);
 
@@ -357,9 +422,11 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$this->_data['section'] =& $sectionDao->getSection($this->article->getSectionId());
 
+		/*
 		if ($this->_data['section']->getAbstractsNotRequired() == 0) {
 			$this->addCheck(new FormValidatorLocale($this, 'abstract', 'required', 'author.submit.form.abstractRequired', $this->getRequiredLocale()));
 		}
+		*/
 	}
 
 	/**
@@ -367,7 +434,7 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 	 * @return array
 	 */
 	function getLocaleFieldNames() {
-		return array('authorPhoneNumber', 'scientificTitle', 'publicTitle', 'studentInitiatedResearch', 'studentInstitution', 'academicDegree','abstract', 'keywords', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'otherPrimarySponsor', 'secondarySponsors', 'otherSecondarySponsor', 'multiCountryResearch', 'multiCountry', 'nationwide', 'proposalCountry', 'researchField', 'otherResearchField', 'withHumanSubjects','proposalType', 'otherProposalType', 'dataCollection', 'submittedAsPi', 'conflictOfInterest', 'reviewedByOtherErc', 'otherErcDecision', 'rtoOffice', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'otherInternationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant');
+		return array('studentInitiatedResearch', 'studentInstitution', 'academicDegree', 'startDate', 'endDate', 'fundsRequired', 'selectedCurrency', 'primarySponsor', 'otherPrimarySponsor', 'secondarySponsors', 'otherSecondarySponsor', 'multiCountryResearch', 'multiCountry', 'nationwide', 'proposalCountry', 'researchField', 'otherResearchField', 'withHumanSubjects','proposalType', 'otherProposalType', 'dataCollection', 'submittedAsPi', 'reviewedByOtherErc', 'otherErcDecision', 'industryGrant', 'nameOfIndustry', 'internationalGrant', 'internationalGrantName', 'otherInternationalGrantName', 'mohGrant', 'governmentGrant', 'governmentGrantName', 'universityGrant', 'selfFunding', 'otherGrant', 'specifyOtherGrant');
 	}
 
 	/**
@@ -420,19 +487,31 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 		$previousRawCitationList = $article->getCitations();
 
 		// Update article
-		$article->setAuthorPhoneNumber($this->getData('authorPhoneNumber'), null);
-		$article->setScientificTitle($this->getData('scientificTitle'), null); // Localized
-		$article->setPublicTitle($this->getData('publicTitle'), null);// Localized
+
+		// Abstract
+		import('classes.article.ProposalAbstract');
+		$abstract = new ProposalAbstract();
+		
+		$abstract->setArticleId($article->getId());		
+        $abstract->setLocale(Locale::getLocale());
+		$abstract->setScientificTitle($this->getData('scientificTitle'));
+		$abstract->setPublicTitle($this->getData('publicTitle'));
+        $abstract->setBackground($this->getData('background'));
+        $abstract->setObjectives($this->getData('objectives'));
+        $abstract->setStudyMethods($this->getData('studyMethods'));
+        $abstract->setExpectedOutcomes($this->getData('expectedOutcomes'));		
+        $abstract->setKeywords($this->getData('keywords'));
+
+		$article->setAbstract($abstract, Locale::getLocale());
+
 		$article->setStudentInitiatedResearch($this->getData('studentInitiatedResearch'), null);
 		$article->setStudentInstitution($this->getData('studentInstitution'), null);
 		$article->setAcademicDegree($this->getData('academicDegree'), null);
-		$article->setAbstract($this->getData('abstract'), null); // Localized
 		$article->setLanguage($this->getData('language'));
 		if ($article->getSubmissionProgress() <= $this->step) {
 			$article->stampStatusModified();
 			$article->setSubmissionProgress($this->step + 1);
 		}                
-        $article->setKeywords($this->getData('keywords'), null); // Localized
         $article->setStartDate($this->getData('startDate'), null); // Localized
         $article->setEndDate($this->getData('endDate'), null); // Localized
         $article->setFundsRequired($this->getData('fundsRequired'), null); // Localized
@@ -561,14 +640,9 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 				if (isset($authors[$i]['firstName'])) $author->setFirstName($authors[$i]['firstName']);
 				if (isset($authors[$i]['middleName'])) $author->setMiddleName($authors[$i]['middleName']);
 				if (isset($authors[$i]['lastName'])) $author->setLastName($authors[$i]['lastName']);
-				if (isset($authors[$i]['affiliation'])) $author->setAffiliation($authors[$i]['affiliation'], null);
-				if (isset($authors[$i]['country'])) $author->setCountry($authors[$i]['country']);
+				if (isset($authors[$i]['affiliation'])) $author->setAffiliation($authors[$i]['affiliation']);
+				if (isset($authors[$i]['phone'])) $author->setPhoneNumber($authors[$i]['phone']);
 				if (isset($authors[$i]['email'])) $author->setEmail($authors[$i]['email']);
-				if (isset($authors[$i]['url'])) $author->setUrl($authors[$i]['url']);
-				if (array_key_exists('competingInterests', $authors[$i])) {
-					$author->setCompetingInterests($authors[$i]['competingInterests'], null);
-				}
-				//$author->setBiography($authors[$i]['biography'], null);  //AIM, 12.12.2011
 				$author->setPrimaryContact($this->getData('primaryContact') == $i ? 1 : 0);
 				$author->setSequence($authors[$i]['seq']);
 
@@ -579,47 +653,44 @@ class AuthorSubmitStep2Form extends AuthorSubmitForm {
 			unset($author);
 		}
 		
-        // Update risk assessment
-        // EL on March 10th 2013
-		$riskAssessmentArray = $this->getData('riskAssessment');
+		// Risk Assessment	
+		import('classes.article.RiskAssessment');
+		$riskAssessment = new RiskAssessment();
+			
+		$riskAssessment->setArticleId($article->getId());
+   	    $riskAssessment->setIdentityRevealed($this->getData('identityRevealed'));
+        $riskAssessment->setUnableToConsent($this->getData('unableToConsent'));
+        $riskAssessment->setUnder18($this->getData('under18'));
+        $riskAssessment->setDependentRelationship($this->getData('dependentRelationship'));
+        $riskAssessment->setEthnicMinority($this->getData('ethnicMinority'));
+        $riskAssessment->setImpairment($this->getData('impairment'));
+        $riskAssessment->setPregnant($this->getData('pregnant'));
+        $riskAssessment->setNewTreatment($this->getData('newTreatment'));
+        $riskAssessment->setBioSamples($this->getData('bioSamples'));
+        $riskAssessment->setRadiation($this->getData('radiation'));
+        $riskAssessment->setDistress($this->getData('distress'));
+        $riskAssessment->setInducements($this->getData('inducements'));
+        $riskAssessment->setSensitiveInfo($this->getData('sensitiveInfo'));
+        $riskAssessment->setDeception($this->getData('deception'));
+        $riskAssessment->setReproTechnology($this->getData('reproTechnology'));
+        $riskAssessment->setGenetic($this->getData('genetic'));
+        $riskAssessment->setStemCell($this->getData('stemCell'));
+        $riskAssessment->setBiosafety($this->getData('biosafety'));
+        $riskAssessment->setRiskLevel($this->getData('riskLevel'));
+        $riskAssessment->setListRisks($this->getData('listRisks'));
+        $riskAssessment->setHowRisksMinimized($this->getData('howRisksMinimized'));
 		
-		if ($riskAssessmentArray != null) {
-			import('classes.article.RiskAssessment');
-			$riskAssessment = new RiskAssessment();
-			
-			$riskAssessment->setArticleId($article->getId());
-    	    $riskAssessment->setIdentityRevealed($riskAssessmentArray['identityRevealed']);
-	        $riskAssessment->setUnableToConsent($riskAssessmentArray['unableToConsent']);
-	        $riskAssessment->setUnder18($riskAssessmentArray['under18']);
-	        $riskAssessment->setDependentRelationship($riskAssessmentArray['dependentRelationship']);
-	        $riskAssessment->setEthnicMinority($riskAssessmentArray['ethnicMinority']);
-	        $riskAssessment->setImpairment($riskAssessmentArray['impairment']);
-	        $riskAssessment->setPregnant($riskAssessmentArray['pregnant']);
-	        $riskAssessment->setNewTreatment($riskAssessmentArray['newTreatment']);
-	        $riskAssessment->setBioSamples($riskAssessmentArray['bioSamples']);
-	        $riskAssessment->setRadiation($riskAssessmentArray['radiation']);
-	        $riskAssessment->setDistress($riskAssessmentArray['distress']);
-	        $riskAssessment->setInducements($riskAssessmentArray['inducements']);
-	        $riskAssessment->setSensitiveInfo($riskAssessmentArray['sensitiveInfo']);
-	        $riskAssessment->setDeception($riskAssessmentArray['deception']);
-	        $riskAssessment->setReproTechnology($riskAssessmentArray['reproTechnology']);
-	        $riskAssessment->setGenetic($riskAssessmentArray['genetic']);
-	        $riskAssessment->setStemCell($riskAssessmentArray['stemCell']);
-	        $riskAssessment->setBiosafety($riskAssessmentArray['biosafety']);
-	        $riskAssessment->setRiskLevel($riskAssessmentArray['riskLevel']);
-	        $riskAssessment->setListRisks($riskAssessmentArray['listRisks']);
-	        $riskAssessment->setHowRisksMinimized($riskAssessmentArray['howRisksMinimized']);
-			
-	        $riskAssessment->setRisksToTeam(isset($riskAssessmentArray['risksToTeam']) ? 1 : 0);
-	        $riskAssessment->setRisksToSubjects(isset($riskAssessmentArray['risksToSubjects']) ? 1 : 0);
-	        $riskAssessment->setRisksToCommunity(isset($riskAssessmentArray['risksToCommunity']) ? 1 : 0);
-	        $riskAssessment->setBenefitsToParticipants(isset($riskAssessmentArray['benefitsToParticipants']) ? 1 : 0);
-	        $riskAssessment->setKnowledgeOnCondition(isset($riskAssessmentArray['knowledgeOnCondition']) ? 1 : 0);
-	        $riskAssessment->setKnowledgeOnDisease(isset($riskAssessmentArray['knowledgeOnDisease']) ? 1 : 0);
-	        $riskAssessment->setMultiInstitutions($riskAssessmentArray['multiInstitutions']);
-	        $riskAssessment->setConflictOfInterest($riskAssessmentArray['conflictOfInterest']);           
-       		$article->setRiskAssessment($riskAssessment);
-		}
+        $riskAssessment->setRisksToTeam($this->getData('risksToTeam') ? 1 : 0);
+        $riskAssessment->setRisksToSubjects($this->getData('risksToSubjects') ? 1 : 0);
+        $riskAssessment->setRisksToCommunity($this->getData('risksToCommunity') ? 1 : 0);
+        $riskAssessment->setBenefitsToParticipants($this->getData('benefitsToParticipants') ? 1 : 0);
+        $riskAssessment->setKnowledgeOnCondition($this->getData('knowledgeOnCondition') ? 1 : 0);
+        $riskAssessment->setKnowledgeOnDisease($this->getData('knowledgeOnDisease') ? 1 : 0);
+
+        $riskAssessment->setMultiInstitutions($this->getData('multiInstitutions'));
+        $riskAssessment->setConflictOfInterest($this->getData('conflictOfInterest'));           
+      	$article->setRiskAssessment($riskAssessment);
+		
 		
 		// Remove deleted authors
 		$deletedAuthors = explode(':', $this->getData('deletedAuthors'));

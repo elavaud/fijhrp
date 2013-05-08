@@ -59,18 +59,8 @@ class UserAction {
 			unset($note);
 		}
 
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->getEditAssignmentsByUserId($oldUserId);
-			//while ($editAssignment =& $editAssignments->next()) {
-				//$editAssignment->setEditorId($newUserId);
-				//$edit Assignment Dao->updateEditAssignment($editAssignment);
-				//unset($editAssignment);
-			//}
-
 		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-		$editorSubmissionDao->transferEditorDecisions($oldUserId, $newUserId);
+		$editorSubmissionDao->transferSectionDecisions($oldUserId, $newUserId);
 
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		foreach ($reviewAssignmentDao->getByUserId($oldUserId) as $reviewAssignment) {

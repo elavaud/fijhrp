@@ -20,18 +20,25 @@
 
 // Submission status constants
 define('STATUS_ARCHIVED', 0);
-define('STATUS_QUEUED', 1);
-// define('STATUS_SCHEDULED', 2); // #2187: Scheduling queue removed.
-define('STATUS_PUBLISHED', 3);
-define('STATUS_DECLINED', 4);
+define('STATUS_QUEUED', 1); 	// Initial Review
+define('STATUS_QUEUED_CR', 2);	// Continuing Review
+define('STATUS_QUEUED_PA', 3);	// Protocol Amendment
+define('STATUS_QUEUED_SAE', 4);	// Serious Adverse Event(s)
+define('STATUS_QUEUED_EOS', 5);	// End of study
+define('STATUS_REVIEWED', 6);	// The proposal is not anymore under review
+define('STATUS_WITHDRAWN', 7);	// Withdrawn proposal
+
+
+
 
 // AuthorSubmission::getSubmissionStatus will return one of these in place of QUEUED:
-define ('STATUS_QUEUED_UNASSIGNED', 5);
-define ('STATUS_QUEUED_REVIEW', 6);
-define ('STATUS_QUEUED_EDITING', 7);
-define ('STATUS_INCOMPLETE', 8);
+//define('STATUS_PUBLISHED', 3);
+// define ('STATUS_QUEUED_UNASSIGNED', 5);
+// define ('STATUS_QUEUED_REVIEW', 6);
+// define ('STATUS_QUEUED_EDITING', 7);
+// define ('STATUS_INCOMPLETE', 8);
+// define('STATUS_SCHEDULED', 2); // #2187: Scheduling queue removed.
 
-define ('STATUS_WITHDRAWN', 9); //Added by AIM, May 25, 2011
 
 // Author display in ToC
 define ('AUTHOR_TOC_DEFAULT', 0);
@@ -82,25 +89,6 @@ class Article extends Submission {
 		parent::addAuthor($author);
 	}
 
-	/**
-	 * Get "localized" article title (if applicable). DEPRECATED
-	 * in favour of getLocalizedTitle.
-	 * @return string
-	 */
-	function getArticleTitle() {
-		if (Config::getVar('debug', 'deprecation_warnings')) trigger_error('Deprecated function.');
-		return $this->getLocalizedTitle();
-	}
-
-	/**
-	 * Get "localized" article abstract (if applicable). DEPRECATED
-	 * in favour of getLocalizedAbstract.
-	 * @return string
-	 */
-	function getArticleAbstract() {
-		if (Config::getVar('debug', 'deprecation_warnings')) trigger_error('Deprecated function.');
-		return $this->getLocalizedAbstract();
-	}
 
 	//
 	// Get/set methods
@@ -362,22 +350,6 @@ class Article extends Submission {
 	}
 
 	/**
-	 * Get current review round.
-	 * @return int
-	 */
-	function getCurrentRound() {
-		return $this->getData('currentRound');
-	}
-
-	/**
-	 * Set current review round.
-	 * @param $currentRound int
-	 */
-	function setCurrentRound($currentRound) {
-		return $this->setData('currentRound', $currentRound);
-	}
-
-	/**
 	 * Get editor file id.
 	 * @return int
 	 */
@@ -496,34 +468,11 @@ class Article extends Submission {
 			$userId = $this->getUserId();
 			if ($userId) $userIds[] = array('id' => $userId, 'role' => 'author');
 		}
-
-		if($editors) {
-			// Edited by EL on February 17th 2013
-			// Editors are not assigned to articles anymore
-			// $edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			// $editAssignments =& $edit Assignment Dao->getEditorAssignmentsByArticleId($articleId);
-			// while ($editAssignment =& $editAssignments->next()) {
-				// $userId = $editAssignment->getEditorId();
-				// if ($userId) $userIds[] = array('id' => $userId, 'role' => 'editor');
-				// unset($editAssignment);
-			//}
-		}
 		
 		if($sectionEditors) {
-			// Edited by EL on February 17th 2013
-			// No more editAssignment
-			// $edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			// $editAssignments =& $edit Assignment Dao->getSectionEditorAssignmentsByArticleId($articleId);
-			//while ($editAssignment =& $editAssignments->next()) {
-			//	$userId = $editAssignment->getEditorId();
-			//	if ($userId) $userIds[] = array('id' => $userId, 'role' => 'sectionEditor');
-			//	unset($editAssignment);
-			//}
-			
-				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($this->getJournalId(), $this->getSectionId());
-				foreach ($sectionEditors as $sectionEditor) $userIds[] = array('id' => $sectionEditor->getId(), 'role' => 'sectionEditor');
-
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($this->getJournalId(), $this->getSectionId());
+			foreach ($sectionEditors as $sectionEditor) $userIds[] = array('id' => $sectionEditor->getId(), 'role' => 'sectionEditor');
 		}
 		
 		if($copyeditor) {
@@ -546,7 +495,7 @@ class Article extends Submission {
 
 		if($reviewers) {
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-			$reviewAssignments =& $reviewAssignmentDao->getBySubmissionId($articleId);
+			$reviewAssignments =& $reviewAssignmentDao->getByDecisionId($this->getLastSectionDecisionId());
 			foreach ($reviewAssignments as $reviewAssignment) {
 				$userId = $reviewAssignment->getReviewerId();
 				if ($userId) $userIds[] = array('id' => $userId, 'role' => 'reviewer');
@@ -588,7 +537,7 @@ class Article extends Submission {
 			return $returner;
 		}
 
-		$articleFile =& $articleFileDao->getArticleFile($signoff->getFileId(), $signoff->getFileRevision());
+		$articleFile =& $articleFileDao->getArticleFile($signoff->getFileId());
 		return $articleFile;
 	}
 
@@ -629,36 +578,29 @@ class Article extends Submission {
 	 * Get the most recent decision.
 	 * @return int 
 	 * Transferred from AuthorSubmission.inc.php
-	 * Edited by aglet
-	 * Last Update: 6/19/2011
 	 */
 	function getMostRecentDecision() {
-            /**
-             *  Edited by: AIM
-             *  Last Updated: May 31, 2011
-             **/
-            $articleId = $this->getArticleId();
-
-            $articleDao = DAORegistry::getDAO('ArticleDAO');
-            $decision = $articleDao->getLastEditorDecision($articleId);
-            
-            return $decision['decision'];
-	}
+	    $articleId = $this->getArticleId();
 	
+	    $sectionDecisionDao = DAORegistry::getDAO('SectionDecisionDAO');
+	    $decision = $sectionDecisionDao->getLastSectionDecision($articleId);
+	    
+	    return $decision->getDecision();
+	}
+
 	/**
-	 * Get the number of resubmission
+	 * Get the number of resubmission for the last decision
 	 * @return int
-	 * Edited by el
-	 * Last update: 5/11/2012
 	*/
 	function getResubmitCount(){
-		$articleId = $this->getArticleId();
-		$articleDao = DAORegistry::getDAO('ArticleDAO');
-		$result = $articleDao->getLastEditorDecision($articleId);
-		return $result['resubmitCount'];	
+	    $articleId = $this->getArticleId();
+	
+	    $sectionDecisionDao = DAORegistry::getDAO('SectionDecisionDAO');
+	    $decision = $sectionDecisionDao->getLastSectionDecision($articleId);
+	    if (isset($decision)) return $decision->getResubmitCount();	
+	    else return 0;
 	}
-
-
+	
 	/*
 	 * Get a map for editor decision to locale key.
 	 * @return array
@@ -668,15 +610,15 @@ class Article extends Submission {
 		static $editorDecisionMap;
 		if (!isset($editorDecisionMap)) {
 			$editorDecisionMap = array(
-				SUBMISSION_EDITOR_DECISION_ACCEPT => 'editor.article.decision.accept',
-				SUBMISSION_EDITOR_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
-				SUBMISSION_EDITOR_DECISION_DECLINE => 'editor.article.decision.decline',
-				SUBMISSION_EDITOR_DECISION_COMPLETE => 'editor.article.decision.complete',
-				SUBMISSION_EDITOR_DECISION_INCOMPLETE => 'editor.article.decision.incomplete',
-				SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
-				SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
-				SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited',
-				SUBMISSION_EDITOR_DECISION_DONE => 'editor.article.decision.researchCompleted'	
+				SUBMISSION_SECTION_DECISION_APPROVED => 'editor.article.decision.approved',
+				SUBMISSION_SECTION_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
+				SUBMISSION_SECTION_DECISION_DECLINED => 'editor.article.decision.declined',
+				SUBMISSION_SECTION_DECISION_COMPLETE => 'editor.article.decision.complete',
+				SUBMISSION_SECTION_DECISION_INCOMPLETE => 'editor.article.decision.incomplete',
+				SUBMISSION_SECTION_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+				SUBMISSION_SECTION_DECISION_FULL_REVIEW => 'editor.article.decision.fullReview',
+				SUBMISSION_SECTION_DECISION_EXPEDITED => 'editor.article.decision.expedited',
+				SUBMISSION_SECTION_DECISION_DONE => 'editor.article.decision.researchCompleted'	
 			);
 		}
 		return $editorDecisionMap;
@@ -728,17 +670,26 @@ class Article extends Submission {
 			);
 		}
 		return $reasonsForExemptionMap;
+	}  
+
+	/**
+	 * Get the last section decision id for this article.
+	 * @return Section Decision object
+	 */
+	function getLastSectionDecisionId() {
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$sDecision =& $sectionDecisionDao->getLastSectionDecision($this->getId());
+		return $sDecision->getId();
 	}
 
-	function isDueForReview() {
-		$today = time();
-        $startdate = strtotime($this->getStartDate($this->getLocale()));
-        $dueDate = strtotime ('+1 year', $startdate) ;
-    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
-        $approvalDue = strtotime ('+1 year', $approvalDate) ;
-        $due = (($today - $dueDate)>0 && ($today - $approvalDue) > 0) ? 1 : 0;
-        //echo "$today, $dueDate, $approvalDue, $due";
-        return $due;
-    }    
+	/**
+	 * Get the last section decision id for this article.
+	 * @return Section Decision object
+	 */
+	function getLastSectionDecisionDate() {
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$sDecision =& $sectionDecisionDao->getLastSectionDecision($this->getId());
+		return $sDecision->getDateDecided();
+	}
 }
 ?>

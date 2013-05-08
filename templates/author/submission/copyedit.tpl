@@ -40,7 +40,7 @@
 		<td colspan="4">
 			{translate key="common.file"}:
 			{if $copyeditInitialSignoff->getDateCompleted() && $initialCopyeditFile}
-				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$copyeditInitialSignoff->getFileId():$copyeditInitialSignoff->getFileRevision()}" class="file">{$initialCopyeditFile->getFileName()|escape}</a>&nbsp;&nbsp;{$initialCopyeditFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$copyeditInitialSignoff->getFileId()}" class="file">{$initialCopyeditFile->getFileName()|escape}</a>&nbsp;&nbsp;{$initialCopyeditFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 			{/if}
@@ -71,7 +71,7 @@
 		<td colspan="5">
 			{translate key="common.file"}:
 			{if $copyeditAuthorSignoff->getDateNotified() && $editorAuthorCopyeditFile}
-				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$copyeditAuthorSignoff->getFileId():$copyeditAuthorSignoff->getFileRevision()}" class="file">{$editorAuthorCopyeditFile->getFileName()|escape}</a>&nbsp;&nbsp;{$editorAuthorCopyeditFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$copyeditAuthorSignoff->getFileId()}" class="file">{$editorAuthorCopyeditFile->getFileName()|escape}</a>&nbsp;&nbsp;{$editorAuthorCopyeditFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 			{/if}
@@ -100,7 +100,7 @@
 		<td colspan="4">
 			{translate key="common.file"}:
 			{if $copyeditFinalSignoff->getDateCompleted() && $finalCopyeditFile}
-				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$copyeditFinalSignoff->getFileId():$copyeditFinalSignoff->getFileRevision()}" class="file">{$finalCopyeditFile->getFileName()|escape}</a>&nbsp;&nbsp;{$finalCopyeditFile->getDateModified()|date_format:$dateFormatShort}
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$copyeditFinalSignoff->getFileId()}" class="file">{$finalCopyeditFile->getFileName()|escape}</a>&nbsp;&nbsp;{$finalCopyeditFile->getDateModified()|date_format:$dateFormatShort}
 			{else}
 				{translate key="common.none"}
 			{/if}

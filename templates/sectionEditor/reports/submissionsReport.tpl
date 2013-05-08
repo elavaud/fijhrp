@@ -65,7 +65,7 @@ $(document).ready(function() {
         		changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', maxDate: '0', onSelect: function(){
         			showProposalDetails();
         			$('.decisionField').remove();
-        			$('#decisions').val('editor.article.decision.accept');
+        			$('#decisions').val('editor.article.decision.approved');
         		}
         	}
         );
@@ -86,13 +86,13 @@ $(document).ready(function() {
         		changeMonth: true, changeYear: true, dateFormat: 'dd-M-yy', maxDate: '-1 d', onSelect: function(){
         			showProposalDetails();
         			$('.decisionField').remove();
-        			$('#decisions').val('editor.article.decision.accept');
+        			$('#decisions').val('editor.article.decision.approved');
         		}
         	}
         );
         
         $('#decisions').change(function(){
-        	if ($('#decisions').val() != 'editor.article.decision.accept') {
+        	if ($('#decisions').val() != 'editor.article.decision.approved') {
         		if ($('#approvedAfter').val() != "" || $('#approvedBefore').val() != ""){
         			$('#approvedAfter').val("");
         			$('#approvedBefore').val("");

@@ -19,18 +19,18 @@
 		<td width="80%" colspan="2" class="data">{$submission->getFirstAuthor()|escape}</td>
 	</tr>
         <tr>
-		<td width="20%" class="label">ID</td>
+		<td width="20%" class="label">{translate key="common.proposalId"}</td>
 		<td width="80%" colspan="2" class="data">{$submission->getLocalizedProposalId()|escape}</td>
 	</tr>
 	<tr>
 		<td width="20%" class="label">{translate key="article.title"}</td>
-		<td width="80%" colspan="2" class="data">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
+		<td width="80%" colspan="2" class="data">{$abstract->getScientificTitle()|strip_unsafe_html}</td>
 	</tr>
 	<tr>
 		<td width="20%" class="label">{translate key="submission.originalFile"}</td>
 		<td width="80%" colspan="2" class="data">
 			{if $submissionFile}
-				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$submissionFile->getFileId():$submissionFile->getRevision()}" class="file">{$submissionFile->getFileName()|escape}</a>
+				<a href="{url op="downloadFile" path=$submission->getArticleId()|to_array:$submissionFile->getFileId()}" class="file">{$submissionFile->getFileName()|escape}</a>
 			{else}
 				{translate key="common.none"}
 			{/if}
@@ -73,7 +73,7 @@
 		<td colspan="2" class="value">
 			{assign var="submitter" value=$submission->getUser()}
 			{assign var=emailString value=$submitter->getFullName()|concat:" <":$submitter->getEmail():">"}
-			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getArticleId()}
+			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$abstract->getScientificTitle()|strip_tags articleId=$submission->getArticleId()}
 			{$submitter->getFullName()|escape} {icon name="mail" url=$url}
 		</td>
 	</tr>
@@ -81,33 +81,7 @@
 		<td class="label">{translate key="common.dateSubmitted"}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$datetimeFormatLong}</td>
 	</tr>
-{* Commented out by spf - 1 Dec 2011
-	<tr valign="top">
-		<td width="20%" class="label">{translate key="section.section"}</td>
-		<td width="80%" colspan="2" class="data">{$submission->getSectionTitle()|escape}</td>
-	</tr>
-	<tr valign="top">
-		<td width="20%" class="label">{translate key="user.role.editor"}</td>
-		{assign var="editAssignments" value=$submission->getEditAssignments()}
-		<td width="80%" colspan="2" class="data">
-			{foreach from=$editAssignments item=editAssignment}
-				{assign var=emailString value=$editAssignment->getEditorFullName()|concat:" <":$editAssignment->getEditorEmail():">"}
-				{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$currentUrl subject=$submission->getLocalizedTitle|strip_tags articleId=$submission->getArticleId()}
-				{$editAssignment->getEditorFullName()|escape} {icon name="mail" url=$url}
-				{if !$editAssignment->getCanEdit() || !$editAssignment->getCanReview()}
-					{if $editAssignment->getCanEdit()}
-						({translate key="submission.editing"})
-					{else}
-						({translate key="submission.review"})
-					{/if}
-				{/if}
-				<br/>
-                        {foreachelse}
-                                {translate key="common.noneAssigned"}
-                        {/foreach}
-		</td>
-	</tr>
-*}
+
 	{if $submission->getCommentsToEditor()}
 	<tr valign="top">
 		<td width="20%" class="label">{translate key="article.commentsToEditor"}</td>

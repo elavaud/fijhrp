@@ -58,11 +58,15 @@ class ArticleMailTemplate extends MailTemplate {
 		$journal = isset($this->journal)?$this->journal:Request::getJournal();
 		$sectionDao =& DAORegistry::getDAO('SectionDAO');
 		$section =& $sectionDao->getSection($article->getSectionId());
-		$paramArray['articleTitle'] = strip_tags($article->getLocalizedTitle());
+		$abstract =& $article->getLocalizedAbstract();
+		$paramArray['articleTitle'] = strip_tags($abstract->getScientificTitle());
 		$paramArray['articleId'] = $article->getProposalId(Locale::getLocale());
 		$paramArray['journalName'] = strip_tags($journal->getLocalizedTitle());
 		$paramArray['sectionName'] = strip_tags($section->getLocalizedTitle());
-		$paramArray['articleAbstract'] = String::html2text($article->getLocalizedAbstract());
+		$paramArray['articleBackground'] = String::html2text($abstract->getBackground());
+		$paramArray['articleObjectives'] = String::html2text($abstract->getObjectives());
+		$paramArray['articleStudyMethods'] = String::html2text($abstract->getStudyMethods());
+		$paramArray['articleExpectedOutcomes'] = String::html2text($abstract->getExpectedOutcomes());
 		$paramArray['authorString'] = strip_tags($article->getAuthorString());
 		parent::assignParams($paramArray);
 	}
@@ -182,97 +186,57 @@ class ArticleMailTemplate extends MailTemplate {
 
 	function toAssignedReviewingSectionEditors($articleId) {
 		$returner = array();
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			// Every section editors (erc secretaries) review and edit
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->getReviewingSectionEditorAssignmentsByArticleId($articleId);
-			//while ($editAssignment =& $editAssignments->next()) {
-				//$this->addRecipient($editAssignment->getEditorEmail(), $editAssignment->getEditorFullName());
-				//$returner[] =& $editAssignment;
-				//unset($editAssignment);
-			//}
-			$journal = isset($this->journal)?$this->journal:Request::getJournal();
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($articleId);
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor){
-				$this->addRecipient($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$returner[] = $sectionEditor;			
-			}
+		$journal = isset($this->journal)?$this->journal:Request::getJournal();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article =& $articleDao->getArticle($articleId);
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+		foreach ($sectionEditors as $sectionEditor){
+			$this->addRecipient($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			$returner[] = $sectionEditor;			
+		}
 		return $returner;
 	}
 
 	function toAssignedEditingSectionEditors($articleId) {
 		$returner = array();
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			// Every section editors (erc secretaries) review and edit
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->getEditingSectionEditorAssignmentsByArticleId($articleId);
-			//while ($editAssignment =& $editAssignments->next()) {
-				//$this->addRecipient($editAssignment->getEditorEmail(), $editAssignment->getEditorFullName());
-				//$returner[] =& $editAssignment;
-				//unset($editAssignment);
-			//}
-			$journal = isset($this->journal)?$this->journal:Request::getJournal();
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($articleId);
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor){
-				$this->addRecipient($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$returner[] =& $sectionEditor;			
-			}
+		$journal = isset($this->journal)?$this->journal:Request::getJournal();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article =& $articleDao->getArticle($articleId);
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+		foreach ($sectionEditors as $sectionEditor){
+			$this->addRecipient($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			$returner[] =& $sectionEditor;			
+		}
 		return $returner;
 	}
 
 	function ccAssignedReviewingSectionEditors($articleId) {
 		$returner = array();
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			// Every section editors (erc secretaries) review and edit
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->getReviewingSectionEditorAssignmentsByArticleId($articleId);
-			//while ($editAssignment =& $editAssignments->next()) {
-				//$this->addCc($editAssignment->getEditorEmail(), $editAssignment->getEditorFullName());
-				//$returner[] =& $editAssignment;
-				//unset($editAssignment);
-			//}
-			$journal = isset($this->journal)?$this->journal:Request::getJournal();
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($articleId);
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor){
-				$this->addCc($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$returner[] =& $sectionEditor;			
-			}
+		$journal = isset($this->journal)?$this->journal:Request::getJournal();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article =& $articleDao->getArticle($articleId);
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+		foreach ($sectionEditors as $sectionEditor){
+			$this->addCc($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			$returner[] =& $sectionEditor;			
+		}
 		return $returner;
 	}
 
 	function ccAssignedEditingSectionEditors($articleId) {
 		$returner = array();
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			// Every section editors (erc secretaries) review and edit
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $edit Assignment Dao->getEditingSectionEditorAssignmentsByArticleId($articleId);
-			//while ($editAssignment =& $editAssignments->next()) {
-				//$this->addCc($editAssignment->getEditorEmail(), $editAssignment->getEditorFullName());
-				//$returner[] =& $editAssignment;
-				//unset($editAssignment);
-			//}
-			$journal = isset($this->journal)?$this->journal:Request::getJournal();
-			$articleDao =& DAORegistry::getDAO('ArticleDAO');
-			$article =& $articleDao->getArticle($articleId);
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-			foreach ($sectionEditors as $sectionEditor){
-				$this->addCc($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$returner[] =& $sectionEditor;			
-			}
+		$journal = isset($this->journal)?$this->journal:Request::getJournal();
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$article =& $articleDao->getArticle($articleId);
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+		foreach ($sectionEditors as $sectionEditor){
+			$this->addCc($sectionEditor->getEmail(), $sectionEditor->getFullName());
+			$returner[] =& $sectionEditor;			
+		}
 		return $returner;
 	}
 }

@@ -92,22 +92,15 @@ class EmailHandler extends UserHandler {
 			// 1. User is submitter
 			if ($article && $article->getUserId() == $user->getId()) $hasAccess = true;
 			// 2. User is section editor of article or full editor
-				// Removed by EL on February 17th 2013
-				// No edit assignments anymore
-				//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-				//$editAssignments =& $edit Assignment Dao->getEditAssignmentsByArticleId($articleId);
-				//while ($editAssignment =& $editAssignments->next()) {
-					//if ($editAssignment->getEditorId() === $user->getId()) $hasAccess = true;
-				//}
-				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
-				foreach ($sectionEditors as $sectionEditor) if ($sectionEditor->getId() === $user->getId()) $hasAccess = true;	
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+			foreach ($sectionEditors as $sectionEditor) if ($sectionEditor->getId() === $user->getId()) $hasAccess = true;	
 				
 			if (Validation::isEditor($journal->getId())) $hasAccess = true;
 
 			// 3. User is reviewer
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-			foreach ($reviewAssignmentDao->getBySubmissionId($articleId) as $reviewAssignment) {
+			foreach ($reviewAssignmentDao->getByDecisionId($article->getLastSectionDecisionId()) as $reviewAssignment) {
 				if ($reviewAssignment->getReviewerId() === $user->getId()) $hasAccess = true;
 			}
 			// 4. User is copyeditor

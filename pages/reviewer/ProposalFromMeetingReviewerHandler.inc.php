@@ -62,8 +62,8 @@ class ProposalFromMeetingReviewerHandler extends ReviewerHandler {
 		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
 		$templateMgr->assign_by_ref('previousFiles', $articleFileDao->getPreviousFilesByArticleId($submission->getId()));
 		
-			// EL on March 11th 2013
-            $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        $templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
             
 		$templateMgr->assign('isReviewer', $ercReviewersDao->ercReviewerExists($journal->getId(), $submission->getSectionId(), $user->getId()));
 		
@@ -72,7 +72,7 @@ class ProposalFromMeetingReviewerHandler extends ReviewerHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadProposalFromMeetingFile($args) {
 		$proposalId = isset($args[0]) ? $args[0] : 0;

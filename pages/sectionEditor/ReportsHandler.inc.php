@@ -464,6 +464,7 @@ $sort = Request::getUserVar('sort');
 	
 		
 		foreach ($submissionsArray as $submission) {
+			$abstract = $submission->getLocalizedAbstract();
 			foreach ($columns as $index => $junk) {
 				if ($index == 'proposalId') {
 					$columns[$index] = $submission->getProposalId($submission->getLocale());
@@ -488,9 +489,9 @@ $sort = Request::getUserVar('sort');
 				} elseif ($index == 'authorEmail') {
 					$columns[$index] = $submission->getAuthorEmail();
 				} elseif ($index == 'scientificTitle') {
-					$columns[$index] = $submission->getLocalizedTitle();
+					$columns[$index] = $abstract->getScientificTitle();
 				} elseif ($index == 'publicTitle') {
-					$columns[$index] = $submission->getLocalizedPublicTitle();
+					$columns[$index] = $abstract->getPublicTitle();
 				} elseif ($index == 'studentInstitution') {
 					if ($submission->getLocalizedStudentInitiatedResearch() == 'Yes') $columns[$index] = $submission->getLocalizedStudentInstitution();
 					else $columns[$index] = 'Non-Student';

@@ -106,11 +106,11 @@
 	<li>{translate key="notification.type.editorDecisionComment" param=$titleVar}
 	<ul class="plain">
 		<li><span>
-			<input id="notificationEditorDecisionComment" type="checkbox" name="notificationEditorDecisionComment"{if !$smarty.const.NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT|in_array:$notificationSettings} checked="checked"{/if} />
+			<input id="notificationEditorDecisionComment" type="checkbox" name="notificationEditorDecisionComment"{if !$smarty.const.NOTIFICATION_TYPE_SECTION_DECISION_COMMENT|in_array:$notificationSettings} checked="checked"{/if} />
 			{fieldLabel name="notificationEditorDecisionComment" key="notification.allow"}
 		</span></li>
 		<li><span>
-			<input id="emailNotificationEditorDecisionComment" type="checkbox" name="emailNotificationEditorDecisionComment"{if $smarty.const.NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT|in_array:$emailSettings} checked="checked"{/if} />
+			<input id="emailNotificationEditorDecisionComment" type="checkbox" name="emailNotificationEditorDecisionComment"{if $smarty.const.NOTIFICATION_TYPE_SECTION_DECISION_COMMENT|in_array:$emailSettings} checked="checked"{/if} />
 			{fieldLabel name="emailNotificationEditorDecisionComment" key="notification.email"}
 		</span></li>
 	</ul>

@@ -83,9 +83,11 @@
 	</div>
 	]]></message>
 	<message key="common.changesSaved">Your changes have been saved.</message>
+	<message key="common.chatRoom">Chat Room</message>
 	<message key="common.chooseOne">Choose One</message>
 	<message key="common.close">Close</message>
 	<message key="common.closeWindow">Close Window</message>
+    <message key="common.comments">Comments</message>
 	<message key="common.complete">Complete</message>
 	<message key="common.completed">Completed</message>
 	<message key="common.continue">Continue</message>
@@ -97,8 +99,9 @@
        <message key="common.picountry"> Country of usual Residence</message>
        
 	<message key="common.create">Create</message>
-	<message key="common.dateCompleted">Date completed</message>
 	<message key="common.date">Date</message>
+    <message key="common.dateDecided">Date decided</message>
+	<message key="common.dateCompleted">Date completed</message>
 
         
         <!-- Added by EL on April 4th 2013 -->
@@ -107,6 +110,7 @@
 	<message key="common.dateModified">Date modified</message>
 	<message key="common.dateRequested">Date requested</message>
 	<message key="common.dateSubmitted">Date submitted</message>
+    <message key="common.dateSubmittedInstruct">The date when this proposal has been submitted to the Ethics Committee.</message>
 	<message key="common.dateUploaded">Date uploaded</message>
 	<message key="common.day">Day</message>
 	<message key="common.deactivate">Deactivate</message>
@@ -148,6 +152,7 @@
 	<message key="common.homePageHeaderLogo.altText">Homepage Header Logo</message>
 	<message key="common.hour">Hour</message>
 	<message key="common.id">ID</message>
+    <message key="common.idInstruct">Identification code of the research proposal.</message>
         <!-- EL on April 2nd 2013 -->
         <message key="common.proposalId">Proposal ID</message>
         <!-- end -->
@@ -162,6 +167,7 @@
 	<message key="common.minute">Minute(s)</message>
 	<message key="common.modify">Modify</message>
 	<message key="common.month">Month</message>
+	<message key="common.name">Name</message>
 	<message key="common.noneAssigned">None assigned</message>
 	<message key="common.none">None</message>
 	<message key="common.no">No</message>
@@ -374,20 +380,6 @@
 	<message key="search.titleIndex">Browse Title Index</message>
 	<message key="search.title">Title</message>
 	<message key="search.typeMethodApproach">Type (method/approach)</message>
-    
-	<message key="editor.article.decision.accept">Approved</message>
-	<message key="editor.article.decision.decline">Not Approved</message>	
-	
-    <!-- Added by EL on May 3 2012-->
-    <message key="editor.article.decision.pendingRevisions">Revisions Required</message >
-	<message key="editor.article.decision.resubmit">Revise and Resubmit</message>
-	<message key="editor.article.decision.decline">Not Approved</message>	
-	<message key="editor.article.decision.complete">Complete</message>
-	<message key="editor.article.decision.incomplete">Incomplete</message>
-	<message key="editor.article.decision.exempted">Exempt From Review</message>
-	<message key="editor.article.decision.expedited">For Expedited Review</message>
-	<message key="editor.article.decision.assigned">For Full Review</message>
-    
     <message key="search.investigator">Investigator</message>
     <message key="search.investigatorAffiliation">Investigator Affiliation</message>
     <message key="search.investigatorEmail">Investigator e-mail</message>

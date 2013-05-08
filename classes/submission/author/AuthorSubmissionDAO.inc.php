@@ -14,21 +14,19 @@
  */
 
 // $Id$
-
-
 import('classes.submission.author.AuthorSubmission');
 
 class AuthorSubmissionDAO extends DAO {
 	var $articleDao;
 	var $authorDao;
 	var $userDao;
-	var $reviewAssignmentDao;
 	var $articleFileDao;
 	var $suppFileDao;
 	var $copyeditorSubmissionDao;
 	var $articleCommentDao;
 	var $galleyDao;
-
+	var $sectionDecisionDao;
+	
 	/**
 	 * Constructor.
 	 */
@@ -37,15 +35,12 @@ class AuthorSubmissionDAO extends DAO {
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
-		$this->reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			// $this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
 		$this->articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
 		$this->copyeditorSubmissionDao =& DAORegistry::getDAO('CopyeditorSubmissionDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 		$this->galleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
+		$this->sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 	}
 
 	/**
@@ -101,25 +96,12 @@ class AuthorSubmissionDAO extends DAO {
 
 		// Article attributes
 		$this->articleDao->_articleFromRow($authorSubmission, $row);
-
-		// Editor Assignment
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $this->edit Assignment Dao->get Edit AssignmentsByArticleId($row['article_id']);
-			//$authorSubmission->setEditAssignments($editAssignments->toArray());
-
+		
 		// Editor Decisions
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$authorSubmission->setDecisions($this->getEditorDecisions($row['article_id'], $i), $i);
-		}
-
-		// Review Assignments
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$authorSubmission->setReviewAssignments($this->reviewAssignmentDao->getBySubmissionId($row['article_id'], $i), $i);
-		}
-
+		$authorSubmission->setDecisions($this->sectionDecisionDao->getSectionDecisionsByArticleId($row['article_id']));
+		
 		// Comments
-		$authorSubmission->setMostRecentEditorDecisionComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_EDITOR_DECISION, $row['article_id']));
+		$authorSubmission->setMostRecentEditorDecisionComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_SECTION_DECISION, $row['article_id']));
 		$authorSubmission->setMostRecentCopyeditComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_COPYEDIT, $row['article_id']));
 		$authorSubmission->setMostRecentProofreadComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_PROOFREAD, $row['article_id']));
 		$authorSubmission->setMostRecentLayoutComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_LAYOUT, $row['article_id']));
@@ -128,12 +110,7 @@ class AuthorSubmissionDAO extends DAO {
 		$authorSubmission->setSubmissionFile($this->articleFileDao->getArticleFile($row['submission_file_id']));
 		$authorSubmission->setRevisedFile($this->articleFileDao->getArticleFile($row['revised_file_id']));
 		$authorSubmission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$authorSubmission->setAuthorFileRevisions($this->articleFileDao->getArticleFileRevisions($row['revised_file_id'], $i), $i);
-		}
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$authorSubmission->setEditorFileRevisions($this->articleFileDao->getArticleFileRevisions($row['editor_file_id'], $i), $i);
-		}
+		
 		$authorSubmission->setGalleys($this->galleyDao->getGalleysByArticle($row['article_id']));
 
 		HookRegistry::call('AuthorSubmissionDAO::_returnAuthorSubmissionFromRow', array(&$authorSubmission, &$row));
@@ -167,8 +144,6 @@ class AuthorSubmissionDAO extends DAO {
 
 	/**
 	 * Get all author submissions for an author.
-	 * Added filtering options
-	 * Last updated by igm 9/25/11
 	 * @param $authorId int
 	 * @return DAOResultFactory continaing AuthorSubmissions
 	 */
@@ -177,8 +152,6 @@ class AuthorSubmissionDAO extends DAO {
 		$locale = Locale::getLocale();
 		$params = array(
 				$locale,
-				'cleanScientificTitle',
-				'cleanScientificTitle',
 				$locale,
 				'proposalCountry',
 				'proposalCountry',
@@ -200,12 +173,12 @@ class AuthorSubmissionDAO extends DAO {
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) = LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) = LOWER(?)';
 				} elseif ($searchMatch === 'contains') {
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
 					$search = '%' . $search . '%';
 				} else { // $searchMatch === 'startsWith'
-					$searchSql = ' AND LOWER(COALESCE(atl.setting_value, atpl.setting_value)) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
 					$search = $search . '%';
 				}
 				$params[] = $search;
@@ -246,15 +219,15 @@ class AuthorSubmissionDAO extends DAO {
 		}
 
 		$sql = 'SELECT DISTINCT	a.*,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+				COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS submission_title,
 				aa.last_name AS author_name,
 				(SELECT SUM(g.views) FROM article_galleys g WHERE (g.article_id = a.article_id AND g.locale = ?)) AS galley_views,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
 				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (atl.article_id = a.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+				LEFT JOIN article_abstract abl ON (abl.article_id = a.article_id AND abl.locale = ?)
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
 				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)	
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
@@ -302,41 +275,6 @@ class AuthorSubmissionDAO extends DAO {
 	//
 
 	/**
-	 * Get the editor decisions for a review round of an article.
-	 * @param $articleId int
-	 * @param $round int
-	 */
-	function getEditorDecisions($articleId, $round = null) {
-		$decisions = array();
-
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? ORDER BY date_decided ASC', $articleId
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY date_decided ASC',
-				array($articleId, $round)
-			);
-		}
-
-		while (!$result->EOF) {
-			$decisions[] = array(
-				'editDecisionId' => $result->fields['edit_decision_id'],
-				'editorId' => $result->fields['editor_id'],
-				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided'])
-			);
-			$result->moveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $decisions;
-	}
-
-	/**
 	 * Get count of active and complete assignments
 	 * @param authorId int
 	 * @param journalId int
@@ -345,22 +283,63 @@ class AuthorSubmissionDAO extends DAO {
 		$submissionsCount = array();
 		$submissionsCount[0] = 0;
 		$submissionsCount[1] = 0;
+		$submissionsCount[2] = 0;
+		$submissionsCount[3] = 0;
 
-		$sql = 'SELECT count(*), status FROM articles a LEFT JOIN sections s ON (s.section_id = a.section_id) WHERE a.journal_id = ? AND a.user_id = ? GROUP BY a.status';
+		$sql = 'SELECT COUNT(*) as review_count
+				FROM	articles a			
+					LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+					LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
+				WHERE	a.user_id = ? 
+					AND a.journal_id = ?';
+					
+		$sql0 = ' AND (a.status <> ' . STATUS_ARCHIVED . ' 
+				AND a.status <> '.STATUS_WITHDRAWN.' 
+				AND (
+						(
+						a.status <> '.STATUS_REVIEWED.' 
+						AND (
+							a.submission_progress <> 0 
+							OR sdec.decision = '.SUBMISSION_SECTION_DECISION_INCOMPLETE.'
+						)
+					) 
+					OR (
+						a.status = '.STATUS_REVIEWED.' 
+						AND sdec.decision = '.SUBMISSION_SECTION_DECISION_RESUBMIT.'
+					)
+				))';
+				
+		$sql1 = ' AND (a.status <> ' . STATUS_ARCHIVED . ' 
+				AND a.status <> ' . STATUS_WITHDRAWN . ' 
+				AND a.status <> ' . STATUS_REVIEWED . '
+				AND (sdec.decision <> '.SUBMISSION_SECTION_DECISION_INCOMPLETE.' OR NOT EXISTS (SELECT * FROM section_decisions sd WHERE sd.section_decision_id = sdec.section_decision_id AND sd.review_type = a.status))
+				AND a.submission_progress = 0)';
+				
+		$sql2 = ' AND (a.status = '.STATUS_REVIEWED.' 
+				AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . '
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . '
+				) AND a.submission_progress = 0)';
+				
+		$sql3 = ' AND (a.status = ' . STATUS_ARCHIVED . ' 
+				OR a.status = ' . STATUS_WITHDRAWN.')';
+				
+		$result0 =& $this->retrieve($sql.$sql0, array($authorId, $journalId));
+		$result1 =& $this->retrieve($sql.$sql1, array($authorId, $journalId));
+		$result2 =& $this->retrieve($sql.$sql2, array($authorId, $journalId));
+		$result3 =& $this->retrieve($sql.$sql3, array($authorId, $journalId));
 
-		$result =& $this->retrieve($sql, array($journalId, $authorId));
-
-		while (!$result->EOF) {
-			if ($result->fields['status'] != 1) {
-				$submissionsCount[1] += $result->fields[0];
-			} else {
-				$submissionsCount[0] += $result->fields[0];
-			}
-			$result->moveNext();
-		}
-
-		$result->Close();
-		unset($result);
+		$submissionsCount[0] = $result0->Fields('review_count');
+		$result0->Close();
+		unset($result0);
+		$submissionsCount[1] = $result1->Fields('review_count');
+		$result1->Close();
+		unset($result1);
+		$submissionsCount[2] = $result2->Fields('review_count');
+		$result2->Close();
+		unset($result2);
+		$submissionsCount[3] = $result3->Fields('review_count');
+		$result3->Close();
+		unset($result3);
 
 		return $submissionsCount;
 	}
@@ -383,6 +362,231 @@ class AuthorSubmissionDAO extends DAO {
 			case 'status': return 'a.status';
 			default: return null;
 		}
+	}
+
+
+	/**
+	 * Retrieve unfiltered author submissions
+	 */
+	function &_getUnfilteredAuthorSubmissions($authorId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $additionalWhereSql = '', $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		
+		$primaryLocale = Locale::getPrimaryLocale();
+		$locale = Locale::getLocale();
+
+		$params = array(
+				$locale,
+				$locale,
+				'proposalCountry',
+				'proposalCountry',
+				$locale,
+				'title',
+				$primaryLocale,
+				'title',
+				$locale,
+				'abbrev',
+				$primaryLocale,
+				'abbrev',
+				$locale,
+				$authorId,
+				$journalId
+		);
+		
+		$searchSql = '';
+		$countrySql = '';
+
+		if (!empty($search)) switch ($searchField) {
+			case SUBMISSION_FIELD_TITLE:
+				if ($searchMatch === 'is') {
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) = LOWER(?)';
+				} elseif ($searchMatch === 'contains') {
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
+					$search = '%' . $search . '%';
+				} else {
+					$searchSql = ' AND LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER(?)';
+					$search = $search . '%';
+				}
+				$params[] = $search;
+				break;		
+		}
+		
+		if (!empty($dateFrom) || !empty($dateTo)) switch($dateField) {
+			case SUBMISSION_FIELD_DATE_SUBMITTED:
+				if (!empty($dateFrom)) {
+					$searchSql .= ' AND a.date_submitted >= ' . $this->datetimeToDB($dateFrom);
+				}
+				if (!empty($dateTo)) {
+					$searchSql .= ' AND a.date_submitted <= ' . $this->datetimeToDB($dateTo);
+				}
+				break;
+		}
+											  	
+		if (!empty($countryField)) {
+			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
+		}
+
+
+				
+		$sql = 'SELECT DISTINCT
+					a.*,
+					COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS submission_title,
+					aa.last_name AS author_name,
+					(SELECT SUM(g.views) FROM article_galleys g WHERE (g.article_id = a.article_id AND g.locale = ?)) AS galley_views,
+					COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
+					COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+				FROM	articles a
+					LEFT JOIN authors aa ON (aa.submission_id = a.article_id AND aa.primary_contact = 1)
+					LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+					LEFT JOIN article_abstract abl ON (abl.article_id = a.article_id AND abl.locale = ?)
+					LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+					LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)	
+					LEFT JOIN sections s ON (s.section_id = a.section_id)
+					LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
+					LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
+					LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
+					LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)				
+					LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+					LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
+				WHERE	a.user_id = ? 
+					AND a.journal_id = ?'.
+					(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'');
+
+
+		$result =& $this->retrieveRange($sql . ' ' . $searchSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+			$params,
+			$rangeInfo
+		);
+
+		return $result;
+	}
+
+	/**
+	 * Get all proposals to submit for a journal and a specific author.
+	 * @param $journalId int
+	 * @param $authorId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array AuthorSubmission
+	 */
+	function &getAuthorProposalsToSubmitIterator($authorId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+
+		$result =& $this->_getUnfilteredAuthorSubmissions(
+			$authorId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+				'a.status <> ' . STATUS_ARCHIVED . ' 
+				AND a.status <> '.STATUS_WITHDRAWN.' 
+				AND (
+						(
+						a.status <> '.STATUS_REVIEWED.' 
+						AND (
+							a.submission_progress <> 0 
+							OR sdec.decision = '.SUBMISSION_SECTION_DECISION_INCOMPLETE.'
+						)
+					) 
+					OR (
+						a.status = '.STATUS_REVIEWED.' 
+						AND sdec.decision = '.SUBMISSION_SECTION_DECISION_RESUBMIT.'
+					)
+				)', 
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
+		return $returner;
+	}
+
+	/**
+	 * Get all proposals in review for a journal and a specific author.
+	 * @param $journalId int
+	 * @param $authorId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array AuthorSubmission
+	 */
+	function &getAuthorProposalsInReviewIterator($authorId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+
+		$result =& $this->_getUnfilteredAuthorSubmissions(
+			$authorId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+				'a.status <> ' . STATUS_ARCHIVED . ' 
+				AND a.status <> ' . STATUS_WITHDRAWN . ' 
+				AND a.status <> ' . STATUS_REVIEWED . '
+				AND (sdec.decision <> '.SUBMISSION_SECTION_DECISION_INCOMPLETE.' OR NOT EXISTS (SELECT * FROM section_decisions sd WHERE sd.section_decision_id = sdec.section_decision_id AND sd.review_type = a.status))
+				AND a.submission_progress = 0', 
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
+		return $returner;
+	}
+
+	/**
+	 * Get all ongoing proposals for a journal and a specific author.
+	 * @param $journalId int
+	 * @param $authorId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array AuthorSubmission
+	 */
+	function &getAuthorOngoingResearchesIterator($authorId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+
+		$result =& $this->_getUnfilteredAuthorSubmissions(
+			$authorId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+				'a.status = '.STATUS_REVIEWED.' 
+				AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . '
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . '
+				) AND a.submission_progress = 0', 
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
+		return $returner;
+	}
+
+	/**
+	 * Get all archives proposals for a journal and a specific author.
+	 * @param $journalId int
+	 * @param $authorId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array AuthorSubmission
+	 */
+	function &getAuthorArchivesIterator($authorId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		
+		$result =& $this->_getUnfilteredAuthorSubmissions(
+			$authorId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+				'a.status = ' . STATUS_ARCHIVED . ' 
+				OR a.status = ' . STATUS_WITHDRAWN, 
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
+		return $returner;
 	}
 }
 

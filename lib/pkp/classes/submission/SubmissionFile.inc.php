@@ -66,22 +66,6 @@ class SubmissionFile extends DataObject {
 	}
 
 	/**
-	 * Get source revision of this file.
-	 * @return int
-	 */
-	function getSourceRevision() {
-		return $this->getData('sourceRevision');
-	}
-
-	/**
-	 * Set source revision of this file.
-	 * @param $sourceRevision int
-	 */
-	function setSourceRevision($sourceRevision) {
-		return $this->setData('sourceRevision', $sourceRevision);
-	}
-
-	/**
 	 * Get associated ID of file. (Used, e.g., for email log attachments.)
 	 * @return int
 	 */
@@ -95,22 +79,6 @@ class SubmissionFile extends DataObject {
 	 */
 	function setAssocId($assocId) {
 		return $this->setData('assocId', $assocId);
-	}
-
-	/**
-	 * Get revision number.
-	 * @return int
-	 */
-	function getRevision() {
-		return $this->getData('revision');
-	}
-
-	/**
-	 * Set revision number.
-	 * @param $revision int
-	 */
-	function setRevision($revision) {
-		return $this->setData('revision', $revision);
 	}
 
 	/**
@@ -257,25 +225,6 @@ class SubmissionFile extends DataObject {
 
 	function getNiceFileSize() {
 		return FileManager::getNiceFileSize($this->getData('fileSize'));
-	}
-
-	/**
-	 * Get round.
-	 * @return int
-	 */
-
-	function getRound() {
-		return $this->getData('round');
-	}
-
-
-	/**
-	 * Set round.
-	 * @param $round int
-	 */
-
-	function setRound($round) {
-		return $this->SetData('round', $round);
 	}
 
 	/**

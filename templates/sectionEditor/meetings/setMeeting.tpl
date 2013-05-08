@@ -55,7 +55,8 @@ $(document).ready(function() {
 {iterate from=submissions item=submission}
 {assign var="status" value=$submission->getSubmissionStatus()}
 {assign var="decision" value=$submission->getMostRecentDecision() }
-
+{assign var="abstract" value=$submission->getLocalizedAbstract()}
+							
 	{assign var="articleId" value=$submission->getArticleId()}
 	{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 	<tr valign="top">
@@ -63,7 +64,7 @@ $(document).ready(function() {
 			<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 			<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    			<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->		
-   			<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
+   			<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$abstract->getScientificTitle()|strip_unsafe_html|truncate:40:"..."}</a></td>
 			<td align="right">
 				{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 				{translate key=$proposalStatusKey}

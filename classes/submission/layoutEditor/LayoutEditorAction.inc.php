@@ -79,18 +79,17 @@ class LayoutEditorAction extends Action {
 	 * Delete an image from an article galley.
 	 * @param $submission object
 	 * @param $fileId int
-	 * @param $revision int (optional)
 	 */
-	function deleteArticleImage($submission, $fileId, $revision) {
+	function deleteArticleImage($submission, $fileId) {
 		import('classes.file.ArticleFileManager');
 		$articleGalleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
-		if (HookRegistry::call('LayoutEditorAction::deleteArticleImage', array(&$submission, &$fileId, &$revision))) return;
+		if (HookRegistry::call('LayoutEditorAction::deleteArticleImage', array(&$submission, &$fileId))) return;
 		foreach ($submission->getGalleys() as $galley) {
 			$images =& $articleGalleyDao->getGalleyImages($galley->getId());
 			foreach ($images as $imageFile) {
-				if ($imageFile->getArticleId() == $submission->getArticleId() && $fileId == $imageFile->getFileId() && $imageFile->getRevision() == $revision) {
+				if ($imageFile->getArticleId() == $submission->getArticleId() && $fileId == $imageFile->getFileId()) {
 					$articleFileManager = new ArticleFileManager($submission->getArticleId());
-					$articleFileManager->deleteFile($imageFile->getFileId(), $imageFile->getRevision());
+					$articleFileManager->deleteFile($imageFile->getFileId());
 				}
 			}
 			unset($images);
@@ -154,13 +153,8 @@ class LayoutEditorAction extends Action {
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($submission, 'LAYOUT_COMPLETE');
 
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $submission->getEditAssignments();
-			//if (empty($editAssignments)) return;
-
 		if (!$email->isEnabled() || ($send && !$email->hasErrors())) {
-			HookRegistry::call('LayoutEditorAction::completeLayoutEditing', array(&$submission, &$editAssignments, &$email));
+			HookRegistry::call('LayoutEditorAction::completeLayoutEditing', array(&$submission, &$email));
 			if ($email->isEnabled()) {
 				$email->setAssoc(ARTICLE_EMAIL_LAYOUT_NOTIFY_COMPLETE, ARTICLE_EMAIL_TYPE_LAYOUT, $layoutSignoff->getId());
 				$email->send();
@@ -344,10 +338,9 @@ class LayoutEditorAction extends Action {
 	 * This includes: The layout editor submission file, supplementary files, and galley files.
 	 * @param $article object
 	 * @parma $fileId int
-	 * @param $revision int optional
 	 * @return boolean
 	 */
-	function downloadFile($article, $fileId, $revision = null) {
+	function downloadFile($article, $fileId) {
 		$canDownload = false;
 
 		$galleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
@@ -364,9 +357,9 @@ class LayoutEditorAction extends Action {
 		}
 
 		$result = false;
-		if (!HookRegistry::call('LayoutEditorAction::downloadFile', array(&$article, &$fileId, &$revision, &$canDownload, &$result))) {
+		if (!HookRegistry::call('LayoutEditorAction::downloadFile', array(&$article, &$fileId, &$canDownload, &$result))) {
 			if ($canDownload) {
-				return parent::downloadFile($article->getId(), $fileId, $revision);
+				return parent::downloadFile($article->getId(), $fileId);
 			} else {
 				return false;
 			}

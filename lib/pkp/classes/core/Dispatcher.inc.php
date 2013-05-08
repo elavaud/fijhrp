@@ -239,7 +239,7 @@ class Dispatcher {
 		PKPRequest::_checkThis();
 
 		header('HTTP/1.0 404 Not Found');
-		fatalError('404 Not Found');
+		fatalError('404 Not Found -- RequestPath: '.PKPRequest::getRequestPath());
 	}
 }
 

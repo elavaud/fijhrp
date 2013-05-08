@@ -209,7 +209,7 @@ class SubmissionCommentsHandler extends AuthorHandler {
 		$trackSubmissionHandler->validate($articleId);
 		$authorSubmission =& $trackSubmissionHandler->submission;
 		
-		if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			// Cannot edit an editor decision comment.
 			Request::redirect(null, Request::getRequestedPage());
 		}
@@ -238,7 +238,7 @@ class SubmissionCommentsHandler extends AuthorHandler {
 		$trackSubmissionHandler->validate($articleId);
 		$authorSubmission =& $trackSubmissionHandler->submission;
 
-		if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			// Cannot edit an editor decision comment.
 			Request::redirect(null, Request::getRequestedPage());
 		}
@@ -250,7 +250,7 @@ class SubmissionCommentsHandler extends AuthorHandler {
 		$comment =& $articleCommentDao->getArticleCommentById($commentId);
 
 		// Redirect back to initial comments page
-		if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			Request::redirect(null, null, 'viewEditorDecisionComments', $articleId);
 		} else if ($comment->getCommentType() == COMMENT_TYPE_COPYEDIT) {
 			Request::redirect(null, null, 'viewCopyeditComments', $articleId);
@@ -280,7 +280,7 @@ class SubmissionCommentsHandler extends AuthorHandler {
 		AuthorAction::deleteComment($commentId);
 
 		// Redirect back to initial comments page
-		if ($comment->getCommentType() == COMMENT_TYPE_EDITOR_DECISION) {
+		if ($comment->getCommentType() == COMMENT_TYPE_SECTION_DECISION) {
 			Request::redirect(null, null, 'viewEditorDecisionComments', $articleId);
 		} else if ($comment->getCommentType() == COMMENT_TYPE_COPYEDIT) {
 			Request::redirect(null, null, 'viewCopyeditComments', $articleId);

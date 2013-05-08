@@ -45,13 +45,13 @@ class SubmissionsReportForm extends Form {
 		
 		$templateMgr =& TemplateManager::getManager();
 		$decisionOptions = array(
-				'editor.article.decision.accept' => 'editor.article.decision.accept',
+				'editor.article.decision.approved' => 'editor.article.decision.approved',
 				'editor.article.decision.resubmit' => 'editor.article.decision.resubmit',
-				'editor.article.decision.decline' => 'editor.article.decision.decline',
+				'editor.article.decision.declined' => 'editor.article.decision.declined',
 				'editor.article.decision.complete' => 'editor.article.decision.complete',
 				'editor.article.decision.incomplete' => 'editor.article.decision.incomplete',
 				'editor.article.decision.exempted' => 'editor.article.decision.exempted',
-				'editor.article.decision.assigned' => 'editor.article.decision.assigned',
+				'editor.article.decision.fullReview' => 'editor.article.decision.fullReview',
 				'editor.article.decision.expedited' => 'editor.article.decision.expedited'
 		);
 		$templateMgr->assign_by_ref('decisionsOptions', $decisionOptions);

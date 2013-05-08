@@ -116,9 +116,9 @@ function confirmAndPrompt(userId) {
 	<tr class="heading" valign="bottom">
 		<td width="5%">&nbsp;</td>
 		<td width="10%">{sort_heading key="user.username" sort="username"}</td>
-		<td width="10%">{sort_heading key="user.name" sort="name"}</td>
-		<td width="35%">Function(s)</td>
-		<td width="20%">{sort_heading key="user.email" sort="email"}</td>
+		<td width="20%">{sort_heading key="user.name" sort="name"}</td>
+		<td width="20%">Function(s)</td>
+		<td width="25%">{sort_heading key="user.email" sort="email"}</td>
 		<td width="20%" align="right">{translate key="common.action"}</td>
 	</tr>
 	<tr>
@@ -135,7 +135,7 @@ function confirmAndPrompt(userId) {
 			{assign var=emailString value=$user->getFullName()|concat:" <":$user->getEmail():">"}
 			{url|assign:"redirectUrl" path=$roleSymbolic escape=false}
 			{url|assign:"url" page="user" op="email" to=$emailString|to_array redirectUrl=$redirectUrl}
-			{$user->getEmail()|truncate:15:"..."|escape}&nbsp;{icon name="mail" url=$url}
+			{$user->getEmail()|truncate:20:"..."|escape}&nbsp;{icon name="mail" url=$url}
 		</td>
 		<td align="right">
 			{if $roleId}

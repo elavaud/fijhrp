@@ -65,16 +65,14 @@
 {assign var="count" value=0}
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getLocalizedProposalId()}
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
 	{assign var="reviewId" value=$submission->getReviewId()}
-	{assign var="status" value=$submission->getSubmissionStatus()}
-    {assign var="decision" value=$submission->getMostRecentDecision() }
 		
 		
 		<tr valign="top">
 			<td>{$articleId|escape}</td>
 			<td>{$submission->getDateNotified()|date_format:$dateFormatLong}</td>
-			<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB, Sept25,2011-->
-			<td><a href="{url op="submission" path=$reviewId}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
+			<td><a href="{url op="submission" path=$reviewId}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
 			<td class="nowrap" align="right">{$submission->getDateDue()|date_format:$dateFormatLong}</td>
 			<td class="nowrap" align="right">
 				{if $submission->getDateConfirmed()!=null && !$submission->getDeclined()}
@@ -96,7 +94,7 @@
 		</tr>
 		
 		
-		<td colspan="6" class="separator">&nbsp;</td>
+		<td colspan="6" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
 		{assign var="count" value=$count+1}
 {/iterate}
 {if $submissions->wasEmpty()}

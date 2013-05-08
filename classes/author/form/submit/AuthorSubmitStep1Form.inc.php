@@ -129,6 +129,7 @@ class AuthorSubmitStep1Form extends AuthorSubmitForm {
 	 * @return int the article ID
 	 */
 	function execute() {
+		
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 
 		if (isset($this->article)) {
@@ -163,13 +164,11 @@ class AuthorSubmitStep1Form extends AuthorSubmitForm {
 			$author->setFirstName($user->getFirstName());
 			$author->setMiddleName($user->getMiddleName());
 			$author->setLastName($user->getLastName());
-			$author->setAffiliation($user->getAffiliation(null), null);
-			$author->setCountry($user->getCountry());
+			$author->setAffiliation($user->getLocalizedAffiliation());
 			$author->setEmail($user->getEmail());
-			$author->setUrl($user->getUrl());
+			$author->setPhoneNumber($user->getPhone());
 			$author->setBiography($user->getBiography(null), null);
 			$author->setPrimaryContact(1);
-			
 			$this->article->addAuthor($author);
 			
 			$articleDao->insertArticle($this->article);

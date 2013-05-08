@@ -65,6 +65,7 @@ class FormValidatorArray extends FormValidator {
 
 		$isValid = true;
 		foreach ($data as $key => $value) {
+
 			if (count($this->_fields) == 0) {
 				// We expect all fields to contain values.
 				if (is_null($value) || trim((string)$value) == '') {
@@ -78,7 +79,6 @@ class FormValidatorArray extends FormValidator {
 					array_push($this->_errorFields, $this->getField()."[{$key}]");
 					continue;
 				}
-
 				// Go through all sub-sub-fields and check them explicitly
 				foreach ($this->_fields as $field) {
 					if (!isset($value[$field]) || trim((string)$value[$field]) == '') {

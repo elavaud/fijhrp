@@ -98,35 +98,6 @@ class AuthorSubmitForm extends Form {
 		return parent::getDefaultFormLocale();
 	}
 
-	/**
-	 * Automatically assign Section Editors to new submissions.
-	 * @param $article object
-	 * @return array of section editors
-	 * Removed by EL on February 17th 2013
-	 * No edit assignment anymore
-	 */
-	 /*
-	function assignEditors(&$article) {
-		$sectionId = $article->getSectionId();
-		$journal =& Request::getJournal();
-
-		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-		$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionId);
-
-		foreach ($sectionEditors as $sectionEditorEntry) {
-			$editAssignment = new EditAssignment();
-			$editAssignment->setArticleId($article->getId());
-			$editAssignment->setEditorId($sectionEditorEntry['user']->getId());
-			$editAssignment->setCanReview($sectionEditorEntry['canReview']);
-			$editAssignment->setCanEdit($sectionEditorEntry['canEdit']);
-			$edit Assignment Dao->insertEditAssignment($editAssignment);
-			unset($editAssignment);
-		}
-
-		return $sectionEditors;
-	}
-	*/
 }
 
 ?>

@@ -88,13 +88,14 @@
 	{assign var="submissionCount" value=0}
 	{foreach from=$submissions item=submission}
 	{assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
 	{assign var="key" value=$submission->getId()}
 	{if $isReviewer}
 	<tr valign="top">
 		<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    		<td>{$submission->getFirstAuthor()|escape}</td>	
-   		<td><a href="{url op="viewProposalFromMeeting" path=$submission->getArticleId()}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>
+   		<td><a href="{url op="viewProposalFromMeeting" path=$submission->getArticleId()}" class="action">{$abstract->getScientificTitle()|strip_unsafe_html}</a></td>
 		<td align="right">
 			{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 			{translate key=$proposalStatusKey}
@@ -107,7 +108,7 @@
 			<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
 			<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
    			<td>{$submission->getFirstAuthor()|escape}</td>	
-   			<td><a href="{url op="submission" path=$map.$key}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html}</a></td>
+   			<td><a href="{url op="submission" path=$map.$key}" class="action">{$abstract->getScientificTitle()|strip_unsafe_html}</a></td>
 			<td align="right">
 				{assign var="proposalStatusKey" value=$submission->getProposalStatusKey()}
 				{translate key=$proposalStatusKey}

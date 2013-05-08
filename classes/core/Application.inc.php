@@ -14,7 +14,6 @@
  *
  */
 
-
 import('lib.pkp.classes.core.PKPApplication');
 
 define('PHP_REQUIRED_VERSION', '4.2.0');
@@ -25,6 +24,7 @@ define('ASSOC_TYPE_ARTICLE',  0x0000101);
 define('CONTEXT_JOURNAL', 1);
 
 class Application extends PKPApplication {
+
 	function Application() {
 		parent::PKPApplication();
 	}
@@ -90,7 +90,6 @@ class Application extends PKPApplication {
 			'CitationDAO' => 'lib.pkp.classes.citation.CitationDAO',
 			'CommentDAO' => 'lib.pkp.classes.comment.CommentDAO',
 			'CopyeditorSubmissionDAO' => 'classes.submission.copyeditor.CopyeditorSubmissionDAO',
-			'Edit Assignment DAO' => 'classes.submission.editAssignment.Edit Assignment DAO',
 			'EditorSubmissionDAO' => 'classes.submission.editor.EditorSubmissionDAO',
 			'EmailTemplateDAO' => 'classes.mail.EmailTemplateDAO',
 			'ErcReviewersDAO' => 'classes.journal.ErcReviewersDAO',
@@ -114,6 +113,7 @@ class Application extends PKPApplication {
 			'OJSCompletedPaymentDAO' => 'classes.payment.ojs.OJSCompletedPaymentDAO',
 			'PluginSettingsDAO' => 'classes.plugins.PluginSettingsDAO',
 			'ProofreaderSubmissionDAO' => 'classes.submission.proofreader.ProofreaderSubmissionDAO',
+			'ProposalAbstractDAO' => 'classes.article.ProposalAbstractDAO',
 			'PublishedArticleDAO' => 'classes.article.PublishedArticleDAO',
 			'QueuedPaymentDAO' => 'lib.pkp.classes.payment.QueuedPaymentDAO',
 			'ReviewAssignmentDAO' => 'classes.submission.reviewAssignment.ReviewAssignmentDAO',
@@ -126,6 +126,7 @@ class Application extends PKPApplication {
 			'RTDAO' => 'classes.rt.ojs.RTDAO',
 			'ScheduledTaskDAO' => 'lib.pkp.classes.scheduledTask.ScheduledTaskDAO',
 			'SectionDAO' => 'classes.journal.SectionDAO',
+			'SectionDecisionDAO' => 'classes.article.SectionDecisionDAO',
 			'SectionEditorsDAO' => 'classes.journal.SectionEditorsDAO',
 			'SectionEditorSubmissionDAO' => 'classes.submission.sectionEditor.SectionEditorSubmissionDAO',
 			'SubscriptionDAO' => 'classes.subscription.SubscriptionDAO',

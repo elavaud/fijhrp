@@ -28,27 +28,6 @@ class CopyeditorSubmission extends Article {
 	}
 
 	//
-	// Editor
-	//	
-
-	/**
-	 * Get edit assignments for this article.
-	 * @return array
-	 */
-	function &getEditAssignments() {
-		$editAssignments =& $this->getData('editAssignments');
-		return $editAssignments;
-	}
-
-	/**
-	 * Set edit assignments for this article.
-	 * @param $editAssignments array
-	 */
-	function setEditAssignments($editAssignments) {
-		return $this->setData('editAssignments', $editAssignments);
-	}
-
-	//
 	// Comments
 	//
 

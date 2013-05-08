@@ -31,10 +31,10 @@
 <ul class="plain">
 
 {* "policie" page changed for SOP pdf by EL on April 10 2012*}
-<li>&#187; <a title="Standard Operating Procedures (khmer)" href="/philhrp/public/Cam_IRBs_HR_SOP_khmer.pdf" target="_blank">Standard Operating Procedures (khmer)<br /></a></li>
-<li>&#187; <a title="Standard Operating Procedures (engl)" href="/philhrp/public/Cam_SOP_engl.pdf" target="_blank">Standard Operating Procedures (engl)<br /></a></li>
-<li>&#187; <a title="Userguide for investigators (engl)" href="/philhrp/public/Cam_IRBs_HR_Investigator_Userguide_khmer.pdf" target="_blank">Userguide for investigators (khmer)<br /></a></li>
-<li>&#187; <a title="Userguide for investigators (khmer)" href="/philhrp/public/Cam_IRBs_HR_Investigator_Userguide_engl.pdf" target="_blank">Userguide for investigators (engl)<br /></a></li>
+<li>&#187; <a title="Standard Operating Procedures (khmer)" href="/fijihrp2/public/Cam_IRBs_HR_SOP_khmer.pdf" target="_blank">Standard Operating Procedures (khmer)<br /></a></li>
+<li>&#187; <a title="Standard Operating Procedures (engl)" href="/fijihrp2/public/Cam_SOP_engl.pdf" target="_blank">Standard Operating Procedures (engl)<br /></a></li>
+<li>&#187; <a title="Userguide for investigators (engl)" href="/fijihrp2/public/Cam_IRBs_HR_Investigator_Userguide_khmer.pdf" target="_blank">Userguide for investigators (khmer)<br /></a></li>
+<li>&#187; <a title="Userguide for investigators (khmer)" href="/fijihrp2/public/Cam_IRBs_HR_Investigator_Userguide_engl.pdf" target="_blank">Userguide for investigators (engl)<br /></a></li>
 </ul>
 </div>
 

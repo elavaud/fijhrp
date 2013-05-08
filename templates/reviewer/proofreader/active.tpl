@@ -23,16 +23,15 @@
 
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
 	{assign var="proofreaderSignoff" value=$submission->getSignoff('SIGNOFF_PROOFREADING_PROOFREADER')}
 	{assign var="authorSignoff" value=$submission->getSignoff('SIGNOFF_PROOFREADING_AUTHOR')}
 
 	<tr valign="top">
 		<td>{$articleId|escape}</td>
 		<td>{$proofreaderSignoff->getDateNotified()|date_format:$dateFormatTrunc}</td>
-		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} -->
-		<!-- {* <td>{$submission->getAuthorString(true)|truncate:40:"..."|escape}</td> *}  Commented out by MSB -->
-   		<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->		
-   		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|strip_unsafe_html|truncate:60:"..."}</a></td>
+   		<td>{$submission->getFirstAuthor(true)|truncate:40:"..."|escape}</td>		
+   		<td><a href="{url op="submission" path=$articleId}" class="action">{$abstract->getScientificTitle()|strip_unsafe_html}</a></td>
 		<td align="right">
 			{if not $authorSignoff->getDateCompleted()}
 				{translate key="submissions.initialProof"}

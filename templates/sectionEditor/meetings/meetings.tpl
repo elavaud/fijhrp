@@ -90,7 +90,8 @@
 			<td width="40%">
 				<a href="{url op="viewMeeting" path=$meeting->getId()}">
 				{foreach from=$map.$key item=submission name=submissions}
-					&#9679;&nbsp;{$submission->getLocalizedTitle()|strip_unsafe_html}
+					{assign var="abstract" value=$submission->getLocalizedAbstract()}
+					&#9679;&nbsp;{$abstract->getScientificTitle()|strip_unsafe_html}
 					{if $smarty.foreach.submissions.last}{else}<br/>{/if}
 				{/foreach}
 				{if empty($map.$key)}
@@ -110,7 +111,7 @@
 						{translate key="editor.minutes.downloadMinutes"}</a>
 				{elseif $meeting->getStatus() == 1}
 						<br/><a href="{url op="manageMinutes" path=$meeting->getId()}" class="action">
-						{translate key="editor.minutes.manageMinutes"}</a>
+						{translate key="editor.minutes.manage"}</a>
 				{/if}
 			</td>
 		</tr>	

@@ -22,10 +22,8 @@
 	<div id="authorBio">
 	<p>
 		<em>{$author->getFullName()|escape}</em><br />
-		{if $author->getUrl()}<a href="{$author->getUrl()|escape:"quotes"}">{$author->getUrl()|escape}</a><br/>{/if}
-		{assign var=authorAffiliation value=$author->getLocalizedAffiliation()}
+		{assign var=authorAffiliation value=$author->getAffiliation()}
 		{if $authorAffiliation}{$authorAffiliation|escape}{/if}
-		{if $author->getCountry()}<br/>{$author->getCountryLocalized()|escape}{/if}
 	</p>
 
 	<p>{$author->getLocalizedBiography()|strip_unsafe_html|nl2br}</p>

@@ -172,58 +172,34 @@ class PKPAuthor extends DataObject {
 
 	/**
 	 * Get affiliation (position, institution, etc.).
-	 * @param $locale string
 	 * @return string
 	 */
-	function getAffiliation($locale) {
-		return $this->getData('affiliation', $locale);
+	function getAffiliation() {
+		return $this->getData('affiliation');
 	}
 
 	/**
 	 * Set affiliation.
 	 * @param $affiliation string
-	 * @param $locale string
 	 */
-	function setAffiliation($affiliation, $locale) {
-		return $this->setData('affiliation', $affiliation, $locale);
+	function setAffiliation($affiliation) {
+		return $this->setData('affiliation', $affiliation);
 	}
 
 	/**
-	 * Get the localized affiliation for this author
-	 */
-	function getLocalizedAffiliation() {
-		return $this->getLocalizedData('affiliation');
-	}
-
-
-
-	/**
-	 * Get country code
+	 * Get phone number.
 	 * @return string
 	 */
-	function getCountry() {
-		return $this->getData('country');
+	function getPhoneNumber() {
+		return $this->getData('phoneNumber');
 	}
 
 	/**
-	 * Get localized country
-	 * @return string
+	 * Set phoneNumber.
+	 * @param $phoneNumber string
 	 */
-	function getCountryLocalized() {
-		$countryDao =& DAORegistry::getDAO('CountryDAO');
-		$country = $this->getCountry();
-		if ($country) {
-			return $countryDao->getCountry($country);
-		}
-		return null;
-	}
-
-	/**
-	 * Set country code.
-	 * @param $country string
-	 */
-	function setCountry($country) {
-		return $this->setData('country', $country);
+	function setPhoneNumber($phoneNumber) {
+		return $this->setData('phoneNumber', $phoneNumber);
 	}
 
 	/**
@@ -240,22 +216,6 @@ class PKPAuthor extends DataObject {
 	 */
 	function setEmail($email) {
 		return $this->setData('email', $email);
-	}
-
-	/**
-	 * Get URL.
-	 * @return string
-	 */
-	function getUrl() {
-		return $this->getData('url');
-	}
-
-	/**
-	 * Set URL.
-	 * @param $url string
-	 */
-	function setUrl($url) {
-		return $this->setData('url', $url);
 	}
 
 	/**

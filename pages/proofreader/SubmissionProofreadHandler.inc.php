@@ -127,16 +127,15 @@ class SubmissionProofreadHandler extends ProofreaderHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
 		$submission =& $this->submission;
-		if (!ProofreaderAction::downloadProofreaderFile($submission, $fileId, $revision)) {
+		if (!ProofreaderAction::downloadProofreaderFile($submission, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}
@@ -206,15 +205,14 @@ class SubmissionProofreadHandler extends ProofreaderHandler {
 
 	/**
 	 * View a file (inlines file).
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function viewFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
-		if (!ProofreaderAction::viewFile($articleId, $fileId, $revision)) {
+		if (!ProofreaderAction::viewFile($articleId, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}

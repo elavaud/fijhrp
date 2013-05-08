@@ -137,7 +137,7 @@ $(document).ready(
 	</tr>
 	<tr>
 		<td>
-			<input type="checkbox" name="dateSubmitted" />&nbsp;Date submitted to PhilHRP
+			<input type="checkbox" name="dateSubmitted" />&nbsp;Date submitted
 		</td>
 		<td colspan="2" class="value">
 			<input type="checkbox" name="studentResearch" checked="checked"/>&nbsp;If student research, Institution & Academic Degree
@@ -170,8 +170,8 @@ $(document).ready(
 <p></p>
 {foreach from=$results item=result}
 <tr valign="bottom">
-	<!--<td>{$result->getDateSubmitted()|date_format:$dateFormatShort}</td>-->
-	<td><a href="{url op="viewProposal" path=$result->getId()}" class="action">{$result->getLocalizedTitle()|escape}</a></td>
+	{assign var="abstract" value=$result->getLocalizedAbstract()}
+	<td><a href="{url op="viewProposal" path=$result->getId()}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
 	<td>
 	{if $result->getLocalizedPrimarySponsor() == "Other"}
 		{$result->getLocalizedOtherPrimarySponsor()}

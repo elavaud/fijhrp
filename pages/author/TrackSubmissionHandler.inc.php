@@ -37,7 +37,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$this->setupTemplate(true);
 
 		// If the submission is incomplete, allow the author to delete it.
-		if ($authorSubmission->getSubmissionProgress()!=0 && !$authorSubmission->getDateSubmitted()) { //Edited May 25, 2011
+		if ($authorSubmission->getSubmissionProgress()!=0 && !$authorSubmission->getDateSubmitted()) { 
 			import('classes.file.ArticleFileManager');
 			$articleFileManager = new ArticleFileManager($articleId);
 			$articleFileManager->deleteArticleTree();
@@ -47,14 +47,7 @@ class TrackSubmissionHandler extends AuthorHandler {
 
                         Request::redirect(null, null, 'index');
 		}
-                
-                /**************************************
-                 * Added by: Anne Ivy Mirasol
-                 * Allow withdrawal of proposal
-                 * Last Updated: May 18, 2011
-                 **************************************/
-
-                if($authorSubmission->getProposalStatus() == PROPOSAL_STATUS_SUBMITTED) {
+        	if($authorSubmission->getProposalStatus() == PROPOSAL_STATUS_SUBMITTED) {
 			import('classes.file.ArticleFileManager');
 			$articleFileManager = new ArticleFileManager($articleId);
 			$articleFileManager->deleteArticleTree();
@@ -73,13 +66,12 @@ class TrackSubmissionHandler extends AuthorHandler {
 	function deleteArticleFile($args) {
 		$articleId = isset($args[0]) ? (int) $args[0] : 0;
 		$fileId = isset($args[1]) ? (int) $args[1] : 0;
-		$revisionId = isset($args[2]) ? (int) $args[2] : 0;
 
 		$this->validate($articleId);
 		$authorSubmission =& $this->submission;
 
 		if ($authorSubmission->getStatus() != STATUS_PUBLISHED && $authorSubmission->getStatus() != STATUS_ARCHIVED) {
-			AuthorAction::deleteArticleFile($authorSubmission, $fileId, $revisionId);
+			AuthorAction::deleteArticleFile($authorSubmission, $fileId);
 		}
 
 		Request::redirect(null, null, 'submissionReview', $articleId);
@@ -100,9 +92,6 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		$journalSettingsDao =& DAORegistry::getDAO('JournalSettingsDAO');
 		$journalSettings = $journalSettingsDao->getJournalSettings($journal->getId());
-
-		// Setting the round.
-		$round = isset($args[1]) ? $args[1] : $submission->getCurrentRound();
                 
 		$templateMgr =& TemplateManager::getManager();
 
@@ -121,8 +110,6 @@ class TrackSubmissionHandler extends AuthorHandler {
 		$templateMgr->assign_by_ref('journalSettings', $journalSettings);
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('publishedArticle', $publishedArticle);
-		$templateMgr->assign_by_ref('reviewAssignments', $submission->getReviewAssignments($round));
-		$templateMgr->assign('round', $round);
 		$templateMgr->assign_by_ref('submissionFile', $submission->getSubmissionFile());
 		$templateMgr->assign_by_ref('revisedFile', $submission->getRevisedFile());
 		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
@@ -132,46 +119,21 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 		import('classes.submission.sectionEditor.SectionEditorSubmission');
 		$templateMgr->assign_by_ref('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
-                
-		// Set up required Payment Related Information
-                /*
-		import('classes.payment.ojs.OJSPaymentManager');
-		$paymentManager =& OJSPaymentManager::getManager();
-		if ( $paymentManager->submissionEnabled() || $paymentManager->fastTrackEnabled() || $paymentManager->publicationEnabled()) {
-			$templateMgr->assign('authorFees', true);
-			$completedPaymentDAO =& DAORegistry::getDAO('OJSCompletedPaymentDAO');
 
-			if ( $paymentManager->submissionEnabled() ) {
-				$templateMgr->assign_by_ref('submissionPayment', $completedPaymentDAO->getSubmissionCompletedPayment ( $journal->getId(), $articleId ));
-			}
-
-			if ( $paymentManager->fastTrackEnabled()  ) {
-				$templateMgr->assign_by_ref('fastTrackPayment', $completedPaymentDAO->getFastTrackCompletedPayment ( $journal->getId(), $articleId ));
-			}
-
-			if ( $paymentManager->publicationEnabled()  ) {
-				$templateMgr->assign_by_ref('publicationPayment', $completedPaymentDAO->getPublicationCompletedPayment ( $journal->getId(), $articleId ));
-			}
-		}
-                */
 		$templateMgr->assign('helpTopicId','editorial.authorsRole');
 
-		//$initialCopyeditSignoff = $submission->getSignoff('SIGNOFF_COPYEDITING_INITIAL');
-		//$templateMgr->assign('canEditMetadata', !$initialCopyeditSignoff->getDateCompleted() && $submission->getStatus() != STATUS_PUBLISHED);
-                //Last Updated, AIM, 12.22.2011
-                if($submission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED) {
-                        $canEditMetadata = true;
-                        $canEditFiles = true;
-                }
-                else {
-                        $canEditMetadata = false;
-                        $canEditFiles = false;
-                }
-                $templateMgr->assign('canEditMetadata', $canEditMetadata);
-                $templateMgr->assign('canEditFiles', $canEditFiles);
-
-				// EL on March 11th 2013
-                $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        if($submission->getSubmissionStatus()==PROPOSAL_STATUS_SUBMITTED) {
+                $canEditMetadata = true;
+                $canEditFiles = true;
+        }
+        else {
+                $canEditMetadata = false;
+                $canEditFiles = false;
+        }
+        $templateMgr->assign('canEditMetadata', $canEditMetadata);
+        $templateMgr->assign('canEditFiles', $canEditFiles);
+        $templateMgr->assign_by_ref('riskAssessment', $submission->getRiskAssessment());
+        $templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
                 
 		$templateMgr->display('author/submission.tpl');
                 
@@ -190,34 +152,21 @@ class TrackSubmissionHandler extends AuthorHandler {
 		Locale::requireComponents(array(LOCALE_COMPONENT_OJS_EDITOR)); // editor.article.decision etc. FIXME?
 
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-		$reviewModifiedByRound = $reviewAssignmentDao->getLastModifiedByRound($articleId);
-		$reviewEarliestNotificationByRound = $reviewAssignmentDao->getEarliestNotificationByRound($articleId);
-		$reviewFilesByRound =& $reviewAssignmentDao->getReviewFilesByRound($articleId);
-		$authorViewableFilesByRound =& $reviewAssignmentDao->getAuthorViewableFilesByRound($articleId);
+		$reviewFilesByDecision =& $reviewAssignmentDao->getReviewFilesByDecision($articleId);
+		$authorViewableFilesByDecision =& $reviewAssignmentDao->getAuthorViewableFilesByDecision($articleId);
 
-		$editorDecisions = $authorSubmission->getDecisions($authorSubmission->getCurrentRound());
-		$lastDecision = count($editorDecisions) >= 1 ? $editorDecisions[count($editorDecisions) - 1] : null;
+		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
 		$templateMgr =& TemplateManager::getManager();
 
-		$reviewAssignments =& $authorSubmission->getReviewAssignments();
-		$templateMgr->assign_by_ref('reviewAssignments', $reviewAssignments);
 		$templateMgr->assign_by_ref('submission', $authorSubmission);
-		$templateMgr->assign_by_ref('reviewFilesByRound', $reviewFilesByRound);
-		$templateMgr->assign_by_ref('authorViewableFilesByRound', $authorViewableFilesByRound);
-		$templateMgr->assign_by_ref('reviewModifiedByRound', $reviewModifiedByRound);
+		$templateMgr->assign_by_ref('abstract', $authorSubmission->getLocalizedAbstract());
+		$templateMgr->assign_by_ref('reviewFilesByDecision', $reviewFilesByDecision);
+		$templateMgr->assign_by_ref('authorViewableFilesByDecision', $authorViewableFilesByDecision);
 
-		$reviewIndexesByRound = array();
-		for ($round = 1; $round <= $authorSubmission->getCurrentRound(); $round++) {
-			$reviewIndexesByRound[$round] = $reviewAssignmentDao->getReviewIndexesForRound($articleId, $round);
-		}
-		$templateMgr->assign_by_ref('reviewIndexesByRound', $reviewIndexesByRound);
-
-		$templateMgr->assign('reviewEarliestNotificationByRound', $reviewEarliestNotificationByRound);
 		$templateMgr->assign_by_ref('submissionFile', $authorSubmission->getSubmissionFile());
 		$templateMgr->assign_by_ref('revisedFile', $authorSubmission->getRevisedFile());
 		$templateMgr->assign_by_ref('suppFiles', $authorSubmission->getSuppFiles());
-		$templateMgr->assign('lastEditorDecision', $lastDecision);
 		import('classes.submission.sectionEditor.SectionEditorSubmission');
 		$templateMgr->assign('editorDecisionOptions', SectionEditorSubmission::getEditorDecisionOptions());
 		
@@ -534,31 +483,29 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function downloadFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
 		$submission =& $this->submission;
-		if (!AuthorAction::downloadAuthorFile($submission, $fileId, $revision)) {
+		if (!AuthorAction::downloadAuthorFile($submission, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}
 
 	/**
 	 * Download a file.
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function download($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
-		Action::downloadFile($articleId, $fileId, $revision);
+		Action::downloadFile($articleId, $fileId);
 	}
 
 	//
@@ -687,15 +634,14 @@ class TrackSubmissionHandler extends AuthorHandler {
 
 	/**
 	 * View a file (inlines file).
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function viewFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
-		if (!AuthorAction::viewFile($articleId, $fileId, $revision)) {
+		if (!AuthorAction::viewFile($articleId, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}

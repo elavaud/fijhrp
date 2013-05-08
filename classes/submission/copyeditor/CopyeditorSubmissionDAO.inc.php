@@ -53,6 +53,8 @@ class CopyeditorSubmissionDAO extends DAO {
 	 * @param $articleId int
 	 * @return CopyeditorSubmission
 	 */
+	 // EL on April 2013: No edit assignments anymore
+	 /*
 	function &getCopyeditorSubmission($articleId) {
 		$primaryLocale = Locale::getPrimaryLocale();
 		$locale = Locale::getLocale();
@@ -92,7 +94,47 @@ class CopyeditorSubmissionDAO extends DAO {
 
 		return $returner;
 	}
+	*/
+	function &getCopyeditorSubmission($articleId) {
+		$primaryLocale = Locale::getPrimaryLocale();
+		$locale = Locale::getLocale();
+		$result =& $this->retrieve(
+			'SELECT	a.*,
+				se.user_id,
+				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
+			FROM	articles a
+				LEFT JOIN section_editors se ON (a.section_id = se.section_id)
+				LEFT JOIN sections s ON (s.section_id = a.section_id)
+				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
+				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
+				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
+				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
+			WHERE	a.article_id = ?',
+			array(
+				'title',
+				$primaryLocale,
+				'title',
+				$locale,
+				'abbrev',
+				$primaryLocale,
+				'abbrev',
+				$locale,
+				$articleId
+			)
+		);
 
+		$returner = null;
+		if ($result->RecordCount() != 0) {
+			$returner =& $this->_returnCopyeditorSubmissionFromRow($result->GetRowAssoc(false));
+		}
+
+		$result->Close();
+		unset($result);
+
+		return $returner;
+	}
+	
 	/**
 	 * Internal function to return a CopyeditorSubmission object from a row.
 	 * @param $row array
@@ -103,12 +145,6 @@ class CopyeditorSubmissionDAO extends DAO {
 
 		// Article attributes
 		$this->articleDao->_articleFromRow($copyeditorSubmission, $row);
-
-		// Editor Assignment
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
-			//$copyeditorSubmission->setEditAssignments($editAssignments->toArray());
 
 		// Comments
 		$copyeditorSubmission->setMostRecentCopyeditComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_COPYEDIT, $row['article_id']));
@@ -257,7 +293,7 @@ class CopyeditorSubmissionDAO extends DAO {
 		if (!empty($countryField)) {
 			$countrySql = " AND LOWER(COALESCE(apc.setting_value, appc.setting_value)) = '" . $countryField . "'";
 		}
-
+		
 		$sql = 'SELECT DISTINCT
 				a.*,
 				scpi.date_notified AS date_assigned,
@@ -272,8 +308,8 @@ class CopyeditorSubmissionDAO extends DAO {
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
 				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
-				LEFT JOIN edit_assignments e ON (e.article_id = a.article_id)
-				LEFT JOIN users ed ON (e.editor_id = ed.user_id)
+				LEFT JOIN section_editors se ON (se.section_id = a.section_id)
+				LEFT JOIN users ed ON (se.user_id = ed.user_id)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
@@ -290,7 +326,8 @@ class CopyeditorSubmissionDAO extends DAO {
 				' . (isset($journalId)?'a.journal_id = ? AND':'') . '
 				scpi.user_id = ? AND
 			(' . ($active?'':'NOT ') . ' (i.date_published IS NULL AND ((scpi.date_notified IS NOT NULL AND scpi.date_completed IS NULL) OR (scpf.date_notified IS NOT NULL AND scpf.date_completed IS NULL)))) ';
-
+			
+			
 		$result =& $this->retrieveRange(
 			$sql . ' ' . $searchSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 			count($params)==1?array_shift($params):$params,

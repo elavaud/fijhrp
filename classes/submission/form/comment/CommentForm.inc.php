@@ -42,7 +42,7 @@ class CommentForm extends Form {
 	function CommentForm($article, $commentType, $roleId, $assocId = null) {
 		if ($commentType == COMMENT_TYPE_PEER_REVIEW) {
 			parent::Form('submission/comment/peerReviewComment.tpl');
-		} else if ($commentType == COMMENT_TYPE_EDITOR_DECISION) {
+		} else if ($commentType == COMMENT_TYPE_SECTION_DECISION) {
 			parent::Form('submission/comment/editorDecisionComment.tpl');
 		} else {
 			parent::Form('submission/comment/comment.tpl');
@@ -76,15 +76,14 @@ class CommentForm extends Form {
 		$articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 		$articleComments =& $articleCommentDao->getArticleComments($article->getId(), $this->commentType, $this->assocId);
 		$userDao =& DAORegistry::getDAO('UserDAO');
-
+		
+		$abstract = $article->getLocalizedAbstract();
+		
 		$templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign_by_ref('userDao', $userDao);
-			
-			// EL on March 15th 2013
-			$templateMgr->assign('sectionId', $article->getSectionId());
-		
+		$templateMgr->assign('sectionId', $article->getSectionId());
 		$templateMgr->assign('articleId', $article->getId());
-		$templateMgr->assign('commentTitle', strip_tags($article->getLocalizedTitle()));
+		$templateMgr->assign('commentTitle', strip_tags($abstract->getScientificTitle()));
 		$user =& $this->user;
 		$templateMgr->assign('userId', $user->getId());
 		$templateMgr->assign('articleComments', $articleComments);

@@ -17,7 +17,8 @@
 					<select name="articleId" id="articleId" class="selectMenu">
 						<option value="none">Choose One</option>
 						{foreach from=$submissions item=submission}
-							<option value="{$submission->getArticleId()}">{$submission->getLocalizedProposalId()}: {$submission->getLocalizedTitle()|strip_unsafe_html}</option>						
+							{assign var="abstract" value=$submission->getLocalizedAbstract()}
+							<option value="{$submission->getArticleId()}">{$submission->getLocalizedProposalId()}: {$abstract->getScientificTitle()|strip_unsafe_html}</option>						
 						{/foreach}
 					</select>
 				</td>	

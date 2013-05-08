@@ -31,7 +31,7 @@
 </form>
 
 <div id="authors">
-<h4>{*translate key="article.authors"*}Investigators</h4>
+<h4>{translate key="article.authors"}</h4>
 	
 <table width="100%" class="data">
 	{foreach name=authors from=$submission->getAuthors() item=author}
@@ -39,26 +39,14 @@
 		<td width="20%" class="label">{translate key="user.name"}</td>
 		<td width="80%" class="value">
 			{assign var=emailString value=$author->getFullName()|concat:" <":$author->getEmail():">"}
-			{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$submission->getLocalizedTitle()|strip_tags articleId=$submission->getId()}
+			{url|assign:"url" page="user" op="email" redirectUrl=$currentUrl to=$emailString|to_array subject=$abstract->getScientificTitle()|strip_tags articleId=$submission->getId()}
 			{$author->getFullName()|escape} {icon name="mail" url=$url}
 		</td>
 	</tr>
-	{if $author->getUrl()}
-		<tr valign="top">
-			<td class="label">{translate key="user.url"}</td>
-			<td class="value"><a href="{$author->getUrl()|escape:"quotes"}">{$author->getUrl()|escape}</a></td>
-		</tr>
-	{/if}
-	{if $author->getLocalizedAffiliation()}
+	{if $author->getAffiliation()}
 	<tr valign="top">
 		<td class="label">{translate key="user.affiliation"}</td>
-		<td class="value">{$author->getLocalizedAffiliation()|escape|nl2br|default:"&mdash;"}</td>
-	</tr>
-	{/if}
-	{if $author->getCountryLocalized()}
-	<tr valign="top">
-		<td class="label">{translate key="common.country"}</td>
-		<td class="value">{$author->getCountryLocalized()|escape|default:"&mdash;"}</td>
+		<td class="value">{$author->getAffiliation()|escape|nl2br|default:"&mdash;"}</td>
 	</tr>
 	{/if}
 	{/foreach}
@@ -71,11 +59,11 @@
 <table width="100%" class="data">
 	<tr>
 		<td width="20%" class="label">{translate key="article.scientificTitle"}</td>
-		<td width="80%">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
+		<td width="80%">{$abstract->getScientificTitle()|strip_unsafe_html}</td>
 	</tr>
 	<tr>
 		<td width="20%" class="label">{translate key="article.publicTitle"}</td>
-		<td width="80%">{$submission->getLocalizedPublicTitle()|strip_unsafe_html}</td>
+		<td width="80%">{$abstract->getPublicTitle()|strip_unsafe_html}</td>
 	</tr>
 	<tr>
 		<td width="20%" class="label">Status</td>
@@ -106,7 +94,7 @@
 	</tr>
 	<tr>
 		<td class="label">Keywords</td>
-		<td class="value">{$submission->getLocalizedKeywords()|strip_unsafe_html}</td>
+		<td class="value">{$abstract->getKeywords()|strip_unsafe_html}</td>
 	</tr>
 	<tr>
 		<td class="label">Start Date</td>
@@ -166,9 +154,22 @@
         </td>
     </tr>
     {/if}
+    <tr><td colspan="2"><br/><b>{translate key="article.abstract"}</b></td></tr>
 	<tr valign="top">
-		<td class="label">{translate key="article.abstract"}</td>
-		<td class="value">{$submission->getLocalizedAbstract()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
+		<td class="label">{translate key="proposal.background"}</td>
+		<td class="value">{$abstract->getBackground()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
+	</tr>
+	<tr valign="top">
+		<td class="label">{translate key="proposal.objectives"}</td>
+		<td class="value">{$abstract->getObjectives()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
+	</tr>
+	<tr valign="top">
+		<td class="label">{translate key="proposal.studyMethods"}</td>
+		<td class="value">{$abstract->getStudyMethods()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
+	</tr>
+	<tr valign="top">
+		<td class="label">{translate key="proposal.expectedOutcomes"}</td>
+		<td class="value">{$abstract->getExpectedOutcomes()|strip_unsafe_html|nl2br|default:"&mdash;"}</td>
 	</tr>
 </table>
 </div>

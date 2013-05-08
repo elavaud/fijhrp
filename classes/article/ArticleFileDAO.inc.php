@@ -29,42 +29,27 @@ class ArticleFileDAO extends DAO {
 	/**
 	 * Retrieve an article by ID.
 	 * @param $fileId int
-	 * @param $revision int optional, if omitted latest revision is used
 	 * @param $articleId int optional
 	 * @return ArticleFile
 	 */
-	function &getArticleFile($fileId, $revision = null, $articleId = null) {
+	function &getArticleFile($fileId, $articleId = null) {
 		if ($fileId === null) {
 			$returner = null;
 			return $returner;
 		}
-		if ($revision == null) {
-			if ($articleId != null) {
-				$result =& $this->retrieveLimit(
-					'SELECT a.* FROM article_files a WHERE file_id = ? AND article_id = ? ORDER BY revision DESC',
-					array($fileId, $articleId),
-					1
-				);
-			} else {
-				$result =& $this->retrieveLimit(
-					'SELECT a.* FROM article_files a WHERE file_id = ? ORDER BY revision DESC',
-					$fileId,
-					1
-				);
-			}
-
+		
+		if ($articleId != null) {
+			$result =& $this->retrieveLimit(
+				'SELECT a.* FROM article_files a WHERE file_id = ? AND article_id = ?',
+				array($fileId, $articleId),
+				1
+			);
 		} else {
-			if ($articleId != null) {
-				$result =& $this->retrieve(
-					'SELECT a.* FROM article_files a WHERE file_id = ? AND revision = ? AND article_id = ?',
-					array($fileId, $revision, $articleId)
-				);
-			} else {
-				$result =& $this->retrieve(
-					'SELECT a.* FROM article_files a WHERE file_id = ? AND revision = ?',
-					array($fileId, $revision)
-				);
-			}
+			$result =& $this->retrieveLimit(
+				'SELECT a.* FROM article_files a WHERE file_id = ?',
+				$fileId,
+				1
+			);
 		}
 
 		$returner = null;
@@ -99,105 +84,6 @@ class ArticleFileDAO extends DAO {
 		$result->Close();
 		unset($result);
 		return $previousFiles;
-	}
-	
-	/**
-	 * Retrieve all revisions of an article file.
-	 * @param $articleId int
-	 * @return ArticleFile
-	 */
-	function &getArticleFileRevisions($fileId, $round = null) {
-		if ($fileId === null) {
-			$returner = null;
-			return $returner;
-		}
-		$articleFiles = array();
-
-		// FIXME If "round" is review-specific, it shouldn't be in this table
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT a.* FROM article_files a WHERE file_id = ? ORDER BY revision',
-				$fileId
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT a.* FROM article_files a WHERE file_id = ? AND round = ? ORDER BY revision',
-				array($fileId, $round)
-			);
-		}
-
-		while (!$result->EOF) {
-			$articleFiles[] =& $this->_returnArticleFileFromRow($result->GetRowAssoc(false));
-			$result->moveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $articleFiles;
-	}
-
-	/**
-	 * Retrieve revisions of an article file in a range.
-	 * @param $articleId int
-	 * @return ArticleFile
-	 */
-	function &getArticleFileRevisionsInRange($fileId, $start = 1, $end = null) {
-		if ($fileId === null) {
-			$returner = null;
-			return $returner;
-		}
-		$articleFiles = array();
-
-		if ($end == null) {
-			$result =& $this->retrieve(
-				'SELECT a.* FROM article_files a WHERE file_id = ? AND revision >= ?',
-				array($fileId, $start)
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT a.* FROM article_files a WHERE file_id = ? AND revision >= ? AND revision <= ?',
-				array($fileId, $start, $end)
-			);
-		}
-
-		while (!$result->EOF) {
-			$articleFiles[] =& $this->_returnArticleFileFromRow($result->GetRowAssoc(false));
-			$result->moveNext();
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $articleFiles;
-	}
-
-	/**
-	 * Retrieve the current revision number for a file.
-	 * @param $fileId int
-	 * @return int
-	 */
-	function &getRevisionNumber($fileId) {
-		if ($fileId === null) {
-			$returner = null;
-			return $returner;
-		}
-		$result =& $this->retrieve(
-			'SELECT MAX(revision) AS max_revision FROM article_files a WHERE file_id = ?',
-			$fileId
-		);
-
-		if ($result->RecordCount() == 0) {
-			$returner = null;
-		} else {
-			$row = $result->FetchRow();
-			$returner = $row['max_revision'];
-		}
-
-		$result->Close();
-		unset($result);
-
-		return $returner;
 	}
 
 	/**
@@ -259,8 +145,6 @@ class ArticleFileDAO extends DAO {
 		$articleFile = new ArticleFile();
 		$articleFile->setFileId($row['file_id']);
 		$articleFile->setSourceFileId($row['source_file_id']);
-		$articleFile->setSourceRevision($row['source_revision']);
-		$articleFile->setRevision($row['revision']);
 		$articleFile->setArticleId($row['article_id']);
 		$articleFile->setFileName($row['file_name']);
 		$articleFile->setFileType($row['file_type']);
@@ -270,7 +154,6 @@ class ArticleFileDAO extends DAO {
 		$articleFile->setAssocId($row['assoc_id']);
 		$articleFile->setDateUploaded($this->datetimeFromDB($row['date_uploaded']));
 		$articleFile->setDateModified($this->datetimeFromDB($row['date_modified']));
-		$articleFile->setRound($row['round']);
 		$articleFile->setViewable($row['viewable']);
 		HookRegistry::call('ArticleFileDAO::_returnArticleFileFromRow', array(&$articleFile, &$row));
 		return $articleFile;
@@ -284,16 +167,13 @@ class ArticleFileDAO extends DAO {
 	function insertArticleFile(&$articleFile) {
 		$fileId = $articleFile->getFileId();
 		$params = array(
-			$articleFile->getRevision() === null ? 1 : $articleFile->getRevision(),
 			(int) $articleFile->getArticleId(),
 			$articleFile->getSourceFileId()?$articleFile->getSourceFileId():null,
-			$articleFile->getSourceRevision()?$articleFile->getSourceRevision():null,
 			$articleFile->getFileName(),
 			$articleFile->getFileType(),
 			$articleFile->getFileSize(),
 			$articleFile->getOriginalFileName(),
 			$articleFile->getType(),
-			(int) $articleFile->getRound(),
 			$articleFile->getViewable(),
 			$articleFile->getAssocId()
 		);
@@ -304,9 +184,9 @@ class ArticleFileDAO extends DAO {
 
 		$this->update(
 			sprintf('INSERT INTO article_files
-				(' . ($fileId ? 'file_id, ' : '') . 'revision, article_id, source_file_id, source_revision, file_name, file_type, file_size, original_file_name, type, date_uploaded, date_modified, round, viewable, assoc_id)
+				(' . ($fileId ? 'file_id, ' : '') . 'article_id, source_file_id, file_name, file_type, file_size, original_file_name, type, date_uploaded, date_modified, viewable, assoc_id)
 				VALUES
-				(' . ($fileId ? '?, ' : '') . '?, ?, ?, ?, ?, ?, ?, ?, ?, %s, %s, ?, ?, ?)',
+				(' . ($fileId ? '?, ' : '') . '?, ?, ?, ?, ?, ?, ?, %s, %s, ?, ?)',
 				$this->datetimeToDB($articleFile->getDateUploaded()), $this->datetimeToDB($articleFile->getDateModified())),
 			$params
 		);
@@ -328,7 +208,6 @@ class ArticleFileDAO extends DAO {
 				SET
 					article_id = ?,
 					source_file_id = ?,
-					source_revision = ?,
 					file_name = ?,
 					file_type = ?,
 					file_size = ?,
@@ -336,25 +215,21 @@ class ArticleFileDAO extends DAO {
 					type = ?,
 					date_uploaded = %s,
 					date_modified = %s,
-					round = ?,
 					viewable = ?,
 					assoc_id = ?
-				WHERE file_id = ? AND revision = ?',
+				WHERE file_id = ?',
 				$this->datetimeToDB($articleFile->getDateUploaded()), $this->datetimeToDB($articleFile->getDateModified())),
 			array(
 				(int) $articleFile->getArticleId(),
 				$articleFile->getSourceFileId()?$articleFile->getSourceFileId():null,
-				$articleFile->getSourceRevision()?$articleFile->getSourceRevision():null,
 				$articleFile->getFileName(),
 				$articleFile->getFileType(),
 				$articleFile->getFileSize(),
 				$articleFile->getOriginalFileName(),
 				$articleFile->getType(),
-				(int) $articleFile->getRound(),
 				$articleFile->getViewable(),
 				$articleFile->getAssocId(),
-				$articleFile->getFileId(),
-				$articleFile->getRevision()
+				$articleFile->getFileId()
 			)
 		);
 
@@ -367,24 +242,17 @@ class ArticleFileDAO extends DAO {
 	 * @param $article ArticleFile
 	 */
 	function deleteArticleFile(&$articleFile) {
-		return $this->deleteArticleFileById($articleFile->getFileId(), $articleFile->getRevision());
+		return $this->deleteArticleFileById($articleFile->getFileId());
 	}
 
 	/**
 	 * Delete an article file by ID.
 	 * @param $articleId int
-	 * @param $revision int
 	 */
-	function deleteArticleFileById($fileId, $revision = null) {
-		if ($revision == null) {
-			return $this->update(
-				'DELETE FROM article_files WHERE file_id = ?', $fileId
-			);
-		} else {
-			return $this->update(
-				'DELETE FROM article_files WHERE file_id = ? AND revision = ?', array($fileId, $revision)
-			);
-		}
+	function deleteArticleFileById($fileId) {
+		return $this->update(
+			'DELETE FROM article_files WHERE file_id = ?', $fileId
+		);
 	}
 
 	/**
@@ -418,22 +286,14 @@ class ArticleFileDAO extends DAO {
 	}
 
 
-        /**
-         *  Added by: Anne Ivy Mirasol
-         *  Last Updated: May 25, 2011
-         */
-
-        /**
+    /**
 	 * Delete an article file by source file ID.
 	 * @param $articleId int
-	 * @param $revision int
-	 */
+	**/
 	function deleteArticleFileBySourceFileId($sourceFileId) {
-
-            return $this->update(
-                    'DELETE FROM article_files WHERE source_file_id = ?', $sourceFileId
-            );
-
+	    return $this->update(
+	            'DELETE FROM article_files WHERE source_file_id = ?', $sourceFileId
+	    );
 	}
 }
 

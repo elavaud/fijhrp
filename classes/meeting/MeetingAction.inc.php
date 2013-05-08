@@ -5,6 +5,7 @@
  * EL
 **/
 
+
 define ('STATUS_NEW', 0);
 define ('STATUS_FINAL', 1);
 define ('STATUS_RESCHEDULED', 2);
@@ -91,10 +92,12 @@ class MeetingAction extends Action {
 				// Insert Attendance of the external reviewers & Investigators
 				$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 				$articleDao =& DAORegistry::getDAO('ArticleDAO');
+				$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 				foreach ($selectedSubmissions as $submission){
 					
 					// For external reviewers
-					$reviewAssignments =& $reviewAssignmentDao->getReviewAssignmentsByArticleId($submission);
+					$lastSectionDecision =& $sectionDecisionDao->getLastSectionDecision($submission);
+					$reviewAssignments =& $lastSectionDecision->getReviewAssignments();
 					foreach ($reviewAssignments as $reviewAssignment) {
 						$isReviewer = $ercReviewersDao->ercReviewerExists($journalId, $user->getSecretaryCommitteeId(), $reviewAssignment->getReviewerId());
 						$willAttend = $meetingAttendanceDao->attendanceExists($meetingId, $reviewAssignment->getReviewerId());
@@ -215,7 +218,8 @@ class MeetingAction extends Action {
 
 		foreach($submissionIds as $submissionId) {
 			$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
-			$submissions .= $num.". '".$submission->getLocalizedTitle()."' by ".$submission->getAuthorString()."\n";
+			$abstract = $submission->getLocalizedAbstract();
+			$submissions .= $num.". '".$abstract->getScientificTitle()."' by ".$submission->getAuthorString()."\n";
 			$num++;
 		}
 
@@ -318,15 +322,18 @@ class MeetingAction extends Action {
 		$user =& Request::getUser();
 		$articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 		$num=1;
 		$submissions = (string)'';
 
 		foreach($submissionIds as $submissionId) {
 			$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
-			$reviewAssignments =& $reviewAssignmentDao->getReviewAssignmentsByArticleId($submissionId);
+			$abstract = $submission->getLocalizedAbstract();
+			$lastSectionDecision =& $sectionDecisionDao->getLastSectionDecision($submissionId);
+			$reviewAssignments =& $lastSectionDecision->getReviewAssignments();
 			foreach ($reviewAssignments as $reviewAssignment) {
 				if ($reviewAssignment->getReviewerId() == $externalReviewerAttendance->getUserId()){
-					$submissions .= $num.". '".$submission->getLocalizedTitle()."' by ".$submission->getAuthorString()."\n";
+					$submissions .= $num.". '".$abstract->getScientificTitle()."' by ".$submission->getAuthorString()."\n";
 					$num++;
 				}
 			}
@@ -426,8 +433,9 @@ class MeetingAction extends Action {
 
 		foreach($submissionIds as $submissionId) {
 			$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
+			$abstract = $submission->getLocalizedAbstract();
 			if ($submission->getUserId() == $investigatorAttendance->getUserId()) {
-				$submissions .= $num.". '".$submission->getLocalizedTitle()."'\n";
+				$submissions .= $num.". '".$abstract->getScientificTitle()."'\n";
 				$num++;
 			}
 		}
@@ -536,7 +544,8 @@ class MeetingAction extends Action {
 		$num=1;
 		foreach($submissionIds as $submissionId) {
 			$submission = $articleDao->getArticle($submissionId, $journal->getId(), false);
-			$submissions .= $num.". '".$submission->getLocalizedTitle()."' by ".$submission->getAuthorString(true)."\n";
+			$abstract = $submission->getLocalizedAbstract();
+			$submissions .= $num.". '".$abstract->getScientificTitle()."' by ".$submission->getAuthorString(true)."\n";
 			$num++;
 		}
 		$userDao =& DAORegistry::getDAO('UserDAO');
@@ -665,7 +674,5 @@ class MeetingAction extends Action {
 		
 		$meetingAttendanceDao->updateReplyOfAttendance($meetingAttendance);
 		return true;	
-	}
-	
-	
+	}	
 }

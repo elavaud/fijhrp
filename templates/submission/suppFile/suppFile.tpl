@@ -62,7 +62,7 @@ function checkSize(){
 	var check = fileToUpload.files[0].fileSize;
 	var valueInKb = Math.ceil(check/1024);
 	if (check > 5242880){
-		alert ('The file is too big ('+valueInKb+' Kb). It should not exceed 5 Mb.');
+		alert ('{/literal}{translate key="common.fileTooBig1"}{literal}'+valueInKb+'{/literal}{translate key="common.fileTooBig2"}{literal}5 Mb.');
 		return false
 	} 
 }

@@ -20,133 +20,15 @@ import('classes.article.Article');
 
 class SectionEditorSubmission extends Article {
 
-	/** @var array ReviewAssignments of this article */
-	var $reviewAssignments;
-
-	/** @var array IDs of ReviewAssignments removed from this article */
-	var $removedReviewAssignments;
-
 	/** @var array the editor decisions of this article */
-	var $editorDecisions;
-
-	/** @var array the revisions of the editor file */
-	var $editorFileRevisions;
-
-	/** @var array the revisions of the author file */
-	var $authorFileRevisions;
-
-	/** @var array the revisions of the revised copyedit file */
-	var $copyeditFileRevisions;
+	var $sectionDecisions;
 
 	/**
 	 * Constructor.
 	 */
 	function SectionEditorSubmission() {
 		parent::Article();
-		$this->reviewAssignments = array();
-		$this->removedReviewAssignments = array();
 	}
-
-	/**
-	 * Add a review assignment for this article.
-	 * @param $reviewAssignment ReviewAssignment
-	 */
-	function addReviewAssignment($reviewAssignment) {
-		if ($reviewAssignment->getSubmissionId() == null) {
-			$reviewAssignment->setSubmissionId($this->getArticleId());
-		}
-
-		if (isset($this->reviewAssignments[$reviewAssignment->getRound()])) {
-			$roundReviewAssignments = $this->reviewAssignments[$reviewAssignment->getRound()];
-		} else {
-			$roundReviewAssignments = Array();
-		}
-		array_push($roundReviewAssignments, $reviewAssignment);
-
-		return $this->reviewAssignments[$reviewAssignment->getRound()] = $roundReviewAssignments;
-	}
-
-	/**
-	 * Add an editorial decision for this article.
-	 * @param $editorDecision array
-	 * @param $round int
-	 */
-	function addDecision($editorDecision, $round) {
-		if (isset($this->editorDecisions[$round]) && is_array($this->editorDecisions[$round])) {
-			array_push($this->editorDecisions[$round], $editorDecision);
-		}
-		else $this->editorDecisions[$round] = Array($editorDecision);
-	}
-
-	/**
-	 * Remove a review assignment.
-	 * @param $reviewId ID of the review assignment to remove
-	 * @return boolean review assignment was removed
-	 */
-	function removeReviewAssignment($reviewId) {
-		$reviewId = (int) $reviewId;
-
-		foreach ($this->reviewAssignments as $round => $assignments) {
-			if (isset($this->reviewAssignments[$round][$reviewId])) {
-				$this->removedReviewAssignments[] = $reviewId;
-				unset($this->reviewAssignments[$round][$reviewId]);
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Updates an existing review assignment.
-	 * @param $reviewAssignment ReviewAssignment
-	 */
-	function updateReviewAssignment($reviewAssignment) {
-		$reviewAssignments = array();
-		$roundReviewAssignments = $this->reviewAssignments[$reviewAssignment->getRound()];
-		for ($i=0, $count=count($roundReviewAssignments); $i < $count; $i++) {
-			if ($roundReviewAssignments[$i]->getReviewId() == $reviewAssignment->getId()) {
-				array_push($reviewAssignments, $reviewAssignment);
-			} else {
-				array_push($reviewAssignments, $roundReviewAssignments[$i]);
-			}
-		}
-		$this->reviewAssignments[$reviewAssignment->getRound()] = $reviewAssignments;
-	}
-
-	/**
-	 * Get the submission status. Returns one of the defined constants
-	 * (STATUS_INCOMPLETE, STATUS_ARCHIVED, STATUS_PUBLISHED,
-	 * STATUS_DECLINED, STATUS_QUEUED_UNASSIGNED, STATUS_QUEUED_REVIEW,
-	 * or STATUS_QUEUED_EDITING). Note that this function never returns
-	 * a value of STATUS_QUEUED -- the three STATUS_QUEUED_... constants
-	 * indicate a queued submission.
-	 * NOTE that this code is similar to getSubmissionStatus in
-	 * the AuthorSubmission class and changes should be made there as well.
-	 
-	function getSubmissionStatus() {
-		$status = $this->getStatus();
-		if ($status == STATUS_ARCHIVED || $status == STATUS_PUBLISHED ||
-		    $status == STATUS_DECLINED) return $status;
-
-		// The submission is STATUS_QUEUED or the author's submission was STATUS_INCOMPLETE.
-		if ($this->getSubmissionProgress()) return (STATUS_INCOMPLETE);
-
-		// The submission is STATUS_QUEUED. Find out where it's queued.
-		$editAssignments = $this->getEditAssignments();
-		if (empty($editAssignments))
-			return (STATUS_QUEUED_UNASSIGNED);
-
-		$decisions = $this->getDecisions();
-		$decision = array_pop($decisions);
-		if (!empty($decision)) {
-			$latestDecision = array_pop($decision);
-			if ($latestDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT) {
-				return STATUS_QUEUED_EDITING;
-			}
-		}
-		return STATUS_QUEUED_REVIEW;
-	}
-	*/
 	
 	/**
 	 * Get the submission status. Returns one of the defined constants
@@ -155,47 +37,35 @@ class SectionEditorSubmission extends Article {
          * Copied from AuthorSubmission::getSubmissionStatus
 	 */
 	function getSubmissionStatus() {
-                /**
-                 * Added by: AIM
-                 * Last Updated: June 1, 2011
-                 * Return status of proposal
-                 **/
-                if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
 
-                //Withdrawn status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
-
-                if($this->getStatus() == PROPOSAL_STATUS_COMPLETED) return PROPOSAL_STATUS_COMPLETED;
-                
-                //Archived status is reflected in table articles field status
-                if($this->getStatus() == PROPOSAL_STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;              
-                
-                $status = $this->getProposalStatus();
-                
-                if($status == PROPOSAL_STATUS_RETURNED) {
-                    $articleDao = DAORegistry::getDAO('ArticleDAO');
-                    $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
-
-                    if($isResubmitted) return PROPOSAL_STATUS_RESUBMITTED;
-                }
-
-                //For all other statuses
-                return $status;
+	    if ($this->getSubmissionProgress() && !$this->getDateSubmitted()) return PROPOSAL_STATUS_DRAFT;
+	
+	    //"Withdrawn", "Reviewed" and "Archived" statuses are reflected in table articles field status
+	    if($this->getStatus() == STATUS_WITHDRAWN) return PROPOSAL_STATUS_WITHDRAWN;
+	
+	    if($this->getStatus() == STATUS_REVIEWED) return PROPOSAL_STATUS_REVIEWED;
+	    
+	    if($this->getStatus() == STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;              
+	    
+	    if($this->getStatus() != STATUS_ARCHIVED && $this->getStatus() != STATUS_REVIEWED && $this->getStatus() != STATUS_WITHDRAWN) {
+	    	if ($this->getLastModified() > $this->getLastSectionDecisionDate()) {
+	    		if ($this->getResubmitCount() > 0) return PROPOSAL_STATUS_RESUBMITTED;
+	    		else return PROPOSAL_STATUS_SUBMITTED;
+	    	}
+	    }
+	    
+	    $status = $this->getProposalStatus();
+	    
+	    if($status == PROPOSAL_STATUS_RETURNED) {
+	        $articleDao = DAORegistry::getDAO('ArticleDAO');
+	        $isResubmitted = $articleDao->isProposalResubmitted($this->getArticleId());
+	
+	        if($isResubmitted) return PROPOSAL_STATUS_RESUBMITTED;
+	    }
+	
+	    //For all other statuses
+	    return $status;
 	}
-	
-	
-	function isSubmissionDue() {
-        $today = time();
-        $startdate = strtotime($this->getStartDate($this->getLocale()));
-        $dueDate = strtotime ('+1 year', $startdate) ;
-    	$approvalDate = strtotime($this->getApprovalDate($this->getLocale()));    	
-        $approvalDue = strtotime ('+1 year', $approvalDate) ;
-    	if($today >= $dueDate && $today >= $approvalDue) {
-    		return true;
-    	} else {
-    		return false;
-    	}
-    }
 	
 	/*
 	 * Override getProposalStatusKey in Submission.inc.php
@@ -204,86 +74,73 @@ class SectionEditorSubmission extends Article {
 		$proposalStatusMap =& $this->getProposalStatusMap();
 		return $proposalStatusMap[$this->getSubmissionStatus()];
 	}
+	
+	//
+	// Section Decisions
+	//
 
 	/**
-	 * Get/Set Methods.
-	 */
-
-	/**
-	 * Get edit assignments for this article.
+	 * Get section decisions.
 	 * @return array
 	 */
-	function &getEditAssignments() {
-		$editAssignments =& $this->getData('editAssignments');
-		return $editAssignments;
+	function getDecisions() {
+		$sectionDecisions =& $this->sectionDecisions;
+		usort($sectionDecisions, function ($a, $b){
+    			return $a->getDateDecided() == $b->getDateDecided() ? 0 : ( $a->getDateDecided() > $b->getDateDecided() ) ? 1 : -1;
+			}
+		);
+		if ($sectionDecisions) return $sectionDecisions;
+		else return null;
+	}
+
+		
+	/**
+	 * Set section decisions.
+	 * @param $sectionDecisions array
+	 */
+	function setDecisions($sectionDecisions) {
+		return $this->sectionDecisions = $sectionDecisions;
 	}
 
 	/**
-	 * Set edit assignments for this article.
-	 * @param $editAssignments array
+	 * Add a section decision for this article.
+	 * @param $sectionDecision array
 	 */
-	function setEditAssignments($editAssignments) {
-		return $this->setData('editAssignments', $editAssignments);
-	}
-
-	//
-	// Review Assignments
-	//
-
-	/**
-	 * Get review assignments for this article.
-	 * @return array ReviewAssignments
-	 */
-	function &getReviewAssignments($round = null) {
-		if ($round == null) {
-			return $this->reviewAssignments;
-		} else {
-			return $this->reviewAssignments[$round];
+	function addDecision($newSectionDecision) {
+		if (isset($this->sectionDecisions) && is_array($this->sectionDecisions)) {
+			$replaced = false;
+			foreach ($this->sectionDecisions as $key => $sectionDecision) {
+				if ($sectionDecision->getId() == $newSectionDecision->getId()) {
+					$this->sectionDecisions[$key] = $newSectionDecision;
+					$replaced = true;
+				}
+			}
+			if (!$replaced) array_push($this->sectionDecisions, $newSectionDecision);
 		}
+		else $this->sectionDecisions = Array($newSectionDecision);
 	}
 
 	/**
-	 * Set review assignments for this article.
-	 * @param $reviewAssignments array ReviewAssignments
+	 * Get the last section decision for this article.
+	 * @return Section Decision object
 	 */
-	function setReviewAssignments($reviewAssignments, $round) {
-		return $this->reviewAssignments[$round] = $reviewAssignments;
-	}
+	function getLastSectionDecision() {
+		$sectionDecisions =& $this->getDecisions();
+		if ($sectionDecisions) return $sectionDecisions[(count($sectionDecisions)-1)];
+		else return null;
+	}	
 
 	/**
-	 * Get the IDs of all review assignments removed..
-	 * @return array int
+	 * Get the last section decision id for this article.
+	 * @return Section Decision object
 	 */
-	function &getRemovedReviewAssignments() {
-		return $this->removedReviewAssignments;
-	}
-
-	//
-	// Editor Decisions
-	//
-
-	/**
-	 * Get editor decisions.
-	 * @return array
-	 */
-	function getDecisions($round = null) {
-		if ($round == null) {
-			return $this->editorDecisions;
-		} else {
-			if (isset($this->editorDecisions[$round])) return $this->editorDecisions[$round];
-			else return null;
-		}
-	}
-
-	/**
-	 * Set editor decisions.
-	 * @param $editorDecisions array
-	 * @param $round int
-	 */
-	function setDecisions($editorDecisions, $round) {
-		return $this->editorDecisions[$round] = $editorDecisions;
-	}
-
+	function getLastSectionDecisionId() {
+		$sectionDecisions =& $this->getDecisions();
+		$sDecision =& $sectionDecisions[(count($sectionDecisions)-1)];
+		if ($sDecision) return $sDecision->getId();
+		else return null;
+	}	
+	
 	// 
 	// Files
 	//	
@@ -372,46 +229,6 @@ class SectionEditorSubmission extends Article {
 	function setPreviousFiles($previousFiles) {
 		return $this->setData('previousFiles', $previousFiles);
 	}
-	
-	/**
-	 * Get all editor file revisions.
-	 * @return array ArticleFiles
-	 */
-	function getEditorFileRevisions($round = null) {
-		if ($round == null) {
-			return $this->editorFileRevisions;
-		} else {
-			return $this->editorFileRevisions[$round];
-		}
-	}
-
-	/**
-	 * Set all editor file revisions.
-	 * @param $editorFileRevisions array ArticleFiles
-	 */
-	function setEditorFileRevisions($editorFileRevisions, $round) {
-		return $this->editorFileRevisions[$round] = $editorFileRevisions;
-	}
-
-	/**
-	 * Get all author file revisions.
-	 * @return array ArticleFiles
-	 */
-	function getAuthorFileRevisions($round = null) {
-		if ($round == null) {
-			return $this->authorFileRevisions;
-		} else {
-			return $this->authorFileRevisions[$round];
-		}
-	}
-
-	/**
-	 * Set all author file revisions.
-	 * @param $authorFileRevisions array ArticleFiles
-	 */
-	function setAuthorFileRevisions($authorFileRevisions, $round) {
-		return $this->authorFileRevisions[$round] = $authorFileRevisions;
-	}
 
 	/**
 	 * Get post-review file.
@@ -428,26 +245,6 @@ class SectionEditorSubmission extends Article {
 	 */
 	function setEditorFile($editorFile) {
 		return $this->setData('editorFile', $editorFile);
-	}
-
-	//
-	// Review Rounds
-	//
-
-	/**
-	 * Get review file revision.
-	 * @return int
-	 */
-	function getReviewRevision() {
-		return $this->getData('reviewRevision');
-	}
-
-	/**
-	 * Set review file revision.
-	 * @param $reviewRevision int
-	 */
-	function setReviewRevision($reviewRevision) {
-		return $this->setData('reviewRevision', $reviewRevision);
 	}
 
 	//
@@ -539,17 +336,17 @@ class SectionEditorSubmission extends Article {
 	 * 
 	 */
 	function &getAllPossibleEditorDecisionOptions() {
-		static $editorDecisionOptions = array(
-			SUBMISSION_EDITOR_DECISION_ACCEPT => 'editor.article.decision.accept',
-			SUBMISSION_EDITOR_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
-			SUBMISSION_EDITOR_DECISION_DECLINE => 'editor.article.decision.decline',
-			SUBMISSION_EDITOR_DECISION_COMPLETE => 'editor.article.decision.complete',
-			SUBMISSION_EDITOR_DECISION_INCOMPLETE=> 'editor.article.decision.incomplete',
-			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
-			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
-			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'			
+		static $sectionDecisionOptions = array(
+			SUBMISSION_SECTION_DECISION_APPROVED => 'editor.article.decision.approved',
+			SUBMISSION_SECTION_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
+			SUBMISSION_SECTION_DECISION_DECLINED => 'editor.article.decision.declined',
+			SUBMISSION_SECTION_DECISION_COMPLETE => 'editor.article.decision.complete',
+			SUBMISSION_SECTION_DECISION_INCOMPLETE=> 'editor.article.decision.incomplete',
+			SUBMISSION_SECTION_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+			SUBMISSION_SECTION_DECISION_FULL_REVIEW => 'editor.article.decision.fullReview',
+			SUBMISSION_SECTION_DECISION_EXPEDITED => 'editor.article.decision.expedited'			
 			);
-		return $editorDecisionOptions;
+		return $sectionDecisionOptions;
 	}
 	/**
 	 * Return array mapping editor decision constants to their locale strings.
@@ -559,13 +356,13 @@ class SectionEditorSubmission extends Article {
 	 * Last Update: 5/28/2011
 	 */
 	function &getEditorDecisionOptions() {
-		static $editorDecisionOptions = array(
+		static $sectionDecisionOptions = array(
 			'' => 'common.chooseOne',
-			SUBMISSION_EDITOR_DECISION_ACCEPT => 'editor.article.decision.accept',
-			SUBMISSION_EDITOR_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
-			SUBMISSION_EDITOR_DECISION_DECLINE => 'editor.article.decision.decline'
+			SUBMISSION_SECTION_DECISION_APPROVED => 'editor.article.decision.approved',
+			SUBMISSION_SECTION_DECISION_RESUBMIT => 'editor.article.decision.resubmit',
+			SUBMISSION_SECTION_DECISION_DECLINED => 'editor.article.decision.declined'
 		);
-		return $editorDecisionOptions;
+		return $sectionDecisionOptions;
 	}
 
 	/********************************************
@@ -577,8 +374,8 @@ class SectionEditorSubmission extends Article {
 	function &getInitialReviewOptions() {
 		static $initialReviewOptions = array(
 			'' => 'common.chooseOne',
-			SUBMISSION_EDITOR_DECISION_COMPLETE => 'editor.article.decision.complete',
-			SUBMISSION_EDITOR_DECISION_INCOMPLETE=> 'editor.article.decision.incomplete'
+			SUBMISSION_SECTION_DECISION_COMPLETE => 'editor.article.decision.complete',
+			SUBMISSION_SECTION_DECISION_INCOMPLETE=> 'editor.article.decision.incomplete'
 		);
 		return $initialReviewOptions;
 	}
@@ -592,9 +389,9 @@ class SectionEditorSubmission extends Article {
 	function &getExemptionOptions() {
 		static $exemptionOptions = array(
 			'' => 'common.chooseOne',
-			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
-			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
-			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited'
+			SUBMISSION_SECTION_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+			SUBMISSION_SECTION_DECISION_FULL_REVIEW => 'editor.article.decision.fullReview',
+			SUBMISSION_SECTION_DECISION_EXPEDITED => 'editor.article.decision.expedited'
 		);
 		return $exemptionOptions;
 	}
@@ -608,10 +405,10 @@ class SectionEditorSubmission extends Article {
 	function &getContinuingReviewOptions() {
 		static $continuingReviewOptions = array(
 			'' => 'common.chooseOne',
-			SUBMISSION_EDITOR_DECISION_ASSIGNED => 'editor.article.decision.assigned',
-			SUBMISSION_EDITOR_DECISION_EXPEDITED => 'editor.article.decision.expedited',
-			SUBMISSION_EDITOR_DECISION_EXEMPTED => 'editor.article.decision.exempted',
-			SUBMISSION_EDITOR_DECISION_DONE => 'editor.article.decision.done'
+			SUBMISSION_SECTION_DECISION_FULL_REVIEW => 'editor.article.decision.fullReview',
+			SUBMISSION_SECTION_DECISION_EXPEDITED => 'editor.article.decision.expedited',
+			SUBMISSION_SECTION_DECISION_EXEMPTED => 'editor.article.decision.exempted',
+			SUBMISSION_SECTION_DECISION_DONE => 'editor.article.decision.done'
 		);
 		return $continuingReviewOptions;
 	}
@@ -628,10 +425,6 @@ class SectionEditorSubmission extends Article {
 		// Submissions that are not still queued (i.e. published) are not highlighted.
 		if ($this->getStatus() != STATUS_QUEUED) return null;
 
-		// Awaiting assignment.
-		$editAssignments = $this->getEditAssignments();
-		if (empty($editAssignments)) return $highlightClass;
-
 		$journal =& Request::getJournal();
 		// Sanity check
 		if (!$journal || $journal->getId() != $this->getJournalId()) return null;
@@ -645,7 +438,7 @@ class SectionEditorSubmission extends Article {
 		if (!empty($decision)) {
 			$latestDecision = array_pop($decision);
 			if (is_array($latestDecision)) {
-				if ($latestDecision['decision'] == SUBMISSION_EDITOR_DECISION_ACCEPT) $inEditing = true;
+				if ($latestDecision['decision'] == SUBMISSION_SECTION_DECISION_APPROVED) $inEditing = true;
 				$decisionsEmpty = false;
 				$lastDecisionDate = strtotime($latestDecision['dateDecided']);
 			}
@@ -828,7 +621,8 @@ class SectionEditorSubmission extends Article {
 			// ---
 			// --- Highlighting conditions for submissions in review
 			// ---
-			$reviewAssignments =& $this->getReviewAssignments($this->getCurrentRound());
+			$lastSectionDecision =& $this->getLastSectionDecision();
+			$reviewAssignments =& $lastSectionDecision->getReviewAssignments();
 			if (is_array($reviewAssignments) && !empty($reviewAssignments)) {
 				$allReviewsComplete = true;
 				foreach ($reviewAssignments as $i => $junk) {
@@ -872,12 +666,7 @@ class SectionEditorSubmission extends Article {
 				// the most recent decision or author/editor correspondence, highlight.
 				$comment = $this->getMostRecentEditorDecisionComment();
 				$commentDate = $comment ? strtotime($comment->getDatePosted()) : 0;
-				$authorFileRevisions = $this->getAuthorFileRevisions($this->getCurrentRound());
 				$authorFileDate = null;
-				if (is_array($authorFileRevisions) && !empty($authorFileRevisions)) {
-					$authorFile = array_pop($authorFileRevisions);
-					$authorFileDate = strtotime($authorFile->getDateUploaded());
-				}
 				if (	($lastDecisionDate || $commentDate) &&
 					$authorFileDate &&
 					$authorFileDate > max($lastDecisionDate, $commentDate)

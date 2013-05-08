@@ -46,22 +46,22 @@
     	{elseif $status==PROPOSAL_STATUS_COMPLETED}{translate key="submission.status.completed"}
         {elseif $status==PROPOSAL_STATUS_ARCHIVED}
         	{assign var="decision" value=$submission->getMostRecentDecision()}
-            {if $decision==SUBMISSION_EDITOR_DECISION_DECLINE}
+            {if $decision==SUBMISSION_SECTION_DECISION_DECLINED}
             	Archived({translate key="submission.status.declined"})
-            {elseif $decision==SUBMISSION_EDITOR_DECISION_EXEMPTED}
+            {elseif $decision==SUBMISSION_SECTION_DECISION_EXEMPTED}
             	Archived({translate key="submission.status.exempted"})
             {/if}
         {elseif $status==PROPOSAL_STATUS_SUBMITTED}{translate key="submission.status.submitted"}
         {elseif $status==PROPOSAL_STATUS_CHECKED}{translate key="submission.status.complete"}
         {elseif $status==PROPOSAL_STATUS_EXPEDITED}{translate key="submission.status.expeditedReview"}
-        {elseif $status==PROPOSAL_STATUS_ASSIGNED}{translate key="submission.status.fullReview"}
+        {elseif $status==PROPOSAL_STATUS_FULL_REVIEW}{translate key="submission.status.fullReview"}
         {elseif $status==PROPOSAL_STATUS_RETURNED}{translate key="submission.status.incomplete"}
         {elseif $status==PROPOSAL_STATUS_EXEMPTED}{translate key="submission.status.exempted"}
         {elseif $status==PROPOSAL_STATUS_REVIEWED}
         	{assign var="decision" value=$submission->getMostRecentDecision()}
-            {if $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT}{translate key="submission.status.reviseAndResubmit"}
-            {elseif $decision==SUBMISSION_EDITOR_DECISION_ACCEPT}{translate key="submission.status.approved"}
-            {elseif $decision==SUBMISSION_EDITOR_DECISION_DECLINE}{translate key="submission.status.declined"}                
+            {if $decision==SUBMISSION_SECTION_DECISION_RESUBMIT}{translate key="submission.status.reviseAndResubmit"}
+            {elseif $decision==SUBMISSION_SECTION_DECISION_APPROVED}{translate key="submission.status.approved"}
+            {elseif $decision==SUBMISSION_SECTION_DECISION_DECLINED}{translate key="submission.status.declined"}                
             {/if}
         {/if}
 	</td>

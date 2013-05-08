@@ -107,7 +107,7 @@ class NotificationSettingsForm extends PKPNotificationSettingsForm {
 		if(!$this->getData('notificationProofreadComment')) $settings[] = NOTIFICATION_TYPE_PROOFREAD_COMMENT;
 		if(!$this->getData('notificationReviewerComment')) $settings[] = NOTIFICATION_TYPE_REVIEWER_COMMENT;
 		if(!$this->getData('notificationReviewerFormComment')) $settings[] = NOTIFICATION_TYPE_REVIEWER_FORM_COMMENT;
-		if(!$this->getData('notificationEditorDecisionComment')) $settings[] = NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT;
+		if(!$this->getData('notificationEditorDecisionComment')) $settings[] = NOTIFICATION_TYPE_SECTION_DECISION_COMMENT;
 		if(!$this->getData('notificationPublishedIssue')) $settings[] = NOTIFICATION_TYPE_PUBLISHED_ISSUE;
 		if(!$this->getData('notificationUserComment')) $settings[] = NOTIFICATION_TYPE_USER_COMMENT;
 		if(!$this->getData('notificationNewAnnouncement')) $settings[] = NOTIFICATION_TYPE_NEW_ANNOUNCEMENT;
@@ -124,7 +124,7 @@ class NotificationSettingsForm extends PKPNotificationSettingsForm {
 		if($this->getData('emailNotificationProofreadComment')) $emailSettings[] = NOTIFICATION_TYPE_PROOFREAD_COMMENT;
 		if($this->getData('emailNotificationReviewerComment')) $emailSettings[] = NOTIFICATION_TYPE_REVIEWER_COMMENT;
 		if($this->getData('emailNotificationReviewerFormComment')) $emailSettings[] = NOTIFICATION_TYPE_REVIEWER_FORM_COMMENT;
-		if($this->getData('emailNotificationEditorDecisionComment')) $emailSettings[] = NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT;
+		if($this->getData('emailNotificationEditorDecisionComment')) $emailSettings[] = NOTIFICATION_TYPE_SECTION_DECISION_COMMENT;
 		if($this->getData('emailNotificationPublishedIssue')) $emailSettings[] = NOTIFICATION_TYPE_PUBLISHED_ISSUE;
 		if($this->getData('emailNotificationUserComment')) $emailSettings[] = NOTIFICATION_TYPE_USER_COMMENT;
 		if($this->getData('emailNotificationNewAnnouncement')) $emailSettings[] = NOTIFICATION_TYPE_NEW_ANNOUNCEMENT;

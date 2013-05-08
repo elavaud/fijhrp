@@ -42,8 +42,6 @@ define('SUBMISSION_REVIEW_METHOD_OPEN', 3);
 
 
 class PKPReviewAssignment extends DataObject {
-	/** @var array The revisions of the reviewer file */
-	var $reviewerFileRevisions;
 
 	/**
 	 * Constructor.
@@ -60,16 +58,16 @@ class PKPReviewAssignment extends DataObject {
 	 * Get ID of review assignment's submission.
 	 * @return int
 	 */
-	function getSubmissionId() {
-		return $this->getData('submissionId');
+	function getDecisionId() {
+		return $this->getData('decisionId');
 	}
 
 	/**
 	 * Set ID of review assignment's submission
-	 * @param $submissionId int
+	 * @param $decisionId int
 	 */
-	function setSubmissionId($submissionId) {
-		return $this->setData('submissionId', $submissionId);
+	function setDecisionId($decisionId) {
+		return $this->setData('decisionId', $decisionId);
 	}
 
 	/**
@@ -498,22 +496,6 @@ class PKPReviewAssignment extends DataObject {
 	}
 
 	/**
-	 * Get round.
-	 * @return int
-	 */
-	function getRound() {
-		return $this->getData('round');
-	}
-
-	/**
-	 * Set round.
-	 * @param $round int
-	 */
-	function setRound($round) {
-		return $this->setData('round', $round);
-	}
-
-	/**
 	 * Get review file id.
 	 * @return int
 	 */
@@ -546,21 +528,6 @@ class PKPReviewAssignment extends DataObject {
 		return $this->setData('reviewFile', $reviewFile);
 	}
 
-	/**
-	 * Get review revision.
-	 * @return int
-	 */
-	function getReviewRevision() {
-		return $this->getData('reviewRevision');
-	}
-
-	/**
-	 * Set review revision.
-	 * @param $reviewRevision int
-	 */
-	function setReviewRevision($reviewRevision) {
-		return $this->setData('reviewRevision', $reviewRevision);
-	}
 
 	/**
 	 * Get review form id.
@@ -597,22 +564,6 @@ class PKPReviewAssignment extends DataObject {
 	 */
 	function setReviewerFile($reviewerFile) {
 		return $this->setData('reviewerFile', $reviewerFile);
-	}
-
-	/**
-	 * Get all reviewer file revisions.
-	 * @return array ArticleFiles
-	 */
-	function getReviewerFileRevisions() {
-		return $this->reviewerFileRevisions;
-	}
-
-	/**
-	 * Set all reviewer file revisions.
-	 * @param $reviewerFileRevisions array ArticleFiles
-	 */
-	function setReviewerFileRevisions($reviewerFileRevisions) {
-		return $this->reviewerFileRevisions = $reviewerFileRevisions;
 	}
 
 	/**

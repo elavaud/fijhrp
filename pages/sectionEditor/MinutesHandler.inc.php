@@ -230,7 +230,7 @@ class MinutesHandler extends Handler {
 
 	/**
 	 * Added  6/29/2011
-	 * Display form for initial review given article id and Generate pdf file for this initial review and update edit_decisions table
+	 * Display form for initial review given article id and Generate pdf file for this initial review and update section_decisions table
 	 * @param $args
 	 * @param $request
 	 */
@@ -356,7 +356,7 @@ class MinutesHandler extends Handler {
 	
 	/**
 	 * Added  6/29/2011
-	 * Display form for continuing review given article id and Generate pdf file for this continuing review and update edit_decisions table
+	 * Display form for continuing review given article id and Generate pdf file for this continuing review and update section_decisions table
 	 * @param $args
 	 * @param $request
 	 */
@@ -541,32 +541,20 @@ class MinutesHandler extends Handler {
 				$templateMgr->assign('canReview', true);
 				$templateMgr->assign('canEdit', true);
 			} else {
-				// If this user isn't the submission's editor, they don't have access.
-					// Modified by EL on February 17th 2013
-					// No edit assignments anymore
-					//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-					$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-					$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());	
+				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $sectionEditorSubmission->getSectionId());	
 				$wasFound = false;
-					//foreach ($editAssignments as $editAssignment) {
-					foreach ($sectionEditors as $sectionEditor) {	
+				foreach ($sectionEditors as $sectionEditor) {	
 					if ($sectionEditor->getId() == $user->getId()) {
-							//$templateMgr->assign('canReview', $editAssignment->getCanReview());
-							//$templateMgr->assign('canEdit', $editAssignment->getCanEdit());
-							$templateMgr->assign('canReview', true);
-							$templateMgr->assign('canEdit', true);
+						$templateMgr->assign('canReview', true);
+						$templateMgr->assign('canEdit', true);
 						switch ($access) {
 							case SECTION_EDITOR_ACCESS_EDIT:
-									//if ($editAssignment->getCanEdit()) {
-									$wasFound = true;
-									//}
+								$wasFound = true;
 								break;
 							case SECTION_EDITOR_ACCESS_REVIEW:
-									//if ($editAssignment->getCanReview()) {
-									$wasFound = true;
-									//}
+								$wasFound = true;
 								break;
-
 							default:
 								$wasFound = true;
 						}
@@ -580,20 +568,7 @@ class MinutesHandler extends Handler {
 
 		if (!$isValid) {
 			Request::redirect(null, Request::getRequestedPage());
-		}
-
-		// If necessary, note the current date and time as the "underway" date/time
-	
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-			//foreach ($editAssignments as $editAssignment) {
-				//if ($editAssignment->getEditorId() == $user->getId() && $editAssignment->getDateUnderway() === null) {
-					//$editAssignment->setDateUnderway(Core::getCurrentDate());
-					//$edit Assignment Dao->updateEditAssignment($editAssignment);
-				//}
-			//}
+		}	
 
 		$this->submission =& $sectionEditorSubmission;
 		return true;

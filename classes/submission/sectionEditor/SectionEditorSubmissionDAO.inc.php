@@ -27,11 +27,6 @@ class SectionEditorSubmissionDAO extends DAO {
 	var $articleDao;
 	var $authorDao;
 	var $userDao;
-
-		// Removed by EL on February 17th 2013
-		// No edit assignments anymore
-		//var $edit Assignment Dao;
-	var $reviewAssignmentDao;
 	var $copyeditorSubmissionDao;
 	var $articleFileDao;
 	var $suppFileDao;
@@ -39,7 +34,8 @@ class SectionEditorSubmissionDAO extends DAO {
 	var $galleyDao;
 	var $articleEmailLogDao;
 	var $articleCommentDao;
-
+	var $sectionDecisionDao;
+		
 	/**
 	 * Constructor.
 	 */
@@ -48,11 +44,6 @@ class SectionEditorSubmissionDAO extends DAO {
 		$this->articleDao =& DAORegistry::getDAO('ArticleDAO');
 		$this->authorDao =& DAORegistry::getDAO('AuthorDAO');
 		$this->userDao =& DAORegistry::getDAO('UserDAO');
-
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$this->edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-		$this->reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
 		$this->copyeditorSubmissionDao =& DAORegistry::getDAO('CopyeditorSubmissionDAO');
 		$this->articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$this->suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
@@ -60,6 +51,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		$this->galleyDao =& DAORegistry::getDAO('ArticleGalleyDAO');
 		$this->articleEmailLogDao =& DAORegistry::getDAO('ArticleEmailLogDAO');
 		$this->articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
+		$this->sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 	}
 
 	/**
@@ -73,11 +65,9 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	a.*,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
-				r2.review_revision
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
-				LEFT JOIN review_rounds r2 ON (a.article_id = r2.submission_id AND a.current_round = r2.round)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
@@ -118,19 +108,8 @@ class SectionEditorSubmissionDAO extends DAO {
 		// Article attributes
 		$this->articleDao->_articleFromRow($sectionEditorSubmission, $row);
 
-		// Editor Assignment
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $this->edit Assignment Dao->getEditAssignmentsByArticleId($row['article_id']);
-			//$sectionEditorSubmission->setEditAssignments($editAssignments->toArray());
-
-		// Editor Decisions
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$sectionEditorSubmission->setDecisions($this->getEditorDecisions($row['article_id'], $i), $i);
-		}
-
 		// Comments
-		$sectionEditorSubmission->setMostRecentEditorDecisionComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_EDITOR_DECISION, $row['article_id']));
+		$sectionEditorSubmission->setMostRecentEditorDecisionComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_SECTION_DECISION, $row['article_id']));
 		$sectionEditorSubmission->setMostRecentCopyeditComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_COPYEDIT, $row['article_id']));
 		$sectionEditorSubmission->setMostRecentLayoutComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_LAYOUT, $row['article_id']));
 		$sectionEditorSubmission->setMostRecentProofreadComment($this->articleCommentDao->getMostRecentArticleComment($row['article_id'], COMMENT_TYPE_PROOFREAD, $row['article_id']));
@@ -141,21 +120,10 @@ class SectionEditorSubmissionDAO extends DAO {
 		$sectionEditorSubmission->setReviewFile($this->articleFileDao->getArticleFile($row['review_file_id']));
 		$sectionEditorSubmission->setPreviousFiles($this->articleFileDao->getPreviousFilesByArticleId($row['article_id']));
 		$sectionEditorSubmission->setSuppFiles($this->suppFileDao->getSuppFilesByArticle($row['article_id']));
-		$sectionEditorSubmission->setEditorFile($this->articleFileDao->getArticleFile($row['editor_file_id']));
-
-
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$sectionEditorSubmission->setEditorFileRevisions($this->articleFileDao->getArticleFileRevisions($row['editor_file_id'], $i), $i);
-			$sectionEditorSubmission->setAuthorFileRevisions($this->articleFileDao->getArticleFileRevisions($row['revised_file_id'], $i), $i);
-		}
-
-		// Review Rounds
-		$sectionEditorSubmission->setReviewRevision($row['review_revision']);
-
-		// Review Assignments
-		for ($i = 1; $i <= $row['current_round']; $i++) {
-			$sectionEditorSubmission->setReviewAssignments($this->reviewAssignmentDao->getBySubmissionId($row['article_id'], $i), $i);
-		}
+		$sectionEditorSubmission->setEditorFile($this->articleFileDao->getArticleFile($row['editor_file_id']));	
+			
+		// Section Decisions
+		$sectionEditorSubmission->setDecisions($this->sectionDecisionDao->getSectionDecisionsByArticleId($row['article_id']));
 
 		// Layout Editing
 		$sectionEditorSubmission->setGalleys($this->galleyDao->getGalleysByArticle($row['article_id']));
@@ -172,69 +140,13 @@ class SectionEditorSubmissionDAO extends DAO {
 	 */
 	function updateSectionEditorSubmission(&$sectionEditorSubmission) {
 		
-		// update edit assignment
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-			//foreach ($editAssignments as $editAssignment) {
-				//if ($editAssignment->getEditId() > 0) {
-					//$this->edit Assignment Dao->updateEditAssignment($editAssignment);
-				//} else {
-					//$this->edit Assignment Dao->insertEditAssignment($editAssignment);
-				//}
-			//}
-
-		// Update editor decisions
-		for ($i = 1; $i <= $sectionEditorSubmission->getCurrentRound(); $i++) {
-			$editorDecisions = $sectionEditorSubmission->getDecisions($i);
-			if (is_array($editorDecisions)) {
-				foreach ($editorDecisions as $editorDecision) {
-					if ($editorDecision['editDecisionId'] == null) {
-						$this->update(
-							sprintf('INSERT INTO edit_decisions
-								(article_id, round, editor_id, decision, date_decided, resubmit_count)
-								VALUES (?, ?, ?, ?, %s, ?)',
-								$this->datetimeToDB($editorDecision['dateDecided'])),
-							array($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound(), $editorDecision['editorId'], $editorDecision['decision'], $editorDecision['resubmitCount'])
-						);
-					}
-	/********************************************************
-	 *
-	 * If editDecisionId is not null, just update the existing row in the database
-	 * Added by aglet
-	 * Last Update: 5/4/2011
-	 *
-	*********************************************************/
-					else {
-						$this->update(
-							sprintf('UPDATE edit_decisions SET
-								round = ?, decision = ?, date_decided = %s, resubmit_count = ? 
-								WHERE edit_decision_id = ?',
-								$this->datetimeToDB($editorDecision['dateDecided'])),
-							array($sectionEditorSubmission->getCurrentRound(), $editorDecision['decision'],  $editorDecision['resubmitCount'], $editorDecision['editDecisionId'])
-						);
-					}
-				}
+		// Update section decisions
+		$sectionDecisions = $sectionEditorSubmission->getDecisions();
+		if (is_array($sectionDecisions)) {
+			foreach ($sectionDecisions as $sectionDecision) {
+				if ($sectionDecision->getId() == null) $this->sectionDecisionDao->insertSectionDecision($sectionDecision);
+				else $this->sectionDecisionDao->updateSectionDecision($sectionDecision);
 			}
-		}
-		if ($this->reviewRoundExists($sectionEditorSubmission->getArticleId(), $sectionEditorSubmission->getCurrentRound())) {
-			$this->update(
-				'UPDATE review_rounds
-					SET
-						review_revision = ?
-					WHERE submission_id = ? AND round = ?',
-				array(
-					$sectionEditorSubmission->getReviewRevision(),
-					$sectionEditorSubmission->getArticleId(),
-					$sectionEditorSubmission->getCurrentRound()
-				)
-			);
-		} elseif ($sectionEditorSubmission->getReviewRevision()!=null) {
-			$this->createReviewRound(
-				$sectionEditorSubmission->getArticleId(),
-				$sectionEditorSubmission->getCurrentRound() === null ? 1 : $sectionEditorSubmission->getCurrentRound(),
-				$sectionEditorSubmission->getReviewRevision()
-			);
 		}
 
 		// Update copyeditor assignment
@@ -250,23 +162,6 @@ class SectionEditorSubmissionDAO extends DAO {
 		$copyeditorSubmission->setDateStatusModified($sectionEditorSubmission->getDateStatusModified());
 		$copyeditorSubmission->setLastModified($sectionEditorSubmission->getLastModified());
 
-		// update review assignments
-		foreach ($sectionEditorSubmission->getReviewAssignments() as $roundReviewAssignments) {
-			foreach ($roundReviewAssignments as $reviewAssignment) {
-				if ($reviewAssignment->getId() > 0) {
-					//$this->reviewAssignmentDao->updateReviewAssignment($reviewAssignment);
-				} else {
-					$this->reviewAssignmentDao->insertReviewAssignment($reviewAssignment);
-				}
-			}
-		}
-
-		// Remove deleted review assignments
-		$removedReviewAssignments = $sectionEditorSubmission->getRemovedReviewAssignments();
-		for ($i=0, $count=count($removedReviewAssignments); $i < $count; $i++) {
-			$this->reviewAssignmentDao->deleteReviewAssignmentById($removedReviewAssignments[$i]);
-		}
-
 		// Update article
 		if ($sectionEditorSubmission->getArticleId()) {
 
@@ -274,7 +169,6 @@ class SectionEditorSubmissionDAO extends DAO {
 
 			// Only update fields that can actually be edited.
 			$article->setSectionId($sectionEditorSubmission->getSectionId());
-			$article->setCurrentRound($sectionEditorSubmission->getCurrentRound());
 			$article->setReviewFileId($sectionEditorSubmission->getReviewFileId());
 			$article->setEditorFileId($sectionEditorSubmission->getEditorFileId());
 			$article->setStatus($sectionEditorSubmission->getStatus());
@@ -287,19 +181,9 @@ class SectionEditorSubmissionDAO extends DAO {
 
 	}
 
-	function createReviewRound($articleId, $round, $reviewRevision) {
-		$this->update(
-			'INSERT INTO review_rounds
-				(submission_id, round, review_revision)
-				VALUES
-				(?, ?, ?)',
-			array($articleId, $round, $reviewRevision)
-		);
-	}
-
 	/**
 	 * Get all section editor submissions for a section editor.
-	 * @param $sectionEditorId int
+	 * @param $sectionId int
 	 * @param $status boolean true if active, false if completed.
 	 * @return array SectionEditorSubmission
 	 * last modified by EL on February 17th 2013
@@ -313,11 +197,9 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	a.*,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
-				r2.review_revision
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
 				LEFT JOIN sections s ON (s.section_id = a.section_id)
-				LEFT JOIN review_rounds r2 ON (a.article_id = r2.submission_id AND a.current_round = r2.round)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
@@ -373,8 +255,6 @@ class SectionEditorSubmissionDAO extends DAO {
 			$primaryLocale,
 			'abbrev',
 			$locale,
-			'cleanScientificTitle', // Article title
-			'cleanScientificTitle',
 			$locale,
 			'proposalCountry',
 			'proposalCountry',
@@ -389,12 +269,12 @@ class SectionEditorSubmissionDAO extends DAO {
 		if (!empty($search)) switch ($searchField) {
 			case SUBMISSION_FIELD_TITLE:
 				if ($searchMatch === 'is') {
-					$searchSql = ' AND LOWER(atl.setting_value) = LOWER(?)';
+					$searchSql = ' AND LOWER(abl.setting_value) = LOWER(?)';
 				} elseif ($searchMatch === 'contains') {
-					$searchSql = ' AND LOWER(atl.setting_value) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(abl.setting_value) LIKE LOWER(?)';
 					$search = '%' . $search . '%';
 				} else { // $searchMatch === 'startsWith'
-					$searchSql = ' AND LOWER(atl.setting_value) LIKE LOWER(?)';
+					$searchSql = ' AND LOWER(abl.setting_value) LIKE LOWER(?)';
 					$search = '%' . $search . '%';
 				}
 				$params[] = $search;
@@ -480,11 +360,10 @@ class SectionEditorSubmissionDAO extends DAO {
 				scf.date_completed as copyedit_completed,
 				spr.date_completed as proofread_completed,
 				sle.date_completed as layout_completed,
-				COALESCE(atl.setting_value, atpl.setting_value) AS submission_title,
+				COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS submission_title,
 				aap.last_name AS author_name,
 				COALESCE(stl.setting_value, stpl.setting_value) AS section_title,
-				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev,
-				r2.review_revision
+				COALESCE(sal.setting_value, sapl.setting_value) AS section_abbrev
 			FROM	articles a
 				LEFT JOIN authors aa ON (aa.submission_id = a.article_id)
 				LEFT JOIN authors aap ON (aap.submission_id = a.article_id AND aap.primary_contact = 1)
@@ -493,24 +372,23 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN users ce ON (scf.user_id = ce.user_id)
 				LEFT JOIN signoffs spr ON (a.article_id = spr.assoc_id AND spr.assoc_type = ? AND spr.symbolic = ?)
 				LEFT JOIN users pe ON (pe.user_id = spr.user_id)
-				LEFT JOIN review_rounds r2 ON (a.article_id = r2.submission_id and a.current_round = r2.round)
 				LEFT JOIN signoffs sle ON (a.article_id = sle.assoc_id AND sle.assoc_type = ? AND sle.symbolic = ?) LEFT JOIN users le ON (le.user_id = sle.user_id)
 				LEFT JOIN section_settings stpl ON (s.section_id = stpl.section_id AND stpl.setting_name = ? AND stpl.locale = ?)
 				LEFT JOIN section_settings stl ON (s.section_id = stl.section_id AND stl.setting_name = ? AND stl.locale = ?)
 				LEFT JOIN section_settings sapl ON (s.section_id = sapl.section_id AND sapl.setting_name = ? AND sapl.locale = ?)
 				LEFT JOIN section_settings sal ON (s.section_id = sal.section_id AND sal.setting_name = ? AND sal.locale = ?)
-				LEFT JOIN article_settings atpl ON (atpl.article_id = a.article_id AND atpl.setting_name = ? AND atpl.locale = a.locale)
-				LEFT JOIN article_settings atl ON (a.article_id = atl.article_id AND atl.setting_name = ? AND atl.locale = ?)
+				LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+				LEFT JOIN article_abstract abl ON (a.article_id = abl.article_id AND abl.locale = ?)
 				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
 				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
 				
-				LEFT JOIN edit_decisions edec ON (a.article_id = edec.article_id)
-				LEFT JOIN edit_decisions edec2 ON (a.article_id = edec2.article_id AND edec.edit_decision_id < edec2.edit_decision_id)
+				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 			WHERE	a.journal_id = ?
 				AND a.section_id = ? '.
 				//AND a.submission_progress = 0' . edited by aglet 6/4/2011 
 				(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'') . '
-				AND edec2.edit_decision_id IS NULL';
+				AND sdec2.section_decision_id IS NULL';
 
 
 		$result =& $this->retrieveRange($sql . ' ' . $searchSql . $countrySql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
@@ -541,7 +419,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision IS NULL OR (edec.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ' AND edec.decision <> ' . SUBMISSION_EDITOR_DECISION_DECLINE . ' AND edec.decision <> '. SUBMISSION_EDITOR_DECISION_EXEMPTED .' AND edec.decision <> '. SUBMISSION_EDITOR_DECISION_INCOMPLETE .' AND edec.decision <> '. SUBMISSION_EDITOR_DECISION_RESUBMIT .') OR ((edec.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_INCOMPLETE .') AND a.date_submitted > edec.date_decided)) AND a.date_submitted IS NOT NULL',
+			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision IS NULL OR (sdec.decision <> ' . SUBMISSION_SECTION_DECISION_APPROVED . ' AND sdec.decision <> ' . SUBMISSION_SECTION_DECISION_DECLINED . ' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_EXEMPTED .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_INCOMPLETE .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_RESUBMIT .') OR ((sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_INCOMPLETE .') AND a.date_submitted > sdec.date_decided)) AND a.date_submitted IS NOT NULL',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -569,7 +447,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ' OR edec.decision = ' . SUBMISSION_EDITOR_DECISION_EXEMPTED . ')',
+			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . ' OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -597,7 +475,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_DECLINE . ' OR ((edec.decision = ' . SUBMISSION_EDITOR_DECISION_INCOMPLETE . ' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .') AND a.date_submitted <= edec.date_decided))',
+			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_DECLINED . ' OR ((sdec.decision = ' . SUBMISSION_SECTION_DECISION_INCOMPLETE . ' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .') AND a.date_submitted <= sdec.date_decided))',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -625,7 +503,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT,
+			'a.status = ' . STATUS_QUEUED . ' AND sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED,
 			$rangeInfo, $sortBy, $sortDirection
 		);
 		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
@@ -673,36 +551,36 @@ class SectionEditorSubmissionDAO extends DAO {
 		}
 
 		// Fetch a count of submissions in review.
-		// "d2" and "d" are used to fetch the single most recent
+		// "sdec2" and "sdec" are used to fetch the single most recent
 		// editor decision.
 		$result =& $this->retrieve(
 			'SELECT	COUNT(*) AS review_count
 			FROM	articles a
-				LEFT JOIN edit_decisions d ON (a.article_id = d.article_id)
-				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
+				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 			WHERE	a.journal_id = ?
 				AND a.section_id = ?
 				AND a.status = '.STATUS_QUEUED.'
-				AND d2.edit_decision_id IS NULL 
-				AND (d.decision IS NULL OR (d.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ' AND d.decision <> ' . SUBMISSION_EDITOR_DECISION_DECLINE . ' AND d.decision <> '. SUBMISSION_EDITOR_DECISION_EXEMPTED .' AND d.decision <> '. SUBMISSION_EDITOR_DECISION_INCOMPLETE .' AND d.decision <> '. SUBMISSION_EDITOR_DECISION_RESUBMIT .') OR ((d.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .' OR d.decision = '. SUBMISSION_EDITOR_DECISION_INCOMPLETE .') AND a.date_submitted > d.date_decided)) AND a.date_submitted IS NOT NULL', 
+				AND sdec2.section_decision_id IS NULL 
+				AND (sdec.decision IS NULL OR (sdec.decision <> ' . SUBMISSION_SECTION_DECISION_APPROVED . ' AND sdec.decision <> ' . SUBMISSION_SECTION_DECISION_DECLINED . ' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_EXEMPTED .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_INCOMPLETE .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_RESUBMIT .') OR ((sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_INCOMPLETE .') AND a.date_submitted > sdec.date_decided)) AND a.date_submitted IS NOT NULL', 
 			array((int) $journalId, (int) $sectionId)
 		);
 		$submissionsCount[0] = $result->Fields('review_count');
 		$result->Close();
 
 		// Fetch a count of submissions approved.
-		// "d2" and "d" are used to fetch the single most recent
+		// "sdec2" and "sdec" are used to fetch the single most recent
 		// editor decision.
 		$result =& $this->retrieve(
 			'SELECT	COUNT(*) AS editing_count
 			FROM	articles a
-				LEFT JOIN edit_decisions d ON (a.article_id = d.article_id)
-				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
+				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 			WHERE	a.journal_id = ?
 				AND a.section_id = ?
 				AND a.status = ' . STATUS_QUEUED . '
-				AND d2.edit_decision_id IS NULL
-				AND (d.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT .' OR d.decision = '. SUBMISSION_EDITOR_DECISION_EXEMPTED .')',
+				AND sdec2.section_decision_id IS NULL
+				AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_EXEMPTED .')',
 			array((int) $journalId, (int) $sectionId)
 		);
 				
@@ -710,18 +588,18 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result->Close();
 
 		// Fetch a count of submissions not approved.
-		// "d2" and "d" are used to fetch the single most recent
+		// "sdec2" and "sdec" are used to fetch the single most recent
 		// editor decision.
 		$result =& $this->retrieve(
 			'SELECT	COUNT(*) AS editing_count
 			FROM	articles a
-				LEFT JOIN edit_decisions d ON (a.article_id = d.article_id)
-				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
+				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 			WHERE	a.journal_id = ?
 				AND a.section_id = ?
 				AND a.status = ' . STATUS_QUEUED . '
-				AND d2.edit_decision_id IS NULL
-				AND (d.decision = ' . SUBMISSION_EDITOR_DECISION_DECLINE .' OR ((d.decision = '. SUBMISSION_EDITOR_DECISION_INCOMPLETE .' OR d.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .') AND a.date_submitted <= d.date_decided))',
+				AND sdec2.section_decision_id IS NULL
+				AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_DECLINED .' OR ((sdec.decision = '. SUBMISSION_SECTION_DECISION_INCOMPLETE .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .') AND a.date_submitted <= sdec.date_decided))',
 			array((int) $journalId, (int) $sectionId)
 		);
 				
@@ -729,13 +607,13 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result->Close();
 
 		// Fetch a count of submissions archived.
-		// "d2" and "d" are used to fetch the single most recent
+		// "sdec2" and "sdec" are used to fetch the single most recent
 		// editor decision.
 		$result =& $this->retrieve(
 			'SELECT	COUNT(*) AS editing_count
 			FROM	articles a
-				LEFT JOIN edit_decisions d ON (a.article_id = d.article_id)
-				LEFT JOIN edit_decisions d2 ON (a.article_id = d2.article_id AND d.edit_decision_id < d2.edit_decision_id)
+				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 			WHERE	a.journal_id = ?
 				AND a.section_id = ?
 				AND a.status <> ' . STATUS_QUEUED,
@@ -758,155 +636,9 @@ class SectionEditorSubmissionDAO extends DAO {
 	 */
 	function deleteDecisionsByArticle($articleId) {
 		return $this->update(
-			'DELETE FROM edit_decisions WHERE article_id = ?',
+			'DELETE FROM section_decisions WHERE article_id = ?',
 			$articleId
 		);
-	}
-
-	/**
-	 * Delete review rounds article.
-	 * @param $articleId int
-	 */
-	function deleteReviewRoundsByArticle($articleId) {
-		return $this->update(
-			'DELETE FROM review_rounds WHERE submission_id = ?',
-			$articleId
-		);
-	}
-
-	/**
-	 * Get the highest review round.
-	 * @param $articleId int
-	 * @return int
-	 */
-	function getMaxReviewRound($articleId) {
-		$result =& $this->retrieve(
-			'SELECT MAX(round) FROM review_rounds WHERE submission_id = ?', $articleId
-		);
-		$returner = isset($result->fields[0]) ? $result->fields[0] : 0;
-
-		$result->Close();
-		unset($result);
-
-		return $returner;
-	}
-
-	/**
-	 * Check if a review round exists for a specified article.
-	 * @param $articleId int
-	 * @param $round int
-	 * @return boolean
-	 */
-	function reviewRoundExists($articleId, $round) {
-		$result =& $this->retrieve(
-			'SELECT COUNT(*) FROM review_rounds WHERE submission_id = ? AND round = ?', array($articleId, $round)
-		);
-		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
-
-		$result->Close();
-		unset($result);
-
-		return $returner;
-	}
-
-	/**
-	 * Check if a reviewer is assigned to a specified article.
-	 * @param $articleId int
-	 * @param $reviewerId int
-	 * @return boolean
-	 */
-	function reviewerExists($articleId, $reviewerId, $round) {
-		$result =& $this->retrieve(
-			'SELECT COUNT(*) FROM review_assignments WHERE submission_id = ? AND reviewer_id = ? AND round = ? AND cancelled = 0', array((int) $articleId, (int) $reviewerId, (int) $round)
-		);
-		$returner = isset($result->fields[0]) && $result->fields[0] == 1 ? true : false;
-
-		$result->Close();
-		unset($result);
-
-		return $returner;
-	}
-
-	/**
-	 * Retrieve a list of all reviewers along with information about their current status with respect to an article's current round.
-	 * @param $journalId int
-	 * @param $articleId int
-	 * @param $round int
-	 * @param $searchType int USER_FIELD_...
-	 * @param $search string
-	 * @param $searchMatch string "is" or "contains" or "startsWith"
-	 * @param $rangeInfo RangeInfo optional
-	 * @return DAOResultFactory containing matching Users
-	 */
-	function &getReviewersForArticleIterator($journalId, $articleId, $round, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
-		$searchSql = '';
-
-		$searchTypeMap = array(
-			USER_FIELD_FIRSTNAME => 'u.first_name',
-			USER_FIELD_LASTNAME => 'u.last_name',
-			USER_FIELD_USERNAME => 'u.username',
-			USER_FIELD_EMAIL => 'u.email',
-			USER_FIELD_INTERESTS => 'cves.setting_value'
-			);
-
-		if (isset($search) && isset($searchTypeMap[$searchType])) {
-			$fieldName = $searchTypeMap[$searchType];
-			switch ($searchMatch) {
-				case 'is':
-					$searchSql = "AND LOWER($fieldName) = LOWER(?)";
-					$paramArray[] = $search;
-					break;
-				case 'contains':
-					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
-					$paramArray[] = '%' . $search . '%';
-					break;
-				case 'startsWith':
-					$searchSql = "AND LOWER($fieldName) LIKE LOWER(?)";
-					$paramArray[] = $search . '%';
-					break;
-			}
-		} elseif (isset($search)) switch ($searchType) {
-			case USER_FIELD_USERID:
-				$searchSql = 'AND user_id=?';
-				$paramArray[] = $search;
-				break;
-			case USER_FIELD_INITIAL:
-				$searchSql = 'AND (LOWER(last_name) LIKE LOWER(?) OR LOWER(username) LIKE LOWER(?))';
-				$paramArray[] = $search . '%';
-				$paramArray[] = $search . '%';
-				break;
-		}
-
-		$result =& $this->retrieveRange(
-			'SELECT DISTINCT
-				u.user_id,
-				u.last_name,
-				ar.review_id,
-				AVG(ra.quality) AS average_quality,
-				COUNT(ac.review_id) AS completed,
-				COUNT(ai.review_id) AS incomplete,
-				MAX(ac.date_notified) AS latest,
-				AVG(ac.date_completed-ac.date_notified) AS average
-			FROM	users u
-			  LEFT JOIN review_assignments ra ON (ra.reviewer_id = u.user_id)
-				LEFT JOIN review_assignments ac ON (ac.reviewer_id = u.user_id AND ac.date_completed IS NOT NULL)
-				LEFT JOIN review_assignments ai ON (ai.reviewer_id = u.user_id AND ai.date_completed IS NULL)
-				LEFT JOIN review_assignments ar ON (ar.reviewer_id = u.user_id AND ar.cancelled = 0 AND ar.submission_id = ? AND ar.round = ?)
-				LEFT JOIN roles r ON (r.user_id = u.user_id)
-				LEFT JOIN articles a ON (ra.submission_id = a.article_id)
-				LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
-				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
-				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id)
-			WHERE u.user_id = r.user_id AND
-				r.journal_id = ? AND
-				r.role_id = ? ' . $searchSql . 'GROUP BY u.user_id, u.last_name, ar.review_id' .
-			($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
-			$paramArray, $rangeInfo
-		);
-
-		$returner = new DAOResultFactory($result, $this, '_returnReviewerUserFromRow');
-		return $returner;
 	}
 
 	function &_returnReviewerUserFromRow(&$row) { // FIXME
@@ -1085,22 +817,21 @@ class SectionEditorSubmissionDAO extends DAO {
 	}
 
 	/**
-	 * Get the last assigned and last completed dates for all reviewers of the given journal.
+	 * Get the last assigned and last completed dates for all reviewers.
 	 * @return array
 	 */
-	function getReviewerStatistics($journalId) {
+	function getReviewerStatistics() {
 		$statistics = Array();
 
 		// Get counts of completed submissions
 		$result =& $this->retrieve(
 			'SELECT	r.reviewer_id, MAX(r.date_notified) AS last_notified
 			FROM	review_assignments r,
-				articles a
-			WHERE	r.submission_id = a.article_id AND
-				a.journal_id = ?
-			GROUP BY r.reviewer_id',
-			(int) $journalId
+				section_decisions sd
+			WHERE	r.decision_id = sd.section_decision_id
+			GROUP BY r.reviewer_id'
 		);
+		
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
 			if (!isset($statistics[$row['reviewer_id']])) $statistics[$row['reviewer_id']] = array();
@@ -1115,15 +846,14 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	r.reviewer_id, COUNT(*) AS incomplete
 			FROM	review_assignments r,
-				articles a
-			WHERE	r.submission_id = a.article_id AND
+				section_decisions sd
+			WHERE	r.decision_id = sd.section_decision_id AND
 				r.date_notified IS NOT NULL AND
 				r.date_completed IS NULL AND
-				r.cancelled = 0 AND
-				a.journal_id = ?
-			GROUP BY r.reviewer_id',
-			(int) $journalId
+				r.cancelled = 0
+			GROUP BY r.reviewer_id'
 		);
+		
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
 			if (!isset($statistics[$row['reviewer_id']])) $statistics[$row['reviewer_id']] = array();
@@ -1138,14 +868,12 @@ class SectionEditorSubmissionDAO extends DAO {
 		$result =& $this->retrieve(
 			'SELECT	r.reviewer_id, r.date_notified, r.date_completed
 			FROM	review_assignments r,
-				articles a
-			WHERE	r.submission_id = a.article_id AND
+				section_decisions sd
+			WHERE	r.decision_id = sd.section_decision_id AND
 				r.date_notified IS NOT NULL AND
 				r.date_completed IS NOT NULL AND
-				r.declined = 0 AND
-				a.journal_id = ?',
-			(int) $journalId
-		);
+				r.declined = 0'		
+			);
 		while (!$result->EOF) {
 			$row = $result->GetRowAssoc(false);
 			if (!isset($statistics[$row['reviewer_id']])) $statistics[$row['reviewer_id']] = array();
@@ -1289,43 +1017,6 @@ class SectionEditorSubmissionDAO extends DAO {
 			default: return null;
 		}
 	}
-
-	/**
-	 * Get the editor decisions for a review round of an article.
-	 * @param $articleId int
-	 * @param $round int
-	 * Edited by aglet
-	 * Last Update: 6/10/2011
-	 */
-	function getEditorDecisions($articleId, $round = null) {
-		$decisions = array();
-
-		if ($round == null) {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided,resubmit_count FROM edit_decisions WHERE article_id = ? ORDER BY edit_decision_id ASC', $articleId
-			);
-		} else {
-			$result =& $this->retrieve(
-				'SELECT edit_decision_id, editor_id, decision, date_decided, resubmit_count FROM edit_decisions WHERE article_id = ? AND round = ? ORDER BY edit_decision_id ASC',
-				array($articleId, $round)
-			);
-		}
-
-		while (!$result->EOF) {
-			$decisions[] = array(
-				'editDecisionId' => $result->fields['edit_decision_id'],
-				'editorId' => $result->fields['editor_id'],
-				'decision' => $result->fields['decision'],
-				'dateDecided' => $this->datetimeFromDB($result->fields['date_decided']),
-				'resubmitCount' => $result->fields['resubmit_count']
-			);
-			$result->moveNext();
-		}
-		$result->Close();
-		unset($result);
-
-		return $decisions;
-	}
 	
 	/*
 	 * Edited by EL
@@ -1336,7 +1027,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			null, null, null,
 			null, null, null, null,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ASSIGNED . ' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_RESUBMIT .' OR edec.decision = '. SUBMISSION_EDITOR_DECISION_EXPEDITED .')',
+			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_FULL_REVIEW . ' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_EXPEDITED .')',
 			null, $sortBy, $sortDirection
 		);
 		
@@ -1355,20 +1046,10 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision IS NULL OR edec.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
+			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision IS NULL OR sdec.decision <> ' . SUBMISSION_SECTION_DECISION_APPROVED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
-		/*
-	{assign var="status" value=$submission->getSubmissionStatus()}
-	
 
-. ' AND (edec.decision IS NULL OR edec.decision <> ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',	
-	
-	
-    assign var="decision" value=$submission->getMostRecentDecision() *}-->
-
-        {*if ($status!=PROPOSAL_STATUS_DRAFT && $status!=PROPOSAL_STATUS_REVIEWED && $status != PROPOSAL_STATUS_EXEMPTED) || $decision==SUBMISSION_EDITOR_DECISION_RESUBMIT
-        */
 		while (!$result->EOF) {
 			$sectionEditorSubmissions[] =& $this->_returnSectionEditorSubmissionFromRow($result->GetRowAssoc(false));
 			$result->MoveNext();
@@ -1415,7 +1096,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (edec.decision = ' . SUBMISSION_EDITOR_DECISION_ACCEPT . ')',
+			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . ')',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -1430,11 +1111,11 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $sectionEditorSubmissions;
 	}
 	
-/**
-	 * Retrieve a list of all reviewers along with information about their current status with respect to an article's current round.
+	/**
+	 * Retrieve a list of all reviewers along with information about their current status with respect to an article's current decision.
 	 * @param $journalId int
-	 * @param $articleId int
-	 * @param $round int
+	 * @param $decisionId int
+	 * @param $extReviewer bool indicate if the kind of reviewers
 	 * @param $searchType int USER_FIELD_...
 	 * @param $search string
 	 * @param $searchMatch string "is" or "contains" or "startsWith"
@@ -1443,13 +1124,13 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Last Modified: EL on Febraury 16th 2013
 	 * Separation of External Reviewers
 	 */
-	function &getReviewersForArticle($journalId, $articleId, $sectionId, $round, $extReviewer = false, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+	function &getReviewersForArticle($journalId, $decisionId, $sectionId, $extReviewer = false, $searchType = null, $search = null, $searchMatch = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 
-		$paramArray = array($articleId, $round, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
-		
-		if ($extReviewer == true) $searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id AND er.section_id = 0) ';
+		$paramArray = array($decisionId, ASSOC_TYPE_USER, 'interest', $journalId, RoleDAO::getRoleIdFromPath('reviewer'));
+
+		if ($extReviewer == true) $searchSql = ' AND er.section_id = 0 ';
 		else {
-			$searchSql = ' AND EXISTS (SELECT NULL FROM erc_reviewers er WHERE er.user_id = u.user_id AND er.section_id <> 0) AND er.section_id = ? ';
+			$searchSql = ' AND er.section_id = ? ';
 			$paramArray[] = $sectionId;
 		}
 
@@ -1503,9 +1184,9 @@ class SectionEditorSubmissionDAO extends DAO {
 			  LEFT JOIN review_assignments ra ON (ra.reviewer_id = u.user_id)
 				LEFT JOIN review_assignments ac ON (ac.reviewer_id = u.user_id AND ac.date_completed IS NOT NULL)
 				LEFT JOIN review_assignments ai ON (ai.reviewer_id = u.user_id AND ai.date_completed IS NULL)
-				LEFT JOIN review_assignments ar ON (ar.reviewer_id = u.user_id AND ar.cancelled = 0 AND ar.submission_id = ? AND ar.round = ?)
+				LEFT JOIN review_assignments ar ON (ar.reviewer_id = u.user_id AND ar.cancelled = 0 AND ar.decision_id = ?)
 				LEFT JOIN roles r ON (r.user_id = u.user_id)
-				LEFT JOIN articles a ON (ra.submission_id = a.article_id)
+				LEFT JOIN section_decisions sd ON (ra.decision_id = sd.section_decision_id)
 				LEFT JOIN controlled_vocabs cv ON (cv.assoc_type = ? AND cv.assoc_id = u.user_id AND cv.symbolic = ?)
 				LEFT JOIN controlled_vocab_entries cve ON (cve.controlled_vocab_id = cv.controlled_vocab_id)
 				LEFT JOIN controlled_vocab_entry_settings cves ON (cves.controlled_vocab_entry_id = cve.controlled_vocab_entry_id)
@@ -1516,7 +1197,7 @@ class SectionEditorSubmissionDAO extends DAO {
 			($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
 			$paramArray, $rangeInfo
 		);
-		
+
 		$returner = new DAOResultFactory($result, $this, '_returnReviewerUserFromRow');
 		return $returner;				
 	}
@@ -1528,7 +1209,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		
 		foreach($submissionIds as $submissionId) {
 			$submission = $this->getSectionEditorSubmission($submissionId);
-			if(!$submission->isSubmissionDue() && ($submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED || $submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED))
+			if(!$submission->isSubmissionDue() && ($submission->getSubmissionStatus() == PROPOSAL_STATUS_FULL_REVIEW || $submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED))
 				array_push($submissions, $submission);
 		}
 		return $submissions;
@@ -1554,7 +1235,7 @@ class SectionEditorSubmissionDAO extends DAO {
 		
 		foreach($submissionIds as $submissionId) {
 			$submission = $this->getSectionEditorSubmission($submissionId);			
-			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_ASSIGNED)
+			if($submission->isSubmissionDue() && $submission->getSubmissionStatus() == PROPOSAL_STATUS_FULL_REVIEW)
 				array_push($submissions, $submission);
 		}
 		return $submissions;
@@ -1573,11 +1254,11 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $submissions;
 	}
 
-	function getReviewAssignmentIdByArticleAndReviewer($articleId, $reviewerId) {
+	function getReviewAssignmentIdByDecisionAndReviewer($decisionId, $reviewerId) {
 		$reviewId = 0;
 		
-		$sql = "SELECT review_id FROM review_assignments WHERE submission_id = ? AND reviewer_id = ?";		
-		$result = $this->retrieve($sql, array($articleId, $reviewerId));		
+		$sql = "SELECT review_id FROM review_assignments WHERE decision_id = ? AND reviewer_id = ?";		
+		$result = $this->retrieve($sql, array($decisionId, $reviewerId));		
 				
 		if ($result->RecordCount() != 0) {
 			$row =& $result->GetRowAssoc(false);

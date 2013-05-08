@@ -31,8 +31,10 @@ function checkSubmissionChecklist(elements) {
 <input type="hidden" name="articleId" value="{$articleId|escape}" />
 {include file="common/formErrors.tpl"}
 
-<h3>Proposal Details</h3>
-<p>{if $article->getSectionId() == 1}National Ethical Committee for Health Research{else}Ethical Committee of the University of Health Sciences{/if}</p>
+<h3>{translate key="article.metadata"}</h3>
+<p>{$section->getSectionTitle()}</p>
+
+<div id="Authors">
 <table class="listing" width="100%">
     <tr valign="top">
         <td colspan="5" class="headseparator">&nbsp;</td>
@@ -43,22 +45,53 @@ function checkSubmissionChecklist(elements) {
         <td class="value">
 			{$author->getFullName()|escape}<br />
 			{$author->getEmail()|escape}<br />
-			{if ($author->getLocalizedAffiliation()) != ""}{$author->getLocalizedAffiliation()|escape}<br/>{/if}
-			{if $author->getPrimaryContact()}{$article->getLocalizedAuthorPhoneNumber()}
-			{else}
-			{if ($author->getUrl()) != ""}{$author->getUrl()|escape}{/if}
-			{/if}
+			{if ($author->getAffiliation()) != ""}{$author->getAffiliation()|escape}<br/>{/if}
+			{if ($author->getPhoneNumber()) != ""}{$author->getPhoneNumber()|escape}<br/>{/if}
         </td>
     </tr>
 {/foreach}
+</table>
+</div>
+
+<div id="titleAndAbstract">
+<h4>{translate key="submission.titleAndAbstract"}</h4>
+<table class="listing" width="100%">
     <tr valign="top">
         <td class="label" width="20%">{translate key="proposal.scientificTitle"}</td>
-        <td class="value">{$article->getLocalizedTitle()}</td>
+        <td class="value">{$abstract->getScientificTitle()}</td>
     </tr>
     <tr valign="top">
         <td class="label" width="20%">{translate key="proposal.publicTitle"}</td>
-        <td class="value">{$article->getLocalizedPublicTitle()}</td>
+        <td class="value">{$abstract->getPublicTitle()}</td>
     </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.background"}</td>
+        <td class="value">{$abstract->getBackground()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.objectives"}</td>
+        <td class="value">{$abstract->getObjectives()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.studyMethods"}</td>
+        <td class="value">{$abstract->getStudyMethods()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.expectedOutcomes"}</td>
+        <td class="value">{$abstract->getExpectedOutcomes()}</td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.keywords"}</td>
+        <td class="value">{$abstract->getKeywords()}</td>
+    </tr>
+</table>
+</div>
+
+<div id="proposalDetails">
+<h4>{translate key="submission.proposalDetails"}</h4>
+<table class="listing" width="100%">
     <tr valign="top">
         <td class="label" width="20%">{translate key="proposal.studentInitiatedResearch"}</td>
         <td class="value">{$article->getLocalizedStudentInitiatedResearch()}</td>
@@ -73,20 +106,6 @@ function checkSubmissionChecklist(elements) {
         <td class="value">{translate key="proposal.academicDegree"} {$article->getLocalizedAcademicDegree()}</td>
     </tr>  
     {/if}
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.abstract"}</td>
-        <td class="value">{$article->getLocalizedAbstract()}</td>
-    </tr>
-    <!--
-    <tr valign="top">
-        <td class="label">{translate key="proposal.objectives"}</td>
-        <td class="value">{$article->getLocalizedObjectives()}</td>
-    </tr>
-    -->
-    <tr valign="top">
-        <td class="label" width="20%">{translate key="proposal.keywords"}</td>
-        <td class="value">{$article->getLocalizedKeywords()}</td>
-    </tr>
     <tr valign="top">
         <td class="label" width="20%">{translate key="proposal.startDate"}</td>
         <td class="value">{$article->getLocalizedStartDate()}</td>

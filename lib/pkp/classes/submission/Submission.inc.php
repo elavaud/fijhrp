@@ -15,36 +15,34 @@
  *
  * @brief Submission class.
  */
-define('PROPOSAL_STATUS_SUBMITTED',1);	//NEW
-define('PROPOSAL_STATUS_RETURNED',2);	//INCOMPLETE
-define('PROPOSAL_STATUS_CHECKED',3);	//COMPLETE
-define('PROPOSAL_STATUS_ASSIGNED',4);	//ASSIGNED FOR NORMAL REVIEW
-define('PROPOSAL_STATUS_EXEMPTED',5);	//EXEMPTED FROM REVIEW
-define('PROPOSAL_STATUS_REVIEWED',6);	//DECISION AFTER NORMAL/EXPEDITED REVIEW
-define('PROPOSAL_STATUS_EXPEDITED',7);	//ASSIGNED FOR EXPEDITED REVIEW
+ 
+define('PROPOSAL_STATUS_SUBMITTED',1);		//NEW
+define('PROPOSAL_STATUS_RETURNED',2);		//INCOMPLETE
+define('PROPOSAL_STATUS_CHECKED',3);		//COMPLETE
+define('PROPOSAL_STATUS_FULL_REVIEW',4);	//ASSIGNED FOR A FULL REVIEW
+define('PROPOSAL_STATUS_EXEMPTED',5);		//EXEMPTED FROM REVIEW
+define('PROPOSAL_STATUS_REVIEWED',6);		//DECISION AFTER NORMAL/EXPEDITED REVIEW
+define('PROPOSAL_STATUS_EXPEDITED',7);		//ASSIGNED FOR EXPEDITED REVIEW
 
-define('PROPOSAL_STATUS_DRAFT',8); //Replaces STATUS_INCOMPLETE
-define('PROPOSAL_STATUS_WITHDRAWN',9);  //Special tag, not part of lifecycle
-define('PROPOSAL_STATUS_ARCHIVED',10);  //To archive Not Approved and Exempt From Review
+define('PROPOSAL_STATUS_DRAFT',8); 			//Replaces STATUS_INCOMPLETE
+define('PROPOSAL_STATUS_WITHDRAWN',9); 		//Special tag, not part of lifecycle
+define('PROPOSAL_STATUS_ARCHIVED',10); 		//To archive Not Approved and Exempt From Review
 define('PROPOSAL_STATUS_COMPLETED',11); 
-define('PROPOSAL_STATUS_RESUBMITTED',12); //Special tag for INCOMPLETE proposals that were resubmitted
+define('PROPOSAL_STATUS_RESUBMITTED',12); 	//Special tag for Revise and resubmit proposals that were resubmitted
 
 class Submission extends DataObject {
 	/** @var array Authors of this submission */
 	var $authors;
 	
-		// EL on march 10th 2013
-		var $riskAssessment;
-		
+	var $riskAssessment;
+			
 	/** @var array IDs of Authors removed from this submission */
 	var $removedAuthors;
 	
 	/** @var DAO for proposal countries */
-	/* Added by igm 9/28/11 */
 	var $areasOfTheCountryDAO;
 
 	/** @var DAO for article */
-	/* Added by igm 9/28/11 */
 	var $articleDAO;
 	
 	var $countryDAO;
@@ -56,9 +54,9 @@ class Submission extends DataObject {
 		parent::DataObject();
 		$this->authors = array();
 		$this->removedAuthors = array();
-                $this->areasOfTheCountryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
-                $this->articleDAO =& DAORegistry::getDAO('ArticleDAO');
-                $this->countryDAO =& DAORegistry::getDAO('CountryDAO');
+        $this->areasOfTheCountryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+        $this->articleDAO =& DAORegistry::getDAO('ArticleDAO');
+        $this->countryDAO =& DAORegistry::getDAO('CountryDAO');
         
 	}
 
@@ -191,12 +189,28 @@ class Submission extends DataObject {
 	/**
 	 * Get the risk assessment of this submission.
 	 * @return object riskAssessment
-	 * EL on March 10th 2013
 	 */
 	function &getRiskAssessment() {
 		return $this->riskAssessment;
 	}
-	
+
+	/**
+	 * Return the localized abstract
+	 * @return string
+	 */
+	function getLocalizedAbstract() {
+		return $this->getLocalizedData('abstract');
+	}
+
+	/**
+	 * Get abstract
+	 * @param $locale
+	 * @return string
+	 */
+	function getAbstract($locale) {
+		return $this->getData('abstract', $locale);
+	}
+		
 	/**
 	 * Get a specific author of this submission.
 	 * @param $authorId int
@@ -238,7 +252,15 @@ class Submission extends DataObject {
 	function setRiskAssessment($riskAssessment) {
 		return $this->riskAssessment = $riskAssessment;
 	}
-	
+
+	/**
+	 * Set abstract of this submission.
+	 * @param $abstract object Abstract
+	 */
+	function setAbstract($abstract, $locale) {
+		return $this->setData('abstract', $abstract, $locale);
+	}
+		
 	/**
 	 * Get user ID of the submitter.
 	 * @return int
@@ -278,132 +300,6 @@ class Submission extends DataObject {
 	 */
 	function setLocale($locale) {
 		return $this->setData('locale', $locale);
-	}
-
-	/**
-	 * Get localized author's phone number
-	 * @return string
-	 */
-	function getLocalizedAuthorPhoneNumber(){
-		return $this->getLocalizedData('authorPhoneNumber');
-	}
-
-	
-	/**
-	 * Get author's phone number
-	 * @return string
-	 */
-	function getAuthorPhoneNumber($locale){
-		return $this->getData('authorPhoneNumber', $locale);
-	}
-	
-	/**
-	 * Set author's phone number
-	 * @return string
-	 */
-	function setAuthorPhoneNumber($phoneNumber, $locale){
-		return $this->setData('authorPhoneNumber', $phoneNumber);
-	}	
-	
-	/**
-	 * Get "localized" submission title (if applicable).
-	 * @return string
-	 */
-	function getLocalizedTitle() {
-		return $this->getLocalizedData('scientificTitle');
-	}
-
-	/**
-	 * Get title.
-	 * @param $locale
-	 * @return string
-	 */
-	function getScientificTitle($locale) {
-		return $this->getData('scientificTitle', $locale);
-	}
-
-	/**
-	 * Set title.
-	 * @param $title string
-	 * @param $locale
-	 */
-	function setScientificTitle($title, $locale) {
-		$this->setCleanScientificTitle($title, $locale);
-		return $this->setData('scientificTitle', $title, $locale);
-	}
-
-	/**
-	 * Set 'clean' scientific title (with punctuation removed).
-	 * @param $cleanTitle string
-	 * @param $locale
-	 */
-	function setCleanScientificTitle($cleanTitle, $locale) {
-		$punctuation = array ("\"", "\'", ",", ".", "!", "?", "-", "$", "(", ")");
-		$cleanTitle = str_replace($punctuation, "", $cleanTitle);
-		return $this->setData('cleanScientificTitle', $cleanTitle, $locale);
-	}
-	
-	/**
-	 * Get public title.
-	 * @param $locale
-	 * @return string
-	 */
-	function getPublicTitle($locale) {
-		return $this->getData('publicTitle', $locale);
-	}
-	
-	/**
-	 * Get localized public title.
-	 * @return string
-	 */
-	function getLocalizedPublicTitle() {
-		return $this->getLocalizedData('publicTitle');
-	}
-	/**
-	 * Set public title.
-	 * @param $title string
-	 * @param $locale
-	 */
-	function setPublicTitle($title, $locale) {
-		$this->setCleanPublicTitle($title, $locale);
-		return $this->setData('publicTitle', $title, $locale);
-	}
-
-	/**
-	 * Set 'clean' public title (with punctuation removed).
-	 * @param $cleanTitle string
-	 * @param $locale
-	 */
-	function setCleanPublicTitle($cleanTitle, $locale) {
-		$punctuation = array ("\"", "\'", ",", ".", "!", "?", "-", "$", "(", ")");
-		$cleanTitle = str_replace($punctuation, "", $cleanTitle);
-		return $this->setData('cleanPublicTitle', $cleanTitle, $locale);
-	}
-
-	/**
-	 * Get "localized" submission abstract (if applicable).
-	 * @return string
-	 */
-	function getLocalizedAbstract() {
-		return $this->getLocalizedData('abstract');
-	}
-
-	/**
-	 * Get abstract.
-	 * @param $locale
-	 * @return string
-	 */
-	function getAbstract($locale) {
-		return $this->getData('abstract', $locale);
-	}
-
-	/**
-	 * Set abstract.
-	 * @param $abstract string
-	 * @param $locale
-	 */
-	function setAbstract($abstract, $locale) {
-		return $this->setData('abstract', $abstract, $locale);
 	}
 
 	/**
@@ -1095,35 +991,6 @@ class Submission extends DataObject {
 	function setObjectives($objectives, $locale) {
 		return $this->setData('objectives', $objectives, $locale);
 	}
-
-
-        /**
-	 * Get "localized" proposal keywords (if applicable).
-	 * @return string
-	 */
-	function getLocalizedKeywords() {
-		return $this->getLocalizedData('keywords');
-	}
-
-	/**
-	 * Get proposal keywords.
-	 * @param $locale
-	 * @return string
-	 */
-	function getKeywords($locale) {
-		return $this->getData('keywords', $locale);
-	}
-
-	/**
-	 * Set proposal keywords.
-	 * @param $keywords string
-	 * @param $locale
-	 */
-	function setKeywords($keywords, $locale) {
-		return $this->setData('keywords', $keywords, $locale);
-	}
-
-
 
         /**
 	 * Get "localized" start date (if applicable).
@@ -1897,7 +1764,7 @@ class Submission extends DataObject {
 				PROPOSAL_STATUS_RETURNED => 'submission.status.incomplete',
 				PROPOSAL_STATUS_CHECKED => 'submission.status.complete',
 				PROPOSAL_STATUS_EXEMPTED => 'submission.status.exempted',
-				PROPOSAL_STATUS_ASSIGNED => 'submission.status.fullReview',
+				PROPOSAL_STATUS_FULL_REVIEW => 'submission.status.fullReview',
 				PROPOSAL_STATUS_EXPEDITED => 'submission.status.expeditedReview',
 				PROPOSAL_STATUS_REVIEWED => 'submission.status.reviewed',
 				PROPOSAL_STATUS_DRAFT => 'submission.status.draft',
@@ -2386,6 +2253,7 @@ class Submission extends DataObject {
 	function getInvestigatorAffiliation(){
 		return $this->getData('investigatorAffiliation');
 	}
+	
 	function setInvestigatorAffiliation($investigatorAffiliation){
 		return $this->setData('investigatorAffiliation', $investigatorAffiliation);
 	}

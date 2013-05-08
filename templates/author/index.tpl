@@ -23,15 +23,16 @@
 {/if}
 
 <ul class="menu">
-	<li{if ($pageToDisplay == "active")} class="current"{/if}><a href="{url op="index" path="active"}">{translate key="common.queue.short.active"}</a></li>
-	<li{if ($pageToDisplay == "completed")} class="current"{/if}><a href="{url op="index" path="completed"}">{translate key="common.queue.short.completed"}</a></li>
+	<li{if ($pageToDisplay == "proposalsToSubmit")} class="current"{/if}><a href="{url op="index" path="proposalsToSubmit"}">{translate key="common.queue.short.proposalsToSubmit"}</a></li>
+	<li{if ($pageToDisplay == "proposalsInReview")} class="current"{/if}><a href="{url op="index" path="proposalsInReview"}">{translate key="common.queue.short.proposalsInReview"}</a></li>
+	<li{if ($pageToDisplay == "ongoingResearches")} class="current"{/if}><a href="{url op="index" path="ongoingResearches"}">{translate key="common.queue.short.ongoingResearches"}</a></li>
+	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 
 <br />
 <form method="post" name="submit" action="{url op="index" path=$pageToDisplay}">
 	<input type="hidden" name="sort" value="id"/>
 	<input type="hidden" name="sortDirection" value="ASC"/>
-	{* Changed by EL on April 27, 2012: Don't need to display this field *}
 	<select name="searchField" size="1" class="selectMenu" style="display: none;">
 		{html_options_translate options=$fieldOptions selected=$searchField}
 	</select>

@@ -14,7 +14,6 @@
 
 // $Id$
 
-
 import('classes.submission.author.AuthorAction');
 import('classes.handler.Handler');
 
@@ -37,14 +36,10 @@ class AuthorHandler extends Handler {
 		$journal =& Request::getJournal();
 
 		$user =& Request::getUser();
-		
 		$rangeInfo =& Handler::getRangeInfo('submissions');
+
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
-		/**
-		 * Get user search fields
-		 * Added by: Ayvee Mallare
-		 * Last Updated: Sept 25, 2011
-		 */
+
 		$searchField = Request::getUserVar('searchField');
 		$dateSearchField = Request::getUserVar('dateSearchField');
 		$searchMatch = Request::getUserVar('searchMatch');
@@ -57,15 +52,21 @@ class AuthorHandler extends Handler {
 		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
 		
 		$countryField = Request::getUserVar('countryField');
-		
+
 		$page = isset($args[0]) ? $args[0] : '';
 		switch($page) {
-			case 'completed':
-				$active = false;
+			case 'proposalsInReview':
+				$functionName = 'getAuthorProposalsInReviewIterator';
+				break;
+			case 'ongoingResearches':
+				$functionName = 'getAuthorOngoingResearchesIterator';
+				break;
+			case 'submissionsArchives':
+				$functionName = 'getAuthorArchivesIterator';
 				break;
 			default:
-				$page = 'active';
-				$active = true;
+				$functionName = 'getAuthorProposalsToSubmitIterator';
+				$page = 'proposalsToSubmit';
 		}
 		
 		$sort = Request::getUserVar('sort');
@@ -74,44 +75,25 @@ class AuthorHandler extends Handler {
 		$sortDirection = (isset($sortDirection) && ($sortDirection == SORT_DIRECTION_ASC || $sortDirection == SORT_DIRECTION_DESC)) ? $sortDirection : SORT_DIRECTION_ASC;
 		if ($sort == 'status') {
 			// FIXME Does not pass $rangeInfo else we only get partial results
-			$unsortedSubmissions = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField, null, $sort, $sortDirection);
+			$unsortedSubmissions = $authorSubmissionDao->$functionName($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField, null, $sort, $sortDirection);
 
 			// Sort all submissions by status, which is too complex to do in the DB
 			$submissionsArray = $unsortedSubmissions->toArray();
 			$compare = create_function('$s1, $s2', 'return strcmp($s1->getSubmissionStatus(), $s2->getSubmissionStatus());');
-			usort ($submissionsArray, $compare);
+			@usort ($submissionsArray, $compare);
 			if($sortDirection == SORT_DIRECTION_DESC) {
 				$submissionsArray = array_reverse($submissionsArray);
 			}
 			// Convert submission array back to an ItemIterator class
 			import('lib.pkp.classes.core.ArrayItemIterator');
-			$submissions1 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
-
-                        //Clumsy workaround due to lack of iterate reset, AIM, June 1, 2011
-                        $submissions2 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
-                        $submissions3 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
-                        $submissions4 =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
+			$submissions =& ArrayItemIterator::fromRangeInfo($submissionsArray, $rangeInfo);
 		} else {
-			$submissions1 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField, $rangeInfo, $sort, $sortDirection);
-                        //Clumsy workaround due to lack of iterate reset, AIM, June 1, 2011  TODO: Find better way
-            $submissions2 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField, $rangeInfo, $sort, $sortDirection);
-                        
-            $submissions3 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField,$rangeInfo, $sort, $sortDirection);
-                        
-            $submissions4 = $authorSubmissionDao->getAuthorSubmissions($user->getId(), $journal->getId(), $active, $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField,$rangeInfo, $sort, $sortDirection);
-        
+			$submissions = $authorSubmissionDao->$functionName($user->getId(), $journal->getId(), $searchField, $searchMatch, $search, $dateSearchField, $fromDate, $toDate, $countryField, $rangeInfo, $sort, $sortDirection);
 		}
         $templateMgr =& TemplateManager::getManager();
 		$templateMgr->assign('pageToDisplay', $page);
-		if (!$active) {
-			// Make view counts available if enabled.
-			$templateMgr->assign('statViews', $journal->getSetting('statViews'));
-		}
 
-		$templateMgr->assign_by_ref('submissions1', $submissions1);
-        $templateMgr->assign_by_ref('submissions2', $submissions2);
-        $templateMgr->assign_by_ref('submissions3', $submissions3);
-        $templateMgr->assign_by_ref('submissions4', $submissions4);
+		$templateMgr->assign_by_ref('submissions', $submissions);
         
 		/*********************************************************************
 		 * Add search fields to template
@@ -124,8 +106,7 @@ class AuthorHandler extends Handler {
 			'dateToMonth', 'dateToDay', 'dateToYear',
 			'dateSearchField'
 		);
-		foreach ($duplicateParameters as $param)
-			$templateMgr->assign($param, Request::getUserVar($param));
+		foreach ($duplicateParameters as $param) $templateMgr->assign($param, Request::getUserVar($param));
                 
         $templateMgr->assign('dateFrom', $fromDate);
 		$templateMgr->assign('dateTo', $toDate);

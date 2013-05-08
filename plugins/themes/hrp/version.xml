@@ -10,7 +10,7 @@
   * Plugin version information.
   -->
 <version>
-	<application>philhrp</application>
+	<application>hrp</application>
 	<type>plugins.themes</type>
 	<release>1.0.0.0</release>
 	<date>2011-10-17</date>

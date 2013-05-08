@@ -57,14 +57,16 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 			}
 		}
 		
+		$sectionDao =& DAORegistry::getDAO('SectionDAO');
+        $section = $sectionDao->getSection($this->article->getSectionId());
+		$templateMgr->assign_by_ref('section', $section);
+		
 		$templateMgr->assign_by_ref('files', $articleFiles);	
 		$templateMgr->assign_by_ref('journal', Request::getJournal());
 
-                //Added by AIM, 1.20.2012
-                $templateMgr->assign_by_ref('article', $this->article);
-
-                // Added by EL on March 11th 2013
-                $templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+        $templateMgr->assign_by_ref('article', $this->article);
+        $templateMgr->assign_by_ref('riskAssessment', $this->article->getRiskAssessment());
+        $templateMgr->assign_by_ref('abstract', $this->article->getLocalizedAbstract());
                                 
 		// Set up required Payment Related Information
 		import('classes.payment.ojs.OJSPaymentManager');
@@ -167,45 +169,33 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 
 		// Update article
 		$article =& $this->article;
-
-                /*************************************************************************************
-                 * Edited by: Anne Ivy Mirasol
-                 * Last Updated: May 4, 2011
-                 * Set proposal ID
-                 * yyyy.nn.ccc.nn.uuu
-                 *************************************************************************************/
                 
-                if($article->getDateSubmitted() == null) {
-                    $year = substr(Core::getCurrentDate(), 0, 4);
-     
-                    $countyear = $articleDao->getSubmissionsForYearCount($year) + 1;
+        if($article->getDateSubmitted() == null) {
+            $year = substr(Core::getCurrentDate(), 0, 4);
 
-                    $countryArray = explode(",", $article->getProposalCountry($this->getFormLocale()));
-                    
-                    $sectionId = $article->getSectionId();
-                    if ($sectionId == '1'){
-                    	$section = 'NIOPH';
-                    } elseif ($sectionId == '2'){
-                    	$section = "UHS";
-                    }
-                    
-                    $countyearsection = $articleDao->getSubmissionsForYearForSectionCount($year, $sectionId) + 1;
-                    
-                    if ($article->getLocalizedMultiCountryResearch() == "Yes"){
-                    	$country = 'MC';
-                    }
-                    elseif(count($countryArray) > 1) {
-                        $country = 'MP';
-                        $countyearcountry = $articleDao->getICPSubmissionsForYearCount($year) + 1;
+            $countyear = $articleDao->getSubmissionsForYearCount($year) + 1;
 
-                    } else {
-                        $country = $countryArray[0];
-                        $countyearcountry = $articleDao->getSubmissionsForYearForCountryCount($year, $country) + 1;
-                    }
-                    
-                    $article->setProposalId($year. '.' . $countyear . '.' . $section . '.' . $countyearsection . '.' .$country , $this->getFormLocale());
-                }
-                if ($this->getData('commentsToEditor') != '') {
+            $countryArray = explode(",", $article->getProposalCountry($this->getFormLocale()));
+            
+            $section = $sectionDao->getSection($article->getSectionId());
+            
+            $countyearsection = $articleDao->getSubmissionsForYearForSectionCount($year, $section->getId()) + 1;
+            
+            if ($article->getLocalizedMultiCountryResearch() == "Yes"){
+            	$country = 'MC';
+            }
+            elseif(count($countryArray) > 1) {
+                $country = 'MP';
+                $countyearcountry = $articleDao->getICPSubmissionsForYearCount($year) + 1;
+
+            } else {
+                $country = $countryArray[0];
+                $countyearcountry = $articleDao->getSubmissionsForYearForCountryCount($year, $country) + 1;
+            }
+            
+            $article->setProposalId($year. '.' . $countyear . '.' . $section->getLocalizedAbbrev(). '.' . $countyearsection . '.' .$country , $this->getFormLocale());
+        }
+        if ($this->getData('commentsToEditor') != '') {
 			$article->setCommentsToEditor($this->getData('commentsToEditor'));
 		}
 
@@ -244,14 +234,8 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 		$signoffDao->updateObject($proofProofreaderSignoff);
 		$signoffDao->updateObject($proofLayoutEditorSignoff);
 
-			// Not anymore: EL on February 17th 2013
-			// A section editor is directly assigned with the section id
-		// if resubmission, don't create again the assignment
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-			//if ($edit Assignment Dao->getEditorAssignmentsByArticleId3($article->getId())) $sectionEditors =& $edit Assignment Dao->getEditorAssignmentsByArticleId3($article->getId());
-			//else $sectionEditors = $this->assignEditors($article);
-			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
+		$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+		$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $article->getSectionId());
 			
 		$user =& Request::getUser();
 
@@ -282,7 +266,6 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
 			$mail->assignParams(array(
 				'authorName' => $user->getFullName(),
 				'authorUsername' => $user->getUsername(),
-				'secretaryName' => $sectionEditor->getFullName(),
 				'address' => $sectionDao->getSettingValue($article->getSectionId(), 'address'),
 				'bankAccount' => $sectionDao->getSettingValue($article->getSectionId(), 'bankAccount'),
 				'proposalId' => $article->getProposalId(Locale::getLocale()),
@@ -304,7 +287,7 @@ class AuthorSubmitStep5Form extends AuthorSubmitForm {
         		// $sectionEditor =& $sectionEditorEntry['user'];
             $notificationManager->createNotification(
             	$sectionEditor->getId(), $message,
-            	$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
+            	$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_ARTICLE_SUBMITTED
         	);
         }
 

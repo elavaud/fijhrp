@@ -23,77 +23,6 @@ class EditorAction extends SectionEditorAction {
 	 */
 
 	/**
-	 * Assigns a section editor to a submission.
-	 * @param $articleId int
-	 * @return boolean true iff ready for redirect
-	 */
-	function assignEditor($articleId, $sectionEditorId, $isEditor = false, $send = false) {
-		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			// This one was already unseful
-			//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-		$userDao =& DAORegistry::getDAO('UserDAO');
-
-		$user =& Request::getUser();
-		$journal =& Request::getJournal();
-
-		$editorSubmission =& $editorSubmissionDao->getEditorSubmission($articleId);
-		$sectionEditor =& $userDao->getUser($sectionEditorId);
-		if (!isset($sectionEditor)) return true;
-
-		import('classes.mail.ArticleMailTemplate');
-		$email = new ArticleMailTemplate($editorSubmission, 'EDITOR_ASSIGN');
-
-		if ($user->getId() === $sectionEditorId || !$email->isEnabled() || ($send && !$email->hasErrors())) {
-			HookRegistry::call('EditorAction::assignEditor', array(&$editorSubmission, &$sectionEditor, &$isEditor, &$email));
-			if ($email->isEnabled() && $user->getId() !== $sectionEditorId) {
-				$email->setAssoc(ARTICLE_EMAIL_EDITOR_ASSIGN, ARTICLE_EMAIL_TYPE_EDITOR, $sectionEditor->getId());
-				$email->send();
-			}
-
-			$editAssignment = new EditAssignment();
-			$editAssignment->setArticleId($articleId);
-			$editAssignment->setCanEdit(1);
-			$editAssignment->setCanReview(1);
-
-			// Make the selected editor the new editor
-			$editAssignment->setEditorId($sectionEditorId);
-			$editAssignment->setDateNotified(Core::getCurrentDate());
-			$editAssignment->setDateUnderway(null);
-
-				// Removed by EL on February 17th 2013
-				// No edit assignments anymore
-				//$editAssignments =& $editorSubmission->getEditAssignments();
-				//array_push($editAssignments, $editAssignment);
-				//$editorSubmission->setEditAssignments($editAssignments);
-
-			$editorSubmissionDao->updateEditorSubmission($editorSubmission);
-
-			// Add log
-			import('classes.article.log.ArticleLog');
-			import('classes.article.log.ArticleEventLogEntry');
-			ArticleLog::logEvent($articleId, ARTICLE_LOG_EDITOR_ASSIGN, ARTICLE_LOG_TYPE_EDITOR, $sectionEditorId, 'log.editor.editorAssigned', array('editorName' => $sectionEditor->getFullName(), 'articleId' => $articleId));
-			return true;
-		} else {
-			if (!Request::getUserVar('continued')) {
-				$email->addRecipient($sectionEditor->getEmail(), $sectionEditor->getFullName());
-				$paramArray = array(
-					'editorialContactName' => $sectionEditor->getFullName(),
-					'editorUsername' => $sectionEditor->getUsername(),
-					'editorPassword' => $sectionEditor->getPassword(),
-					'editorialContactSignature' => $user->getContactSignature(),
-					'submissionUrl' => Request::url(null, $isEditor?'editor':'sectionEditor', 'submissionReview', $articleId),
-					'submissionEditingUrl' => Request::url(null, $isEditor?'editor':'sectionEditor', 'submissionReview', $articleId)
-				);
-				$email->assignParams($paramArray);
-			}
-			$email->displayEditForm(Request::url(null, null, 'assignEditor', 'send'), array('articleId' => $articleId, 'editorId' => $sectionEditorId));
-			return false;
-		}
-	}
-
-	/**
 	 * Rush a new submission into the end of the editing queue.
 	 * @param $article object
 	 */
@@ -114,24 +43,15 @@ class EditorAction extends SectionEditorAction {
 		import('classes.article.log.ArticleEventLogEntry');
 		ArticleLog::logEvent($article->getId(), ARTICLE_LOG_EDITOR_EXPEDITE, ARTICLE_LOG_TYPE_EDITOR, $user->getId(), 'log.editor.submissionExpedited', array('editorName' => $user->getFullName(), 'articleId' => $article->getId()));
 
-		// 1. Ensure that an editor is assigned.
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments =& $sectionEditorSubmission->getEditAssignments();
-			//if (empty($editAssignments)) {
-				// No editors are currently assigned; assign self.
-				//EditorAction::assignEditor($article->getId(), $user->getId(), true);
-			//}
-
-		// 2. Accept the submission and send to copyediting.
+		// 1. Accept the submission and send to copyediting.
 		$sectionEditorSubmission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($article->getId());
 		if (!$sectionEditorSubmission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true)) {
-			SectionEditorAction::recordDecision($sectionEditorSubmission, SUBMISSION_EDITOR_DECISION_ACCEPT);
+			SectionEditorAction::recordDecision($sectionEditorSubmission, SUBMISSION_SECTION_DECISION_APPROVED);
 			$reviewFile = $sectionEditorSubmission->getReviewFile();
-			SectionEditorAction::setCopyeditFile($sectionEditorSubmission, $reviewFile->getFileId(), $reviewFile->getRevision());
+			SectionEditorAction::setCopyeditFile($sectionEditorSubmission, $reviewFile->getFileId());
 		}
 
-		// 3. Add a galley.
+		// 2. Add a galley.
 		$sectionEditorSubmission =& $sectionEditorSubmissionDao->getSectionEditorSubmission($article->getId());
 		$galleys =& $sectionEditorSubmission->getGalleys();
 		if (empty($galleys)) {

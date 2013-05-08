@@ -14,7 +14,6 @@
 
 // $Id$
 
-
 import('classes.submission.common.Action');
 
 class AuthorAction extends Action {
@@ -50,7 +49,6 @@ class AuthorAction extends Action {
 				$authorSubmissionDao->updateAuthorSubmission($authorSubmission);
 
 				$sectionEditorSubmissionDao =& DAORegistry::getDAO('SectionEditorSubmissionDAO');
-				$sectionEditorSubmissionDao->createReviewRound($authorSubmission->getId(), 1, 1);
 			}
 		}
 	}
@@ -59,30 +57,20 @@ class AuthorAction extends Action {
 	 * Delete an author file from a submission.
 	 * @param $article object
 	 * @param $fileId int
-	 * @param $revisionId int
 	 */
-	function deleteArticleFile($article, $fileId, $revisionId) {
+	function deleteArticleFile($article, $fileId) {
 		import('classes.file.ArticleFileManager');
 
 		$articleFileManager = new ArticleFileManager($article->getId());
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 
-		$articleFile =& $articleFileDao->getArticleFile($fileId, $revisionId, $article->getId());
+		$articleFile =& $articleFileDao->getArticleFile($fileId, $article->getId());
 		$authorSubmission = $authorSubmissionDao->getAuthorSubmission($article->getId());
-		$authorRevisions = $authorSubmission->getAuthorFileRevisions();
 
-		// Ensure that this is actually an author file.
 		if (isset($articleFile)) {
-			HookRegistry::call('AuthorAction::deleteArticleFile', array(&$articleFile, &$authorRevisions));
-			foreach ($authorRevisions as $round) {
-				foreach ($round as $revision) {
-					if ($revision->getFileId() == $articleFile->getFileId() &&
-						$revision->getRevision() == $articleFile->getRevision()) {
-						$articleFileManager->deleteFile($articleFile->getFileId(), $articleFile->getRevision());
-					}
-				}
-			}
+			HookRegistry::call('AuthorAction::deleteArticleFile', array(&$articleFile));
+			$articleFileManager->deleteFile($articleFile->getFileId());
 		}
 	}
 
@@ -114,7 +102,7 @@ class AuthorAction extends Action {
 			$user =& Request::getUser();
 			import('classes.article.log.ArticleLog');
 			import('classes.article.log.ArticleEventLogEntry');
-			ArticleLog::logEvent($authorSubmission->getId(), ARTICLE_LOG_AUTHOR_REVISION, ARTICLE_LOG_TYPE_AUTHOR, $user->getId(), 'log.author.documentRevised', array('authorName' => $user->getFullName(), 'fileId' => $fileId, 'articleId' => $authorSubmission->getId()));
+			ArticleLog::logEvent($authorSubmission->getId(), ARTICLE_LOG_AUTHOR_REVISION, ARTICLE_LOG_TYPE_AUTHOR, $user->getId(), 'log.author.documentRevised', array('authorName' => $user->getFullName(), 'fileId' => $fileId, 'articleId' => $authorSubmission->getLocalizedProposalId()));
 		}
 	}
 
@@ -136,10 +124,6 @@ class AuthorAction extends Action {
 		$user =& Request::getUser();
 		import('classes.mail.ArticleMailTemplate');
 		$email = new ArticleMailTemplate($authorSubmission, 'COPYEDIT_AUTHOR_COMPLETE');
-
-			// Removed by EL on February 17th 2013
-			// No edit assignments anymore
-			//$editAssignments = $authorSubmission->get Edit Assignments();
 
 		$copyeditor = $authorSubmission->getUserBySignoffType('SIGNOFF_COPYEDITING_INITIAL');
 
@@ -252,11 +236,13 @@ class AuthorAction extends Action {
 		}
 
 		$authorSignoff->setFileId($fileId);
-
+		
+		/* No revision anymore
 		if ($copyeditStage == 'author') {
 			$authorSignoff->setFileRevision($articleFileDao->getRevisionNumber($fileId));
 		}
-
+		*/
+		
 		$signoffDao->updateObject($authorSignoff);
 	}
 
@@ -300,7 +286,7 @@ class AuthorAction extends Action {
 					$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'layout');
 					$notificationManager->createNotification(
 						$userRole['id'], 'notification.type.layoutComment',
-						$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_LAYOUT_COMMENT
+						$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_LAYOUT_COMMENT
 					);
 				}
 
@@ -359,7 +345,7 @@ class AuthorAction extends Action {
 
 			$articleCommentDao =& DAORegistry::getDAO('ArticleCommentDAO');
 			$articleComment = new ArticleComment();
-			$articleComment->setCommentType(COMMENT_TYPE_EDITOR_DECISION);
+			$articleComment->setCommentType(COMMENT_TYPE_SECTION_DECISION);
 			$articleComment->setRoleId(ROLE_ID_AUTHOR);
 			$articleComment->setArticleId($authorSubmission->getId());
 			$articleComment->setAuthorId($authorSubmission->getUserId());
@@ -373,7 +359,8 @@ class AuthorAction extends Action {
 			return true;
 		} else {
 			if (!Request::getUserVar('continued')) {
-				$email->setSubject($authorSubmission->getLocalizedTitle());
+				$abstract = $authorSubmission->getLocalizedAbstract();
+				$email->setSubject($abstract->getScientificTitle());
 				if (!empty($editors)) {
 					foreach ($editors as $editor) {
 						$email->addRecipient($editor->getEmail(), $editor->getFullName());
@@ -425,7 +412,7 @@ class AuthorAction extends Action {
 					$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'copyedit');
 					$notificationManager->createNotification(
 						$userRole['id'], 'notification.type.copyeditComment',
-						$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_COPYEDIT_COMMENT
+						$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_COPYEDIT_COMMENT
 					);
 				}
 
@@ -477,7 +464,7 @@ class AuthorAction extends Action {
 				foreach ($notificationUsers as $userRole) {
 					$url = Request::url(null, $userRole['role'], 'submissionEditing', $article->getId(), null, 'proofread');
 					$notificationManager->createNotification($userRole['id'], 'notification.type.proofreadComment',
-						$article->getLocalizedTitle(), $url, 1, NOTIFICATION_TYPE_PROOFREAD_COMMENT
+						$article->getLocalizedProposalId(), $url, 1, NOTIFICATION_TYPE_PROOFREAD_COMMENT
 					);
 				}
 
@@ -501,11 +488,10 @@ class AuthorAction extends Action {
 	 * Download a file an author has access to.
 	 * @param $article object
 	 * @param $fileId int
-	 * @param $revision int
 	 * @return boolean
 	 * TODO: Complete list of files author has access to
 	 */
-	function downloadAuthorFile($article, $fileId, $revision = null) {
+	function downloadAuthorFile($article, $fileId) {
 		$signoffDao =& DAORegistry::getDAO('SignoffDAO');
 		$authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
 
@@ -529,17 +515,14 @@ class AuthorAction extends Action {
 		if ($authorSubmission->getSubmissionFileId() == $fileId) {
 			$canDownload = true;
 		} else if ($authorSubmission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL', true) == $fileId) {
-			if ($revision != null) {
-				$initialSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $authorSubmission->getId());
-				$authorSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_AUTHOR', ASSOC_TYPE_ARTICLE, $authorSubmission->getId());
-				$finalSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_FINAL', ASSOC_TYPE_ARTICLE, $authorSubmission->getId());
+			$initialSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_INITIAL', ASSOC_TYPE_ARTICLE, $authorSubmission->getId());
+			$authorSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_AUTHOR', ASSOC_TYPE_ARTICLE, $authorSubmission->getId());
+			$finalSignoff = $signoffDao->getBySymbolic('SIGNOFF_COPYEDITING_FINAL', ASSOC_TYPE_ARTICLE, $authorSubmission->getId());
 
-				if ($initialSignoff && $initialSignoff->getFileRevision()==$revision && $initialSignoff->getDateCompleted()!=null) $canDownload = true;
-				else if ($finalSignoff && $finalSignoff->getFileRevision()==$revision && $finalSignoff->getDateCompleted()!=null) $canDownload = true;
-				else if ($authorSignoff && $authorSignoff->getFileRevision()==$revision) $canDownload = true;
-			} else {
-				$canDownload = false;
-			}
+			if ($initialSignoff && $initialSignoff->getDateCompleted()!=null) $canDownload = true;
+			else if ($finalSignoff && $finalSignoff->getDateCompleted()!=null) $canDownload = true;
+			else if ($authorSignoff) $canDownload = true;
+
 		} else if ($authorSubmission->getFileBySignoffType('SIGNOFF_COPYEDITING_AUTHOR', true) == $fileId){
 			$canDownload = true;
 		} else if ($authorSubmission->getRevisedFileId() == $fileId) {
@@ -548,16 +531,12 @@ class AuthorAction extends Action {
 			$canDownload = true;
 		} else {
 			// Check reviewer files
-			foreach ($authorSubmission->getReviewAssignments() as $roundReviewAssignments) {
-				foreach ($roundReviewAssignments as $reviewAssignment) {
-					if ($reviewAssignment->getReviewerFileId() == $fileId) {
-						$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
-
-						$articleFile =& $articleFileDao->getArticleFile($fileId, $revision);
-
-						if ($articleFile != null && $articleFile->getViewable()) {
-							$canDownload = true;
-						}
+			$articleFileDao = DAORegistry::getDAO('ArticleFileDAO');
+			$files =& $articleFileDao->getArticleFilesByArticle($authorSubmission->getArticleId());
+			foreach ($files as $articleFile) {
+				if ($articleFile->getFileId() == $fileId) {
+					if ($articleFile != null && $articleFile->getViewable()) {
+						$canDownload = true;
 					}
 				}
 			}
@@ -575,28 +554,30 @@ class AuthorAction extends Action {
 					$canDownload = true;
 				}
 			}
-
+			
 			// Check current review version
 			$reviewAssignmentDao =& DAORegistry::getDAO('ReviewAssignmentDAO');
-			$reviewFilesByRound =& $reviewAssignmentDao->getReviewFilesByRound($article->getId());
-			$reviewFile = @$reviewFilesByRound[$article->getCurrentRound()];
+			$reviewFilesByDecision =& $reviewAssignmentDao->getReviewFilesByDecision($article->getId());
+			$reviewFile = @$reviewFilesByDecision[$article->getLastSectionDecisionId()];
 			if ($reviewFile && $fileId == $reviewFile->getFileId()) {
 				$canDownload = true;
 			}
 
 			// Check editor version
-			$editorFiles = $authorSubmission->getEditorFileRevisions($article->getCurrentRound());
+			/*
+			$editorFiles = $authorSubmission->getEditorFileRevisions();
 			if (is_array($editorFiles)) foreach ($editorFiles as $editorFile) {
 				if ($editorFile->getFileId() == $fileId) {
 					$canDownload = true;
 				}
 			}
-		}
+			*/
+		}	
 
 		$result = false;
-		if (!HookRegistry::call('AuthorAction::downloadAuthorFile', array(&$article, &$fileId, &$revision, &$canDownload, &$result))) {
+		if (!HookRegistry::call('AuthorAction::downloadAuthorFile', array(&$article, &$fileId, &$canDownload, &$result))) {
 			if ($canDownload) {
-				return Action::downloadFile($article->getId(), $fileId, $revision);
+				return Action::downloadFile($article->getId(), $fileId);
 			} else {
 				return false;
 			}
@@ -632,7 +613,7 @@ class AuthorAction extends Action {
 				$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'editorDecision');
 				$notificationManager->createNotification(
 					$userRole['id'], 'notification.type.editorDecisionComment',
-					$param, $url, 1, NOTIFICATION_TYPE_EDITOR_DECISION_COMMENT
+					$param, $url, 1, NOTIFICATION_TYPE_SECTION_DECISION_COMMENT
 				);
 			}
 

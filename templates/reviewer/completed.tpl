@@ -58,12 +58,13 @@
 	<tr><td colspan="5" class="headseparator">&nbsp;</td></tr>
 {iterate from=submissions item=submission}
 	{assign var="articleId" value=$submission->getLocalizedProposalId()}
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
 	{assign var="reviewId" value=$submission->getReviewId()}
 	<tr valign="top">
 		<td width="10%">{$articleId|escape}</td>
 		<td width="10%">{$submission->getDateNotified()|date_format:$dateFormatLong}</td>
 		<!-- {* <td>{$submission->getSectionAbbrev()|escape}</td> *} Commented out by MSB,Sept25,2011-->
-		<td width="40%">{if !$submission->getDeclined()}<a href="{url op="submission" path=$reviewId}" class="action">{/if}{$submission->getLocalizedTitle()|escape}{if !$submission->getDeclined()}</a>{/if}</td>
+		<td width="40%">{if !$submission->getDeclined()}<a href="{url op="submission" path=$reviewId}" class="action">{/if}{$abstract->getScientificTitle()|escape}{if !$submission->getDeclined()}</a>{/if}</td>
 		<td width="20%">
 			{if $submission->getCancelled()}
 				Canceled
@@ -83,17 +84,16 @@
 				&mdash;
 			{else*}
 			{* Display the most recent editor decision *}
-			{assign var=round value=$submission->getRound()}
-			{assign var=decisions value=$submission->getDecisions($round)}
-			{foreach from=$decisions item=decision name=lastDecisionFinder}
-				{if $smarty.foreach.lastDecisionFinder.last and $decision.decision == SUBMISSION_EDITOR_DECISION_ACCEPT}
-					{translate key="editor.article.decision.accept"}
-				{elseif $smarty.foreach.lastDecisionFinder.last and $decision.decision == SUBMISSION_EDITOR_DECISION_PENDING_REVISIONS}
+			{assign var=decisions value=$submission->getDecisions()}
+			{foreach from=$decisions item=decision}
+				{if $decision->getDecision() == SUBMISSION_SECTION_DECISION_APPROVED}
+					{translate key="editor.article.decision.approved"}
+				{elseif $decision->getDecision() == SUBMISSION_SECTION_DECISION_PENDING_REVISIONS}
 					{translate key="editor.article.decision.pendingRevisions"}
-				{elseif $smarty.foreach.lastDecisionFinder.last and $decision.decision == SUBMISSION_EDITOR_DECISION_RESUBMIT}
+				{elseif $decision->getDecision() == SUBMISSION_SECTION_DECISION_RESUBMIT}
 					{translate key="editor.article.decision.resubmit"}
-				{elseif $smarty.foreach.lastDecisionFinder.last and $decision.decision == SUBMISSION_EDITOR_DECISION_DECLINE}
-					{translate key="editor.article.decision.decline"}
+				{elseif $decision->getDecision() == SUBMISSION_SECTION_DECISION_DECLINED}
+					{translate key="editor.article.decision.declined"}
 				{else}
 					&mdash;
 				{/if}

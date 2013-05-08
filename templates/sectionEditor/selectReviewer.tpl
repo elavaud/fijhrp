@@ -30,7 +30,6 @@ function sortSearch(heading, direction) {
 
 
 <form name="submit" method="post" action="{url op="selectReviewer" path=$articleId}">
-	<input type="hidden" name="sort" value="id"/>
 	<input type="hidden" name="sortDirection" value="ASC"/>
 	<select name="extReviewers" size="1" class="selectMenu">
 		<option value=false {if $extReviewers == false} selected="selected"{/if}>{$ercAbbrev} Members</option>

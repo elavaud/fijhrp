@@ -242,7 +242,9 @@
 	<message key="submission.comments.review">Review</message>
 	<message key="submission.comments.sendDecisionToReviewers">Send Reviewers editorial decision</message>
 	<message key="submission.comments.subject">Subject</message>
-	<message key="submission.complete">Complete</message>	
+	<message key="submission.complete">Complete</message>
+	<message key="submission.continuingReview">Continuing Review</message>
+    <message key="submission.decisionFile">Decision File</message>
     <message key="submission.done">Done</message>
 	<message key="submission.dueDate">Due Date</message>
 	<message key="submission.due">Due</message>
@@ -253,6 +255,7 @@
 	<message key="submission.email.confirmDeleteLogEntry">Are you sure you want to delete this email log entry?</message>
 	<message key="submission.email.deleteLogEntry">Delete Log Entry</message>
 	<message key="submission.emailLog">{$id} Email Log</message>
+	<message key="submission.endOfStudy">End of Study</message>
 	<message key="submission.event.backToEventLog">Back to Event Log</message>
 	<message key="submission.event.confirmClearLog">Are you sure you want to clear the event log for this submission?</message>
 	<message key="submission.event.confirmDeleteLogEntry">Are you sure you want to delete this event log entry?</message>
@@ -284,6 +287,7 @@
 	<message key="submission.history.submissionNotes">Submission Notes</message>
 	<message key="submission.history.viewLog">View Log</message>
     <message key="submission.indexing">Indexing</message>
+	<message key="submission.initialReview">Initial Review</message>
 	<message key="submission.initiated">Initiated</message>
 	<message key="submission.lastModified">Last modified</message>
 	<message key="submission.layout.addGalley">Add a Layout Galley</message>
@@ -335,6 +339,7 @@
 	<message key="submission.notes.updateNote">Update Note</message>
 	<message key="submission.notes.viewNotes">View Notes</message>
 	<message key="submission.originalFile">Proposal file</message>
+    <message key="submission.originalFileInstruct">Main file of the research proposal. Please click on its title (blue link) for downloading it.</message>
 	<message key="submission.page.editing">{$id} Editing</message>
 	<message key="submission.page.history">{$id} History</message>
 	<message key="submission.page.review">{$id} Review</message>
@@ -342,6 +347,10 @@
 	<message key="submission.page.summary">{$id} Summary</message>
 	<message key="submission.page.citations">{$id} Citations</message>
 	<message key="submission.peerReview">Peer&amp;nbsp;Review</message>
+    <message key="submission.previousProposalFile">Previous proposal file(s)</message>
+    <message key="submission.previousProposalFileInstruct">In case of a re-submission, here are the main proposal files previously submitted. Plese click on their title to download them.</message>
+    <message key="submission.proposalDetails">Proposal Details</message>
+	<message key="submission.protocolAmendment">Protocol Amendment</message>
 	<message key="submission.recommendation">Recommendation</message>
 	<message key="submission.rejected">Rejected</message>
 	<message key="submission.request">Request</message>
@@ -349,9 +358,10 @@
 	<message key="submission.restrictions">Restrictions</message>
 	<message key="submission.reviewMetadata">Review Metadata</message>
 	<message key="submission.review">Review</message>
+	<message key="submission.reviewFiles">Review File(s)</message>
 	<message key="submission.reviewVersion">Review Version</message>
     <message key="submission.saveMetadata">Save Metadata</message>
-    
+	<message key="submission.seriousAdverseEvents">Serious Adverse Events</message>
     <message key="submission.status.approved">Approved</message>
     <message key="submission.status.complete">Complete</message>
     <message key="submission.status.completed">Completed</message>
@@ -388,6 +398,7 @@
 	<message key="submission.submissionManuscript">Main proposal file</message>
 	<message key="submission.submissionReview">Submission Review</message>
 	<message key="submission.submitter">Submitter</message>
+    <message key="submission.submitterInstruct">The user who submitted the proposal through this health research portal. It could not be the same person as the investigator of the research.</message>
 	<message key="submission.summary">Summary</message>
 	<message key="submission.supplementaryFiles">Supplementary Files</message>
 
@@ -395,7 +406,9 @@
         <message key="submission.completionReports">Completion Reports</message>
         <message key="submission.extensionRequest">Request For Extension</message>
         <message key="submission.withdrawReports">Reason for Withdrawal</message>
-        
+        <message key="submission.withdrawLack">Lack of Funding</message>
+        <message key="submission.withdrawAdverse">Adverse Event</message>
+
         <!-- Added by: EL, April 18, 2012 -->
         <message key="submission.rawDataFile">Raw Data File</message>
         <message key="submission.otherSuppResearchOutput">Other Supplementary Research Output</message>
@@ -403,7 +416,7 @@
 	<message key="submission.supportingAgencies">Supporting Agencies</message>
 	<message key="submission.currentAgencies">Current Agencies</message>
 	<message key="submission.indexingInformation">Indexing Information</message>
-	<message key="submission.titleAndAbstract">Title and summary of proposal</message>
+	<message key="submission.titleAndAbstract">Titles and abstract</message>
 	<message key="submission.underway">Underway</message>
 	<message key="submission.uploadFileTo">Upload file to</message>
 	<message key="submission.viewMetadata">View Metadata</message>

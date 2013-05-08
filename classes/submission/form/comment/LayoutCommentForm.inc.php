@@ -85,19 +85,10 @@ class LayoutCommentForm extends CommentForm {
 			}
 		} else {
 			// Then add editor
-				// Removed by EL on February 17th 2013
-				// No edit assignments anymore
-				//$edit Assignment Dao =& DAORegistry::getDAO('Edit Assignment DAO');
-				//$editAssignments =& $edit Assignment Dao->getEditAssignmentsByArticleId($this->article->getArticleId());
 			$editorAddresses = array();
-				//while (!$editAssignments->eof()) {
-					//$editAssignment =& $editAssignments->next();
-					//if ($editAssignment->getCanEdit()) $editorAddresses[$editAssignment->getEditorEmail()] = $editAssignment->getEditorFullName();
-					//unset($editAssignment);
-				//}
-				$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
-				$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->article->getSectionId());
-				foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
+			$sectionEditorsDao =& DAORegistry::getDAO('SectionEditorsDAO');
+			$sectionEditors =& $sectionEditorsDao->getEditorsBySectionId($journal->getId(), $this->article->getSectionId());
+			foreach ($sectionEditors as $sectionEditor) $editorAddresses[$sectionEditor->getEmail()] = $sectionEditor->getFullName();
 
 			// If no editors are currently assigned to this article,
 			// send the email to all editors for the journal

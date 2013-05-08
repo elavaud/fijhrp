@@ -47,9 +47,6 @@ class PubMedExportDom {
 
 	function &generateArticleDom(&$doc, &$journal, &$issue, &$section, &$article) {
 
-		// register the editor submission DAO for use later
-		$editorSubmissionDao =& DAORegistry::getDAO('EditorSubmissionDAO');
-
 		/* --- Article --- */
 		$root =& XMLCustomWriter::createElement($doc, 'Article');
 
@@ -150,14 +147,15 @@ class PubMedExportDom {
 		XMLCustomWriter::appendChild($historyNode, $receivedNode);
 
 		// accepted for publication
-		$editordecisions = $editorSubmissionDao->getEditorDecisions($article->getId());
+		$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
+		$sectionDecisions = $sectionDecisionDao->getSectionDecisionsByArticleId($article->getId());
 
 		// if there are multiple decisions, make sure we get the accepted date
-		$editordecision = array_pop($editordecisions);
-		while ($editordecision['decision'] != SUBMISSION_EDITOR_DECISION_ACCEPT && count($editordecisions) > 0) $editordecision = array_pop($editordecisions);
+		$sectionDecision = array_pop($sectionDecisions);
+		while ($sectionDecision->getDecision() != SUBMISSION_SECTION_DECISION_APPROVED && count($sectionDecisions) > 0) $sectionDecision = array_pop($sectionDecisions);
 
-		if ($editordecision != '') {
-			$acceptedNode =& PubMedExportDom::generatePubDateDom($doc, $editordecision['dateDecided'], 'accepted');
+		if ($sectionDecision != '') {
+			$acceptedNode =& PubMedExportDom::generatePubDateDom($doc, $sectionDecision->getDateDecided(), 'accepted');
 			XMLCustomWriter::appendChild($historyNode, $acceptedNode);
 		}
 

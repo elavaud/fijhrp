@@ -12,12 +12,12 @@
 
 <form method="post" action="{url op="selectReviewers" path=$submission->getId()}">
 <div id="peerReview">
-<table><tr width="100%"><td width="30%"><h3>Active ERC Members</h3><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="selectReviewer" path=$submission->getId()|to_array:0:true}" class="action">&#187;&nbsp;{translate key="editor.article.selectExternalReviewer"}</a></td></tr></table>
+<table><tr width="100%"><td width="30%"><h3>{translate key="user.ercrole.ercMembers"}</h3><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="{url op="selectReviewer" path=$submission->getId()|to_array:0:true}" class="action">&#187;&nbsp;{translate key="editor.article.selectExternalReviewer"}</a></td></tr></table>
 <table class="data" width="100%">
 	<tr id="reviewersHeader" valign="middle">
 		<td width="10%"></td>
-		<td width="40%" valign="left"><h4>Name</h4></td>
-		<td width="50%" valign="left"><h4>Reviewing Interests</h4></td>
+		<td width="40%" valign="left"><h4>{translate key="common.name"}</h4></td>
+		<td width="50%" valign="left"><h4>{translate key="user.interests"}</h4></td>
 	</tr>
 </table>
 

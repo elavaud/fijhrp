@@ -21,11 +21,12 @@
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
 {iterate from=submissions1 item=submission}
 	{assign var="articleId" value=$submission->getArticleId()}
+	{assign var="abstract" value=$submission->getLocalizedAbstract()}
         {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
 	<tr valign="top">
 		<td>{$proposalId|escape}</td>
 		<td>{$submission->getDateSubmitted()|date_format:$dateFormatShort}</td>
-		<td><a href="{url op="submission" path=$articleId}" class="action">{$submission->getLocalizedTitle()|escape}</a></td>
+		<td><a href="{url op="submission" path=$articleId}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
 		{assign var="status" value=$submission->getSubmissionStatus()}
 		{if $statViews}
 			<td>
@@ -52,9 +53,9 @@
                             {translate key="submission.status.completed"}<br />
                         {elseif $status==PROPOSAL_STATUS_ARCHIVED}
                             {assign var="decision" value=$submission->getMostRecentDecision()}
-                            {if $decision==SUBMISSION_EDITOR_DECISION_DECLINE}
+                            {if $decision==SUBMISSION_SECTION_DECISION_DECLINED}
                                 {translate key="submission.status.declined"}
-                            {elseif $decision==SUBMISSION_EDITOR_DECISION_EXEMPTED}
+                            {elseif $decision==SUBMISSION_SECTION_DECISION_EXEMPTED}
                                 {translate key="submission.status.exempted"}
                             {/if}
                          {else}

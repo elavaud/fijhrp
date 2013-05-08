@@ -16,7 +16,7 @@ function checkSize(){
 	var check = fileToUpload.files[0].fileSize;
 	var valueInKb = Math.ceil(check/1024);
 	if (check > 5242880){
-		alert ('The file is too big ('+valueInKb+' Kb). It should not exceed 5 Mb.');
+		alert ('{/literal}{translate key="common.fileTooBig1"}{literal}'+valueInKb+'{/literal}{translate key="common.fileTooBig2"}{literal}5 Mb.');
 		return false
 	} 
 }
@@ -27,13 +27,13 @@ function checkSize(){
 
 <table class="data" width="100%">
 	<tr id="reviewersHeader" valign="middle">
-		<td width="30%" colspan="2" ><h4>Active ERC Members</h4></td>		
+		<td width="30%" colspan="2" ><h4>{translate key="editor.article.activeReviewers"}</h4></td>		
 		<td width="70%" align="left" valign="bottom">
 			<a href="{url op="selectReviewer" path=$submission->getId()}" class="action">{translate key="editor.article.selectReviewer"}</a>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			
 			{if $reviewAssignmentCount>0}
-				<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">Set Due Date For Primary Review</a>
+				<a href="{url op="setDueDateForAll" path=$submission->getId()}" class="action">{translate key="editor.article.setDueDateForAll"}</a>
 			{/if}
 		</td>
 	</tr>
@@ -43,7 +43,6 @@ function checkSize(){
 {foreach from=$reviewAssignments item=reviewAssignment key=reviewKey}
 
 {assign var="reviewId" value=$reviewAssignment->getId()}
-{assign var="articleId" value=$reviewAssignment->getSubmissionId()}
 
 
 {if not $reviewAssignment->getCancelled() and not $reviewAssignment->getDeclined()}
@@ -85,7 +84,7 @@ function checkSize(){
 							{$reviewAssignment->getDateNotified()|date_format:$dateFormatLong}							
 						{else}
 							{url|assign:"reviewUrl" op="notifyReviewer" reviewId=$reviewAssignment->getId() articleId=$submission->getId()}
-							<a href="{url op="notifyReviewer" path=$articleId|to_array:$reviewId}" class="action">Notify</a>
+							<a href="{url op="notifyReviewer" path=$submission->getArticleId()|to_array:$reviewId}" class="action">{translate key="common.notify"}</a>
 						{/if}
 					</td>
 					<td>
@@ -95,7 +94,7 @@ function checkSize(){
 						{if $reviewAssignment->getDeclined()}
 							{translate key="sectionEditor.regrets"}
 						{else}
-							<a href="{url op="setDueDate" path=$reviewAssignment->getSubmissionId()|to_array:$reviewAssignment->getId()}">{if $reviewAssignment->getDateDue()}{$reviewAssignment->getDateDue()|date_format:$dateFormatLong}{else}&mdash;{/if}</a>
+							<a href="{url op="setDueDate" path=$submission->getArticleId()|to_array:$reviewAssignment->getId()}">{if $reviewAssignment->getDateDue()}{$reviewAssignment->getDateDue()|date_format:$dateFormatLong}{else}&mdash;{/if}</a>
 						{/if}
 					</td>
 					<td>
@@ -145,25 +144,25 @@ function checkSize(){
 			<td class="label">{translate key="reviewer.article.uploadedFile"}</td>
 			<td>
 				<table width="100%" class="data">
-					{foreach from=$reviewAssignment->getReviewerFileRevisions() item=reviewerFile key=key}
+					{assign var="reviewerFile" value=$reviewAssignment->getReviewerFile()}
+					{if $reviewerFile}
 					<tr valign="top">
 						<td valign="middle">
 							<form name="authorView{$reviewAssignment->getId()}" method="post" action="{url op="makeReviewerFileViewable"}">
-								<a href="{url op="downloadFile" path=$submission->getId()|to_array:$reviewerFile->getFileId():$reviewerFile->getRevision()}" class="file">{$reviewerFile->getFileName()|escape}</a>&nbsp;&nbsp;{$reviewerFile->getDateModified()|date_format:$dateFormatLong}
+								<a href="{url op="downloadFile" path=$submission->getId()|to_array:$reviewerFile->getFileId()}" class="file">{$reviewerFile->getFileName()|escape}</a>&nbsp;&nbsp;{$reviewerFile->getDateModified()|date_format:$dateFormatLong}
 								<input type="hidden" name="reviewId" value="{$reviewAssignment->getId()}" />
 								<input type="hidden" name="articleId" value="{$submission->getId()}" />
 								<input type="hidden" name="fileId" value="{$reviewerFile->getFileId()}" />
-								<input type="hidden" name="revision" value="{$reviewerFile->getRevision()}" />
 								<br/>{translate key="editor.article.showAuthor"} <input type="checkbox" name="viewable" value="1"{if $reviewerFile->getViewable()} checked="checked"{/if} />
 								<input type="submit" value="{translate key="common.record"}" class="button" />
 							</form>
 						</td>
 					</tr>
-					{foreachelse}
+					{else}
 					<tr>
 						<td>{translate key="common.none"}</td>
 					</tr>
-					{/foreach}
+					{/if}
 				</table>
 			</td>
 		</tr>

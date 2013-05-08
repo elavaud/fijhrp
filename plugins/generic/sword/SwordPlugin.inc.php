@@ -113,7 +113,7 @@ class SwordPlugin extends GenericPlugin {
 		$decisions = array_pop($decisions); // Rounds
 		$decision = array_pop($decisions);
 		$decisionConst = $decision?$decision['decision']:null;
-		if ($decisionConst != SUBMISSION_EDITOR_DECISION_ACCEPT) return false;
+		if ($decisionConst != SUBMISSION_SECTION_DECISION_APPROVED) return false;
 
 		// The most recent decision was an "Accept"; perform auto deposits.
 		$journal =& Request::getJournal();

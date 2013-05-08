@@ -97,27 +97,25 @@ class SubmissionCopyeditHandler extends CopyeditorHandler {
 	function downloadFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
 		$submission =& $this->submission;
-		if (!CopyeditorAction::downloadCopyeditorFile($submission, $fileId, $revision)) {
+		if (!CopyeditorAction::downloadCopyeditorFile($submission, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}
 
 	/**
 	 * View a file (inlines file).
-	 * @param $args array ($articleId, $fileId, [$revision])
+	 * @param $args array ($articleId, $fileId)
 	 */
 	function viewFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
 		$fileId = isset($args[1]) ? $args[1] : 0;
-		$revision = isset($args[2]) ? $args[2] : null;
 
 		$this->validate($articleId);
 		$submission =& $this->submission;
-		if (!CopyeditorAction::viewFile($articleId, $fileId, $revision)) {
+		if (!CopyeditorAction::viewFile($articleId, $fileId)) {
 			Request::redirect(null, null, 'submission', $articleId);
 		}
 	}

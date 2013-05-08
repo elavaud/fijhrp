@@ -27,10 +27,8 @@
 	{/if}
 
 	{assign var=lastAuthorName value=$authorName}
-	{assign var=lastAuthorCountry value=$authorCountry}
 
-	{assign var=authorAffiliation value=$author->getLocalizedAffiliation()}
-	{assign var=authorCountry value=$author->getCountry()}
+	{assign var=authorAffiliation value=$author->getAffiliation()}
 
 	{assign var=authorFirstName value=$author->getFirstName()}
 	{assign var=authorMiddleName value=$author->getMiddleName()}
@@ -39,12 +37,8 @@
 
 	{if $authorMiddleName != ''}{assign var=authorName value="$authorName $authorMiddleName"}{/if}
 	{strip}
-		<a href="{url op="authors" path="view" firstName=$authorFirstName middleName=$authorMiddleName lastName=$authorLastName affiliation=$authorAffiliation country=$authorCountry}">{$authorName|escape}</a>
+		<a href="{url op="authors" path="view" firstName=$authorFirstName middleName=$authorMiddleName lastName=$authorLastName affiliation=$authorAffiliation}">{$authorName|escape}</a>
 		{if $authorAffiliation}, {$authorAffiliation|escape}{/if}
-		{if $lastAuthorName == $authorName && $lastAuthorCountry != $authorCountry}
-			{* Disambiguate with country if necessary (i.e. if names are the same otherwise) *}
-			{if $authorCountry} ({$author->getCountryLocalized()}){/if}
-		{/if}
 	{/strip}
 	<br/>
 {/iterate}
