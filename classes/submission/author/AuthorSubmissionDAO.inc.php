@@ -320,8 +320,7 @@ class AuthorSubmissionDAO extends DAO {
 				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . '
 				) AND a.submission_progress = 0)';
 				
-		$sql3 = ' AND (a.status = ' . STATUS_ARCHIVED . ' 
-				OR a.status = ' . STATUS_WITHDRAWN.')';
+		$sql3 = ' AND (a.status = ' . STATUS_COMPLETED .')';
 				
 		$result0 =& $this->retrieve($sql.$sql0, array($authorId, $journalId));
 		$result1 =& $this->retrieve($sql.$sql1, array($authorId, $journalId));
@@ -561,6 +560,33 @@ class AuthorSubmissionDAO extends DAO {
 		return $returner;
 	}
 
+	/**
+	 * Get all completed proposals for a journal and a specific author.
+	 * @param $journalId int
+	 * @param $authorId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array AuthorSubmission
+	 */
+	function &getAuthorCompletedResearchesIterator($authorId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+
+		$result =& $this->_getUnfilteredAuthorSubmissions(
+			$authorId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+				'a.status = '.STATUS_COMPLETED, 
+			$rangeInfo, $sortBy, $sortDirection
+		);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
+		return $returner;
+	}
+	
 	/**
 	 * Get all archives proposals for a journal and a specific author.
 	 * @param $journalId int

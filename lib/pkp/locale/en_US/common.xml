@@ -311,7 +311,7 @@
 	<message key="icon.view.alt">View</message>
 	<message key="locale.primary">Primary locale</message>
 	<message key="locale.supported">Supported locales</message>
-	<message key="navigation.about">About ERC</message>
+	<message key="navigation.about">About</message>
 	<message key="navigation.browse">Browse</message>
 	<message key="navigation.browseByTitle">By Title</message>
 	<message key="navigation.dashboard">Dashboard</message>

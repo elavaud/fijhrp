@@ -28,7 +28,7 @@
         <td>{if $submission->getDateSubmitted()}{$submission->getDateSubmitted()|date_format:$dateFormatLong}{else}&mdash;{/if}</td>
         	{if $status==PROPOSAL_STATUS_DRAFT}
             	{assign var="progress" value=$submission->getSubmissionProgress()}
-            	<td><a href="{url op="submit" path=$progress articleId=$articleId}" class="action">{if $abstract}{$abstract->getScientificTitle()|escape}{else}{translate key="common.untitled"}{/if}</a></td>
+            	<td><a href="{url op="submit" path=$progress articleId=$articleId}" class="action">{if $abstract->getScientificTitle()}{$abstract->getScientificTitle()|escape}{else}{translate key="common.untitled"}{/if}</a></td>
         	{else}
             	<td><a href="{url op="submission" path=$articleId}" class="action">{if $abstract}{$abstract->getScientificTitle()|strip_unsafe_html}{else}{translate key="common.untitled"}{/if}</a></td>
         	{/if}

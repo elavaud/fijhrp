@@ -92,6 +92,8 @@
 	<message key="common.queue.short.proposalsToSubmit">To submit</message>
     <message key="common.queue.long.ongoingResearches">Ongoing researches</message>
 	<message key="common.queue.short.ongoingResearches">Ongoing</message>
+    <message key="common.queue.long.completedResearches">Completed researches</message>
+	<message key="common.queue.short.completedResearches">Completed</message>
 	<message key="common.queue.long.submissionsInEditing">Proposals in Editing</message>
 	<message key="common.queue.short.submissionsInEditing">In Editing</message>
 	<message key="common.queue.long.submissionsInReview">Proposals under Review</message>
@@ -125,7 +127,7 @@
 
 	<!-- Common Section Terms -->
 	<message key="section.section">Ethics Review Committee</message>
-    <message key="section.sectionAbbrev">ERC</message>
+    <message key="section.sectionAbbrev">Committee</message>
 	<message key="section.sections">Ethics Review Committees</message>
 
 	<message key="section.title">Ethics Committee title</message>
@@ -265,10 +267,10 @@
         <message key="proposal.informedConsentIncluded">Informed Consent Included?</message>
         <message key="proposal.dataCollectionQuestionnairesIncluded">Data Collection Questionnaires Included?</message>
         <message key="proposal.ethicalClearanceEnclosed">Ethical Clearance Enclosed?</message>
-        <message key="proposal.reviewedByOtherErc">Proposal reviewed by other ERC</message>
+        <message key="proposal.reviewedByOtherErc">Proposal reviewed by other Committee</message>
             <!-- Added by EL on April 17, 2012-->
             <message key="proposal.rtoOffice">Office</message>
-        <message key="proposal.otherErcDecision">If yes, other ERC Decision </message>
+        <message key="proposal.otherErcDecision">If yes, other Committee Decision </message>
         <message key="proposal.nameOfIndustry">If yes, please specify:</message>
         <message key="proposal.proofOfRegistration">Proof Of Registration Included? </message>
         <message key="proposal.dataCollection">Data Collection: </message>
@@ -364,7 +366,7 @@
 	 * Last Update: 5/3/2011
 	 *
 	************************************* -->
-	<message key="submission.editorDecision">ERC Decision and Review</message>/*Editor decision to ERC decision*/
+	<message key="submission.editorDecision">Committee Decision and Review</message>/*Editor decision to Committee decision*/
 	<message key="submission.proposalStatus">Proposal Status</message>
 	<message key="submission.submissionEditing">Submission Editing</message>
 	<message key="submission.changeSection">Change to</message>
@@ -397,8 +399,8 @@
 	<message key="submissions.postAuthor">Post-Author</message>
 	<message key="submissions.reviewRound">Review Round</message>
 	<message key="submissions.proof">Proof</message>
-	<message key="submissions.editorDecision">ERC Decision</message> /*Editor decision to ERC Decision*/
-	<message key="submissions.editorRuling">ERC Ruling</message>
+	<message key="submissions.editorDecision">Committee Decision</message> /*Editor decision to Committee Decision*/
+	<message key="submissions.editorRuling">Committee Ruling</message>
 	<message key="submission.eventLog">{$id} Event Log</message>
 
 	<!-- Submission list search engine -->
@@ -425,8 +427,8 @@
 	<message key="user.noRoles.noRolesForJournal">Your account does not currently have any roles for this site. Please choose from the actions below:</message>
 	<message key="user.noRoles.submitArticle">Submit a Proposal</message>
 	<message key="user.noRoles.submitArticleRegClosed">Submit Proposal: Registration is currently disabled.</message>
-	<message key="user.noRoles.regReviewer">Register as a ERC Member</message>
-	<message key="user.noRoles.regReviewerClosed">Register as a ERC Member: ERC Member registration is currently disabled.</message>
+	<message key="user.noRoles.regReviewer">Register as a Committee Member</message>
+	<message key="user.noRoles.regReviewerClosed">Register as a Committee Member: Committee Member registration is currently disabled.</message>
 
 	<!-- Roles -->
         <message key="user.role.manager">Administrator</message>
@@ -436,7 +438,7 @@
         <!-- Replaced "Secretary" by "Secretary Administrative Assistants". EL April 4 2012-->
         <message key="user.role.sectionEditor">Secretary</message>
         
-        <!-- Added ERC roles. EL April 10 2012-->
+        <!-- Added Committee roles. EL April 10 2012-->
         <message key="user.ercrole.chair">Chair</message>
         <message key="user.ercrole.viceChair">Vice-Chair</message>
         <message key="user.ercrole.secretariat">Secretariat</message>
@@ -446,9 +448,9 @@
         <message key="user.ercrole.extMembers">External Members (non-affiliated members)</message>
         
         <!-- Added by EL on April 19, 2012 -->
-        <message key="user.ercrole.status">ERC Member Status</message>
+        <message key="user.ercrole.status">Committee Member Status</message>
         
-	<message key="user.role.reviewer">ERC Member</message> /* Reviewer to ERC Member */
+	<message key="user.role.reviewer">Committee Member</message> /* Reviewer to Committee Member */
 	<message key="user.role.layoutEditor">Layout Editor</message>
 	<message key="user.role.copyeditor">Copyeditor</message>
 	<message key="user.role.proofreader">Proofreader</message>
@@ -456,7 +458,7 @@
         <!-- EL on April 3rd 2013 -->
         <message key="user.role.coinvestigator">Co-Investigator</message>
 	<message key="user.role.subscriptionManager">Subscription Manager</message>
-	<message key="user.role.managers">Administrators</message> /* Replaced Journal Managers with ERC Admins - spf */
+	<message key="user.role.managers">Administrators</message> /* Replaced Journal Managers with Committee Admins - spf */
     <message key="user.role.editors">Secretaries</message> /*Editor to Secretary*/
     <message key="user.role.coordinators">Coordinators</message>
         <message key="user.role.sectionEditors">Ethics Committees Secretaries</message>
@@ -531,7 +533,7 @@
 	<message key="submission.event.editor.editorAssigned">Secretary assigned to proposal</message>
 	<message key="submission.event.editor.editorUnassigned">Secretary unassigned from submission</message>
 	<message key="submission.event.editor.editorDecision">Secretary decision submitted</message>
-	<message key="submission.event.editor.editorFile">ERC file updated</message>
+	<message key="submission.event.editor.editorFile">Committee file updated</message>
 	<message key="submission.event.editor.submissionArchived">Submission sent to archive</message>
 	<message key="submission.event.editor.submissionRestored">Submission restored from archive</message>
 
@@ -613,7 +615,7 @@ Note that the OAI interface can be disabled for this site by editing the OJS sys
 	<message key="subscriptionManager.institutionalSubscriptions">Institutional Subscriptions</message>
 	<message key="subscriptionManager.subscriptionTypes">Subscription Types</message>
 	
-	<!-- ERC Management -->
+	<!-- Committee Management -->
 
 	<!-- Statistics & Reports -->
 
@@ -654,8 +656,8 @@ Note that the OAI interface can be disabled for this site by editing the OJS sys
 	<!-- Setup Step 2 -->
 
 
-	<message key="manager.setup.reviewProcessEmailDescription">The ERC Secretary sends
-to the ERC Members the request to review with the proposal attached to the email. ERC Members email the Secretary their assent (or regrets), as well as the review and recommendation. The Secretary enters the ERC Member's assent (or regrets), as well as the review and recommendation on the proposal's Review page, to record the review process.</message>
+	<message key="manager.setup.reviewProcessEmailDescription">The Committee Secretary sends
+to the Committee Members the request to review with the proposal attached to the email. Committee Members email the Secretary their assent (or regrets), as well as the review and recommendation. The Secretary enters the Committee Member's assent (or regrets), as well as the review and recommendation on the proposal's Review page, to record the review process.</message>
 
 
 	<message key="manager.setup.lockssDescription"><![CDATA[Open Journal Systems supports the <a href="http://lockss.org/" target="_blank">LOCKSS</a> (Lots of Copies Keep Stuff Safe) system to ensure a secure and permanent archive for the journal. LOCKSS is open source software developed at Stanford University Library that enables libraries to preserve selected web journals by regularly polling registered journal websites for newly published content and archiving it. Each archive is continually validated against other library caches, and if content is found to be corrupted or lost, the other caches or the journal is used to restore it.
@@ -831,7 +833,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.article.restrictedFileAccess">Submission will be made available, if and when reviewer agrees to undertake review</message>
 	<message key="reviewer.article.submissionEditor">Submission Editor</message>
 	<message key="reviewer.article.reviewerCommentsDescription">Type or paste in review comments here</message>
-	<message key="reviewer.article.editorToEnter">ERC Secretary To Enter</message>
+	<message key="reviewer.article.editorToEnter">Committee Secretary To Enter</message>
 	<message key="reviewer.article.sendReminder">Send Reminder</message>
 	<message key="reviewer.article.automatic">(Auto)</message>
 	<message key="reviewer.article.recommendation">Recommendation</message>
@@ -888,7 +890,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="reviewer.competingInterests">Competing Interests</message>
         <message key="reviewer.article.enterReviewA">For more information, please click on the bubble icon to open a chat room between you and the secretary of your committee.</message>
         <message key="reviewer.article.uploadFile">Please upload the reivew of the proposal here.</message>
-        <message key="reviewer.article.selectRecommendation">Select a recommendation and submit the review to complete the process. You must enter a review or upload a file before selecting a recommendation.</message>
+        <message key="reviewer.article.selectRecommendation">Select a recommendation and submit the review to complete the process. You must upload your review file before selecting a recommendation.</message>
 	<message key="reviewer.article.mustSelectDecision">No recommendation was selected. You must choose a recommendation to submit.</message>
 	<message key="reviewer.article.confirmDecision">Once you have recorded a decision you will no longer be able to make changes to this review. Are you sure you wish to continue?</message>
 	<message key="reviewer.article.ensuringBlindReview">Ensuring a Blind Review</message>
@@ -979,7 +981,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 	<message key="submission.comments.viewableDescription"><![CDATA[These comments can be shared with the author.<br />
 (After saving, further comments can be added.)]]></message>
 	<!-- Edited by ayveemallare 7/19/2011 -->
-	<!-- Changed Editor to ERC, Author to Investigator -->
+	<!-- Changed Editor to Committee, Author to Investigator -->
 	<message key="submission.comments.canShareWithAuthor">Can share with Investigator</message>
 	<message key="submission.comments.cannotShareWithAuthor">Cannot share with Investigator</message>
 	<message key="submission.comments.blindCcReviewers">After sending, present an editable BCC copy to send to reviewers.</message>

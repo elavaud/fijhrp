@@ -377,7 +377,7 @@ $(document).ready(function() {
 					{else}
 						<form name="recommendation" method="post" action="{url op="recordRecommendation"}">
 							<input type="hidden" name="reviewId" value="{$reviewId|escape}" />
-							<select name="recommendation" {if not $confirmedStatus or $declined or $submission->getCancelled() or (!$reviewFormResponseExists and !$reviewAssignment->getMostRecentPeerReviewComment() and !$uploadedFileExists)}disabled="disabled"{/if} class="selectMenu">
+							<select name="recommendation" {if not $confirmedStatus or $declined or $submission->getCancelled() or (!$reviewFormResponseExists and !$uploadedFileExists)}disabled="disabled"{/if} class="selectMenu">
 								{html_options_translate options=$reviewerRecommendationOptions selected=''}
 							</select>
 							&nbsp;&nbsp;&nbsp;&nbsp;

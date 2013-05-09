@@ -169,9 +169,9 @@
 				</td>
 				<td align="left">{* EL on August 18, 2012 *}
 					{if $authorSubmissionsCount[3]}
-						<a href="{url journal=$journalPath page="author" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"} ({$authorSubmissionsCount[3]})</a> 
+						<a href="{url journal=$journalPath page="author" path="completedResearches"}">{translate key="common.queue.short.completedResearches"} ({$authorSubmissionsCount[3]})</a> 
 					{else}
-						<span class="disabled">{translate key="common.queue.short.submissionsArchives"} (0)</span>
+						<span class="disabled">{translate key="common.queue.short.completedResearches"} (0)</span>
 					{/if}
 				</td>
 				<td align="right">&nbsp;</td>

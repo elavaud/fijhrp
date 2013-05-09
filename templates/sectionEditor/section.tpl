@@ -196,7 +196,7 @@
 		<td align="right">
 			{if $thisUser->getId() == $member->getId()}&mdash;
 			{else}
-				<a href="{url op="unEnroll" path="512" userId=$member->getId() journalId=$currentJournal->getId() sectionId=$erc->getSectionId()}" onclick="return confirm('{translate|escape:"jsparam" key="manager.people.confirmUnenroll"}')" class="action">{translate key="manager.people.unenroll"}</a>
+				<a href="{url op="unEnroll" path="4096" userId=$member->getId() journalId=$currentJournal->getId() sectionId=$erc->getSectionId()}" onclick="return confirm('{translate|escape:"jsparam" key="manager.people.confirmUnenroll"}')" class="action">{translate key="manager.people.unenroll"}</a>
 			{/if}
 		</td>
 	</tr>

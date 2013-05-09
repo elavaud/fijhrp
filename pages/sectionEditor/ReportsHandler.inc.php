@@ -146,7 +146,7 @@ class ReportsHandler extends Handler {
 	* @param $args (type)
 	*/
 	function submissionsReport($args) {
-		import ('classes.submission.sectionEditor.form.SubmissionsReportForm');
+		import ('classes.submission.sectionEditor.SubmissionsReportForm');
 		parent::validate();
 		$this->setupTemplate();
 		$submissionsReportForm= new SubmissionsReportForm($args);

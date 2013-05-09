@@ -7,8 +7,8 @@
  * $Id$
  *}
 {strip}
-{assign var="meetingId" value=$meeting->getPublicId()}
-{translate|assign:"pageTitleTranslated" key="common.queue.long.viewMeeting" id=$meetingId}
+{assign var="meetingPublicId" value=$meeting->getPublicId()}
+{translate|assign:"pageTitleTranslated" key="common.queue.long.viewMeeting" id=$meetingPublicId}
 {assign var="pageCrumbTitle" value="common.queue.long.viewMeeting"}
 {include file="common/header.tpl"}
 {/strip}
@@ -178,7 +178,7 @@
 <tr>
 	<td class="label"></td>
 	<td class="value">
-		<input type="hidden" id="meetingId" name="meetingId" value={$meetingId}> </input>
+		<input type="hidden" id="meetingId" name="meetingId" value={$meeting->getId()}> </input>
 		<input type="submit" value="{translate key="common.save"}" class="button defaultButton" /> <input type="button" value="{translate key="common.cancel"}" class="button" onclick="document.location.href='{url op="meetings" escape=false}'" />
 	</td>
 </tr>

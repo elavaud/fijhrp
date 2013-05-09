@@ -957,16 +957,13 @@ class ArticleDAO extends DAO {
 	}
 
 	/**
-	 *  Added by:  Anne Ivy Mirasol
-	 *  Last Updated: June 15, 2011
-	 *
 	 *  Set status in articles table to PROPOSAL_STATUS_ARCHIVED
 	 *  @return boolean
 	 */
 
 	function sendToArchive($articleId) {
 		$this->update(
-			'UPDATE articles SET status = ? WHERE article_id = ?', array(PROPOSAL_STATUS_ARCHIVED, (int) $articleId)
+			'UPDATE articles SET status = ? WHERE article_id = ?', array(STATUS_ARCHIVED, (int) $articleId)
 		);
 		$this->flushCache();
 	}

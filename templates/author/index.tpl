@@ -26,6 +26,7 @@
 	<li{if ($pageToDisplay == "proposalsToSubmit")} class="current"{/if}><a href="{url op="index" path="proposalsToSubmit"}">{translate key="common.queue.short.proposalsToSubmit"}</a></li>
 	<li{if ($pageToDisplay == "proposalsInReview")} class="current"{/if}><a href="{url op="index" path="proposalsInReview"}">{translate key="common.queue.short.proposalsInReview"}</a></li>
 	<li{if ($pageToDisplay == "ongoingResearches")} class="current"{/if}><a href="{url op="index" path="ongoingResearches"}">{translate key="common.queue.short.ongoingResearches"}</a></li>
+	<li{if ($pageToDisplay == "completedResearches")} class="current"{/if}><a href="{url op="index" path="completedResearches"}">{translate key="common.queue.short.completedResearches"}</a></li>
 	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url op="index" path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 

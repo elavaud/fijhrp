@@ -225,17 +225,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		$templateMgr->assign('sectionId', $submission->getSectionId());
 		$templateMgr->assign_by_ref('notifyReviewerLogs', $notifyReviewerLogs);
 		$templateMgr->assign_by_ref('submissionFile', $submission->getSubmissionFile());	
-
-		$suppFiles =&  $submission->getSuppFiles();
-		$finalDecisionFileUploaded = false; 
-		foreach ($suppFiles as $suppFile) {
-			if ($suppFile->getType() == 'Final Decision') $finalDecisionFileUploaded = true;
-		}
-		$templateMgr->assign('finalDecisionFileUploaded', $finalDecisionFileUploaded);
-
         $templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
-
-		$templateMgr->assign_by_ref('suppFiles', $suppFiles);
+		$templateMgr->assign_by_ref('suppFiles', $submission->getSuppFiles());
 		$templateMgr->assign_by_ref('reviewFile', $submission->getReviewFile());
 		$templateMgr->assign_by_ref('previousFiles', $submission->getPreviousFiles());
 		$templateMgr->assign_by_ref('copyeditFile', $submission->getFileBySignoffType('SIGNOFF_COPYEDITING_INITIAL'));
@@ -432,7 +423,8 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		
 		$fileName = "finalDecisionFile";
 		if(($submission->getSubmissionStatus() == PROPOSAL_STATUS_EXPEDITED || $submission->getSubmissionStatus() == PROPOSAL_STATUS_FULL_REVIEW) && isset($_FILES[$fileName])) {			
-			if (SectionEditorAction::uploadDecisionFile($articleId, $fileName) == '0') Request::redirect(null, null, 'submissionReview', $articleId);
+			if (SectionEditorAction::uploadDecisionFile($articleId, $fileName, $submission->getLastSectionDecisionId()) == '0') Request::redirect(null, null, 'submissionReview', $articleId);
+				
 		}
 		
 		$decision = Request::getUserVar('decision');
@@ -2164,30 +2156,22 @@ class SubmissionEditHandler extends SectionEditorHandler {
 		}
 	}
 
-//////////////////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////////////////	
-
 	/**
 	 * Download a file.
 	 * @param $args array ($articleId, $fileId)
 	 */
 	function uploadDecisionFile($args) {
 		$articleId = isset($args[0]) ? $args[0] : 0;
+		$decisionId = isset($args[1]) ? $args[1] : 0;
+
 		//echo $articleId;
 		$fileName = "finalDecisionFile";
 		$this->validate($articleId);
 		if (isset($_FILES[$fileName])){
-			SectionEditorAction::uploadDecisionFile($articleId, $fileName);
+			SectionEditorAction::uploadDecisionFile($articleId, $fileName, $decisionId);
 		}
 		Request::redirect(null, null, 'submissionReview', $articleId);
 	}
-	
-//////////////////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////////////////	
-//////////////////////////////////////////////////////////////////////////////////////	
 	
 	/**
 	 * View a file (inlines file).

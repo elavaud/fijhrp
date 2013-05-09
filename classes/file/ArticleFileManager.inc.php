@@ -89,8 +89,8 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int
 	 * @return int file ID, is false if failure
 	 */
-	function uploadEditorDecisionFile($fileName, $assocId = null, $fileId = null) {	
-		return $this->handleUpload($fileName, ARTICLE_FILE_EDITOR, $assocId, $fileId);
+	function uploadEditorDecisionFile($fileName, $assocId, $fileId = null) {	
+		return $this->handleUpload($fileName, ARTICLE_FILE_EDITOR, $assocId, $fileId, 1);
 	}
 
 	/**
@@ -511,9 +511,9 @@ class ArticleFileManager extends FileManager {
 	 * @param $fileId int ID of an existing file to update
 	 * @return int the file ID (false if upload failed)
 	 */
-	function handleUpload($fileName, $type, $assocId = null, $fileId = null) {
+	function handleUpload($fileName, $type, $assocId = null, $fileId = null, $viewable = null) {
         
-        if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$assocId, &$fileId, &$result))) return $result;
+        if (HookRegistry::call('ArticleFileManager::handleUpload', array(&$fileName, &$type, &$assocId, &$fileId, &$viewable, &$result))) return $result;
 
 		$articleFileDao =& DAORegistry::getDAO('ArticleFileDAO');
 
@@ -532,6 +532,8 @@ class ArticleFileManager extends FileManager {
 			$articleFile->setDateUploaded(Core::getCurrentDate());
 			$articleFile->setDateModified(Core::getCurrentDate());
 		}
+		
+		if ($viewable) $articleFile->setViewable($viewable);
 		$articleFile->setAssocId($assocId);
 		$articleFile->setFileType($_FILES[$fileName]['type']);
 		$articleFile->setFileSize($_FILES[$fileName]['size']);

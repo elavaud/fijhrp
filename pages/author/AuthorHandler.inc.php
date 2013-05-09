@@ -61,6 +61,9 @@ class AuthorHandler extends Handler {
 			case 'ongoingResearches':
 				$functionName = 'getAuthorOngoingResearchesIterator';
 				break;
+			case 'completedResearches':
+				$functionName = 'getAuthorCompletedResearchesIterator';
+				break;
 			case 'submissionsArchives':
 				$functionName = 'getAuthorArchivesIterator';
 				break;

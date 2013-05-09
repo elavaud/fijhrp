@@ -26,11 +26,11 @@
 	 * DEFAULT - Default settings for setup items.
 	 *
 	-->
-	<message key="default.journalSettings.checklist.notPreviouslyPublished">The submission has not been previously submitted to the ERC.</message>
+	<message key="default.journalSettings.checklist.notPreviouslyPublished">The submission has not been previously submitted to the Committee.</message>
 	<message key="default.journalSettings.checklist.fileFormat">The submission file is in OpenOffice, Microsoft Word, RTF, or PDF file format.</message>
 	<message key="default.journalSettings.checklist.addressesLinked">Where available, URLs for the references have been provided.</message>
 	<message key="default.journalSettings.checklist.submissionAppearance">The text is single-spaced; uses a 12-point font; employs italics, rather than underlining (except with URL addresses); and all illustrations, figures, and tables are placed within the text at the appropriate points, rather than at the end.</message>
-	<message key="default.journalSettings.checklist.bibliographicRequirements"><![CDATA[The text adheres to the stylistic and bibliographic requirements outlined in the <a href="{$indexUrl}/{$journalPath}/about/submissions#authorGuidelines" target="_new">ERC Guidelines</a>, which is found in the Standard Operating Procedures of the ERC.]]></message>
+	<message key="default.journalSettings.checklist.bibliographicRequirements"><![CDATA[The text adheres to the stylistic and bibliographic requirements outlined in the <a href="{$indexUrl}/{$journalPath}/about/submissions#authorGuidelines" target="_new">Committee Guidelines</a>, which is found in the Standard Operating Procedures of the Committee.]]></message>
 	<message key="default.journalSettings.checklist.anonymous"><![CDATA[If submitting to a peer-reviewed section of the journal, the instructions in <a href="javascript:openHelp('{$indexUrl}/{$journalPath}/help/view/editorial/topic/000044')">Ensuring a Blind Review</a> have been followed.]]></message>
 	<message key="default.journalSettings.privacyStatement">The names and email addresses entered in this site will be used exclusively for the stated purposes and will not be made available for any other purpose or to any other party.</message>
 	<message key="default.journalSettings.openAccessPolicy">This site provides immediate open access to its content on the principle that making research freely available to the public supports a greater global exchange of knowledge.</message>

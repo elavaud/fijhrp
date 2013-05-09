@@ -74,7 +74,7 @@ class SectionEditorAction extends Action {
 		// Send a notification to the user
 		import('lib.pkp.classes.notification.NotificationManager');
 		$notificationManager = new NotificationManager();
-		$url = Request::url($journal->getPath(), 'author', 'submission', array($sectionEditorSubmission->getArticleId()));
+		$url = Request::url($journal->getPath(), 'author', 'submissionReview', array($sectionEditorSubmission->getArticleId()));
 
 		if ($decision == SUBMISSION_SECTION_DECISION_COMPLETE) $message = 'notification.type.submissionComplete';
 		elseif ($decision == SUBMISSION_SECTION_DECISION_INCOMPLETE) $message = 'notification.type.submissionIncomplete';		
@@ -2552,7 +2552,7 @@ class SectionEditorAction extends Action {
 		return $breadcrumb;
 	}
 	
-	function uploadDecisionFile($articleId, $fileName) {
+	function uploadDecisionFile($articleId, $fileName, $decisionId) {
 		$journal =& Request::getJournal();
 		$this->validate($articleId);
 
@@ -2561,7 +2561,7 @@ class SectionEditorAction extends Action {
 		
         // Upload file, if file selected.
 		if ($articleFileManager->uploadedFileExists($fileName)) {
-			$fileId = $articleFileManager->uploadEditorDecisionFile($fileName);
+			$fileId = $articleFileManager->uploadEditorDecisionFile($fileName, $decisionId);
 			return $fileId;	
 		} else {
 			$fileId = 0;

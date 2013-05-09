@@ -860,7 +860,7 @@
 {assign var="isOtherSecondarySponsorSelected" value=false}
 {foreach from=$secondarySponsors[$formLocale] key=i item=sponsor}
             <tr valign="top" {if $i == 0}id="firstSecondarySponsor" class="secondarySponsor"{else}id="secondarySponsorField" class="secondarySponsorSupp"{/if}>
-                <td title="{translate key="proposal.secondarySponsorsInstruct"}">{if $i == 0}[?] {fieldLabel name="secondarySponsors" key="proposal.secondarySponsors"}{/if}</td>
+                <td width="20%" class="secondarySponsorTitle" title="{translate key="proposal.secondarySponsorsInstruct"}">{if $i == 0}[?] {fieldLabel name="secondarySponsors" key="proposal.secondarySponsors"}{/if}</td>
 				<td class="noSecondarySponsorTitle" style="display: none;">&nbsp;</td>
                 <td width="80%" class="value">
                     <select name="secondarySponsors[{$formLocale|escape}][]" id="secondarySponsors" class="selectMenu" onchange="showOrHideOtherSecondarySponsor(this.value);">

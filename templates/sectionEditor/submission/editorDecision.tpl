@@ -219,7 +219,7 @@ function checkSize(){
 {/if}
 
 
-{if $proposalStatus == PROPOSAL_STATUS_EXEMPTED}
+{if $submission->getMostRecentDecision() == SUBMISSION_SECTION_DECISION_EXEMPTED}
 	{assign var="localizedReasons" value=$submission->getLocalizedReasonsForExemption()}
 	<form method="post" action="{url op="recordReasonsForExemption"}">
 		<input type="hidden" name="articleId" value="{$submission->getId()}" />
@@ -247,16 +247,20 @@ function checkSize(){
 	</form>
 {/if}
 
-{if (($submission->getMostRecentDecision() == '6') || ($submission->getMostRecentDecision() == '1') || ($submission->getMostRecentDecision() == '3')) && $finalDecisionFileUploaded == false}
-<form method="post" action="{url op="uploadDecisionFile" path=$submission->getId()}"  enctype="multipart/form-data">
-	<tr valign="top">
-		<td title="{translate key="editor.article.uploadFinalDecisionFileInstruct"}" class="label">[?] {translate key="editor.article.uploadFinalDecisionFile"}</td>
-		<td class="value">
-			<input type="file" class="uploadField" name="finalDecisionFile" id="finalDecisionFile"/>
-			<input type="submit" class="button" value="{translate key="common.upload"}" />
-		</td>
-	</tr>
-</form>
+{assign var="lastSectionDecision" value=$submission->getLastSectionDecision()}
+{if $lastSectionDecision}
+	{assign var="decisionFiles" value=$lastSectionDecision->getDecisionFiles()}
+	{if (($submission->getMostRecentDecision() == SUBMISSION_SECTION_DECISION_EXEMPTED) || ($submission->getMostRecentDecision() == SUBMISSION_SECTION_DECISION_APPROVED) || ($submission->getMostRecentDecision() == SUBMISSION_SECTION_DECISION_DECLINED)) && count($decisionFiles) < 1}
+	<form method="post" action="{url op="uploadDecisionFile" path=$submission->getId()|to_array:$submission->getLastSectionDecisionId()}"  enctype="multipart/form-data">
+		<tr valign="top">
+			<td title="{translate key="editor.article.uploadFinalDecisionFileInstruct"}" class="label">[?] {translate key="editor.article.uploadFinalDecisionFile"}</td>
+			<td class="value">
+				<input type="file" class="uploadField" name="finalDecisionFile" id="finalDecisionFile"/>
+				<input type="submit" class="button" value="{translate key="common.upload"}" />
+			</td>
+		</tr>
+	</form>
+	{/if}
 {/if}
 
 <tr valign="top">

@@ -27,8 +27,7 @@ define('STATUS_QUEUED_SAE', 4);	// Serious Adverse Event(s)
 define('STATUS_QUEUED_EOS', 5);	// End of study
 define('STATUS_REVIEWED', 6);	// The proposal is not anymore under review
 define('STATUS_WITHDRAWN', 7);	// Withdrawn proposal
-
-
+define('STATUS_COMPLETED', 8);	// Completed proposal
 
 
 // AuthorSubmission::getSubmissionStatus will return one of these in place of QUEUED:

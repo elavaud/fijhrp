@@ -16,8 +16,8 @@
 	<message key="editor.article.activeReviewers">Active Reviewer(s)</message>
     <message key="editor.article.addReviewer">Add Reviewer</message>
 	<message key="editor.article.archiveSubmission">Reject and Archive Submission</message>
-	<message key="editor.article.assignEditor">Add ERC Secretary</message>
-	<message key="editor.article.assignSectionEditor">Add ERC Secretary</message>
+	<message key="editor.article.assignEditor">Add Committee Secretary</message>
+	<message key="editor.article.assignSectionEditor">Add Committee Secretary</message>
 	<message key="editor.article.authorComments">Author Comments</message>
 	<message key="editor.article.cancelReview">Cancel Request</message>
 	<message key="editor.article.changeSection">Change Section</message>
@@ -75,7 +75,7 @@
     <message key="editor.article.meetingInstruct">Please click on one of the link to access to the concerned meeting.</message>
     <message key="editor.article.notifyAuthor">Notify Investigator</message>
     <message key="editor.article.notifyAuthorInstruct">Please click on the mail icon for sending an email to investigator. Please click on the speech bubble icon for opening the chat room between you and the investigator.</message>
-	<message key="editor.article.notifyReviewer">Notify ERC Members</message>
+	<message key="editor.article.notifyReviewer">Notify Committee Members</message>
 	<message key="editor.article.numberOfWeeks">Number of Weeks</message>
     <message key="editor.article.payment.paymentConfirm">Please confirm the payment of the proposal review fee.</message>
     <message key="editor.article.payment.publicationFeeNotPaid">Publication Fee not paid. To schedule item for publication notify author to pay fee or waive fee.</message>
@@ -127,7 +127,7 @@
 	<message key="editor.article.submissionStatus">Proposal Status</message>
 	<message key="editor.article.todaysDate">Today's Date</message>
 	<message key="editor.article.toReviewer">To Reviewer</message>
-	<message key="editor.article.unassignedReviewers">Unassigned ERC Members</message>
+	<message key="editor.article.unassignedReviewers">Unassigned Committee Members</message>
 	<message key="editor.article.uploaded">Uploaded</message>
 	<message key="editor.article.uploadFinalDecisionFile">Upload Decision File</message>
     <message key="editor.article.uploadFinalDecisionFileInstruct">Please select and upload the approbation letter.</message>
@@ -144,7 +144,7 @@
 	<message key="editor.publishing">Proposal Approval</message>
 	<message key="editor.publishedIssues">Approved Proposals</message>
 	<message key="editor.allSections">All Sections</message>
-	<message key="editor.allEditors">ERC Secretariat</message>
+	<message key="editor.allEditors">Committee Secretariat</message>
 	<message key="editor.me">Me</message>
 	<message key="editor.submissionArchive.noSubmissions">No submissions in the archive.</message>
 	<message key="editor.submissionArchive.saveChanges">Save changes to archived submissions? Submissions marked for deletion will be permanently deleted from the system.</message>
@@ -164,7 +164,7 @@
 	<message key="editor.notifyUsers.allUsers">Send this message to all users associated with this site ({$count} users)</message>
 	<message key="editor.notifyUsers.interestedUsers">Send this message to the users associated with this site who have indicated that they wish to receive updates ({$count} users)</message>
 	<message key="editor.notifyUsers.includeToc">Include the table of contents:</message>
-	<message key="editor.editorAdministration">ERC Administration</message>
+	<message key="editor.editorAdministration">Committee Administration</message>
 	<message key="editor.issues.createIssue">Create Issue</message>
 	<message key="editor.issues.backIssues">Back Issues</message>
 	<message key="editor.issues.futureIssues">Future Issues</message>
@@ -254,7 +254,7 @@
     <message key="editor.meeting.attendanceReport.intro1">The meeting was convened at</message>
     <message key="editor.meeting.attendanceReport.intro2">with the required quorum of</message>
     <message key="editor.meeting.attendanceReport.intro3">members present. The meeting was adjourned at</message>
-    <message key="editor.meeting.attendanceReport.meetingDate">Minutes of the ERC Meeting held on</message>
+    <message key="editor.meeting.attendanceReport.meetingDate">Minutes of the Committee Meeting held on</message>
     <message key="editor.meeting.attendanceReport.membersAbsent">Member(s) absent:</message>
     <message key="editor.meeting.attendanceReport.membersPresent">Member(s) present:</message>
     <message key="editor.meeting.attendanceReport.reasonForAbsence">Reason for absence:</message>
@@ -346,7 +346,7 @@
 	<message key="editor.minutes.initialReview.benefits">Benefit Category</message>
 	<message key="editor.minutes.initialReview.confidentiality">Privacy and Confidentiality</message>
 	<message key="editor.minutes.initialReview.consentDocument">Consent Document</message>
-	<message key="editor.minutes.initialReview.localIrbApproval">Local IRB/ERC Approval</message>
+	<message key="editor.minutes.initialReview.localIrbApproval">Local IRB/Committee Approval</message>
 	<message key="editor.minutes.initialReview.minimizations">Minimizations of Risks to Subjects</message>
 	<message key="editor.minutes.initialReview.other">Other</message>
 	<message key="editor.minutes.initialReview.otherConsiderations">Additional Considerations</message>
@@ -411,9 +411,9 @@
 	<message key="editor.minutes.confirmContinuingReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.confirmInitialReview">This cannot be undone. Are you sure you want to submit this review?</message>
 	<message key="editor.minutes.proposalsForInitialReview">Proposals for Initial Review</message>
-	<message key="editor.minutes.noProposalsForInitialReview">No proposals are assigned for initial ERC Review.</message>
+	<message key="editor.minutes.noProposalsForInitialReview">No proposals are assigned for initial Review.</message>
 	<message key="editor.minutes.proposalsForContinuingReview">Proposals for Continuing Review</message>
-	<message key="editor.minutes.noProposalsForContinuingReview">No proposals are assigned for continuing ERC Review.</message>
+	<message key="editor.minutes.noProposalsForContinuingReview">No proposals are assigned for continuing Review.</message>
 	<message key="editor.minutes.uploadContinuingReviews">Upload Continuing Reviews</message>
 	<message key="editor.minutes.completeContinuingReviews">Complete Continuing Reviews</message>
 	<message key="editor.submission.dateOfApproval">Date of Approval</message>
@@ -427,8 +427,8 @@
 	<message key="editor.reports.generateReport">Generate Report</message>
 	<message key="editor.reports.submissions">Submissions</message>
 	<message key="editor.reports.meetingAttendance">Meeting Attendance</message>
-	<message key="editor.reports.ercMemberRequired">Select at least one (1) ERC member</message>
-	<message key="editor.reports.selectAtLeastOneErcMember">Select at least one (1) ERC member for the report</message>
+	<message key="editor.reports.ercMemberRequired">Select at least one (1) Committee member</message>
+	<message key="editor.reports.selectAtLeastOneErcMember">Select at least one (1) Committee member for the report</message>
 	<message key="editor.reports.dateRange">Pick a date range for the report (optional)</message>
 	<message key="editor.reports.preview">Preview</message>
 	<message key="editor.reports.previewReport">Preview Report</message>
@@ -457,7 +457,7 @@
     <message key="editor.reports.dataCollection">Data Collection</message>
 	<message key="editor.reports.budget">Estimated Budget</message>
     <message key="editor.reports.currency">Currency</message>
-	<message key="editor.reports.otherErcReview">Other ERC Review</message>
+	<message key="editor.reports.otherErcReview">Other Committee Review</message>
 	<message key="editor.reports.abstract">Abstract</message>
     <message key="editor.reports.industryGrant">Industry Grant(s)</message>
     <message key="editor.reports.agencyGrant">Agency Grant(s)</message>    

@@ -15,6 +15,7 @@
 // $Id$
 
 import('pages.author.AuthorHandler');
+import('classes.article.Article');
 
 class SubmitHandler extends AuthorHandler {
 	/** article associated with the request **/
@@ -28,34 +29,34 @@ class SubmitHandler extends AuthorHandler {
 	}
 
 
-	   function resubmit($args, $request, $reviewType = STATUS_QUEUED) {
-	       $articleDAO = DAORegistry::getDAO('ArticleDAO');
-	       $articleId = isset($args[0]) ? (int) $args[0] : 0;
-	
-	       $sectionDecisionDao = DAORegistry::getDAO('SectionDecisionDAO');
-	       $lastDecision = $sectionDecisionDao->getLastSectionDecision($articleId);
-	
-	       $authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
-	       $authorSubmission = $authorSubmissionDao->getAuthorSubmission($articleId);
-	
-	       if (
-	       	$sectionDecisionDao->getProposalStatus($articleId) == PROPOSAL_STATUS_RETURNED 
-	       	|| ($lastDecision->getDecision() == SUBMISSION_SECTION_DECISION_RESUBMIT 
-	       		&& !($articleDAO->isProposalResubmitted($articleId))) 
-	       	|| ($lastDecision->getDecision() == SUBMISSION_SECTION_DECISION_APPROVED 
-	       		&& $authorSubmission->isSubmissionDue())
-	         ) {
-	           $step = 2;
-	           $articleDAO->changeArticleStatus($reviewType, $step);
-	           $articleDAO->changeArticleProgress($articleId, $step);
-	           
-	           Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
-	       }
-	       else
-	       {
-	           Request::redirect(null, 'author', '');
-	       }
-	   }
+    function resubmit($args, $request, $reviewType = STATUS_QUEUED) {
+		$articleDAO = DAORegistry::getDAO('ArticleDAO');
+        $articleId = isset($args[0]) ? (int) $args[0] : 0;
+
+        $sectionDecisionDao = DAORegistry::getDAO('SectionDecisionDAO');
+        $lastDecision = $sectionDecisionDao->getLastSectionDecision($articleId);
+
+        $authorSubmissionDao =& DAORegistry::getDAO('AuthorSubmissionDAO');
+        $authorSubmission = $authorSubmissionDao->getAuthorSubmission($articleId);
+
+        if (
+        	$sectionDecisionDao->getProposalStatus($articleId) == PROPOSAL_STATUS_RETURNED 
+        	|| ($lastDecision->getDecision() == SUBMISSION_SECTION_DECISION_RESUBMIT 
+        		&& !($articleDAO->isProposalResubmitted($articleId))) 
+        	|| ($lastDecision->getDecision() == SUBMISSION_SECTION_DECISION_APPROVED 
+        		&& $authorSubmission->isSubmissionDue())
+        ) {
+            $step = 2;
+            $articleDAO->changeArticleStatus($reviewType, $step);
+            $articleDAO->changeArticleProgress($articleId, $step);
+           
+            Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
+        }
+        else
+        {
+            Request::redirect(null, 'author', '');
+        }
+    }
         
      /**
       * Added by MSB, Sept 29, 2011
