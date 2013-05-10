@@ -30,32 +30,19 @@ class AuthorSubmitStep4Form extends AuthorSubmitForm {
 	 */
 	function display() {
 		$templateMgr =& TemplateManager::getManager();
-                
-                // Start Edit Raf Tan 04/30/2011
-                // Add Options drop-down list of supplementary files
-                $typeOptions = array(
-                    "author.submit.suppFile.summary" => "author.submit.suppFile.summary",
-                    //"author.submit.suppFile.proposal" => "author.submit.suppFile.proposal",
-                    "author.submit.suppFile.informedConsent" => "author.submit.suppFile.informedConsent",
-                    //"author.submit.suppFile.localEthicalApproval" => "author.submit.suppFile.localEthicalApproval",
-                    "author.submit.suppFile.funding" => "author.submit.suppFile.funding",
-                    "author.submit.suppFile.cv" => "author.submit.suppFile.cv",
-                    "author.submit.suppFile.questionnaire" => "author.submit.suppFile.questionnaire",
-                    // Deleted author.submit.suppFile.local option as supplementary file - 9Dec2011 - spf
-                    // "author.submit.suppFile.local" => "author.submit.suppFile.local",
-                    //"author.submit.suppFile.ethicalClearance" => "author.submit.suppFile.ethicalClearance",
-                    "author.submit.suppFile.proofOfRegistration" => "author.submit.suppFile.proofOfRegistration",
-                    "author.submit.suppFile.otherErcDecision" => "author.submit.suppFile.otherErcDecision",
-                    //"author.submit.suppFile.review" => "author.submit.suppFile.review",
-                    "common.other" => "common.other"
+        $typeOptions = array(
+            "author.submit.suppFile.summary" => "author.submit.suppFile.summary",
+            "author.submit.suppFile.informedConsent" => "author.submit.suppFile.informedConsent",
+            "author.submit.suppFile.localEthicalApproval" => "author.submit.suppFile.localEthicalApproval",
+            "author.submit.suppFile.funding" => "author.submit.suppFile.funding",
+            "author.submit.suppFile.cv" => "author.submit.suppFile.cv",
+            "author.submit.suppFile.questionnaire" => "author.submit.suppFile.questionnaire",
+            "author.submit.suppFile.proofOfRegistration" => "author.submit.suppFile.proofOfRegistration",
+            "author.submit.suppFile.otherErcDecision" => "author.submit.suppFile.otherErcDecision",
+            "common.other" => "common.other"
 		);
-		//$typeOptionsValues = $typeOptionsOutput;
-		//array_push($typeOptionsOutput, 'common.other');
-		//array_push($typeOptionsValues, '');
 
 		$templateMgr->assign('typeOptions', $typeOptions);
-		//$templateMgr->assign('typeOptionsValues', $typeOptionsValues);
-                // End Edit Raf Tan 04/30/2011
 
 		// Get supplementary files for this article
 		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');

@@ -14,9 +14,7 @@
 {/strip}
 
 <div>
-{**Changed by EL on April 12 2012*}
-<p>
-Through this portal you may search ongoing research. <br /> In addition this website serves as a submission platform for review of research proposals by National Ethics Committee for Health Research/NECHR.</p>
+<p>{translate key="common.homePageText"}</p>
 </div>
 
 {call_hook name="Templates::Index::journal"}

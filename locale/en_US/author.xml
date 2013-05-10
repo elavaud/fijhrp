@@ -55,7 +55,7 @@
 	<message key="author.submit.howToSubmit"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance ({$supportPhone}).]]></message>
 	<message key="author.submit.howToSubmitNoPhone"><![CDATA[Encountering difficulties? Contact <a href="mailto:{$supportEmail}">{$supportName}</a> for assistance.]]></message>
 	<message key="author.submit.journalSection">Ethics Committees</message>
-	<message key="author.submit.journalSectionDescription">If the proposal is submitted by a student enrolled in UHS or affiliated with UHS or if the research is conducted by UHS staff, please select the Ethics Committee of the University of Health Sciences, but if the research is conducted with an external partner (not in collaboration with UHS) or ministry of health staff including NIOPH staff, please select National Ethics Committee for Health Research.</message>
+	<message key="author.submit.journalSectionDescription">If the proposal is submitted by a student enrolled in CMNHS(FNU) or affiliated with CMNHS(FNU) or if the research is conducted by CMNHS(FNU) staff, please select the College Health Research Ethics Review Committee, but if the research is conducted with an external partner (not in collaboration with CMNHS(FNU)) or ministry of health staff, please select Fiji National Research Ethics Review Committee.</message>
 	<message key="author.submit.selectSection">Please select an Ethics Committee...</message>
 	<message key="author.submit.submissionLocale">Submission Language</message>
 	<message key="author.submit.submissionLocaleDescription">This site accepts proposals in several languages. Choose the primary language of the submission from the pulldown below.</message>
@@ -247,6 +247,7 @@
         <message key="author.submit.suppFile.informedConsent">Informed Consent</message>
         <message key="author.submit.suppFile.funding">Funding</message>
         <message key="author.submit.suppFile.cv">CV of Principal Investigator</message>
+        <message key="author.submit.suppFile.localEthicalApproval">Local Ethical Approval</message>
         <message key="author.submit.suppFile.questionnaire">Questionnaires</message>
         <!-- <message key="author.submit.suppFile.local">Local</message> removed SPF 9 Dec 2011-->
         <message key="author.submit.suppFile.ethicalClearance">Local Ethical Clearance</message>

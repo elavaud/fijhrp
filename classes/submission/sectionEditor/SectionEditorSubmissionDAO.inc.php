@@ -385,8 +385,8 @@ class SectionEditorSubmissionDAO extends DAO {
 				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
 				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 			WHERE	a.journal_id = ?
-				AND a.section_id = ? '.
-				//AND a.submission_progress = 0' . edited by aglet 6/4/2011 
+				AND a.section_id = ?
+				AND a.submission_progress = 0 '.
 				(!empty($additionalWhereSql)?" AND ($additionalWhereSql)":'') . '
 				AND sdec2.section_decision_id IS NULL';
 
@@ -414,12 +414,55 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Last modified by EL on February 17th 2013
 	 * Removed edit assignments
 	 */
+	function &getSectionEditorSubmissionsSubmittedIterator($sectionId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+			'a.status <> ' . STATUS_ARCHIVED . '
+			AND a.status <> ' . STATUS_REVIEWED . ' 
+			AND a.status <> ' . STATUS_WITHDRAWN . ' 
+			AND a.status <> ' . STATUS_COMPLETED . ' 
+			AND (
+				sdec.decision IS NULL 
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_COMPLETE . '
+				OR sdec.date_decided < a.date_submitted
+			) AND a.date_submitted IS NOT NULL',
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
+		return $returner;
+	}
+	
+	/**
+	 * Get all submissions in review for a journal and a specific section.
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array EditorSubmission
+	 * Last modified by EL on February 17th 2013
+	 * Removed edit assignments
+	 */
 	function &getSectionEditorSubmissionsInReviewIterator($sectionId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
 		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision IS NULL OR (sdec.decision <> ' . SUBMISSION_SECTION_DECISION_APPROVED . ' AND sdec.decision <> ' . SUBMISSION_SECTION_DECISION_DECLINED . ' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_EXEMPTED .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_INCOMPLETE .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_RESUBMIT .') OR ((sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_INCOMPLETE .') AND a.date_submitted > sdec.date_decided)) AND a.date_submitted IS NOT NULL',
+			'a.status <> ' . STATUS_ARCHIVED . '
+			AND a.status <> ' . STATUS_REVIEWED . ' 
+			AND a.status <> ' . STATUS_WITHDRAWN . ' 
+			AND a.status <> ' . STATUS_COMPLETED . ' 
+			AND (
+				sdec.decision = ' . SUBMISSION_SECTION_DECISION_FULL_REVIEW . '
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXPEDITED . '
+			) AND a.date_submitted IS NOT NULL',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -447,7 +490,11 @@ class SectionEditorSubmissionDAO extends DAO {
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status = ' . STATUS_QUEUED . ' AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . ' OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . ')',
+			'a.status = ' . STATUS_REVIEWED . ' 
+			AND (
+				sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . '
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . '
+			) AND a.date_submitted IS NOT NULL',
 			$rangeInfo, $sortBy, $sortDirection
 		);
 
@@ -455,6 +502,34 @@ class SectionEditorSubmissionDAO extends DAO {
 		return $returner;
 	}
 
+	/**
+	 * Get all submissions Approved for a journal and a specific section.
+	 * @param $journalId int
+	 * @param $sectionId int
+	 * @param $searchField int Symbolic SUBMISSION_FIELD_... identifier
+	 * @param $searchMatch string "is" or "contains" or "startsWith"
+	 * @param $search String to look in $searchField for
+	 * @param $dateField int Symbolic SUBMISSION_FIELD_DATE_... identifier
+	 * @param $dateFrom String date to search from
+	 * @param $dateTo String date to search to
+	 * @param $rangeInfo object
+	 * @return array EditorSubmission
+	 * Last modified by EL on February 17th 2013
+	 * Removed edit assignments
+	 */
+	function &getSectionEditorSubmissionsCompletedIterator($sectionId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
+			$sectionId, $journalId,
+			$searchField, $searchMatch, $search,
+			$dateField, $dateFrom, $dateTo, $countryField,
+			'a.status = ' . STATUS_COMPLETED,
+			$rangeInfo, $sortBy, $sortDirection
+		);
+
+		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
+		return $returner;
+	}
+	
 	/**
 	 * Get all submissions not approved (declined, incomplete or revise and resubmit) for a journal and a specific section.
 	 * @param $journalId int
@@ -526,13 +601,31 @@ class SectionEditorSubmissionDAO extends DAO {
 	 * Removed edit assignments
 	 */
 	function &getSectionEditorSubmissionsArchivesIterator($sectionId, $journalId, $searchField = null, $searchMatch = null, $search = null, $dateField = null, $dateFrom = null, $dateTo = null, $countryField = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
-		$result = $this->_getUnfilteredSectionEditorSubmissions(
+		$result =& $this->_getUnfilteredSectionEditorSubmissions(
 			$sectionId, $journalId,
 			$searchField, $searchMatch, $search,
 			$dateField, $dateFrom, $dateTo, $countryField,
-			'a.status <> ' . STATUS_QUEUED,
+			'a.status = ' . STATUS_ARCHIVED . ' 
+			OR a.status = ' . STATUS_WITHDRAWN . '
+			OR (
+					(
+						a.status = ' . STATUS_REVIEWED . '
+						AND (
+							sdec.decision = ' . SUBMISSION_SECTION_DECISION_DECLINED . '
+							OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_RESUBMIT . '
+						)
+				) OR (
+						(
+							a.status <> ' . STATUS_REVIEWED . '
+							OR a.status <> ' . STATUS_WITHDRAWN . '
+							OR a.status <> ' . STATUS_ARCHIVED . '
+							OR a.status <> ' . STATUS_COMPLETED . '
+					) AND sdec.decision = ' . SUBMISSION_SECTION_DECISION_INCOMPLETE . '
+				)
+			)',
 			$rangeInfo, $sortBy, $sortDirection
 		);
+		
 		$returner = new DAOResultFactory($result, $this, '_returnSectionEditorSubmissionFromRow');
 		return $returner;
 	}
@@ -546,82 +639,64 @@ class SectionEditorSubmissionDAO extends DAO {
 	 */
 	function &getSectionEditorSubmissionsCount($sectionId, $journalId) {
 		$submissionsCount = array();
-		for($i = 0; $i < 2; $i++) {
-			$submissionsCount[$i] = 0;
-		}
+		$submissionsCount[0] = 0;
+		$submissionsCount[1] = 0;
+		$submissionsCount[2] = 0;
+		$submissionsCount[3] = 0;
 
-		// Fetch a count of submissions in review.
-		// "sdec2" and "sdec" are used to fetch the single most recent
-		// editor decision.
-		$result =& $this->retrieve(
-			'SELECT	COUNT(*) AS review_count
-			FROM	articles a
-				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
-				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
-			WHERE	a.journal_id = ?
-				AND a.section_id = ?
-				AND a.status = '.STATUS_QUEUED.'
-				AND sdec2.section_decision_id IS NULL 
-				AND (sdec.decision IS NULL OR (sdec.decision <> ' . SUBMISSION_SECTION_DECISION_APPROVED . ' AND sdec.decision <> ' . SUBMISSION_SECTION_DECISION_DECLINED . ' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_EXEMPTED .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_INCOMPLETE .' AND sdec.decision <> '. SUBMISSION_SECTION_DECISION_RESUBMIT .') OR ((sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_INCOMPLETE .') AND a.date_submitted > sdec.date_decided)) AND a.date_submitted IS NOT NULL', 
-			array((int) $journalId, (int) $sectionId)
-		);
-		$submissionsCount[0] = $result->Fields('review_count');
-		$result->Close();
-
-		// Fetch a count of submissions approved.
-		// "sdec2" and "sdec" are used to fetch the single most recent
-		// editor decision.
-		$result =& $this->retrieve(
-			'SELECT	COUNT(*) AS editing_count
-			FROM	articles a
-				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
-				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
-			WHERE	a.journal_id = ?
-				AND a.section_id = ?
-				AND a.status = ' . STATUS_QUEUED . '
-				AND sdec2.section_decision_id IS NULL
-				AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_EXEMPTED .')',
-			array((int) $journalId, (int) $sectionId)
-		);
+		$sql = 'SELECT COUNT(*) as review_count
+				FROM	articles a			
+					LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+					LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
+				WHERE	a.journal_id = ?
+					AND a.section_id = ?
+					AND a.submission_progress = 0
+					AND sdec2.section_decision_id IS NULL';
+					
+		$sql0 = ' AND (a.status <> ' . STATUS_ARCHIVED . '
+			AND a.status <> ' . STATUS_REVIEWED . ' 
+			AND a.status <> ' . STATUS_WITHDRAWN . ' 
+			AND a.status <> ' . STATUS_COMPLETED . ' 
+			AND (
+				sdec.decision IS NULL 
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_COMPLETE . '
+				OR sdec.date_decided < a.date_submitted
+			) AND a.date_submitted IS NOT NULL)';
 				
-		$submissionsCount[1] = $result->Fields('editing_count');
-		$result->Close();
-
-		// Fetch a count of submissions not approved.
-		// "sdec2" and "sdec" are used to fetch the single most recent
-		// editor decision.
-		$result =& $this->retrieve(
-			'SELECT	COUNT(*) AS editing_count
-			FROM	articles a
-				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
-				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
-			WHERE	a.journal_id = ?
-				AND a.section_id = ?
-				AND a.status = ' . STATUS_QUEUED . '
-				AND sdec2.section_decision_id IS NULL
-				AND (sdec.decision = ' . SUBMISSION_SECTION_DECISION_DECLINED .' OR ((sdec.decision = '. SUBMISSION_SECTION_DECISION_INCOMPLETE .' OR sdec.decision = '. SUBMISSION_SECTION_DECISION_RESUBMIT .') AND a.date_submitted <= sdec.date_decided))',
-			array((int) $journalId, (int) $sectionId)
-		);
+		$sql1 = ' AND (a.status <> ' . STATUS_ARCHIVED . '
+			AND a.status <> ' . STATUS_REVIEWED . ' 
+			AND a.status <> ' . STATUS_WITHDRAWN . ' 
+			AND a.status <> ' . STATUS_COMPLETED . ' 
+			AND (
+				sdec.decision = ' . SUBMISSION_SECTION_DECISION_FULL_REVIEW . '
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXPEDITED . '
+			) AND a.date_submitted IS NOT NULL)';
 				
-		$submissionsCount[2] = $result->Fields('editing_count');
-		$result->Close();
-
-		// Fetch a count of submissions archived.
-		// "sdec2" and "sdec" are used to fetch the single most recent
-		// editor decision.
-		$result =& $this->retrieve(
-			'SELECT	COUNT(*) AS editing_count
-			FROM	articles a
-				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
-				LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
-			WHERE	a.journal_id = ?
-				AND a.section_id = ?
-				AND a.status <> ' . STATUS_QUEUED,
-			array((int) $journalId, (int) $sectionId)
-		);
+		$sql2 = ' AND (a.status = ' . STATUS_REVIEWED . ' 
+			AND (
+				sdec.decision = ' . SUBMISSION_SECTION_DECISION_APPROVED . '
+				OR sdec.decision = ' . SUBMISSION_SECTION_DECISION_EXEMPTED . '
+			) AND a.date_submitted IS NOT NULL)';
 				
-		$submissionsCount[3] = $result->Fields('editing_count');
-		$result->Close();
+		$sql3 = ' AND (a.status = ' . STATUS_COMPLETED .')';
+				
+		$result0 =& $this->retrieve($sql.$sql0, array($journalId, $sectionId));
+		$result1 =& $this->retrieve($sql.$sql1, array($journalId, $sectionId));
+		$result2 =& $this->retrieve($sql.$sql2, array($journalId, $sectionId));
+		$result3 =& $this->retrieve($sql.$sql3, array($journalId, $sectionId));
+
+		$submissionsCount[0] = $result0->Fields('review_count');
+		$result0->Close();
+		unset($result0);
+		$submissionsCount[1] = $result1->Fields('review_count');
+		$result1->Close();
+		unset($result1);
+		$submissionsCount[2] = $result2->Fields('review_count');
+		$result2->Close();
+		unset($result2);
+		$submissionsCount[3] = $result3->Fields('review_count');
+		$result3->Close();
+		unset($result3);
 
 		return $submissionsCount;
 	}

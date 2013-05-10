@@ -12,6 +12,7 @@
 {assign var="pageTitle" value="about.aboutTheJournal"}
 {include file="common/header.tpl"}
 {/strip}
+<!--
 <div id="aboutPeople">
 <h3>{translate key="about.people"}</h3>
 <ul class="plain">
@@ -25,16 +26,28 @@
 	{call_hook name="Templates::About::Index::People"}*}{*Not useful anymore. EL on April 18, 2012*}
 </ul>
 </div>
+-->
 <div id="aboutPolicies">
 
 <h3>{translate key="about.policies"}</h3>
 <ul class="plain">
+<li>&#187;{* <a title="Standard Operating Procedures (engl)" href="/public/Cam_SOP_engl.pdf" target="_blank">*} Standard Operating Procedures (engl) <i>...soon available...</i>{*</a>*}</li>
+</ul>
+</div>
 
-{* "policie" page changed for SOP pdf by EL on April 10 2012*}
-<li>&#187; <a title="Standard Operating Procedures (khmer)" href="/fijihrp2/public/Cam_IRBs_HR_SOP_khmer.pdf" target="_blank">Standard Operating Procedures (khmer)<br /></a></li>
-<li>&#187; <a title="Standard Operating Procedures (engl)" href="/fijihrp2/public/Cam_SOP_engl.pdf" target="_blank">Standard Operating Procedures (engl)<br /></a></li>
-<li>&#187; <a title="Userguide for investigators (engl)" href="/fijihrp2/public/Cam_IRBs_HR_Investigator_Userguide_khmer.pdf" target="_blank">Userguide for investigators (khmer)<br /></a></li>
-<li>&#187; <a title="Userguide for investigators (khmer)" href="/fijihrp2/public/Cam_IRBs_HR_Investigator_Userguide_engl.pdf" target="_blank">Userguide for investigators (engl)<br /></a></li>
+<div id="userGuides">
+<h3>{translate key="about.userGuides"}</h3>
+<ul class="plain">
+<li>&#187; {* <a title="Userguide for investigators (engl)" href="/public/Cam_IRBs_HR_Investigator_Userguide_khmer.pdf" target="_blank">*} Userguide for investigators (engl) <i>...soon available...</i>{*</a>*}</li>
+</ul>
+</div>
+
+<div id="userGuides">
+<h3>{translate key="about.templates"}</h3>
+<ul class="plain">
+<li>&#187;  <a href="/hrp/public/FINAL_REPORT_Template.doc" target="_blank"> Final Report (engl)</a></li>
+<li>&#187;  <a href="/hrp/public/PROGRESS_REPORT_Template.doc" target="_blank"> Progress Report (engl)</a></li>
+<li>&#187;  <a href="/hrp/public/PROPOSAL_REVIEW_template.doc" target="_blank"> Proposal Review (engl)</a></li>
 </ul>
 </div>
 

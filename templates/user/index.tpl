@@ -68,12 +68,12 @@
 				<td>&#187; <a href="{url journal=$journalPath page="sectionEditor"}">{$user->getErcFunction($ercId)}</a></td>
 				<td align="left"></td>
 				<td align="left">{if $sectionEditorSubmissionsCount[0]}
-						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"} ({$sectionEditorSubmissionsCount[0]})</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
+						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsSubmitted"}">{translate key="common.queue.short.submissionsSubmitted"} ({$sectionEditorSubmissionsCount[0]})</a>
+					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsSubmitted"}</span>{/if}
 				</td>
 				<td align="left">{if $sectionEditorSubmissionsCount[1]}
-					<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsApproved"}">{translate key="common.queue.short.submissionsApproved"} ({$sectionEditorSubmissionsCount[1]})</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsApproved"}</span>{/if}
+					<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"} ({$sectionEditorSubmissionsCount[1]})</a>
+					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsInReview"}</span>{/if}
 				</td>
 				<td align="right"><a href="{url journal=$journalPath page="sectionEditor" op="section" path=$ercId}">{translate key="section.sectionAbbrev"}</a></td>
 				<td align="right"></td>
@@ -82,12 +82,12 @@
 				<td></td>
 				<td align="left"></td>
 				<td align="left">{if $sectionEditorSubmissionsCount[2]}
-						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsNotApproved"}">{translate key="common.queue.short.submissionsNotApproved"} ({$sectionEditorSubmissionsCount[2]})</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsNotApproved"}</span>{/if}
+						<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsApproved"}">{translate key="common.queue.short.submissionsApproved"} ({$sectionEditorSubmissionsCount[2]})</a>
+					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsApproved"}</span>{/if}
 				</td>
 				<td align="left">{if $sectionEditorSubmissionsCount[3]}
-					<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsArchives"}">{translate key="common.queue.short.completed"} ({$sectionEditorSubmissionsCount[3]})</a>
-					{else}<span class="disabled">0 {translate key="common.queue.short.completed"}</span>{/if}
+					<a href="{url journal=$journalPath page="sectionEditor" op="index" path="submissionsCompleted"}">{translate key="common.queue.short.submissionsCompleted"} ({$sectionEditorSubmissionsCount[3]})</a>
+					{else}<span class="disabled">0 {translate key="common.queue.short.submissionsCompleted"}</span>{/if}
 				</td>
 				<td align="right"><a href="{url journal=$journalPath page="sectionEditor" op="meetings"}">{translate key="editor.meetings"}</a></td>
 				<td align="right"></td>

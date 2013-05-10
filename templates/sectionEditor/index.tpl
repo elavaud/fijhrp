@@ -20,9 +20,10 @@
 	<li><a class="action" href="{url op="meetings"}">{translate key="editor.meetings"}</a></li>
 </ul>
 <ul class="menu">
+	<li{if ($pageToDisplay == "submissionsSubmitted")} class="current"{/if}><a href="{url path="submissionsSubmitted"}">{translate key="common.queue.short.submissionsSubmitted"}</a></li>
 	<li{if ($pageToDisplay == "submissionsInReview")} class="current"{/if}><a href="{url path="submissionsInReview"}">{translate key="common.queue.short.submissionsInReview"}</a></li>
 	<li{if ($pageToDisplay == "submissionsApproved")} class="current"{/if}><a href="{url path="submissionsApproved"}">{translate key="common.queue.short.submissionsApproved"}</a></li>
-	<li{if ($pageToDisplay == "submissionsNotApproved")} class="current"{/if}><a href="{url path="submissionsNotApproved"}">{translate key="common.queue.short.submissionsNotApproved"}</a></li>
+	<li{if ($pageToDisplay == "submissionsCompleted")} class="current"{/if}><a href="{url path="submissionsCompleted"}">{translate key="common.queue.short.submissionsCompleted"}</a></li>
 	<li{if ($pageToDisplay == "submissionsArchives")} class="current"{/if}><a href="{url path="submissionsArchives"}">{translate key="common.queue.short.submissionsArchives"}</a></li>
 </ul>
 

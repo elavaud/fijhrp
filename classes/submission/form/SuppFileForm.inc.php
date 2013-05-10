@@ -92,18 +92,17 @@ class SuppFileForm extends Form {
 		$templateMgr->assign('articleId', $this->article->getArticleId());
 		$templateMgr->assign('suppFileId', $this->suppFileId);
 
-                // Start Edit Jan 31 2012
-                // Add Options drop-down list
-                $typeOptions = array(
-                    "author.submit.suppFile.summary" => "author.submit.suppFile.summary",
-                    "author.submit.suppFile.informedConsent" => "author.submit.suppFile.informedConsent",
-                    "author.submit.suppFile.funding" => "author.submit.suppFile.funding",
-                    "author.submit.suppFile.cv" => "author.submit.suppFile.cv",
-                    "author.submit.suppFile.questionnaire" => "author.submit.suppFile.questionnaire",
-                    "author.submit.suppFile.ethicalClearance" => "author.submit.suppFile.ethicalClearance",
-                    "author.submit.suppFile.proofOfRegistration" => "author.submit.suppFile.proofOfRegistration",
-                    "author.submit.suppFile.otherErcDecision" => "author.submit.suppFile.otherErcDecision",
-                    "common.other" => "common.other"
+       $typeOptions = array(
+           "author.submit.suppFile.summary" => "author.submit.suppFile.summary",
+           "author.submit.suppFile.informedConsent" => "author.submit.suppFile.informedConsent",
+            "author.submit.suppFile.localEthicalApproval" => "author.submit.suppFile.localEthicalApproval",
+           "author.submit.suppFile.funding" => "author.submit.suppFile.funding",
+           "author.submit.suppFile.cv" => "author.submit.suppFile.cv",
+           "author.submit.suppFile.questionnaire" => "author.submit.suppFile.questionnaire",
+           "author.submit.suppFile.ethicalClearance" => "author.submit.suppFile.ethicalClearance",
+           "author.submit.suppFile.proofOfRegistration" => "author.submit.suppFile.proofOfRegistration",
+           "author.submit.suppFile.otherErcDecision" => "author.submit.suppFile.otherErcDecision",
+           "common.other" => "common.other"
 		);
 
 		$templateMgr->assign('typeOptions', $typeOptions);

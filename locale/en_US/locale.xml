@@ -56,6 +56,7 @@
 	<!-- Common Messages -->
         <message key="common.openJournalSystems">The Demo National Health Research Portal Portal</message>
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
+    <message key="common.homePageText"><![CDATA[<p>The Fiji Health Research Portal is an <i>integrated online health research management system</i> that offers substantial benefits for all stakeholders in health research. The Portal aims to improve accountability, efficiency and quality of health research conducted in Fiji by increasing transparency and streamlining the ethics review process.<br/><br/>The Portal can be used to:<br/><br/><b>Submit research proposals at anytime from anywhere</b> for review by accredited Ethics Review Committees of Fiji. Researchers need to register on the Portal. Once registered, the researcher will have a permanent account and be able to submit research proposal in a paper-less way and to track the review status of their proposals.<br/><br/><b>Search ongoing and completed health research</b> from Mai 2013 onwards through a publically accessible research registry. No registration or log-in is required to search the ongoing research.<br/><br/><b>Access complete research reports</b> for the research started since Mai 2013 once the research is completed. [Since the system is launched only Mai 2013, there are no research reports in the system at present, but will be added as and when a research is completed over time].<br/><br/><b>Access information on all the applicable guidelines, rules, and regulations</b> related to health research in Fiji (being added…).<br/><br/><b>Access a “Researchers' Directory”</b> containing information on the national and international researchers doing research in Fiji (will be added soon...).</p>]]></message>
 	<message key="common.payment">Payment</message>
 	<message key="common.payments">Payments</message>
 	<message key="common.pageHeader.altText">Page Header</message>
@@ -98,9 +99,13 @@
 	<message key="common.queue.short.submissionsInEditing">In Editing</message>
 	<message key="common.queue.long.submissionsInReview">Proposals under Review</message>
 	<message key="common.queue.short.submissionsInReview">In Review</message>
+    <message key="common.queue.long.submissionsSubmitted">Proposals Submitted</message>
+	<message key="common.queue.short.submissionsSubmitted">Submitted</message>
+    <message key="common.queue.long.submissionsCompleted">Completed Researches</message>
+	<message key="common.queue.short.submissionsCompleted">Completed</message>
     <message key="common.queue.long.proposalsInReview">Proposals under Review</message>
 	<message key="common.queue.short.proposalsInReview">In Review</message>
-    <message key="common.queue.short.submissionsApproved">Approved</message>
+    <message key="common.queue.short.submissionsApproved">Ongoing</message>
     <message key="common.queue.short.submissionsNotApproved">Not Approved</message>
     <message key="common.queue.long.submissionsNotApproved">Not Approved Proposals</message>
 	<message key="common.queue.long.submissionsArchives">Archived Proposals</message>
@@ -108,7 +113,7 @@
 	<message key="common.queue.long.active">Active Proposals</message>
 	<message key="common.queue.short.active">Active</message>
 	<message key="common.queue.long.completed">Archived Proposals</message>
-    <message key="common.queue.long.submissionsApproved">Approved Proposals</message>
+    <message key="common.queue.long.submissionsApproved">Ongoing Researches</message>
 	<message key="common.queue.short.completed">Archive</message>
     <message key="common.queue.short.meetingProposals">Proposals</message>
     <message key="common.queue.short.reviewAssignments">Review Assignments</message>
@@ -1117,10 +1122,9 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="archive.browse">Browse through the older issues</message>
 	<message key="archive.issueUnavailable">Issue Unavailable</message>
 	
-	<!-- About The the Demo National Health Research Portal -->
 	<message key="about.statistics">Statistics</message>
 	<message key="about.journalContact">The National Ethics Committee for Health Research</message>
-	<message key="about.aboutTheJournal">About the Demo National Health Research Portal</message>
+	<message key="about.aboutTheJournal">About the Health Research Portal</message>
 	<message key="about.history">Demo National Health Research Portal History</message>
 	  
         <message key="about.editorialTeam">The Ethics Committee of the University of Health Sciences</message>

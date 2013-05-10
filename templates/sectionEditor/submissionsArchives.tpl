@@ -12,7 +12,7 @@
 <table class="listing" width="100%">
 	<tr><td class="headseparator" colspan="{if $statViews}7{else}6{/if}">&nbsp;</td></tr>
 	<tr valign="bottom" class="heading">
-		<td width="5%">Proposal ID</td>
+		<td width="5%">{translate key="common.proposalId"}</td>
 		<td width="5%">{sort_heading key="submissions.submit" sort="submitDate"}</td>
 		<td width="23%">{sort_heading key="article.authors" sort="authors"}</td>
 		<td width="32%">{sort_heading key="article.title" sort="title"}</td>

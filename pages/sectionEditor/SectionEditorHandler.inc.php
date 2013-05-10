@@ -72,45 +72,23 @@ class SectionEditorHandler extends Handler {
 			FILTER_SECTION_ALL => Locale::Translate('editor.allSections')
 		) + $sections;
 		switch($page) {
-				// Modified by EL on February 17th 2013
-				//case 'minutes':
-					//$page = 'minutes';
-					//$functionName = 'getSectionEditorSubmissionsInReview';
-					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.inReview';
-					//break;
-				//case 'submissionsInEditing':
-					//$functionName = 'getSectionEditorSubmissionsInEditing';
-					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.inEditing';
-					//break;
-				case 'submissionsApproved':
-					$functionName = 'getSectionEditorSubmissionsApprovedIterator';
-					break;
-				case 'submissionsNotApproved':
-					$functionName = 'getSectionEditorSubmissionsNotApprovedIterator';
-					break;
+			case 'submissionsInReview':
+				$functionName = 'getSectionEditorSubmissionsInReviewIterator';
+				break;
+			case 'submissionsApproved':
+				$functionName = 'getSectionEditorSubmissionsApprovedIterator';
+				break;
+			case 'submissionsCompleted':
+				$functionName = 'getSectionEditorSubmissionsCompletedIterator';
+				break;
 			case 'submissionsArchives':
 				$functionName = 'getSectionEditorSubmissionsArchivesIterator';
-					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.archives';
 				break;
 			default:
-				$page = 'submissionsInReview';
-				$functionName = 'getSectionEditorSubmissionsInReviewIterator';
-					//$helpTopicId = 'editorial.sectionEditorsRole.submissions.inReview';
+				$page = 'submissionsSubmitted';
+				$functionName = 'getSectionEditorSubmissionsSubmittedIterator';
 		}
 
-		// Modified by EL on February 17th 2013
-		/*
-		$filterSection = Request::getUserVar('filterSection');
-		if ($filterSection != '' && array_key_exists($filterSection, $filterSectionOptions)) {
-			$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-		} else {
-			$filterSection = $user->getSetting('filterSection', $journalId);
-			if ($filterSection == null) {
-				$filterSection = FILTER_SECTION_ALL;
-				$user->updateSetting('filterSection', $filterSection, 'int', $journalId);
-			}	
-		}
-		*/
 		$submissions =& $sectionEditorSubmissionDao->$functionName(
 			$user->getSecretaryCommitteeId(),
 			$journal->getId(),

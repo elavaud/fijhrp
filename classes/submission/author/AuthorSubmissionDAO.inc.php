@@ -295,6 +295,7 @@ class AuthorSubmissionDAO extends DAO {
 					
 		$sql0 = ' AND (a.status <> ' . STATUS_ARCHIVED . ' 
 				AND a.status <> '.STATUS_WITHDRAWN.' 
+				AND a.status <> '.STATUS_COMPLETED.' 
 				AND (
 						(
 						a.status <> '.STATUS_REVIEWED.' 
@@ -312,6 +313,7 @@ class AuthorSubmissionDAO extends DAO {
 		$sql1 = ' AND (a.status <> ' . STATUS_ARCHIVED . ' 
 				AND a.status <> ' . STATUS_WITHDRAWN . ' 
 				AND a.status <> ' . STATUS_REVIEWED . '
+				AND a.status <> ' . STATUS_COMPLETED . '
 				AND (sdec.decision <> '.SUBMISSION_SECTION_DECISION_INCOMPLETE.' OR NOT EXISTS (SELECT * FROM section_decisions sd WHERE sd.section_decision_id = sdec.section_decision_id AND sd.review_type = a.status))
 				AND a.submission_progress = 0)';
 				
@@ -479,6 +481,7 @@ class AuthorSubmissionDAO extends DAO {
 			$dateField, $dateFrom, $dateTo, $countryField,
 				'a.status <> ' . STATUS_ARCHIVED . ' 
 				AND a.status <> '.STATUS_WITHDRAWN.' 
+				AND a.status <> '.STATUS_COMPLETED.' 
 				AND (
 						(
 						a.status <> '.STATUS_REVIEWED.' 
@@ -521,6 +524,7 @@ class AuthorSubmissionDAO extends DAO {
 				'a.status <> ' . STATUS_ARCHIVED . ' 
 				AND a.status <> ' . STATUS_WITHDRAWN . ' 
 				AND a.status <> ' . STATUS_REVIEWED . '
+				AND a.status <> ' . STATUS_COMPLETED . '
 				AND (sdec.decision <> '.SUBMISSION_SECTION_DECISION_INCOMPLETE.' OR NOT EXISTS (SELECT * FROM section_decisions sd WHERE sd.section_decision_id = sdec.section_decision_id AND sd.review_type = a.status))
 				AND a.submission_progress = 0', 
 			$rangeInfo, $sortBy, $sortDirection
