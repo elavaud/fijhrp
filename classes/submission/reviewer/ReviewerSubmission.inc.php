@@ -491,7 +491,7 @@ class ReviewerSubmission extends Article {
 	    //Archived status is reflected in table articles field status
 	    if($this->getStatus() == STATUS_ARCHIVED) return PROPOSAL_STATUS_ARCHIVED;                               
 
-	    if($this->getStatus() != STATUS_ARCHIVED && $this->getStatus() != STATUS_REVIEWED && $this->getStatus() != STATUS_WITHDRAWN) {
+	    if($this->getStatus() != STATUS_ARCHIVED && $this->getStatus() != STATUS_REVIEWED && $this->getStatus() != STATUS_WITHDRAWN && $this->getStatus() != STATUS_COMPLETED) {
 	    	if ($this->getLastModified() > $this->getLastSectionDecisionDate()) {
 	    		if ($this->getResubmitCount() > 0) return PROPOSAL_STATUS_RESUBMITTED;
 	    		else return PROPOSAL_STATUS_SUBMITTED;
