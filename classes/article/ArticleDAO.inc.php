@@ -1000,58 +1000,113 @@ class ArticleDAO extends DAO {
         }
  
 	
-	function searchProposalsPublic($query, $dateFrom, $dateTo, $country, $status = null) {
-		$searchSql = "select distinct 
+	function searchProposalsPublic($query, $dateFrom, $dateTo, $country, $status = null, $rangeInfo = null, $sortBy = null, $sortDirection = SORT_DIRECTION_ASC) {
+		
+		$locale = Locale::getLocale();
+
+		$params = array(
+				$locale,
+				'proposalCountry',
+				'proposalCountry',
+				$locale,
+				'startDate',
+				'startDate',
+				$locale,
+				'endDate',
+				'endDate',
+				$locale,
+				'primarySponsor',
+				'primarySponsor',
+				$locale,
+				'otherPrimarySponsor',
+				'otherPrimarySponsor',
+				$locale,
+				'multiCountryResearch',
+				'multiCountryResearch',
+				$locale,
+				'researchField',
+				'researchField',
+				$locale,
+				SUBMISSION_SECTION_DECISION_APPROVED,
+				SUBMISSION_SECTION_DECISION_EXEMPTED,
+				SUBMISSION_SECTION_DECISION_DONE
+		);
+	
+		$searchSql = '';
+	
+		$sql = 'select distinct 
 				a.article_id, a.status,
 				a.date_submitted as date_submitted,
-				ab.scientific_title as scientifictitle,
-				ab.keywords as keywords,
-				country.setting_value as country, 
-				startdate.setting_value as start_date, 
-				enddate.setting_value as end_date, 
-				primarysponsor.setting_value as primarysponsor, 
-				otherprimarysponsor.setting_value as otherprimarysponsor,
-				multicountryresearch.setting_value as multicountryresearch,
-				researchfield.setting_value as researchfield
+				COALESCE(abl.clean_scientific_title, abpl.clean_scientific_title) AS scientific_title,
+				COALESCE(abl.keywords, abpl.keywords) AS keywords,
+				COALESCE(appc.setting_value, apc.setting_value) AS country,
+				COALESCE(asdl.setting_value, asdpl.setting_value) AS start_date,
+				COALESCE(aedl.setting_value, aedpl.setting_value) AS end_date,
+				COALESCE(apsl.setting_value, apspl.setting_value) AS primarysponsor,
+				COALESCE(aopsl.setting_value, aopspl.setting_value) AS otherprimarysponsor,
+				COALESCE(amcl.setting_value, amcpl.setting_value) AS multicountryresearch,
+				COALESCE(arfl.setting_value, arfpl.setting_value) AS researchfield
 			FROM articles a
-				left join article_abstract ab on (ab.article_id = a.article_id)
-				left join article_settings country on (country.article_id = a.article_id and country.setting_name = 'proposalCountry')
-				left join article_settings startdate on (startdate.article_id = a.article_id and startdate.setting_name = 'startDate')
-				left join article_settings enddate on (enddate.article_id = a.article_id and enddate.setting_name = 'endDate')
-				left join article_settings primarysponsor on (primarysponsor.article_id = a.article_id and primarysponsor.setting_name = 'primarySponsor')
-				left join article_settings otherprimarysponsor on (otherprimarysponsor.article_id = a.article_id and otherprimarysponsor.setting_name = 'otherPrimarySponsor')
-				left join article_settings multicountryresearch on (multicountryresearch.article_id = a.article_id and multicountryresearch.setting_name = 'multiCountryResearch')
-				left join article_settings researchfield on (researchfield.article_id = a.article_id and researchfield.setting_name = 'researchField')
-				inner join section_decisions as sd on (sd.article_id = a.article_id)
-				where (sd.decision = '1' || sd.decision = '6' || sd.decision = '9')";
+				LEFT JOIN article_abstract abpl ON (abpl.article_id = a.article_id AND abpl.locale = a.locale)
+				LEFT JOIN article_abstract abl ON (abl.article_id = a.article_id AND abl.locale = ?)
+				LEFT JOIN article_settings appc ON (a.article_id = appc.article_id AND appc.setting_name = ? AND appc.locale = a.locale)
+				LEFT JOIN article_settings apc ON (a.article_id = apc.article_id AND apc.setting_name = ? AND apc.locale = ?)
+				LEFT JOIN article_settings asdl ON (a.article_id = asdl.article_id AND asdl.setting_name = ? AND asdl.locale = a.locale)
+				LEFT JOIN article_settings asdpl ON (a.article_id = asdpl.article_id AND asdpl.setting_name = ? AND asdpl.locale = ?)
+				LEFT JOIN article_settings aedl ON (a.article_id = aedl.article_id AND aedl.setting_name = ? AND aedl.locale = a.locale)
+				LEFT JOIN article_settings aedpl ON (a.article_id = aedpl.article_id AND aedpl.setting_name = ? AND aedpl.locale = ?)
+				LEFT JOIN article_settings apsl ON (a.article_id = apsl.article_id AND apsl.setting_name = ? AND apsl.locale = a.locale)
+				LEFT JOIN article_settings apspl ON (a.article_id = apspl.article_id AND apspl.setting_name = ? AND apspl.locale = ?)
+				LEFT JOIN article_settings aopsl ON (a.article_id = aopsl.article_id AND aopsl.setting_name = ? AND aopsl.locale = a.locale)
+				LEFT JOIN article_settings aopspl ON (a.article_id = aopspl.article_id AND aopspl.setting_name = ? AND aopspl.locale = ?)
+				LEFT JOIN article_settings amcl ON (a.article_id = amcl.article_id AND amcl.setting_name = ? AND amcl.locale = a.locale)
+				LEFT JOIN article_settings amcpl ON (a.article_id = amcpl.article_id AND amcpl.setting_name = ? AND amcpl.locale = ?)
+				LEFT JOIN article_settings arfl ON (a.article_id = arfl.article_id AND arfl.setting_name = ? AND arfl.locale = a.locale)
+				LEFT JOIN article_settings arfpl ON (a.article_id = arfpl.article_id AND arfpl.setting_name = ? AND arfpl.locale = ?)
+				LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
+			WHERE (sdec.decision = ? 
+				OR sdec.decision = ? 
+				OR sdec.decision = ?)';
 		
 		if (!empty($query)) {
-			$searchSql .= " AND (ab.keywords LIKE '"."%".$query."%"."' or ab.scientific_title LIKE '"."%".$query."%"."' or ab.public_title LIKE '"."%".$query."%"."')";
+			$searchSql .= ' AND (
+				LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER ("%'.$query.'%")
+				OR LOWER(COALESCE(abl.public_title, abpl.public_title)) LIKE LOWER ("%'.$query.'%")
+				OR LOWER(COALESCE(abl.keywords, abpl.keywords)) LIKE LOWER ("%'.$query.'%")
+			)';
 		}
 		
 		
 		if (!empty($dateFrom) || !empty($dateTo)){
 			if (!empty($dateFrom)) {
-				$searchSql .= " AND (STR_TO_DATE(startdate.setting_value, '%d-%b-%Y') >= " . $this->datetimeToDB($dateFrom).")";
+				$searchSql .= ' AND (
+					STR_TO_DATE(COALESCE(asdl.setting_value, asdpl.setting_value), "%d-%b-%Y") >= ' .
+					$this->datetimeToDB($dateFrom) .
+				')';
 			}
 			if (!empty($dateTo)) {
-				$searchSql .= " AND (STR_TO_DATE(startdate.setting_value, '%d-%b-%Y') <= " . $this->datetimeToDB($dateTo).")";
+				$searchSql .= ' AND (
+					STR_TO_DATE(COALESCE(asdl.setting_value, asdpl.setting_value), "%d-%b-%Y") <= ' .
+					$this->datetimeToDB($dateTo) .
+				')';
 			}
 		}
 		
-		if ($country != 'ALL') $searchSql .= " AND country.setting_value LIKE '"."%".$country."%"."'";
+		if ($country != 'ALL') $searchSql .= ' AND LOWER(COALESCE(appc.setting_value, apc.setting_value)) LIKE LOWER ("%'.$country.'%")';
+				
 		
-		if ($status == 1) $searchSql .= " AND a.status = 11";
-		else if ($status == 2) $searchSql .= " AND a.status <> 11";
+		if ($status == 1) $searchSql .= ' AND a.status = ' . STATUS_COMPLETED;
+		elseif ($status == 2) $searchSql .= ' AND a.status <> ' . STATUS_COMPLETED;
 
-		$result =& $this->retrieve($searchSql);
-		while (!$result->EOF) {
-			$articles[] =& $this->_returnSearchArticleFromRow($result->GetRowAssoc(false));
-			$result->MoveNext();
-		}
-		$result->Close();
-		unset($result);
-		return $articles;
+		$result =& $this->retrieveRange(
+			$sql . ' ' . $searchSql . ($sortBy?(' ORDER BY ' . $this->getSortMapping($sortBy) . ' ' . $this->getDirectionMapping($sortDirection)) : ''),
+			count($params)===1?array_shift($params):$params,
+			$rangeInfo
+		);
+		
+		$returner = new DAOResultFactory($result, $this, '_returnSearchArticleFromRow');
+		
+		return $returner;
 	}
 	
 	/**
@@ -1069,7 +1124,7 @@ class ArticleDAO extends DAO {
 		
 		$searchSqlBeg = "select distinct a.article_id, 
 						ab.keywords as keywords, 
-						ab.scientific_title as scientifictitle, 
+						ab.scientific_title as scientific_title, 
 						startdate.setting_value as start_date";
 		$searchSqlMid = " FROM articles a 
 						inner join section_decisions sd on (sd.article_id = a.article_id)
@@ -1202,13 +1257,24 @@ class ArticleDAO extends DAO {
 		import('classes.article.ProposalAbstract');
 		$abstract = new ProposalAbstract();
 		
-		if (isset($row['scientifictitle'])) $abstract->setScientificTitle($row['scientifictitle']);
+		if (isset($row['scientific_title'])) $abstract->setScientificTitle($row['scientific_title']);
 		if (isset($row['keywords'])) $abstract->setKeywords($row['keywords']);
 		
 		$article->setAbstract($abstract, $article->getLocale());
 				
 		HookRegistry::call('ArticleDAO::_returnSearchArticleFromRow', array(&$article, &$row));
+	}
 
+	function getSortMapping($heading) {
+		switch ($heading) {
+			case 'status': return 'a.status';
+			case 'primarySponsor': return 'primarysponsor';
+			case 'region': return 'country';
+			case 'researchField': return 'researchfield';
+			case 'title': return 'scientific_title';
+			case 'researchDates': return 'STR_TO_DATE(start_date, "%d-%b-%Y")';
+			default: return null;
+		}
 	}
 }
 

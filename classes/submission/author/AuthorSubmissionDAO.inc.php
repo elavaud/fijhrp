@@ -286,8 +286,8 @@ class AuthorSubmissionDAO extends DAO {
 		$submissionsCount[2] = 0;
 		$submissionsCount[3] = 0;
 
-		$sql = 'SELECT COUNT(*) as review_count
-				FROM	articles a			
+		$sql = 'SELECT COUNT(DISTINCT a.article_id) as review_count
+				FROM articles a			
 					LEFT JOIN section_decisions sdec ON (a.article_id = sdec.article_id)
 					LEFT JOIN section_decisions sdec2 ON (a.article_id = sdec2.article_id AND sdec.section_decision_id < sdec2.section_decision_id)
 				WHERE	a.user_id = ? 
@@ -590,7 +590,7 @@ class AuthorSubmissionDAO extends DAO {
 		$returner = new DAOResultFactory($result, $this, '_returnAuthorSubmissionFromRow');
 		return $returner;
 	}
-	
+
 	/**
 	 * Get all archives proposals for a journal and a specific author.
 	 * @param $journalId int

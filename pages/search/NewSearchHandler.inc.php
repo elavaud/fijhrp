@@ -80,34 +80,57 @@ class NewSearchHandler extends Handler {
 	 * Show advanced search results.
 	 */
 	function advancedResults() {
+		
 		$this->validate();
 		$this->setupTemplate(true);
+				
 		$query = Request::getUserVar('query');
-		$fromDate = Request::getUserDateVar('dateFrom', 1, 1);
-		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
-		$toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
-		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
-		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		
+		$fromDate = Request::getUserVar('dateFrom');
+		if(!$fromDate) $fromDate = Request::getUserDateVar('dateFrom', 1, 1);
+
+		$toDate = Request::getUserVar('dateTo');		
+		if(!$toDate) $toDate = Request::getUserDateVar('dateTo', 32, 12, null, 23, 59, 59);
 		
 		$country = Request::getUserVar('proposalCountry');
-		$countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+		
 		$status = Request::getUserVar('status');
 		if($status != '1' && $status != '2') $status = false;
-		$results =& $articleDao->searchProposalsPublic($query, $fromDate, $toDate, $country, $status);
-						
-		$templateMgr =& TemplateManager::getManager();
 		
-		$templateMgr->assign_by_ref('results', $results);
-		$templateMgr->assign('query', Request::getUserVar('query'));
+		$rangeInfo =& Handler::getRangeInfo('search');
+		
+		$sort = Request::getUserVar('sort');
+		$sort = isset($sort) ? $sort : 'title';
+		
+		$sortDirection = Request::getUserVar('sortDirection');
+		$sortDirection = (isset($sortDirection) && ($sortDirection == SORT_DIRECTION_ASC || $sortDirection == SORT_DIRECTION_DESC)) ? $sortDirection : SORT_DIRECTION_ASC;
 
-		$templateMgr->assign('region', $country);
-		$templateMgr->assign('statusFilter', $status);
-				
-		$templateMgr->assign('country', $countryDAO->getAreaOfTheCountry($country));
+		$templateMgr =& TemplateManager::getManager();
 		
 		$templateMgr->assign('dateFrom', $fromDate);
 		$templateMgr->assign('dateTo', $toDate);
-		$templateMgr->assign('count', count($results));
+		
+		if ($fromDate !== null) $fromDate = date('Y-m-d H:i:s', $fromDate);
+		if ($toDate !== null) $toDate = date('Y-m-d H:i:s', $toDate);
+		
+		$articleDao =& DAORegistry::getDAO('ArticleDAO');
+		$countryDAO =& DAORegistry::getDAO('AreasOfTheCountryDAO');
+		$results =& $articleDao->searchProposalsPublic($query, $fromDate, $toDate, $country, $status, $rangeInfo, $sort, $sortDirection);
+
+		$templateMgr->assign('formattedDateFrom', $fromDate);
+		$templateMgr->assign('formattedDateTo', $toDate);
+										
+		$templateMgr->assign('statusFilter', $status);
+		$templateMgr->assign_by_ref('results', $results);
+		$templateMgr->assign('query', $query);
+		$templateMgr->assign('region', $country);
+		$templateMgr->assign('country', $countryDAO->getAreaOfTheCountry($country));
+		
+
+		$templateMgr->assign('sort', $sort);
+		$templateMgr->assign('sortDirection', $sortDirection);
+
+		$templateMgr->assign('count', $results->getCount());
 		$templateMgr->display('search/searchResults.tpl');
 	}
 	
@@ -284,7 +307,7 @@ class NewSearchHandler extends Handler {
 			//$templateMgr->assign('dateTo', $toDate);
 		$templateMgr->assign_by_ref('submission', $submission);
 		$templateMgr->assign_by_ref('abstract', $submission->getLocalizedAbstract());
-
+		
 		$templateMgr->display('search/viewProposal.tpl');
 	}
 	/**

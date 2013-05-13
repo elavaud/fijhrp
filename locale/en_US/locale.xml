@@ -1089,6 +1089,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
     <message key="search.proposalType">Proposal Type</message>    
     <message key="search.region">Geographical Area</message>
     <message key="search.researchField">Research Field</message>
+    <message key="search.researchDates">Research Dates</message>
     <message key="search.startDate">Start Date</message>
     <message key="search.endDate">End Date</message>
 	<message key="search.email">Email</message>

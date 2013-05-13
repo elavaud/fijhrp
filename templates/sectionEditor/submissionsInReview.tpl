@@ -23,48 +23,46 @@
 <p></p>
 
 {iterate from=submissions item=submission}
-
 	{assign var="status" value=$submission->getSubmissionStatus()}
 	{assign var="abstract" value=$submission->getLocalizedAbstract()}
-            {assign var="articleId" value=$submission->getArticleId()}
-            {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
-			<tr valign="top">
-				<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
-				<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
-	   			<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
-           		<td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
-				<td align="right">
-					{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($status)}
-					{if ($submission->getMostRecentDecision()) == SUBMISSION_SECTION_DECISION_RESUBMIT}
-						{translate key="editor.article.resubmittedMsg1} ({translate key=$submission->getEditorDecisionKey()})						
-					{else}
-						{translate key=$proposalStatusKey}
-						{assign var="sectionDecision" value=$submission->getLastSectionDecision()}
-						{if $sectionDecision}
-							{assign var="reviewAssignments" value=$sectionDecision->getReviewAssignments()}
-							{assign var="decisionAllowed" value="false"}
-							{if $reviewAssignments}
-								{assign var="decisionAllowed" value="true"}
-								{foreach from=$reviewAssignments item=reviewAssignment}
-									{if !$reviewAssignment->getRecommendation()}
-										{assign var="decisionAllowed" value="false"}
-									{/if}
-								{/foreach}
+    {assign var="articleId" value=$submission->getArticleId()}
+    {assign var="proposalId" value=$submission->getProposalId($submission->getLocale())}
+	<tr valign="top">
+		<td>{if $proposalId}{$proposalId|escape}{else}&mdash;{/if}</td>
+		<td>{$submission->getDateSubmitted()|date_format:$dateFormatLong}</td>
+	   	<td>{$submission->getFirstAuthor()|truncate:40:"..."|escape}</td> <!-- Get first author. Added by MSB, Sept 25, 2011 -->
+        <td><a href="{url op="submissionReview" path=$submission->getId()}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
+		<td align="right">
+			{assign var="proposalStatusKey" value=$submission->getProposalStatusKey($status)}
+			{if ($submission->getMostRecentDecision()) == SUBMISSION_SECTION_DECISION_RESUBMIT}
+				{translate key="editor.article.resubmittedMsg1} ({translate key=$submission->getEditorDecisionKey()})						
+			{else}
+				{translate key=$proposalStatusKey}
+				{assign var="sectionDecision" value=$submission->getLastSectionDecision()}
+				{if $sectionDecision}
+					{assign var="reviewAssignments" value=$sectionDecision->getReviewAssignments()}
+					{assign var="decisionAllowed" value="false"}
+					{if $reviewAssignments}
+						{assign var="decisionAllowed" value="true"}
+						{foreach from=$reviewAssignments item=reviewAssignment}
+							{if !$reviewAssignment->getRecommendation()}
+								{assign var="decisionAllowed" value="false"}
 							{/if}
-						{/if}
-						{if ($status == PROPOSAL_STATUS_FULL_REVIEW) && ($decisionAllowed == "true")}
-							&nbsp;({translate key="editor.article.recommendationAvailable"})
-						{/if}
-						{if $submission->isSubmissionDue()} 
-							({translate key="submission.status.continuingReview"}) 
-						{/if}
+						{/foreach}
 					{/if}
-				</td>		
-			</tr>
-			<tr>
-				<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
-			</tr>
-		<!--{*/if*}-->
+				{/if}
+				{if ($status == PROPOSAL_STATUS_FULL_REVIEW) && ($decisionAllowed == "true")}
+					&nbsp;({translate key="editor.article.recommendationAvailable"})
+				{/if}
+				{if $submission->isSubmissionDue()} 
+					({translate key="submission.status.continuingReview"}) 
+				{/if}
+			{/if}
+		</td>		
+	</tr>
+	<tr>
+		<td colspan="5" class="{if $submissions->eof()}end{/if}separator">&nbsp;</td>
+	</tr>
 {/iterate}
 {if $submissions->wasEmpty()}
 	<tr>

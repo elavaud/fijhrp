@@ -152,23 +152,22 @@ $(document).ready(
 </form>
 
 <br/>
-<h4>{if $statusFilter == 1}Complete Research:<br/>{/if}{if $statusFilter == 2}Ongoing Research:<br/>{/if}Search {if $query}for '{$query}' {/if}{if $dateFrom != '--'} from {$dateFrom|date_format:$dateFormatLong}{/if} {if $dateFrom != '--' && $dateTo != '--'} and {/if}{if $dateTo != '--'} until {$dateTo|date_format:$dateFormatLong}{/if}{if $country} in {$country} {/if} returned {$count} result(s). </h4>
+<h4>{if $statusFilter == 1}Complete Research:<br/>{/if}{if $statusFilter == 2}Ongoing Research:<br/>{/if}Search {if $query}for '{$query}' {/if}{if $formattedDateFrom != ''} from {$formattedDateFrom|date_format:$dateFormatLong}{/if} {if $formattedDateFrom != '' && $formattedDateTo != ''} and {/if}{if $formattedDateTo != ''} until {$formattedDateTo|date_format:$dateFormatLong}{/if}{if $country} in {$country} {/if} returned {$count} result(s). </h4>
 <div id="results">
 <table width="100%" class="listing">
 <tr class="heading" valign="bottom">
-		<!--<td>{translate key='common.dateSubmitted'}</td>-->
-		<td>{translate key='article.title'}</td>
-		<td>{translate key='search.primarySponsor'}</td>
-		<td>{translate key='search.region'}</td>
-		<td>{translate key='search.researchField'}</td>
-		<td>Dates of research</td>
-		<td>Status</td>
+		<td>{sort_heading key='article.title' sort="title"}</td>
+		<td>{sort_heading key='search.primarySponsor' sort="primarySponsor"}</td>
+		<td>{sort_heading key='search.region' sort="region"}</td>
+		<td>{sort_heading key='search.researchField' sort="researchField"}</td>
+		<td>{sort_heading key='search.researchDates' sort="researchDates"}</td>
+		<td>{sort_heading key="common.status" sort="status"}</td>
 </tr>
 <tr>
-	<td colspan="7" class="headseparator">&nbsp;</td>
+	<td colspan="6" class="headseparator">&nbsp;</td>
 </tr>
 <p></p>
-{foreach from=$results item=result}
+{iterate from=results item=result}
 <tr valign="bottom">
 	{assign var="abstract" value=$result->getLocalizedAbstract()}
 	<td><a href="{url op="viewProposal" path=$result->getId()}" class="action">{$abstract->getScientificTitle()|escape}</a></td>
@@ -193,12 +192,22 @@ $(document).ready(
 	<td>{if $result->getStatus() == 11}Complete{else}Ongoing{/if}</td>
 </tr>
 <tr>
-	<td colspan="7" class="separator">&nbsp;</td>
+	<td colspan="6" class="{if $results->eof()}end{/if}separator">&nbsp;</td>
 </tr>
-{/foreach}
-<tr>
-	<td colspan="7" class="endseparator">&nbsp;</td>
-</tr>
+{/iterate}
+{if $results->wasEmpty()}
+	<tr>
+		<td colspan="6" class="nodata">{translate key="search.noResults"}</td>
+	</tr>
+	<tr>
+		<td colspan="6" class="endseparator">&nbsp;</td>
+	</tr>
+{else}
+	<tr>
+		<td colspan="4" align="left">{page_info iterator=$results}</td>
+		<td align="right" colspan="2">{page_links anchor="results" iterator=$results name="search" query=$query dateFrom=$dateFrom dateTo=$dateTo proposalCountry=$country sort=$sort sortDirection=$sortDirection}</td>
+	</tr>
+{/if}
 </table>
 </div>	
 
