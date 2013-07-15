@@ -23,6 +23,11 @@
 	<message key="manager.groups.enableBoard">The Site Manager creates titles and adds people under each title.</message>
 	<message key="manager.groups.enableBoard.description"><![CDATA[Under <a href="{$aboutEditorialTeamUrl}">People</a> in About the Site:]]></message>
 	<message key="manager.groups.noneCreated">No Committee have been created.</message>
+    <message key="manager.institutions.noneCreated">No institutions have been created.</message>
+    <message key="manager.institutions.create">Create a new institution</message>
+    <message key="manager.institutions.form.nameRequired">The name of the institution is required.</message>
+    <message key="manager.institutions.form.regionRequired">The geographical area of the institution is required.</message>
+    <message key="manager.institutions.form.typeRequired">The type of the institution is required.</message>
 	<message key="manager.journalManagement">Site Management</message>
 	<message key="manager.language.ui">UI</message>
 	<message key="manager.language.submissions">Submissions</message>

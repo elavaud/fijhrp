@@ -130,6 +130,14 @@
 	 *
 	-->
 
+	<!-- Common Institution Terms -->
+	<message key="institution.government">Government</message>
+	<message key="institution.institution">Institution</message>
+	<message key="institution.institutions">Institutions</message>
+	<message key="institution.location">Location</message>
+	<message key="institution.private">Private</message>
+	<message key="institution.type">Type</message>
+
 	<!-- Common Section Terms -->
 	<message key="section.section">Ethics Review Committee</message>
     <message key="section.sectionAbbrev">Committee</message>

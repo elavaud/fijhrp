@@ -14,8 +14,6 @@
  */
 
 // $Id$
-
-
 import('classes.article.Article');
 
 class SectionEditorSubmission extends Article {
@@ -83,12 +81,14 @@ class SectionEditorSubmission extends Article {
 	 * Get section decisions.
 	 * @return array
 	 */
+	private function usortDecisions($a, $b){
+    	return $a->getDateDecided() == $b->getDateDecided() ? 0 : ( $a->getDateDecided() > $b->getDateDecided() ) ? 1 : -1;
+   	}
+	
 	function getDecisions() {
 		$sectionDecisions =& $this->sectionDecisions;
-		usort($sectionDecisions, function ($a, $b){
-    			return $a->getDateDecided() == $b->getDateDecided() ? 0 : ( $a->getDateDecided() > $b->getDateDecided() ) ? 1 : -1;
-			}
-		);
+		usort($sectionDecisions, array($this, "usortDecisions"));
+		
 		if ($sectionDecisions) return $sectionDecisions;
 		else return null;
 	}
