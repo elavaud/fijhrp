@@ -27,12 +27,12 @@
 <h3>{translate key="reviewer.article.submissionToBeReviewed"}</h3>
 <table width="100%" class="data">
 <tr valign="top">
-	<td width="30%" class="label">Proposal ID</td>
+	<td width="30%" class="label">{translate key="common.proposalId"}</td>
 	<td width="70%" class="value">{$submission->getLocalizedProposalId()|strip_unsafe_html}</td>
 </tr>
 <tr valign="top">
 	<td width="30%" class="label">{translate key="article.title"}</td>
-	<td width="70%" class="value">{$submission->getLocalizedTitle()|strip_unsafe_html}</td>
+	<td width="70%" class="value">{$abstract->getScientificTitle()|strip_unsafe_html}</td>
 </tr>
 <tr valign="top">
 	<td class="label">{translate key="article.journalSection"}</td>
@@ -128,11 +128,11 @@
 <table width="100%" class="data">
    <tr valign="top">
         <td class="label" width="30%"><br/>{translate key="proposal.scientificTitle"}</td>
-        <td class="value" width="70%"><br/>{$submission->getLocalizedTitle()}</td>
+        <td class="value" width="70%"><br/>{$abstract->getScientificTitle()}</td>
     </tr>
     <tr valign="top">
         <td class="label"><br/>{translate key="proposal.publicTitle"}</td>
-        <td class="value"><br/>{$submission->getLocalizedPublicTitle()}</td>
+        <td class="value">{$abstract->getPublicTitle()}</td>
     </tr>
     <tr valign="top">
         <td class="label"><br/>{translate key="proposal.studentInitiatedResearch"}</td>
@@ -148,13 +148,27 @@
         <td class="value">{translate key="proposal.academicDegree"}: {$submission->getLocalizedAcademicDegree()}</td>
     </tr>  
     {/if}
+    <tr><td colspan="2">&nbsp;</td></tr>
     <tr valign="top">
-        <td class="label"><br/>{translate key="proposal.abstract"}ໍ້</td>
-        <td class="value"><br/>{$submission->getLocalizedAbstract()}</td>
+        <td class="label" width="20%">{translate key="proposal.background"}</td>
+        <td class="value">{$abstract->getBackground()}</td>
     </tr>
     <tr valign="top">
-        <td class="label"><br/>{translate key="proposal.keywords"}</td>
-        <td class="value"><br/>{$submission->getLocalizedKeywords()}</td>
+        <td class="label" width="20%">{translate key="proposal.objectives"}</td>
+        <td class="value">{$abstract->getObjectives()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.studyMethods"}</td>
+        <td class="value">{$abstract->getStudyMethods()}</td>
+    </tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.expectedOutcomes"}</td>
+        <td class="value">{$abstract->getExpectedOutcomes()}</td>
+    </tr>
+    <tr><td colspan="2">&nbsp;</td></tr>
+    <tr valign="top">
+        <td class="label" width="20%">{translate key="proposal.keywords"}</td>
+        <td class="value">{$abstract->getKeywords()}</td>
     </tr>
     <tr valign="top">
         <td class="label"><br/>{translate key="proposal.startDate"}</td>
