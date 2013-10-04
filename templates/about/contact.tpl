@@ -4,7 +4,7 @@
  * Copyright (c) 2003-2011 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * About the Demo National Health Research Portal / Contact.
+ * About the Fiji National Health Research Portal / Contact.
  *
  * $Id$
  *}

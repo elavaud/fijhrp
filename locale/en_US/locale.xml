@@ -54,7 +54,7 @@
 	-->
 
 	<!-- Common Messages -->
-        <message key="common.openJournalSystems">The Demo National Health Research Portal Portal</message>
+        <message key="common.openJournalSystems">The Fiji National Health Research Portal Portal</message>
 	<message key="common.confirmComplete">Are you sure you wish to mark this task as completed? You may not be able to make changes afterwards.</message>
     <message key="common.homePageText"><![CDATA[<p>The Fiji Health Research Portal is an <i>integrated online health research management system</i> that offers substantial benefits for all stakeholders in health research. The Portal aims to improve accountability, efficiency and quality of health research conducted in Fiji by increasing transparency and streamlining the ethics review process.<br/><br/>The Portal can be used to:<br/><br/><b>Submit research proposals at anytime from anywhere</b> for review by accredited Ethics Review Committees of Fiji. Researchers need to register on the Portal. Once registered, the researcher will have a permanent account and be able to submit research proposal in a paper-less way and to track the review status of their proposals.<br/><br/><b>Search ongoing and completed health research</b> from Mai 2013 onwards through a publically accessible research registry. No registration or log-in is required to search the ongoing research.<br/><br/><b>Access complete research reports</b> for the research started since Mai 2013 once the research is completed. [Since the system is launched only Mai 2013, there are no research reports in the system at present, but will be added as and when a research is completed over time].<br/><br/><b>Access information on all the applicable guidelines, rules, and regulations</b> related to health research in Fiji (being added…).<br/><br/><b>Access a “Researchers' Directory”</b> containing information on the national and international researchers doing research in Fiji (will be added soon...).</p>]]></message>
 	<message key="common.payment">Payment</message>
@@ -73,7 +73,7 @@
 	<!-- Common Error Messages -->
 		
 	<!-- Navigation -->
-	<message key="navigation.journalHelp">Demo National Health Research Portal Help</message>
+	<message key="navigation.journalHelp">Fiji National Health Research Portal Help</message>
 
 	<message key="navigation.archives">Archives</message>
 	<message key="navigation.current">Current</message>
@@ -126,7 +126,7 @@
 	<!--
 	 *
 	 * ENTITIES - This section contains terms pertaining to the system's
-	 *            major entities, e.g. Article, the Demo National Health Research Portal, Section
+	 *            major entities, e.g. Article, the Fiji National Health Research Portal, Section
 	 *
 	-->
 
@@ -932,7 +932,7 @@ Active is how many reviews are currently being considered or underway.]]></messa
 <li>On this page, click Browse (or Choose File) which opens a Choose File window for locating the file on the hard drive of your computer.</li>
 <li>Locate the file you wish to submit and highlight it.</li>
 <li>Click Open on the Choose File window, which places the name of the file on this page.</li>
-<li>Click Upload on this page, which uploads the file from the computer to the web site and renames it following the Demo Nationaln Health Research Portal naming conventions.</li>
+<li>Click Upload on this page, which uploads the file from the computer to the web site and renames it following the Fiji Nationaln Health Research Portal naming conventions.</li>
 <li>Once the proposal is uploaded, click Save and Continue at the bottom of this page.</li>
 </ol>]]></message>
 
@@ -1134,7 +1134,7 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="about.statistics">Statistics</message>
 	<message key="about.journalContact">The National Ethics Committee for Health Research</message>
 	<message key="about.aboutTheJournal">About the Health Research Portal</message>
-	<message key="about.history">Demo National Health Research Portal History</message>
+	<message key="about.history">Fiji National Health Research Portal History</message>
 	  
         <message key="about.editorialTeam">The Ethics Committee of the University of Health Sciences</message>
         
@@ -1179,10 +1179,10 @@ current password.<br /><br />Enter your email address below to reset your passwo
 	<message key="about.subscriptionTypes.cost">Cost</message>
 	<message key="about.availableSubscriptionTypes">Subscription Types</message>
 	<message key="about.memberships">Memberships</message>
-	<message key="about.journalSponsorship">The Demo National Health Research Portal Sponsorship</message>
+	<message key="about.journalSponsorship">The Fiji National Health Research Portal Sponsorship</message>
 	<message key="about.aboutThisPublishingSystem">About this Publishing System</message>
 	<message key="about.aboutThisPublishingSystem.altText">OJS Editorial and Publishing Process</message>
-	<message key="about.aboutOJSJournal"><![CDATA[This Demo National Health Research Portal uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
+	<message key="about.aboutOJSJournal"><![CDATA[This Fiji National Health Research Portal uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
 	<message key="about.aboutOJSSite"><![CDATA[This site uses Open Journal Systems {$ojsVersion}, which is open source journal management and publishing software developed, supported, and freely distributed by the <a href="http://pkp.sfu.ca/">Public Knowledge Project</a> under the GNU General Public License.]]></message>
 	
 	<!-- Announcement -->
@@ -1364,15 +1364,15 @@ Your server currently supports mbstring: <strong>{$supportsMBString}</strong>]]>
 	<!-- RT Settings -->
 	<message key="rt.admin.settings">Reading Tool Options</message>
 
-	<message key="rt.admin.settings.description">The reading tools appear in a frame beside published items in the sections of the Demo National Health Research Portal that have been designated for indexing. The reading tools consist of a set of optional tools related to the published item, listed below, and a set of tools that provide access to related items, organized by field and discipline.</message>
+	<message key="rt.admin.settings.description">The reading tools appear in a frame beside published items in the sections of the Fiji National Health Research Portal that have been designated for indexing. The reading tools consist of a set of optional tools related to the published item, listed below, and a set of tools that provide access to related items, organized by field and discipline.</message>
 	<message key="rt.admin.settings.enableReadingTools">Enable Reading Tools for designated sections of the Health Research Portal.</message>
 	<message key="rt.admin.settings.relatedItems">Field</message>
 	<message key="rt.admin.settings.relatedItemsLink"><![CDATA[See <a href="{$relatedItemsLink}" class="action">Related Items Sets</a> to view, add, correct, or delete related items for each field.]]></message>
 
-	<message key="rt.admin.options">The Demo National Health Research Portal Item Tools</message>
+	<message key="rt.admin.options">The Fiji National Health Research Portal Item Tools</message>
 	<message key="rt.admin.relatedItems">Related Item Tools</message>
 
-	<message key="rt.admin.settings.addComment">Add comment (enables readers to post comments, with the Demo National Health Research Portal Manager able to delete).</message>
+	<message key="rt.admin.settings.addComment">Add comment (enables readers to post comments, with the Fiji National Health Research Portal Manager able to delete).</message>
 	<message key="rt.admin.settings.addComment.authenticated">Users must be registered and logged in to post, with anonymity not permitted.</message>
 	<message key="rt.admin.settings.addComment.anonymous">Users must be registered and logged in to post, with anonymity permitted.</message>
 	<message key="rt.admin.settings.addComment.unauthenticated">Users do not need to be registered to post, with anonymity permitted.</message>

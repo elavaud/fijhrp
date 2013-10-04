@@ -122,5 +122,5 @@
 	<message key="user.userHome">User Home</message>
 	<message key="user.username">Username</message>
 	<message key="user.workingLanguages">Working languages</message>
-	<message key="user.register.completeForm">Fill in this form to register to the Demo National Health Research Portal.</message>
+	<message key="user.register.completeForm">Fill in this form to register to the Fiji National Health Research Portal.</message>
 </locale>

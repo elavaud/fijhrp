@@ -60,7 +60,7 @@
 	<message key="editor.article.exemption.limitedPublicHealthSurveillance">The intervention is limited to public health surveillance or routine evaluation of health programmes carried out pursuant to statutory or regulatory authority.</message>
 	<message key="editor.article.exemption.noHumanParticipants">The research does not involve human participants.</message>	
 	<message key="editor.article.exemption.publicOfficials">Public officials are interviewed in their official capacity on issues that are in the public domain.</message>
-	<message key="editor.article.exemption.registered">Proposals registered in the Demo National Health Research Portal when the study has been reviewed and approved by the Ethics Committee of the University of Health Sciences (ECUHS) or the National Ethics Committee for Health Research.</message>
+	<message key="editor.article.exemption.registered">Proposals registered in the Fiji National Health Research Portal when the study has been reviewed and approved by the Ethics Committee of the University of Health Sciences (ECUHS) or the National Ethics Committee for Health Research.</message>
 	<message key="editor.article.finalDecision">Final Decision</message>
 	<message key="editor.article.hideCoverPageAbstract">Do not display cover image in article abstract view.</message>
 	<message key="editor.article.hideCoverPageToc">Do not display cover image thumbnail in table of contents.</message>
