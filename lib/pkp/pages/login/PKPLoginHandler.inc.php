@@ -189,6 +189,7 @@ class PKPLoginHandler extends Handler {
 			$mail = new MailTemplate('PASSWORD_RESET_CONFIRM');
 			$this->_setMailFrom($mail);
 			$mail->assignParams(array(
+				'userFullName' => $user->getFullName(),
 				'url' => PKPRequest::url(null, 'login', 'resetPassword', $user->getUsername(), array('confirm' => $hash)),
 				'siteTitle' => $site->getLocalizedTitle()
 			));
@@ -253,7 +254,8 @@ class PKPLoginHandler extends Handler {
 			$mail = new MailTemplate('PASSWORD_RESET');
 			$this->_setMailFrom($mail);
 			$mail->assignParams(array(
-				'username' => $user->getUsername(),
+				'userFullName' => $user->getFullName(),
+                                'username' => $user->getUsername(),
 				'password' => $newPassword,
 				'siteTitle' => $site->getLocalizedTitle()
 			));
