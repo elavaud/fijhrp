@@ -136,6 +136,8 @@ class ProposalAbstract extends DataObject {
 	 * @param $background string
 	 */
 	function setBackground($background) {
+                $background = preg_replace('/<\s*/', '< ', $background);
+                $background = preg_replace('/\s*>/', ' >', $background);
 		return $this->setData('background', $background);
 	}
 
@@ -152,6 +154,8 @@ class ProposalAbstract extends DataObject {
 	 * @param $objectives string
 	 */
 	function setObjectives($objectives) {
+                $objectives = preg_replace('/<\s*/', '< ', $objectives);
+                $objectives = preg_replace('/\s*>/', ' >', $objectives);
 		return $this->setData('objectives', $objectives);
 	}
 
@@ -168,6 +172,8 @@ class ProposalAbstract extends DataObject {
 	 * @param $studyMethods string
 	 */
 	function setStudyMethods($studyMethods) {
+                $studyMethods = preg_replace('/<\s*/', '< ', $studyMethods);
+                $studyMethods = preg_replace('/\s*>/', ' >', $studyMethods);
 		return $this->setData('studyMethods', $studyMethods);
 	}
 
@@ -184,6 +190,8 @@ class ProposalAbstract extends DataObject {
 	 * @param $expectedOutcomes string
 	 */
 	function setExpectedOutcomes($expectedOutcomes) {
+                $expectedOutcomes = preg_replace('/<\s*/', '< ', $expectedOutcomes);
+                $expectedOutcomes = preg_replace('/\s*>/', ' >', $expectedOutcomes);
 		return $this->setData('expectedOutcomes', $expectedOutcomes);
 	}
 
