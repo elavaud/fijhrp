@@ -258,8 +258,6 @@ class Submission extends DataObject {
 	 * @param $abstract object Abstract
 	 */
 	function setAbstract($abstract, $locale) {
-                $abstract = preg_replace('/<\s*/', '< ', $abstract);
-                $abstract = preg_replace('/\s*>/', ' >', $abstract);
 		return $this->setData('abstract', $abstract, $locale);
 	}
 		
