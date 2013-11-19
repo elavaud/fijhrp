@@ -149,7 +149,7 @@ class SectionEditorAction extends Action {
 			$sectionId = $lastSectionDecision->getSectionId();
 			$section =& $sectionDao->getSection($sectionId, $journal->getId());
 			if ($section && ($reviewFormId = (int) $section->getReviewFormId())) {
-				if ($reviewFormDao->reviewFormExists($reviewFormId, ASSOC_TYPE_JOURNAL, $journalId)) {
+				if ($reviewFormDao->reviewFormExists($reviewFormId, ASSOC_TYPE_JOURNAL, $journal->getId())) {
 					$reviewAssignment->setReviewFormId($reviewFormId);
 				}
 			}

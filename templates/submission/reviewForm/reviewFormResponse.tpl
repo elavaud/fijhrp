@@ -70,5 +70,5 @@
 
 </form>
 </div>
-{include file="submission/comment/footer.tpl"}
+{include file="common/footer.tpl"}
 

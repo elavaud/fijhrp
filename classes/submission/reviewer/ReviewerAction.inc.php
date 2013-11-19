@@ -247,7 +247,8 @@ class ReviewerAction extends Action {
 					
 				// Check if file already uploaded
 				$reviewFile =& $reviewAssignment->getReviewerFile();
-				if ($reviewFile != null) {					$articleFileManager->deleteFile($reviewFile->getFileId());
+				if ($reviewFile != null) {
+					$articleFileManager->deleteFile($reviewFile->getFileId());
 				}
 				
 				HookRegistry::call('ReviewerAction::uploadReviewFile', array(&$reviewAssignment));
@@ -430,10 +431,10 @@ class ReviewerAction extends Action {
 				$sectionDecisionDao =& DAORegistry::getDAO('SectionDecisionDAO');
 				$reviewAssignment = $reviewAssignmentDao->getById($reviewId);
 				$sectionDecision =& $sectionDecisionDao->getSectionDecision($reviewAssignment->getDecisionId());
-				$abstract = $article->getLocalizedAbstract();
 				$articleId = $sectionDecision->getArticleId();
 				$articleDao =& DAORegistry::getDAO('ArticleDAO'); 
 				$article =& $articleDao->getArticle($articleId);
+				$abstract = $article->getLocalizedAbstract();
 				$notificationUsers = $article->getAssociatedUserIds();
 				foreach ($notificationUsers as $userRole) {
 					$url = Request::url(null, $userRole['role'], 'submissionReview', $article->getId(), null, 'peerReview');
