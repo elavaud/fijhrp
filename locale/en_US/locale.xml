@@ -89,8 +89,8 @@
 	<!-- Article Queues -->
 	<message key="common.queue.long.submissionsUnassigned">Unassigned Proposals</message>
 	<message key="common.queue.short.submissionsUnassigned">Unassigned</message>
-    <message key="common.queue.long.proposalsToSubmit">Proposals to submit</message>
-	<message key="common.queue.short.proposalsToSubmit">To submit</message>
+    <message key="common.queue.long.proposalsToSubmit">Draft proposals</message>
+	<message key="common.queue.short.proposalsToSubmit">Drafts</message>
     <message key="common.queue.long.ongoingResearches">Ongoing researches</message>
 	<message key="common.queue.short.ongoingResearches">Ongoing</message>
     <message key="common.queue.long.completedResearches">Completed researches</message>
