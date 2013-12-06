@@ -42,7 +42,7 @@
 <div id="userGuides">
 <h3>{translate key="about.userGuides"}</h3>
 <ul class="plain">
-<li>&#187; {* <a title="Userguide for investigators (engl)" href="/public/Cam_IRBs_HR_Investigator_Userguide_khmer.pdf" target="_blank">*} Userguide for investigators (engl) <i>...soon available...</i>{*</a>*}</li>
+<li>&#187; 	<a title="Userguide for investigators (engl)" href="/hrp/public/FijiHRP_UserManual_Investigator_eng.pdf" target="_blank"> Userguide for investigators (engl)</a></li>
 </ul>
 </div>
 
