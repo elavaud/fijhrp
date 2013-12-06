@@ -12,6 +12,10 @@
 {assign var="pageTitle" value="about.aboutTheJournal"}
 {include file="common/header.tpl"}
 {/strip}
+
+
+<h3>Health Information Research Analysis Division, Ministry of Health, Fiji</h3>
+<p><b>Director</b><br/>Mr. Shivnay Naidu<br/>Email: snaidu002 @ health.gov.fj <br/><i>(please remove the spaces before and after the "@")</i></p>
 <!--
 <div id="aboutPeople">
 <h3>{translate key="about.people"}</h3>

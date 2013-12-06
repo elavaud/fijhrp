@@ -12,8 +12,8 @@
 {include file="common/header.tpl"}
 {/strip}
 
-<script type="text/javascript" src="{$baseUrl|cat:"/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"}"></script>
-<style type="text/css" src="{$baseUrl|cat:"/lib/pkp/styles/jquery-ui-timepicker-addon.css"}"></style>
+<script type="text/javascript" src="{$baseUrl}/lib/pkp/js/lib/jquery/jquery-ui-timepicker-addon.js"></script>
+<style type="text/css" src="{$baseUrl}/lib/pkp/styles/jquery-ui-timepicker-addon.css"></style>
 
 {literal}
 <script type="text/javascript">
