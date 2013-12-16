@@ -42,16 +42,16 @@
 <div id="userGuides">
 <h3>{translate key="about.userGuides"}</h3>
 <ul class="plain">
-<li>&#187; 	<a title="Userguide for investigators (engl)" href="/hrp/public/FijiHRP_UserManual_Investigator_eng.pdf" target="_blank"> Userguide for investigators (engl)</a></li>
+<li>&#187; 	<a title="Userguide for investigators (engl)" href="/fijihrp/public/FijiHRP_UserManual_Investigator_eng.pdf" target="_blank"> Userguide for investigators (engl)</a></li>
 </ul>
 </div>
 
 <div id="userGuides">
 <h3>{translate key="about.templates"}</h3>
 <ul class="plain">
-<li>&#187;  <a href="/hrp/public/FINAL_REPORT_Template.doc" target="_blank"> Final Report (engl)</a></li>
-<li>&#187;  <a href="/hrp/public/PROGRESS_REPORT_Template.doc" target="_blank"> Progress Report (engl)</a></li>
-<li>&#187;  <a href="/hrp/public/PROPOSAL_REVIEW_template.doc" target="_blank"> Proposal Review (engl)</a></li>
+<li>&#187;  <a href="/fijihrp/public/FINAL_REPORT_Template.doc" target="_blank"> Final Report (engl)</a></li>
+<li>&#187;  <a href="/fijihrp/public/PROGRESS_REPORT_Template.doc" target="_blank"> Progress Report (engl)</a></li>
+<li>&#187;  <a href="/fijihrp/public/PROPOSAL_REVIEW_template.doc" target="_blank"> Proposal Review (engl)</a></li>
 </ul>
 </div>
 
