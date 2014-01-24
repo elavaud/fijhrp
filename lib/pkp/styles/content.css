@@ -339,17 +339,17 @@ div.list .refresh {
 
 
 /*width: 100%;*/
-	font: menu;
-	font-size: 12px;
+	//font: menu;
+	//font-size: 12px;
 
 
 /*
 	it is very important, if line-height not setted or setted
 	in relative units scroll will be broken in firefox
 	*/
-	line-height: 16px;
-	overflow: hidden;
-}
+	//line-height: 16px;
+	//overflow: hidden;
+//}
 
 .ac_loading {
 	background: white url('indicator.gif') right center no-repeat;

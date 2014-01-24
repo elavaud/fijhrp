@@ -383,7 +383,7 @@ class ArticleFileManager extends FileManager {
 		$fileExtension = $this->parseFileExtension($sourceArticleFile->getFileName());
 		
 		$date = new DateTime($sourceArticleFile->getDateUploaded());
-		$dateUploaded = $date->format('MdY-g:ia');
+		$dateUploaded = $date->format('dMY-gia');
 		
 		$newFileName = $this->article->getLocalizedProposalId().".".$type.'.'.$dateUploaded.'.'.$fileExtension;
 

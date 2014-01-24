@@ -12,10 +12,6 @@
 {assign var="pageTitle" value="about.aboutTheJournal"}
 {include file="common/header.tpl"}
 {/strip}
-
-
-<h3>Health Information Research Analysis Division, Ministry of Health, Fiji</h3>
-<p><b>Director</b><br/>Mr. Shivnay Naidu<br/>Email: snaidu002 @ health.gov.fj <br/><i>(please remove the spaces before and after the "@")</i></p>
 <!--
 <div id="aboutPeople">
 <h3>{translate key="about.people"}</h3>
@@ -33,22 +29,10 @@
 -->
 <div id="aboutPolicies">
 
-<h3>{translate key="about.policies"}</h3>
+<h3>Documents</h3>
 <ul class="plain">
 <li>&#187;{* <a title="Standard Operating Procedures (engl)" href="/public/Cam_SOP_engl.pdf" target="_blank">*} Standard Operating Procedures (engl) <i>...soon available...</i>{*</a>*}</li>
-</ul>
-</div>
-
-<div id="userGuides">
-<h3>{translate key="about.userGuides"}</h3>
-<ul class="plain">
 <li>&#187; 	<a title="Userguide for investigators (engl)" href="/fijihrp/public/FijiHRP_UserManual_Investigator_eng.pdf" target="_blank"> Userguide for investigators (engl)</a></li>
-</ul>
-</div>
-
-<div id="userGuides">
-<h3>{translate key="about.templates"}</h3>
-<ul class="plain">
 <li>&#187;  <a href="/fijihrp/public/FINAL_REPORT_Template.doc" target="_blank"> Final Report (engl)</a></li>
 <li>&#187;  <a href="/fijihrp/public/PROGRESS_REPORT_Template.doc" target="_blank"> Progress Report (engl)</a></li>
 <li>&#187;  <a href="/fijihrp/public/PROPOSAL_REVIEW_template.doc" target="_blank"> Proposal Review (engl)</a></li>
@@ -84,5 +68,14 @@
 </ul>
 </div>
 *}
+
+<div id="aboutSubmissions">
+	<h3>Contacts</h3>
+	<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#187;&nbsp;Ministry of Health, Head Quarters</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dinem House<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88 Amy Street, Toorak<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suva, Fiji<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ph: (679) 3306177<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: (679) 3306163<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Website: <a href="www.health.gov.fj">www.health.gov.fj</a></p>
+	<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#187;&nbsp;Division of Health Information Research Analysis</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Director: Mr.Shivnay Naidu<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 2, Dinem House<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88 Amy Street, Toorak<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suva, Fiji<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ph: (679) 3306177 or 3215725<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: (679) 331822<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email: snaidu002 @ health.gov.fj <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(please remove the spaces before and after the "@")</i></p>
+	<p><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#187;&nbsp;National Health Research Office</b><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;National Health Research Officer: Mere Delai<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Level 2, Dinem House<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;88 Amy Street, Toorak<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Suva, Fiji<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ph: (679) 3306177 or 3215770<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fax: (679) 3318227<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Email: mere.delai @ govnet.gov.fj <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i>(please remove the spaces before and after the "@")</i></p>
+
+</div>
+
 {include file="common/footer.tpl"}
 
