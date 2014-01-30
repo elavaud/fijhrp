@@ -398,7 +398,7 @@ class PeopleHandler extends ManagerHandler {
 						$roleDao->insertRole($role);
 					
 					}
-					$ercReviewersDAO->insertReviewer($journal->getId(), 0, $users[$i], $status);
+					$ercReviewersDAO->insertReviewer($journal->getId(), 0, $users[$i], 0);
 				}
 			}
 		}

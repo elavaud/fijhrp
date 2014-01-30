@@ -199,7 +199,6 @@ class SectionEditorHandler extends Handler {
 	 */
 	function enrollSearch($args) {
 		$sectionId = isset($args[0]) ? (int) $args[0] : 0;
-		$this->validate(true);
 		Locale::requireComponents(array(LOCALE_COMPONENT_PKP_MANAGER)); // manager.people.enrollment, manager.people.enroll
 		$journal =& Request::getJournal();
 
@@ -273,7 +272,6 @@ class SectionEditorHandler extends Handler {
 	 */
 	function enroll($args) {
 		$sectionId = isset($args[0]) ? (int) $args[0] : 0;
-		$this->validate(true);
 		$journal =& Request::getJournal();
 		
 		// For security purposes
