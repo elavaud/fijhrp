@@ -484,11 +484,14 @@ class ArticleFileManager extends FileManager {
 		 *  If proposalId is already created, use it in naming the file (proposalId.type
 		.dateuploaded.extension)
 		 *  Else, use the default naming scheme (articleId.fileId.type.extension)
+                 * 
+                 *  EDIT: Not for supp file: If resubmission (so proposalId already created) 2 supp files might be uploaded during the same minute 
+                 *  -> the second supp file will overwrite the first one (but the entry in the database will stay)
+                 *  Anyway, the supp files are renamed when finishing the (re)submission of the proposal by the renameFile function of this class
 		 **/
-		$proposalId = $this->article->getLocalizedProposalId();
-		$suppFileDao =& DAORegistry::getDAO('SuppFileDAO');
+		$proposalId = $this->article->getProposalId();
 		 
-		if($proposalId!=null || $proposalId!=''){
+		if(($proposalId!=null || $proposalId!='') && $articleFile->getType() != 'supp'){
 			
 			$date = new DateTime($articleFile->getDateUploaded());
 			$dateUploaded = $date->format('MdY-g:ia');
