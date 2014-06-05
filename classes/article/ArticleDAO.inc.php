@@ -1070,9 +1070,9 @@ class ArticleDAO extends DAO {
 		
 		if (!empty($query)) {
 			$searchSql .= ' AND (
-				LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER ("%'.$query.'%")
-				OR LOWER(COALESCE(abl.public_title, abpl.public_title)) LIKE LOWER ("%'.$query.'%")
-				OR LOWER(COALESCE(abl.keywords, abpl.keywords)) LIKE LOWER ("%'.$query.'%")
+				LOWER(COALESCE(abl.scientific_title, abpl.scientific_title)) LIKE LOWER("%'.$query.'%")
+				OR LOWER(COALESCE(abl.public_title, abpl.public_title)) LIKE LOWER("%'.$query.'%")
+				OR LOWER(COALESCE(abl.keywords, abpl.keywords)) LIKE LOWER("%'.$query.'%")
 			)';
 		}
 		
@@ -1092,7 +1092,7 @@ class ArticleDAO extends DAO {
 			}
 		}
 		
-		if ($country != 'ALL') $searchSql .= ' AND LOWER(COALESCE(appc.setting_value, apc.setting_value)) LIKE LOWER ("%'.$country.'%")';
+		if ($country != 'ALL') $searchSql .= ' AND LOWER(COALESCE(appc.setting_value, apc.setting_value)) LIKE LOWER("%'.$country.'%")';
 				
 		
 		if ($status == 1) $searchSql .= ' AND a.status = ' . STATUS_COMPLETED;
