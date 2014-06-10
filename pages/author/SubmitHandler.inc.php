@@ -29,7 +29,7 @@ class SubmitHandler extends AuthorHandler {
 	}
 
 
-    function resubmit($args, $request, $reviewType = STATUS_QUEUED) {
+    function resubmit($args, $request) {
 		$articleDAO = DAORegistry::getDAO('ArticleDAO');
         $articleId = isset($args[0]) ? (int) $args[0] : 0;
 
@@ -47,7 +47,7 @@ class SubmitHandler extends AuthorHandler {
         		&& $authorSubmission->isSubmissionDue())
         ) {
             $step = 2;
-            $articleDAO->changeArticleStatus($reviewType, $step);
+            $articleDAO->changeArticleStatus($articleId, STATUS_QUEUED);
             $articleDAO->changeArticleProgress($articleId, $step);
            
             Request::redirect(null, null, 'submit', $step, array('articleId' => $articleId));
